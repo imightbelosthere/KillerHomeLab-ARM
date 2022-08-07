@@ -13,19 +13,19 @@
             "metadata": {
             "description": "Extension Type Handler Version"
             }
-        },        
+        },         
         "computerName": {
             "type": "string",
             "metadata": {
                 "description": "Computer Name"
             }
         },
-        "location": {
-            "type": "string",
-          "metadata": {
-            "description": "Region of Resources"
-          }
-        }, 
+        "TimeZone": {
+            "type": "string",      
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },                 
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -37,11 +37,17 @@
             "metadata": {
                 "description": "Auto-generated token to access _artifactsLocation"
             }
-        }                
+        },
+        "location": {
+            "type": "string",
+          "metadata": {
+            "description": "Region of Resources"
+          }
+        }                        
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/RESTARTVM.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "RESTARTVM.ps1\\RESTARTVM"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/TIMEZONE.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "TIMEZONE.ps1\\TIMEZONE"
     },
     "resources": [
         {
@@ -58,9 +64,10 @@
                     "WMFVersion": "latest",
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                    "Properties": {
-                    }
-                } 
+                        "Properties": {
+                            "TimeZone": "[parameters('TimeZone')]"                      
+                        }
+                }
             }
         }
     ]

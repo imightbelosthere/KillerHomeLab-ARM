@@ -1,0 +1,103 @@
+{
+"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+"contentVersion": "1.0.0.0",
+"parameters": {
+    "keyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Specifies the name of the key vault."
+      }
+    },
+    "BackupObjectID": {
+      "type": "string",
+      "metadata": {
+        "description": "Backup Object ID"
+      }
+    },        
+    "AdminObjectID": {
+      "type": "string",
+      "metadata": {
+        "description": "Admin Object ID"
+      }
+    },      
+    "userManagedObjectID": {
+      "type": "string",
+      "metadata": {
+        "description": "Managed ID Object ID"
+      }
+    },          
+      "location": {
+          "type": "string",
+        "metadata": {
+          "description": "Region of Resources"
+        }
+    }
+},
+  "variables": {
+    "keysPermissions": [
+      "All"
+      ],
+    "secretsPermissions": [
+      "All"
+      ],
+    "skuName":  "Premium",
+    "tenantID": "[subscription().tenantId]"
+  },
+"resources": [
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "name": "[parameters('keyVaultName')]",
+      "apiVersion": "2021-11-01-preview",
+      "location": "[parameters('location')]",
+      "properties": {
+        "enabledForDeployment": true,
+        "enabledForDiskEncryption": true,
+        "enabledForTemplateDeployment": true,
+        "enableSoftDelete": true,        
+        "enablePurgeProtection": true,
+        "softDeleteRetentionInDays":  7,                
+        "tenantId": "[variables('tenantId')]",
+        "accessPolicies": [
+          {
+            "objectId": "[parameters('BackupObjectID')]",
+            "tenantId": "[variables('tenantId')]",
+            "permissions": {
+              "keys": "[variables('keysPermissions')]",
+              "secrets": "[variables('secretsPermissions')]"      
+            }
+          },
+          {
+            "objectId": "[parameters('AdminObjectID')]",
+            "tenantId": "[variables('tenantId')]",
+            "permissions": {
+              "keys": "[variables('keysPermissions')]",
+              "secrets": "[variables('secretsPermissions')]"      
+            }
+          },
+          {
+            "objectId": "[parameters('userManagedObjectID')]",
+            "tenantId": "[variables('tenantId')]",
+            "permissions": {
+              "keys": "[variables('keysPermissions')]",
+              "secrets": "[variables('secretsPermissions')]"      
+            }
+          }                    
+        ],
+        "sku": {
+          "name": "[variables('skuName')]",
+          "family": "A"
+        },
+        "networkAcls": {
+            "defaultAction": "Allow",
+            "bypass": "AzureServices"
+        }
+      }
+    }
+   ],
+"outputs": {
+    "KeyVaultName": {
+        "type": "string",
+        "value": "[parameters('keyVaultName')]"
+    }
+  }      
+}

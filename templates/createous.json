@@ -13,19 +13,19 @@
             "metadata": {
             "description": "Extension Type Handler Version"
             }
-        },        
+        },         
         "computerName": {
             "type": "string",
             "metadata": {
                 "description": "Computer Name"
             }
         },
-        "location": {
+        "BaseDN": {
             "type": "string",
-          "metadata": {
-            "description": "Region of Resources"
-          }
-        }, 
+            "metadata": {
+                "description": "Base Domain Distiguished Name"
+            }
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -37,11 +37,17 @@
             "metadata": {
                 "description": "Auto-generated token to access _artifactsLocation"
             }
-        }                
+        },
+        "location": {
+            "type": "string",
+          "metadata": {
+            "description": "Region of Resources"
+          }
+        }                        
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/RESTARTVM.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "RESTARTVM.ps1\\RESTARTVM"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CREATEOUS.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "CREATEOUS.ps1\\CREATEOUS"
     },
     "resources": [
         {
@@ -58,9 +64,10 @@
                     "WMFVersion": "latest",
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                    "Properties": {
-                    }
-                } 
+                        "Properties": {
+                            "BaseDN": "[parameters('BaseDN')]"
+                        }
+                }
             }
         }
     ]
