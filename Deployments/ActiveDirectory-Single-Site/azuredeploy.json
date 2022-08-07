@@ -305,7 +305,7 @@
         "metadata": {
             "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
         },
-        "defaultValue": "token=GHSAT0AAAAAABXMJGR25GEZ6TVCNWOS2G2KYXPZVDQ"
+        "defaultValue": "?token=GHSAT0AAAAAABXMJGR2ATUPZLBJV2XBXL4MYXP2WZQ"
     }
   },
   "variables": {
