@@ -188,7 +188,7 @@
         },
         "AzureUserObjectID": {
             "type": "string",
-            "defaultValue": "871dc2b8-5ec5-4d71-a8db-8aa1e8552873",
+            "defaultValue": "",
             "metadata": {
                 "description": "Deployment Account Object ID"
             }
