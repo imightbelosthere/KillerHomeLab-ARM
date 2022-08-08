@@ -183,7 +183,14 @@
       "metadata": {
         "description": "The password for the Administrator account of the new VM and Domain"
       }
-    },    
+    },  
+    "AzureUserObjectID": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+            "description": "Deployment Account Object ID"
+        }
+    },      
     "WindowsServerLicenseType": {
       "type": "string",
       "defaultValue": "None",
@@ -346,6 +353,10 @@
     }
   },
   "variables": {
+    "DeploymentName": "[deployment().name]",
+    "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
+    "KeyVaultName": "[concat('ADSS-', variables('Identifier'))]",
+    "SecretName": "[concat(resourceGroup().Name,'-Password')]",
     "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
     "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
     "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",    
@@ -370,6 +381,8 @@
     "BastionHostAPIVersion": "2021-08-01",
     "DeploymentAPIVersion": "2021-04-01",
     "ExtensionsAPIVersion": "2022-03-01",    
+    "KeyVaultAPIVersion": "2021-11-01-preview",
+    "KeyVaultSecretAPIVersion": "2021-11-01-preview",    
     "NetworkInterfacesAPIVersion": "2021-08-01",
     "PublicIPAddressesAPIVersion": "2021-08-01",
     "SchedulesAPIVersion": "2018-09-15",
@@ -379,6 +392,41 @@
     "DJExtensionsTypeHandlerVersion": "1.3"
   },  
   "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('DeploymentAPIVersion')]",
+      "name": "Deploy-Password-KeyVault-with-Secret",
+      "Properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultwithsecret.json', parameters('_artifactsLocationSasToken')))]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "KeyVaultAPIVersion": {
+            "value": "[variables('KeyVaultAPIVersion')]"
+          },
+          "KeyVaultSecretAPIVersion": {
+            "value": "[variables('KeyVaultSecretAPIVersion')]"
+          },
+          "KeyVaultName": {
+            "value": "[variables('KeyVaultName')]"
+          },
+          "SecretName": {
+            "value": "[variables('SecretName')]"
+          },
+          "SecretValue": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "AzureUserObjectID": {
+            "value": "[parameters('AzureUserObjectID')]"
+          },
+          "location": {
+            "value": "[resourceGroup().location]"
+          }
+        }
+      }
+    },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "[variables('DeploymentAPIVersion')]",

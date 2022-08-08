@@ -2,8 +2,11 @@
 
 All labs with VM's deploy a Bastion Host for Remote Desktop access
 
-Click on the desired Lab for details
+Click on the desired Lab to Deploy
 
-<h2><a href="./Deployments/AlphaDeployment"><img src="./Deployments/x_Images/ActiveDirectorySingleSite.png" alt="Alpha Deployment" width="300"/></a></h2>
+# Active Directory Single-Site
+<img src="../x_Images/ActiveDirectorySingleSite.png" alt="Active Directory" width="150">
+Click the button below to deploy
 
-<h2><a href="./Deployments/ActiveDirectory-Single-Site.md"><img src="./Deployments/x_Images/ActiveDirectorySingleSite.png" alt="Alpha Deployment" width="300"/></a></h2>
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FActiveDirectory-Single-Site.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FActiveDirectory-Single-Site.json)

@@ -1,15 +1,9 @@
-# Active Directory Single-Site
-<img src="../x_Images/ActiveDirectorySingleSite.png" alt="Active Directory" width="150">
-Click the button below to deploy
-
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FActiveDirectory-Single-Site.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FActiveDirectory-Single-Site.json)
-
 This Templates deploys a Single Forest/Domain:
 
 - 1 - Active Directory Forest/Domain
 - 1 - Domain Controller
 - 1 - Domain Joined Windows Workstation (Windows 11/10/7)
+- 1 - Azure KeyVault with Secret contianing Deployment Password
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
