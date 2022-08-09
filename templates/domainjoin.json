@@ -5,15 +5,15 @@
         "ExtensionsAPIVersion": {
             "type": "string",
             "metadata": {
-            "description": "Virtual Network API Version"
+                "description": "Virtual Network API Version"
             }
         },
         "DJExtensionsTypeHandlerVersion": {
             "type": "string",
             "metadata": {
-            "description": "JSON Active Directory Join Extension Type Handler Version"
+                "description": "JSON Active Directory Domain Join Extension Type Handler Version"
             }
-        },        
+        },
         "computerName": {
             "type": "string",
             "metadata": {
@@ -22,23 +22,23 @@
         },
         "domainName": {
             "type": "string",
-          "metadata": {
-            "description": "The FQDN of the AD Domain created "
-          }
-        }, 
+            "metadata": {
+                "description": "The FQDN of the AD Domain created "
+            }
+        },
         "OUPath": {
-          "type": "string",
-          "metadata": {
-              "description": "Organizational Unit Path"
-          }
-        },        
+            "type": "string",
+            "metadata": {
+                "description": "Organizational Unit Path"
+            }
+        },
         "domainJoinOptions": {
-          "type": "int",
-          "defaultValue": 3,
-        "metadata": {
-            "description": "Set of bit flags that define the join options. Default value of 3 is a combination of NETSETUP_JOIN_DOMAIN (0x00000001) & NETSETUP_ACCT_CREATE (0x00000002) i.e. will join the domain and create the account on the domain. For more information see https://msdn.microsoft.com/en-us/library/aa392154(v=vs.85).aspx"
-          }
-        },                       
+            "type": "int",
+            "defaultValue": 3,
+            "metadata": {
+                "description": "Set of bit flags that define the join options. Default value of 3 is a combination of NETSETUP_JOIN_DOMAIN (0x00000001) & NETSETUP_ACCT_CREATE (0x00000002) i.e. will join the domain and create the account on the domain. For more information see https://msdn.microsoft.com/en-us/library/aa392154(v=vs.85).aspx"
+            }
+        },
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -47,20 +47,20 @@
         },
         "adminPassword": {
             "type": "securestring",
-          "metadata": {
-            "description": "The password for the Administrator account of the new VM and Domain"
-          }
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
         },
         "location": {
             "type": "string",
-          "metadata": {
-            "description": "Region of Resources"
-          }
-        }        
+            "metadata": {
+                "description": "Region of Resources"
+            }
+        }
     },
     "resources": [
         {
-          "name": "[concat(parameters('computerName'), '/DomainJoin')]",
+            "name": "[concat(parameters('computerName'), '/DomainJoin')]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "[parameters('ExtensionsAPIVersion')]",
             "location": "[parameters('location')]",
@@ -70,14 +70,14 @@
                 "typeHandlerVersion": "[parameters('DJExtensionsTypeHandlerVersion')]",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
-                  "Name": "[parameters('domainName')]",
-                  "User": "[concat(parameters('domainName'), '\\', parameters('adminUsername'))]",
-                  "OUPath": "[parameters('OUPath')]",
-                  "Restart": "true",
-                  "Options": "[parameters('domainJoinOptions')]"
+                    "Name": "[parameters('domainName')]",
+                    "User": "[concat(parameters('domainName'), '\\', parameters('adminUsername'))]",
+                    "OUPath": "[parameters('OUPath')]",
+                    "Restart": "true",
+                    "Options": "[parameters('domainJoinOptions')]"
                 },
                 "protectedSettings": {
-                  "Password": "[parameters('adminPassword')]"
+                    "Password": "[parameters('adminPassword')]"
                 }
             }
         }

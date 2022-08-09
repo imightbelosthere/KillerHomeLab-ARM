@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "RouteTableAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Table API Version"
+            }
+        },
+        "FirewallIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Firewall Private IP"
+            }
+        },
+        "RouteTableName": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Table Name"
+            }
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('RouteTableName')]",
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "[parameters('RouteTableAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "routes": [
+                    {
+                        "name": "Internet",
+                        "properties": {
+                            "addressPrefix": "0.0.0.0/0",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('FirewallIP')]"
+                        }
+                    }
+                ],
+                "disableBgpRoutePropagation": true
+            },
+            "resources": []
+        }
+    ]
+}

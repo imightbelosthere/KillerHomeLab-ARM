@@ -1,0 +1,95 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NATGatewayAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "NATGateway API Version"
+            }
+        },
+        "PublicIPPrefixesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "PublicIPPrefixes API Version"
+            }
+        },
+        "PublicIPAddressesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "PublicIPAddresses API Version"
+            }
+        },
+        "NATGatewayName": {
+            "type": "string",
+            "metadata": {
+                "description": "NAT Gateway Name"
+            }
+        },
+        "AllocationMethod": {
+            "type": "string",
+            "metadata": {
+                "description": "Public IP Allocation Method"
+            }
+        }
+    },
+    "variables": {
+        "PublicIPPrefixesName": "[concat(parameters('NATGatewayName'),'-Prefixes')]",
+        "PublicIPAddressName": "[concat(parameters('NATGatewayName'),'-PIP1')]"
+    },
+    "resources": [
+        {
+            "name": "[variables('PublicIPPrefixesName')]",
+            "type": "Microsoft.Network/publicIPPrefixes",
+            "apiVersion": "[parameters('PublicIPPrefixesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "properties": {
+                "prefixLength": 29,
+                "publicIPAddressVersion": "IPv4"
+            }
+        },
+        {
+            "name": "[variables('publicIPAddressName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('PublicIPAddressesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "[parameters('AllocationMethod')]"
+            }
+        },
+        {
+            "name": "[parameters('NATGatewayName')]",
+            "type": "Microsoft.Network/natGateways",
+            "apiVersion": "[parameters('NATGatewayAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]",
+                "[resourceId('Microsoft.Network/publicIPPrefixes', variables('PublicIPPrefixesName'))]"
+            ],
+            "sku": {
+                "name": "Standard",
+                "tier": "Regional"
+            },
+            "properties": {
+                "idleTimeoutInMinutes": 4,
+                "publicIpAddresses": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/publicIpAddresses', variables('publicIPAddressName'))]"
+                    }
+                ],
+                "publicIpPrefixes": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/publicIPPrefixes', variables('PublicIPPrefixesName'))]"
+                    }
+                ]
+            }
+        }
+    ]
+}

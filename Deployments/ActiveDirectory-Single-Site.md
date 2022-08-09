@@ -37,6 +37,7 @@ Parameters that support changes
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
+- Azure UserObject ID.  Object ID for the Azure Using running the deployment
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - Naming Convention. Enter a name that will be used as a naming prefix for (Servers, VNets, etc) you are using.

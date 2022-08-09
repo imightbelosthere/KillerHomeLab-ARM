@@ -8,6 +8,12 @@
                 "description": "Virtual Network API Version"
             }
         },
+        "NATGatewayName": {
+            "type": "string",
+            "metadata": {
+                "description": "NAT Gateway Name"
+            }
+        },
         "vnetName": {
             "type": "string",
             "metadata": {
@@ -61,7 +67,17 @@
             "metadata": {
                 "description": "Firewall Subnet Prefix"
             }
+        },
+        "RouteTableName": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Table Name"
+            }
         }
+    },
+    "variables": {
+        "RouteTableId": "[resourceId(resourceGroup().name, 'Microsoft.Network/routeTables', parameters('RouteTableName'))]",
+        "NATGatewayId": "[resourceId(resourceGroup().name, 'Microsoft.Network/natGateways', parameters('NATGatewayName'))]"
     },
     "resources": [
         {
@@ -85,13 +101,19 @@
                     {
                         "name": "[parameters('subnet1Name')]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet1Prefix')]"
+                            "addressPrefix": "[parameters('subnet1Prefix')]",
+                            "routeTable": {
+                                "id": "[variables('RouteTableId')]"
+                            }
                         }
                     },
                     {
                         "name": "[parameters('subnet2Name')]",
                         "properties": {
-                            "addressPrefix": "[parameters('subnet2Prefix')]"
+                            "addressPrefix": "[parameters('subnet2Prefix')]",
+                            "routeTable": {
+                                "id": "[variables('RouteTableId')]"
+                            }
                         }
                     },
                     {
@@ -103,7 +125,10 @@
                     {
                         "name": "AzureFirewallSubnet",
                         "properties": {
-                            "addressPrefix": "[parameters('FirewallsubnetPrefix')]"
+                            "addressPrefix": "[parameters('FirewallsubnetPrefix')]",
+                            "natGateway": {
+                                "id": "[variables('NATGatewayId')]"
+                            }
                         }
                     }
                 ]
