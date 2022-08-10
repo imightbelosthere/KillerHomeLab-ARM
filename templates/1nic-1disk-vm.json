@@ -13,13 +13,13 @@
             "metadata": {
                 "description": "VirtualMachines API Version"
             }
-        },              
+        },
         "SchedulesAPIVersion": {
             "type": "string",
             "metadata": {
                 "description": "Schedules API Version"
             }
-        },                  
+        },
         "computerName": {
             "type": "string",
             "metadata": {
@@ -33,29 +33,29 @@
             }
         },
         "TimeZone": {
-            "type": "string",      
+            "type": "string",
             "metadata": {
                 "description": "Time Zone"
             }
         },
         "AutoShutdownEnabled": {
             "type": "string",
-          "metadata": {
-            "description": "Enable or Disable Auto-Shutdown"
-          }
-        },                    
+            "metadata": {
+                "description": "Enable or Disable Auto-Shutdown"
+            }
+        },
         "AutoShutdownTime": {
             "type": "string",
-          "metadata": {
-            "description": "Time to Shutdown VM"
-          }
-        },                    
+            "metadata": {
+                "description": "Time to Shutdown VM"
+            }
+        },
         "AutoShutdownEmail": {
-            "type": "string",      
+            "type": "string",
             "metadata": {
                 "description": "Notification Email for Auto-Shutdown"
             }
-        },                                             
+        },
         "Publisher": {
             "type": "string",
             "metadata": {
@@ -67,13 +67,13 @@
             "metadata": {
                 "description": "Image Publisher Offer"
             }
-        },   
+        },
         "OSSku": {
             "type": "string",
             "metadata": {
                 "description": "OS Sku"
             }
-        },                   
+        },
         "OSVersion": {
             "type": "string",
             "metadata": {
@@ -85,13 +85,13 @@
             "metadata": {
                 "description": "License Type (Windows_Server or None)"
             }
-        },                 
+        },
         "VMSize": {
             "type": "string",
             "metadata": {
                 "description": "VMSize"
             }
-        },        
+        },
         "vnetName": {
             "type": "string",
             "metadata": {
@@ -102,7 +102,7 @@
             "type": "string",
             "metadata": {
                 "description": "Existing subnet name that contains the domain controller"
-          }
+            }
         },
         "adminUsername": {
             "type": "string",
@@ -114,12 +114,6 @@
             "type": "securestring",
             "metadata": {
                 "description": "The password for the Administrator account of the new VM and Domain"
-            }
-        },
-        "location": {
-            "type": "string",
-            "metadata": {
-                "description": "Region of Resources"
             }
         }
     },
@@ -135,7 +129,7 @@
             "name": "[variables('Nic1Name')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "ipConfigurations": [
                     {
@@ -150,12 +144,12 @@
                     }
                 ]
             }
-        },      
+        },
         {
             "name": "[parameters('computerName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('VirtualMachinesAPIVersion')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces',variables('Nic1Name'))]"
             ],
@@ -199,10 +193,10 @@
             "type": "microsoft.devtestlab/schedules",
             "apiVersion": "[parameters('SchedulesAPIVersion')]",
             "name": "[concat('shutdown-computevm-',parameters('computerName'))]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/virtualMachines',parameters('computerName'))]"
-            ],          
+            ],
             "properties": {
                 "status": "Enabled",
                 "taskType": "ComputeVmShutdownTask",
@@ -218,6 +212,6 @@
                 },
                 "targetResourceId": "[variables('VMId')]"
             }
-        }              
+        }
     ]
 }

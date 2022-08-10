@@ -326,9 +326,6 @@
                     },
                     "AzureUserObjectID": {
                         "value": "[parameters('AzureUserObjectID')]"
-                    },
-                    "location": {
-                        "value": "[resourceGroup().location]"
                     }
                 }
             }
@@ -408,9 +405,6 @@
                     },
                     "subnetName": {
                         "value": "AzureBastionSubnet"
-                    },
-                    "location": {
-                        "value": "[resourceGroup().location]"
                     }
                 }
             }
@@ -571,9 +565,6 @@
                     },
                     "AutoShutdownEmail": {
                         "value": "[parameters('AutoShutdownEmail')]"
-                    },
-                    "location": {
-                        "value": "[resourceGroup().location]"
                     }
                 }
             }
@@ -649,9 +640,6 @@
                     },
                     "AutoShutdownEmail": {
                         "value": "[parameters('AutoShutdownEmail')]"
-                    },
-                    "location": {
-                        "value": "[resourceGroup().location]"
                     }
                 }
             }
@@ -727,9 +715,6 @@
                     },
                     "AutoShutdownEmail": {
                         "value": "[parameters('AutoShutdownEmail')]"
-                    },
-                    "location": {
-                        "value": "[resourceGroup().location]"
                     }
                 }
             }
@@ -767,9 +752,6 @@
                     },
                     "_artifactsLocationSasToken": {
                         "value": "[parameters('_artifactsLocationSasToken')]"
-                    },
-                    "location": {
-                        "value": "[resourceGroup().location]"
                     }
                 }
             }

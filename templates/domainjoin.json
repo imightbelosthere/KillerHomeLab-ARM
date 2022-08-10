@@ -50,12 +50,6 @@
             "metadata": {
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
-        },
-        "location": {
-            "type": "string",
-            "metadata": {
-                "description": "Region of Resources"
-            }
         }
     },
     "resources": [
@@ -63,7 +57,7 @@
             "name": "[concat(parameters('computerName'), '/DomainJoin')]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "[parameters('ExtensionsAPIVersion')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "publisher": "Microsoft.Compute",
                 "type": "JsonADDomainExtension",

@@ -5,27 +5,21 @@
         "ExtensionsAPIVersion": {
             "type": "string",
             "metadata": {
-            "description": "Virtual Network API Version"
+                "description": "Virtual Network API Version"
             }
         },
         "ExtensionsTypeHandlerVersion": {
             "type": "string",
             "metadata": {
-            "description": "Extension Type Handler Version"
+                "description": "Extension Type Handler Version"
             }
-        },        
+        },
         "computerName": {
             "type": "string",
             "metadata": {
                 "description": "Computer Name"
             }
         },
-        "location": {
-            "type": "string",
-          "metadata": {
-            "description": "Region of Resources"
-          }
-        }, 
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -37,7 +31,7 @@
             "metadata": {
                 "description": "Auto-generated token to access _artifactsLocation"
             }
-        }                
+        }
     },
     "variables": {
         "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/RESTARTVM.zip', parameters('_artifactsLocationSasToken')))]",
@@ -48,7 +42,7 @@
             "name": "[concat(parameters('computerName'),'/Microsoft.Powershell.DSC')]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "[parameters('ExtensionsAPIVersion')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "publisher": "Microsoft.Powershell",
                 "type": "DSC",
@@ -58,9 +52,8 @@
                     "WMFVersion": "latest",
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                    "Properties": {
-                    }
-                } 
+                    "Properties": {}
+                }
             }
         }
     ]

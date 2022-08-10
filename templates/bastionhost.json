@@ -13,7 +13,7 @@
             "metadata": {
                 "description": "PublicIPAddresses API Version"
             }
-        },        
+        },
         "publicIPAddressName": {
             "type": "string",
             "metadata": {
@@ -25,24 +25,18 @@
             "metadata": {
                 "description": "Public IP Allocation Method"
             }
-        },        
+        },
         "vnetName": {
             "type": "string",
             "metadata": {
                 "description": "Existing virtual Network Name"
             }
-        },                
+        },
         "subnetName": {
             "type": "string",
             "metadata": {
                 "description": "Existing Subnet Name"
             }
-        },                        
-        "location": {
-            "type": "string",
-          "metadata": {
-            "description": "Region of Resources"
-          }
         }
     },
     "resources": [
@@ -50,7 +44,7 @@
             "name": "[parameters('publicIPAddressName')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "[parameters('PublicIPAddressesAPIVersion')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Standard"
             },
@@ -60,9 +54,9 @@
         },
         {
             "type": "Microsoft.Network/bastionHosts",
-            "apiVersion": "[parameters('BastionHostAPIVersion')]",          
+            "apiVersion": "[parameters('BastionHostAPIVersion')]",
             "name": "[parameters('vnetName')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
             ],
@@ -81,6 +75,6 @@
                     }
                 ]
             }
-        }        
+        }
     ]
 }

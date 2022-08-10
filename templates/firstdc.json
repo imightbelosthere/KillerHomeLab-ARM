@@ -5,15 +5,15 @@
         "ExtensionsAPIVersion": {
             "type": "string",
             "metadata": {
-            "description": "Virtual Network API Version"
+                "description": "Virtual Network API Version"
             }
         },
         "ExtensionsTypeHandlerVersion": {
             "type": "string",
             "metadata": {
-            "description": "Extension Type Handler Version"
+                "description": "Extension Type Handler Version"
             }
-        },                
+        },
         "computerName": {
             "type": "string",
             "metadata": {
@@ -21,11 +21,11 @@
             }
         },
         "TimeZone": {
-            "type": "string",      
+            "type": "string",
             "metadata": {
                 "description": "Time Zone"
             }
-        },         
+        },
         "NetBiosDomain": {
             "type": "string",
             "metadata": {
@@ -34,16 +34,10 @@
         },
         "domainName": {
             "type": "string",
-          "metadata": {
-            "description": "The FQDN of the AD Domain created "
-          }
-        },                               
-        "location": {
-            "type": "string",
-          "metadata": {
-            "description": "Region of Resources"
-          }
-        }, 
+            "metadata": {
+                "description": "The FQDN of the AD Domain created "
+            }
+        },
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -67,7 +61,7 @@
             "metadata": {
                 "description": "Auto-generated token to access _artifactsLocation"
             }
-        }                
+        }
     },
     "variables": {
         "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/FIRSTDC.zip', parameters('_artifactsLocationSasToken')))]",
@@ -78,7 +72,7 @@
             "name": "[concat(parameters('computerName'),'/Microsoft.Powershell.DSC')]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "[parameters('ExtensionsAPIVersion')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "properties": {
                 "publisher": "Microsoft.Powershell",
                 "type": "DSC",
@@ -92,17 +86,17 @@
                         "AdminCreds": {
                             "UserName": "[parameters('adminUsername')]",
                             "Password": "PrivateSettingsRef:AdminPassword1"
-                        },                        
+                        },
                         "DomainName": "[parameters('domainName')]",
-                        "TimeZone": "[parameters('TimeZone')]",                            
+                        "TimeZone": "[parameters('TimeZone')]",
                         "NetBiosDomain": "[parameters('NetBiosDomain')]"
-                    }                        
+                    }
                 },
                 "protectedSettings": {
                     "Items": {
                         "AdminPassword1": "[parameters('adminPassword')]"
                     }
-                }                
+                }
             }
         }
     ]
