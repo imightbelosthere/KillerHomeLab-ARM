@@ -1500,7 +1500,63 @@
                     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                 }
             }
-        },                                                               
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Finalize-Issuing-CertificateAuthority",
+            "dependsOn": [
+                "Grant-Issuing-Certificate-Authority-Request"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/finalizeca.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                                             
+                    "computerName": {
+                        "value": "[variables('icaname')]"
+                    },
+                    "RootCAIP": {
+                        "value": "[variables('rcaIP')]"
+                    },              
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },              
+                    "IssuingCAName": {
+                        "value": "[parameters('IssuingCAName')]"
+                    },              
+                    "RootCAName": {
+                        "value": "[parameters('RootCAName')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },   
+                    "CATemplateScriptUrl": {
+                        "value": "[variables('CATemplateScriptUrl')]"
+                    },                 
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },              
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                }
+            }
+        },                                                                      
         {
             "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
             "type": "Microsoft.Resources/deployments",
