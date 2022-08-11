@@ -1222,7 +1222,7 @@
             }
         },
 		{
-			"condition": "[equals(parameters('ICAOSVersion'),'2022-Datacenter')]",
+			"condition": "[equals(parameters('ICAOSSku'),'2022-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinIssuingCA-22",
@@ -1261,7 +1261,7 @@
 			}
 		},  
         {
-            "condition": "[equals(parameters('ICAOSVersion'),'2019-Datacenter')]",
+            "condition": "[equals(parameters('ICAOSSku'),'2019-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoinIssuingCA-19",
@@ -1306,7 +1306,7 @@
             }
         },	
         {
-            "condition": "[equals(parameters('ICAOSVersion'),'2016-Datacenter')]",
+            "condition": "[equals(parameters('ICAOSSku'),'2016-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoinIssuingCA-16",
@@ -1351,7 +1351,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('ICAOSVersion'),'2012-R2-Datacenter')]",
+            "condition": "[equals(parameters('ICAOSSku'),'2012-R2-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoinIssuingCA-12R2",
