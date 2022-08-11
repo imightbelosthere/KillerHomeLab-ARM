@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkSecurityGroupAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group API Version"
+            }
+        },
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name"
+            }
+        },
+        "OCSPPrivateIP": {
+            "type": "string",
+            "metadata": {
+                "description": "OCSP Private IP Address"
+            }
+        }
+    },
+    "resources": [
+      {
+        "apiVersion": "[parameters('NetworkSecurityGroupAPIVersion')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[parameters('NetworkSecurityGroupName')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "HTTP",
+              "properties": {
+                "description": "Opens Port HTTP (Port 80/TCP)",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "[parameters('OCSPPrivateIP')]",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            } 
+          ]
+        }
+      }
+    ]
+  }

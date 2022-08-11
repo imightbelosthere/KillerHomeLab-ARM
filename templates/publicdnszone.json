@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PublicDNSZoneAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Public DNS Zone API Version"
+            }
+        },            
+        "ZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS Zone Name"
+              }
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('ZoneName')]",
+            "type": "Microsoft.Network/dnsZones",
+            "apiVersion": "[parameters('PublicDNSZoneAPIVersion')]",
+            "location": "global",
+            "tags": {},
+            "properties": {
+            },
+            "resources": []
+        }
+    ]
+}
