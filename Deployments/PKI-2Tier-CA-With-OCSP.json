@@ -973,7 +973,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('DC1OSVersion'),'2012-R2-Datacenter')]",
+            "condition": "[equals(parameters('DC1OSSku'),'2012-R2-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "name": "Deploy-PowerShell-ExecutionPolicy",
