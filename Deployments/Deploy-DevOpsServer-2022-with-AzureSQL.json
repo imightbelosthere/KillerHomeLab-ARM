@@ -173,6 +173,13 @@
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
             }
         },
+        "DevOpsServerSASUrl": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "DevOps Server 2022 Download SAS Url"
+            }
+        },        
         "adminUsername": {
             "type": "string",
             "defaultValue": "dom-admin",
@@ -835,7 +842,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-smi.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -934,6 +941,53 @@
 				}
 			}
 		},
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-DevOps-Server-2022",
+            "dependsOn": [
+                "DomainJoinDevOpsServer-01-22"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/devopsserver2022.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dev1name')]"
+                    },
+                    "DevOpsServerSASUrl": {
+                        "value": "[parameters('DevOpsServerSASUrl')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
         {
             "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
             "type": "Microsoft.Resources/deployments",
