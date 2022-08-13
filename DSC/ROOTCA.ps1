@@ -2,7 +2,6 @@ Configuration ROOTCA
 {
    param
    (
-        [String]$TimeZone,
         [String]$domainName,
         [String]$RootCAHashAlgorithm,
         [String]$RootCAKeyLength,
@@ -11,7 +10,6 @@ Configuration ROOTCA
         [System.Management.Automation.PSCredential]$Admincreds
     )
  
-    Import-DscResource -ModuleName ComputerManagementDsc
     Import-DscResource -ModuleName ActiveDirectoryCSDsc
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
 
@@ -70,12 +68,6 @@ Configuration ROOTCA
             Ensure = 'Present' 
             Name = 'RSAT-ADCS-Mgmt' 
             DependsOn = '[AdcsCertificationAuthority]CertificateAuthority'
-        }
-
-        TimeZone SetTimeZone
-        {
-            IsSingleInstance = 'Yes'
-            TimeZone         = $TimeZone
         }
 
         Script ConfigureRootCA

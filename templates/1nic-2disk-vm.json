@@ -168,7 +168,10 @@
                 "osProfile": {
                     "computerName": "[parameters('computerName')]",
                     "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]"
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "WindowsConfiguration": {
+                        "timeZone": "[parameters('TimeZone')]"
+                    }                    
                 },
                 "storageProfile": {
                     "imageReference": {

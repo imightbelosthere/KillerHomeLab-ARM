@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualNetworkAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "ServiceEndpointName": {
+            "type": "string",
+            "metadata": {
+                "description": "Service Endpoint Name"
+            }
+        },        
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "VNet name"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet 1 Name"
+            }
+        },
+        "subnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet 1 Prefix"
+            }
+        }
+    },
+    "resources": [
+                {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "[parameters('VirtualNetworkAPIVersion')]",
+            "name": "[concat(parameters('vnetName'), '/', parameters('subnetName'))]",
+            "properties": {
+                "addressPrefix": "[parameters('subnetPrefix')]",
+                "serviceEndpoints": [
+                    {
+                        "service": "[parameters('ServiceEndpointName')]",
+                        "locations": [
+                            "[resourceGroup().location]"
+                        ]
+                    }                    
+                ],
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        }
+    ]
+}

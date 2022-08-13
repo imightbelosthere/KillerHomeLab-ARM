@@ -19,13 +19,7 @@
             "metadata": {
                 "description": "Computer Name"
             }
-        },
-        "TimeZone": {
-            "type": "string",      
-            "metadata": {
-                "description": "Time Zone"
-            }
-        },         
+        },      
         "NamingConvention": {
             "type": "string",
             "metadata": {
@@ -115,7 +109,6 @@
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
                             "computerName": "[parameters('computerName')]",
-                            "TimeZone": "[parameters('TimeZone')]",                            
                             "NamingConvention": "[parameters('NamingConvention')]",                            
                             "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                                                                               
                             "IssuingCAName": "[parameters('IssuingCAName')]",

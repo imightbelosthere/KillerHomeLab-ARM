@@ -1,8 +1,7 @@
 ﻿configuration FIRSTDC
 {
    param
-   (
-        [String]$TimeZone,        
+   (      
         [String]$DomainName,
         [String]$NetBiosDomain,
         [System.Management.Automation.PSCredential]$Admincreds,
@@ -15,7 +14,6 @@
     Import-DscResource -ModuleName xStorage
     Import-DscResource -ModuleName xNetworking
     Import-DscResource -ModuleName xPendingReboot
-    Import-DscResource -ModuleName ComputerManagementDsc
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
     Import-DscResource -ModuleName DNSServerDsc
 
@@ -105,12 +103,6 @@
             InterfaceAlias = $InterfaceAlias
             AddressFamily  = 'IPv4'
             DependsOn = "[ADDomain]FirstDS"
-        }
-
-        TimeZone SetTimeZone
-        {
-            IsSingleInstance = 'Yes'
-            TimeZone         = $TimeZone
         }
 
         Script UpdateDNSSettings

@@ -606,9 +606,6 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },
@@ -1161,43 +1158,6 @@
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-Workstation-01-TimeZone",
-            "dependsOn": [
-                "DomainJoin-Workstation-01-11",
-                "DomainJoin-Workstation-01-10",
-                "DomainJoin-Workstation-01-7"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/timezone.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "ExtensionsTypeHandlerVersion": {
-                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('wk1name')]"
-                    },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
                     }
                 }
             }

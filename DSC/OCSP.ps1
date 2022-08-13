@@ -3,7 +3,6 @@ Configuration OCSP
    param
    (
         [String]$computerName,
-        [String]$TimeZone,
         [String]$NetBiosDomain,
         [String]$InternaldomainName,
         [String]$ExternaldomainName,
@@ -13,7 +12,6 @@ Configuration OCSP
     )
  
     Import-DscResource -ModuleName ActiveDirectoryCSDsc # Used for Certificate Authority
-    Import-DscResource -ModuleName ComputerManagementDsc # Used for TimeZone
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($AdminCreds.UserName)", $AdminCreds.Password)
  
@@ -45,12 +43,6 @@ Configuration OCSP
             Name = "RSAT-Online-Responder"
             Ensure = "Present"
 
-        }
-
-        TimeZone SetTimeZone
-        {
-            IsSingleInstance = 'Yes'
-            TimeZone         = $TimeZone
         }
 
         Script BackupCryptoKeys

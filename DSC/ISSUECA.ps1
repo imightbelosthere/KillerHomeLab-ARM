@@ -3,7 +3,6 @@ Configuration ISSUECA
    param
    (
         [String]$computerName,
-        [String]$TimeZone,
         [String]$NamingConvention,
         [String]$NetBiosDomain,
         [String]$IssuingCAName,
@@ -15,7 +14,6 @@ Configuration ISSUECA
     )
  
     Import-DscResource -Module ActiveDirectoryCSDsc # Used for Certificate Authority
-    Import-DscResource -Module ComputerManagementDsc # Used for TimeZone
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($AdminCreds.UserName)", $AdminCreds.Password)
  
@@ -96,12 +94,6 @@ Configuration ISSUECA
             Ensure = 'Present' 
             Name = 'RSAT-ADCS-Mgmt' 
             DependsOn = '[AdcsCertificationAuthority]CertificateAuthority'
-        }
-
-        TimeZone SetTimeZone
-        {
-            IsSingleInstance = 'Yes'
-            TimeZone         = $TimeZone
         }
 
         File CopyFilesFromRootCA

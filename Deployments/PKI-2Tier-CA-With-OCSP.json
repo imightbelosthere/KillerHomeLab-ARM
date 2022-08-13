@@ -749,9 +749,6 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },
@@ -1130,10 +1127,7 @@
                     },                     
                     "computerName": {
                         "value": "[variables('rcaname')]"
-                    },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },              
+                    },            
                     "RootCAName": {
                         "value": "[parameters('RootCAName')]"
                     },
@@ -1431,9 +1425,6 @@
                     },                                         
                     "computerName": {
                         "value": "[variables('icaname')]"
-                    },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
                     },                
                     "NamingConvention": {
                         "value": "[parameters('NamingConvention')]"
@@ -1835,10 +1826,7 @@
                     },                     
                     "computerName": {
                         "value": "[variables('ocspname')]"
-                    },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },                         
+                    },                   
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },              
@@ -1898,14 +1886,14 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Update-VNet1-NSG",
+            "name": "Associate-NSG-with-Subnet1",
             "dependsOn": [
                 "Deploy-NetworksecurityGroup-01"
             ],            
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetdnsandnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1915,35 +1903,12 @@
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
                     },
-                    "vnetprefix": {
-                        "value": "[variables('vnet1Prefix')]"
-                    },
-                    "subnet1Name": {
+                    "subnetName": {
                         "value": "[variables('vnet1subnet1Name')]"
                     },                                                                                                            
-                    "subnet1Prefix": {
+                    "subnetPrefix": {
                         "value": "[variables('vnet1subnet1Prefix')]"
                     }, 
-                    "subnet2Name": {
-                        "value": "[variables('vnet1subnet2Name')]"
-                    },                                                                                                            
-                    "subnet2Prefix": {
-                        "value": "[variables('vnet1subnet2Prefix')]"
-                    },               
-                    "BastionsubnetPrefix": {
-                        "value": "[variables('vnet1BastionsubnetPrefix')]"
-                    },
-                    "GatewaysubnetPrefix": {
-                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
-                    },                    
-                    "FirewallsubnetPrefix": {
-                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
-                    },                                     
-                    "DNSServerIP": {
-                        "value": [
-                        "[variables('dc1IP')]"
-                        ]
-                    },  
                     "NetworkSecurityGroupname": {
                         "value": "[variables('NSG1Name')]"
                     }                                                                                                                                                                                                                             
@@ -1953,9 +1918,42 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-Subnet2",
+            "dependsOn": [
+                "Associate-NSG-with-Subnet1"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },                                                                                                            
+                    "subnetPrefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    }, 
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    }                                                                                                                                                                                                                             
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Add-PublicIP-to-OCSPServer",
             "dependsOn": [
-                "Update-VNet1-NSG"
+                "Associate-NSG-with-Subnet1",
+                "Associate-NSG-with-Subnet2"
             ],
             "properties": {
                 "mode": "Incremental",

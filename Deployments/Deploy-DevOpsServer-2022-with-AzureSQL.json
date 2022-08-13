@@ -193,6 +193,13 @@
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
         },
+        "AzureUserPrincipal": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Deployment Account Azure Principal Name user@domain.onmicrosoft.com"
+            }
+        },  		        
         "AzureUserObjectID": {
             "type": "string",
             "defaultValue": "",
@@ -369,6 +376,20 @@
                 "description": "Workstation1 VMSize"
             }
         },
+        "AzureADSQLAdmin": {
+            "type": "object",
+            "metadata": {
+                "description": "Azure AD SQL Admin"
+            },
+            "defaultValue": {
+                "administratorType": "activeDirectory",
+                "login": "[parameters('AzureUserPrincipal')]",
+                "sid": "[parameters('AzureUserObjectID')]",
+                "tenantId": "[tenant().tenantId]",
+                "azureADOnlyAuthentication": true,
+                "principalType": "User"
+            }
+        },        
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -407,6 +428,7 @@
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
         "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",
         "wk1lastoctet": "201",
+        "AzureSQLServerName": "[concat(parameters('NamingConvention'), '-sql-', variables('Identifier'))]",        
         "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",
         "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",
         "DCDataDisk1Name": "NTDS",
@@ -424,6 +446,7 @@
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
+        "SQLServerAPIVersion": "2021-11-01-preview",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",
         "ExtensionsTypeHandlerVersion": "2.83",
@@ -635,9 +658,6 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },
@@ -831,13 +851,76 @@
                 }
             }
         },
-
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-SQL-Service-Endpoint",
+            "dependsOn": [
+                "Create-ActiveDirectory-OUs"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/enablesubnetserviceendpoint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "ServiceEndpointName": {
+                        "value": "Microsoft.Sql"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Azure-SQL-Server",
+            "dependsOn": [
+                "Add-SQL-Service-Endpoint"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/azuresqlserver.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SQLServerAPIVersion": {
+                        "value": "[variables('SQLServerAPIVersion')]"
+                    },
+                    "AzureSQLServerName": {
+                        "value": "[variables('AzureSQLServerName')]"
+                    },   					                 
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "AzureADSQLAdmin": {
+                        "value": "[parameters('AzureADSQLAdmin')]"
+                    }                    
+                }
+            }
+        },                
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-DevOpsServer-2022",
             "dependsOn": [
-                "Create-ActiveDirectory-OUs"
+                "Deploy-Azure-SQL-Server"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -944,9 +1027,50 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Install-DevOps-Server-2022",
+            "name": "Install-SQL-Management-Studio",
             "dependsOn": [
                 "DomainJoinDevOpsServer-01-22"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ssms.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dev1name')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-DevOps-Server-2022",
+            "dependsOn": [
+                "Install-SQL-Management-Studio"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1344,43 +1468,6 @@
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-Workstation-01-TimeZone",
-            "dependsOn": [
-                "DomainJoin-Workstation-01-11",
-                "DomainJoin-Workstation-01-10",
-                "DomainJoin-Workstation-01-7"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/timezone.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "ExtensionsTypeHandlerVersion": {
-                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('wk1name')]"
-                    },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
                     }
                 }
             }

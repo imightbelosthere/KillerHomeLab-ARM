@@ -722,52 +722,14 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-Workstation-01-TimeZone",
+            "name": "Associate-NATGateway-with-FirewallSubnet",
             "dependsOn": [
-                "Deploy-Workstation-01-11",
-                "Deploy-Workstation-01-10",
-                "Deploy-Workstation-01-7"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/timezone.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "ExtensionsTypeHandlerVersion": {
-                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('wk1name')]"
-                    },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Update-VNet1-RouteTable-and-NATGateway",
-            "dependsOn": [
-                "Configure-Workstation-01-TimeZone",
                 "Deploy-NATGateway-01"
             ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetroutetableandnatgateway.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnatgateway.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -780,35 +742,78 @@
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
                     },
-                    "vnetprefix": {
-                        "value": "[variables('vnet1Prefix')]"
+                    "subnetName": {
+                        "value": "AzureFirewallSubnet"
                     },
-                    "subnet1Name": {
-                        "value": "[variables('vnet1subnet1Name')]"
-                    },
-                    "subnet1Prefix": {
-                        "value": "[variables('vnet1subnet1Prefix')]"
-                    },
-                    "subnet2Name": {
-                        "value": "[variables('vnet1subnet2Name')]"
-                    },
-                    "subnet2Prefix": {
-                        "value": "[variables('vnet1subnet2Prefix')]"
-                    },
-                    "GatewaysubnetPrefix": {
-                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
-                    },
-                    "BastionsubnetPrefix": {
-                        "value": "[variables('vnet1BastionsubnetPrefix')]"
-                    },
-                    "FirewallsubnetPrefix": {
+                    "subnetPrefix": {
                         "value": "[variables('vnet1FirewallsubnetPrefix')]"
-                    },
-                    "RouteTableName": {
-                        "value": "[variables('RouteTableName')]"
                     }
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-RouteTable-with-Subnet1",
+            "dependsOn": [
+                "Associate-NATGateway-with-FirewallSubnet"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "RouteTableName": {
+                        "value": "[variables('RouteTableName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-RouteTable-with-Subnet2",
+            "dependsOn": [
+                "Associate-RouteTable-with-Subnet1"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "RouteTableName": {
+                        "value": "[variables('RouteTableName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    }
+                }
+            }
+        }                
     ]
 }

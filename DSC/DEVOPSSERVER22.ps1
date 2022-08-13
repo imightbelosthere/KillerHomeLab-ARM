@@ -62,35 +62,12 @@
             Ensure = "Present"
         }
 
-        xRemoteFile SSMS
-        {
-            DestinationPath = 'C:\DevOpsServerInstall\SSMS-Setup-ENU.exe'
-            Uri             = "https://aka.ms/SSMSFullSetup"
-            UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
-            DependsOn =    "[File]CreateSoftwareFolder"
-        }
-
-        Script InstallSQLManagementStudio
-        {
-            SetScript =
-            {
-                # Install SQL Management Studio
-                C:\SQLSoftware\SSMS-Setup-ENU.exe /install /quiet /norestart
-
-                $EnableSQL = Get-NetFirewallRule "SQL-In-TCP" -ErrorAction 0
-                IF ($EnableSQL -eq $null) {New-NetFirewallRule -DisplayName "SQL-In-TCP" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow}
-            }
-            GetScript =  { @{} }
-            TestScript = { $false}
-            DependsOn = '[xRemoteFile]SSMS'
-        }
-
         xRemoteFile DownloadDevOpsServer2022
         {
             DestinationPath = "C:\DevOpsServerInstall\DevOpsServer2022.iso"
             Uri             = "$DevOpsServerSASUrl"
             UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
-            DependsOn =    '[File]CreateSoftwareFolder', '[Script]InstallSQLManagementStudio'
+            DependsOn =    '[File]CreateSoftwareFolder'
         }
 
         xMountImage DevOpsServerISO

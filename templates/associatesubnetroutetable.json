@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualNetworkAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "RouteTableName": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Table Name"
+            }
+        },       
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "VNet name"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet 1 Name"
+            }
+        },
+        "subnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet 1 Prefix"
+            }
+        }
+    },    
+    "variables": {
+        "RouteTableId": "[resourceId(resourceGroup().name, 'Microsoft.Network/routeTables', parameters('RouteTableName'))]"
+    },
+    "resources": [
+                {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "[parameters('VirtualNetworkAPIVersion')]",
+            "name": "[concat(parameters('vnetName'), '/', parameters('subnetName'))]",
+            "properties": {
+                "addressPrefix": "[parameters('subnetPrefix')]",
+                "routeTable": {
+                    "id": "[variables('RouteTableId')]"
+                },               
+                "delegations": [],
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        }
+    ]
+}

@@ -1,0 +1,63 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "SQLServerAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure SQL Server API Version"
+            }
+        },
+        "AzureSQLServerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure PAAS Server Name"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET Name that contains the domain controller"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing subnet name that contains the domain controller"
+            }
+        },
+        "AzureADSQLAdmin": {
+            "type": "object",
+            "metadata": {
+                "description": "Azure AD SQL Admin"
+            }
+        }
+    },
+    "variables": {
+        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "[parameters('SQLServerAPIVersion')]",
+            "name": "[parameters('AzureSQLServerName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "version": "12.0",
+                "administrators": "[parameters('AzureADSQLAdmin')]"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/virtualNetworkRules",
+            "apiVersion": "[parameters('SQLServerAPIVersion')]",
+            "name": "[concat(parameters('AzureSQLServerName'),'/',parameters('subnetName'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('AzureSQLServerName'))]"
+            ],
+            "properties": {
+                "virtualNetworkSubnetId": "[variables('subnet1Id')]",
+                "ignoreMissingVnetServiceEndpoint": false
+            }
+        }
+    ]
+}
