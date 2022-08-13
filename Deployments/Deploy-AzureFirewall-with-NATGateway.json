@@ -263,7 +263,7 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('ADSS-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('AFWN-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "FirewallName": "[concat(resourceGroup().Name,'-AZFW-01')]",
         "NATGatewayName": "[concat(resourceGroup().Name,'-NG-01')]",
@@ -283,7 +283,6 @@
         "wk1lastoctet": "201",
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
-        "ExtensionsAPIVersion": "2022-03-01",
         "FirewallAPIVersion": "2022-01-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
@@ -294,8 +293,7 @@
         "RouteTableAPIVersion": "2022-01-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
-        "VirtualNetworkAPIVersion": "2020-11-01",
-        "ExtensionsTypeHandlerVersion": "2.83"
+        "VirtualNetworkAPIVersion": "2020-11-01"
     },
     "resources": [
         {

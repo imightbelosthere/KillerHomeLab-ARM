@@ -34,8 +34,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/SSMS.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "SSMS.ps1\\SSMS"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/SQLCMD.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "SQLCMD.ps1\\SQLCMD"
     },
     "resources": [
         {

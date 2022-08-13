@@ -1,12 +1,5 @@
 ﻿Configuration SSMS
 {
-   param
-   (
-        [String]$TimeZone,
-        [System.Management.Automation.PSCredential]$Admincreds
-    )
- 
-    Import-DscResource -ModuleName ComputerManagementDsc # Used for TimeZone
     Import-DscResource -ModuleName xPSDesiredStateConfiguration # Used for xRemote
 
     Node localhost
@@ -63,12 +56,6 @@
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[xRemoteFile]SSMS'
-        }
-
-        TimeZone SetTimeZone
-        {
-            IsSingleInstance = 'Yes'
-            TimeZone         = $TimeZone
         }
      }
   }

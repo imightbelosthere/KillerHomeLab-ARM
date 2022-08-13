@@ -1,11 +1,5 @@
 ﻿Configuration SQLCMD
 {
-   param
-   (
-        [String]$TimeZone
-    )
- 
-    Import-DscResource -ModuleName ComputerManagementDsc # Used for TimeZone
     Import-DscResource -ModuleName xPSDesiredStateConfiguration # Used for xRemote
 
     Node localhost
@@ -53,12 +47,6 @@
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[xRemoteFile]SQLCMD'
-        }
-
-        TimeZone SetTimeZone
-        {
-            IsSingleInstance = 'Yes'
-            TimeZone         = $TimeZone
         }
      }
   }
