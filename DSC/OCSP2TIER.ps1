@@ -1,4 +1,4 @@
-Configuration OCSP
+Configuration OCSP2TIER
 {
    param
    (

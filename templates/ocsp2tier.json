@@ -76,8 +76,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/OCSP.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "OCSP.ps1\\OCSP"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/OCSP2TIER.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "OCSP2TIER.ps1\\OCSP2TIER"
     },
     "resources": [
         {

@@ -2,17 +2,14 @@
 {
    param
    (
-        [String]$DevOpsServerSASUrl, 
-        [String]$TimeZone,                       
-        [String]$NetBiosDomain,
-        [System.Management.Automation.PSCredential]$Admincreds
+        [String]$computerName, 
+        [String]$AzureSQLServerFQDN,                             
+        [String]$DevOpsServerSASUrl,                     
+        [System.Management.Automation.PSCredential]$AzureCreds
     )
 
     Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
-    Import-DscResource -Module ComputerManagementDsc # Used for TimeZone
     Import-DscResource -Module xStorage # Used by Disk
-
-    [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
     Node localhost
     {
@@ -49,12 +46,6 @@
             TestScript = { $false }
         }
 
-        TimeZone SetTimeZone
-        {
-            IsSingleInstance = 'Yes'
-            TimeZone         = $TimeZone
-        }
-
         File CreateSoftwareFolder
         {
             Type = 'Directory'
@@ -84,14 +75,65 @@
             RetryCount       = 10
         }
 
+        Script ConfigureAzureSQLDatabases
+        {
+            SetScript =
+            {
+                # Create Credentials
+                $Load = "$using:AzureCreds"
+                $Username = $AzureCreds.GetNetworkCredential().Username
+                $Password = $AzureCreds.GetNetworkCredential().Password
+                $ServerURL = "$using:AzureSQLServerFQDN"
+                $SQLCMD = '"C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\SQLCMD.EXE"'
+
+                # Create SQL Script that Create/Grant DevOps Server Managed Identity Permissions to Master DB
+                $masterdbconfig = Get-ChildItem -Path C:\DevOpsServerInstall\masterdb.sql -ErrorAction 0
+                IF ($masterdbconfig -eq $null) {                 
+                    Set-Content -Path C:\DevOpsServerInstall\masterdb.sql -Value "CREATE USER [$using:computerName] FROM EXTERNAL PROVIDER"
+                    Add-Content -Path C:\DevOpsServerInstall\masterdb.sql -Value "ALTER ROLE [dbmanager] ADD MEMBER [$using:computerName]"
+                }
+
+                # Create SQL Script that Creates/Grants DevOps Server Managed Identity Permissions to Devops DB
+                $devopsdbconfig = Get-ChildItem -Path C:\DevOpsServerInstall\devopsdb.sql -ErrorAction 0
+                IF ($devopsdbconfig -eq $null) {                 
+                    Set-Content -Path C:\DevOpsServerInstall\devopsdb.sql -Value "CREATE USER [$using:computerName] FROM EXTERNAL PROVIDER"
+                    Add-Content -Path C:\DevOpsServerInstall\devopsdb.sql -Value "ALTER ROLE [db_owner] ADD MEMBER [$using:computerName]"
+                    Add-Content -Path C:\DevOpsServerInstall\devopsdb.sql -Value "ALTER USER [$using:computerName] WITH DEFAULT_SCHEMA=dbo"
+                }
+
+                # Run SQL Script
+                $ConfigureDatabases = Get-ChildItem -Path C:\DevOpsServerInstall\ConfigureDatabases.cmd -ErrorAction 0
+                IF ($ConfigureDatabases -eq $null) {                 
+                    Set-Content -Path C:\DevOpsServerInstall\ConfigureDatabases.cmd -Value "$SQLCMD -S $ServerURL -d master -U $Username -P $Password -G -l 30 -i C:\DevOpsServerInstall\masterdb.sql -o C:\DevOpsServerInstall\masterdb.txt"
+                    Add-Content -Path C:\DevOpsServerInstall\ConfigureDatabases.cmd -Value "$SQLCMD -S $ServerURL -d AzureDevOps_Configuration -U $Username -P $Password -G -l 30 -i C:\DevOpsServerInstall\devopsdb.sql -o C:\DevOpsServerInstall\devopsdb1.txt"
+                    Add-Content -Path C:\DevOpsServerInstall\ConfigureDatabases.cmd -Value "$SQLCMD -S $ServerURL -d zureDevOps_DefaultCollection -U $Username -P $Password -G -l 30 -i C:\DevOpsServerInstall\devopsdb.sql -o C:\DevOpsServerInstall\devopsdb2.txt"
+                    C:\DevOpsServerInstall\ConfigureDatabases.cmd
+                }
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            DependsOn = "[xWaitForVolume]WaitForISO"
+        }
+
         Script InstallDevOpsServer2022Bits
         {
             SetScript =
             {
-                $Install = Get-ChildItem -Path C:\DevOpsServerInstall\DeployDevOpsServer.cmd -ErrorAction 0
+                # Script Variables
+                $TFSConfig = '"C:\Program Files\Azure DevOps Server 2022\Tools\TfsConfig.exe"'
+                $ServerURL = "$using:AzureSQLServerFQDN"
+
+                $InstallBits = Get-ChildItem -Path C:\DevOpsServerInstall\InstallDevOpsServerBits.cmd -ErrorAction 0
+                IF ($InstallBits -eq $null) {                 
+                    Set-Content -Path C:\DevOpsServerInstall\InstallDevOpsServerBits.cmd -Value ""
+                    C:\DevOpsServerInstall\InstallDevOpsServerBits.cmd
+                }
+
+                $Install = Get-ChildItem -Path C:\DevOpsServerInstall\InstallDevOpsServer.cmd -ErrorAction 0
                 IF ($Install -eq $null) {                 
-                Set-Content -Path C:\DevOpsServerInstall\DeployDevOpsServer.cmd -Value "I:\AzureDevops2022_RC1.exe /Silent"
-                C:\DevOpsServerInstall\DeployDevOpsServer.cmd
+                    Set-Content -Path C:\DevOpsServerInstall\InstallDevOpsServer.cmd -Value "$TFSConfig unattend /create /type:NewServerAzure /unattendfile:C:\DevOpsServerInstall\AzureBasic.ini /inputs:$ServerURL"
+                    Add-Content -Path C:\DevOpsServerInstall\InstallDevOpsServer.cmd -Value "$TFSConfig unattend /configure /unattendfile:C:\DevOpsServerInstall\basic.ini"
+                    C:\DevOpsServerInstall\InstallDevOpsServer.cmd
                 }
             }
             GetScript =  { @{} }

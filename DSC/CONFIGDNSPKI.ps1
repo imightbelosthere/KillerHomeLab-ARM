@@ -3,7 +3,7 @@
    param
    (
         [String]$ExternaldomainName,
-        [String]$icaIP,
+        [String]$crlIP,
         [String]$ocspIP
     )
 
@@ -15,7 +15,7 @@
         {
             Name      = "crl"
             ZoneName  = "$ExternaldomainName"
-            IPv4Address = "$icaIP"
+            IPv4Address = "$crlIP"
             Ensure    = 'Present'
         }
 

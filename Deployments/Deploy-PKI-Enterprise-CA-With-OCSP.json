@@ -298,22 +298,15 @@
             "metadata": {
                 "description": "DNS Reverse Lookup Zone1 Prefix"
             }
-        },
-        "RootCAName": {
+        },                   
+        "EnterpriseCAName": {
             "type": "string",
-            "defaultValue": "Offline Root CA",
+            "defaultValue": "Enterprise CA",
             "metadata": {
-                "description": "Offline Root CA Name"
-            }
-        },                    
-        "IssuingCAName": {
-            "type": "string",
-            "defaultValue": "Issuing CA",
-            "metadata": {
-                "description": "Issuing CA Name"
+                "description": "Enterprise CA Name"
             }
         },
-        "RootCAHashAlgorithm": {
+        "EnterpriseCAHashAlgorithm": {
             "type": "string",
             "defaultValue": "SHA256",
                 "allowedValues": [
@@ -321,10 +314,10 @@
                 "SHA1"
                 ],
             "metadata": {
-                "description": "Offline Root CA Algorithm"
+                "description": "Enterprise Root CA Algorithm"
             }
         },    
-        "RootCAKeyLength": {
+        "EnterpriseCAKeyLength": {
             "type": "string",
             "defaultValue": "4096",
                 "allowedValues": [
@@ -332,31 +325,9 @@
                 "2048"
                 ],
             "metadata": {
-                "description": "Offline Root CA Key Length"
+                "description": "Enterprise Root CA Key Length"
             }
         },                                
-        "IssuingCAHashAlgorithm": {
-            "type": "string",
-            "defaultValue": "SHA256",
-                "allowedValues": [
-                "SHA256",
-                "SHA1"
-                ],
-            "metadata": {
-                "description": "Issuing CA Algorithm"
-            }
-        },    
-        "IssuingCAKeyLength": {
-        "type": "string",
-            "defaultValue": "4096",
-                "allowedValues": [
-                "4096",
-                "2048"
-                ],
-            "metadata": {
-                "description": "Issuing CA Key Length"
-            }
-        },        
         "DC1OSSku": {
             "type": "string",
             "defaultValue": "2022-Datacenter",
@@ -384,7 +355,7 @@
                 "description": "Domain Controller1 VMSize"
             }
         },
-        "RCAOSSku": {
+        "ECAOSSku": {
             "type": "string",
             "defaultValue": "2022-Datacenter",
             "allowedValues": [
@@ -394,48 +365,21 @@
                 "2012-R2-Datacenter"
             ],
             "metadata": {
-                "description": "Root CA OS Sku"
+                "description": "Enterprise CA OS Sku"
             }
         },
-        "RCAOSVersion": {
+        "ECAOSVersion": {
             "type": "string",
             "defaultValue": "latest",
             "metadata": {
-                "description": "Root CA OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
+                "description": "Enterprise CA OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
             }
         },
-        "RCAVMSize": {
+        "ECAVMSize": {
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
             "metadata": {
-                "description": "Root CA VMSize"
-            }
-        },        
-        "ICAOSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-                "2022-Datacenter",
-                "2019-Datacenter",
-                "2016-Datacenter",
-                "2012-R2-Datacenter"
-            ],
-            "metadata": {
-                "description": "Issuing CA OS Sku"
-            }
-        },
-        "ICAOSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "Issuing CA OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
-            }
-        },
-        "ICAVMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "Issuing CA VMSize"
+                "description": "Enterprise CA VMSize"
             }
         },                
         "OCSPOSSku": {
@@ -497,12 +441,9 @@
         "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",
         "dc1IP": "[concat(parameters('vnet1ID'),'.1.',variables('dc1lastoctet'))]",
         "dc1lastoctet": "101",
-        "rcaname": "[concat(parameters('NamingConvention'),'-rca-01')]",           
-        "rcaIP": "[concat(parameters('vnet1ID'),'.1.',variables('rcalastoctet'))]",   
-        "rcalastoctet": "99",
-        "icaname": "[concat(parameters('NamingConvention'),'-ica-01')]",           
-        "icaIP": "[concat(parameters('vnet1ID'),'.1.',variables('icalastoctet'))]",            
-        "icalastoctet": "102",
+        "ecaname": "[concat(parameters('NamingConvention'),'-eca-01')]",           
+        "ecaIP": "[concat(parameters('vnet1ID'),'.1.',variables('ecalastoctet'))]",            
+        "ecalastoctet": "102",
         "ocspname": "[concat(parameters('NamingConvention'),'-ocsp-01')]",           
         "ocspIP": "[concat(parameters('vnet1ID'),'.1.',variables('ocsplastoctet'))]",                    
         "ocsplastoctet": "103",
@@ -936,7 +877,7 @@
                     "ExternalDomainName": {
                         "value": "[variables('ExternaldomainName')]"
                     },                      
-                    "crlIP": {
+                    "icaIP": {
                         "value": "[variables('icaIP')]"
                     },                                                                                                                          
                     "ocspIP": {
@@ -1814,7 +1755,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ocsp2tier.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ocsp.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {

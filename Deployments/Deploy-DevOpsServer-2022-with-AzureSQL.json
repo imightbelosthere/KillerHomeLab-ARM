@@ -199,7 +199,13 @@
             "metadata": {
                 "description": "Deployment Account Azure Principal Name user@domain.onmicrosoft.com"
             }
-        },  		        
+        },  
+        "AzureUserPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Deployment Account Azure Password"
+            }
+        },        		        
         "AzureUserObjectID": {
             "type": "string",
             "defaultValue": "",
@@ -428,7 +434,8 @@
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
         "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",
         "wk1lastoctet": "201",
-        "AzureSQLServerName": "[concat(parameters('NamingConvention'), '-sql-', variables('Identifier'))]",        
+        "AzureSQLServerName": "[concat(parameters('NamingConvention'), '-sql-', variables('Identifier'))]",
+        "AzureSQLServerFQDN": "[concat(variables('AzureSQLServerName'),'.database.usgovcloudapi.net')]",
         "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",
         "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",
         "DCDataDisk1Name": "NTDS",
@@ -914,13 +921,72 @@
                     }                    
                 }
             }
-        },                
+        },   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Azure-SQL-Database-DevOpsConfig",
+            "dependsOn": [
+                "Deploy-Azure-SQL-Server"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/azuresqldatabase.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SQLServerAPIVersion": {
+                        "value": "[variables('SQLServerAPIVersion')]"
+                    },
+                    "AzureSQLServerName": {
+                        "value": "[variables('AzureSQLServerName')]"
+                    },   
+                    "AzureSQLDatabaseName": {
+                        "value": "AzureDevOps_Configuration"
+                    },                     					                 
+                    "AzureSQLSkuName": {
+                        "value": "S3"
+                    }                  
+                }
+            }
+        },                        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Azure-SQL-Database-DevOpsCollection",
+            "dependsOn": [
+                "Deploy-Azure-SQL-Database-DevOpsConfig"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/azuresqldatabase.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SQLServerAPIVersion": {
+                        "value": "[variables('SQLServerAPIVersion')]"
+                    },
+                    "AzureSQLServerName": {
+                        "value": "[variables('AzureSQLServerName')]"
+                    },   
+                    "AzureSQLDatabaseName": {
+                        "value": "AzureDevOps_DefaultCollection"
+                    },                     					                 
+                    "AzureSQLSkuName": {
+                        "value": "S3"
+                    }                  
+                }
+            }
+        },                                
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-DevOpsServer-2022",
             "dependsOn": [
-                "Deploy-Azure-SQL-Server"
+                "Deploy-Azure-SQL-Database-DevOpsConfig",
+                "Deploy-Azure-SQL-Database-DevOpsCollection"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1111,20 +1177,17 @@
                     "computerName": {
                         "value": "[variables('dev1name')]"
                     },
+                    "AzureSQLServerFQDN": {
+                        "value": "[variables('AzureSQLServerFQDN')]"
+                    },
                     "DevOpsServerSASUrl": {
                         "value": "[parameters('DevOpsServerSASUrl')]"
+                    },                    
+                    "AzureUserPrincipal": {
+                        "value": "[parameters('AzureUserPrincipal')]"
                     },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
+                    "AzureUserPassword": {
+                        "value": "[parameters('AzureUserPassword')]"
                     },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"

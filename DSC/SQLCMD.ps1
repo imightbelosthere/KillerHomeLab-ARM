@@ -31,7 +31,7 @@
 
         xRemoteFile SQLCMD
         {
-            DestinationPath = 'C:\SQLSoftware\\MsSqlCmdLnUtils.msi'
+            DestinationPath = 'C:\SQLSoftware\MsSqlCmdLnUtils.msi'
             Uri             = "https://go.microsoft.com/fwlink/?linkid=2142258"
             UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
             DependsOn =    "[File]SQLSoftware"
@@ -42,7 +42,7 @@
             SetScript =
             {
                 # Install SQL Management Studio
-                msiexec.exe /i C:\SQLSoftware\\MsSqlCmdLnUtils.msi /quiet IACCEPTMSSQLCMDLNUTILSLICENSETERMS=YES
+                msiexec.exe /i C:\SQLSoftware\MsSqlCmdLnUtils.msi /quiet IACCEPTMSSQLCMDLNUTILSLICENSETERMS=YES
             }
             GetScript =  { @{} }
             TestScript = { $false}

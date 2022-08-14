@@ -26,10 +26,10 @@
             "description": "The External FQDN of the AD Domain created "
           }
         }, 
-        "icaIP": {
+        "crlIP": {
             "type": "string",
             "metadata": {
-                "description": "Issuing CA IP"
+                "description": "IP used for CRL"
             }
         },                        
         "ocspIP": {
@@ -71,7 +71,7 @@
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
                         "ExternaldomainName": "[parameters('ExternaldomainName')]",                                                                                      
-                        "icaIP": "[parameters('icaIP')]",                                                        
+                        "crlIP": "[parameters('crlIP')]",                                                        
                         "ocspIP": "[parameters('ocspIP')]"                                                                                                                                                                                                                                                                                                                                                                                                 
                     }
                 },
