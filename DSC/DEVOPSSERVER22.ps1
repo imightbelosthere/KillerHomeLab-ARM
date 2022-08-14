@@ -125,7 +125,7 @@
 
                 $InstallBits = Get-ChildItem -Path C:\DevOpsServerInstall\InstallDevOpsServerBits.cmd -ErrorAction 0
                 IF ($InstallBits -eq $null) {                 
-                    Set-Content -Path C:\DevOpsServerInstall\InstallDevOpsServerBits.cmd -Value ""
+                    Set-Content -Path C:\DevOpsServerInstall\InstallDevOpsServerBits.cmd -Value " I:\AzureDevOpsServer2022_RC1.exe /Silent"
                     C:\DevOpsServerInstall\InstallDevOpsServerBits.cmd
                 }
 
