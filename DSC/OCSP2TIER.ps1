@@ -60,7 +60,7 @@ Configuration OCSP2TIER
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[TimeZone]SetTimeZone'
+            DependsOn = '[AdcsOnlineResponder]OnlineResponder'
         }
 
         Script GetOCSPCertificate
