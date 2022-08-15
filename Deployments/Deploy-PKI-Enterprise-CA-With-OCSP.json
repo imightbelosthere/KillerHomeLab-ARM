@@ -427,7 +427,7 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('2TPK-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('PKIENT-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
@@ -877,8 +877,8 @@
                     "ExternalDomainName": {
                         "value": "[variables('ExternaldomainName')]"
                     },                      
-                    "icaIP": {
-                        "value": "[variables('icaIP')]"
+                    "crlIP": {
+                        "value": "[variables('ecaIP')]"
                     },                                                                                                                          
                     "ocspIP": {
                         "value": "[variables('ocspIP')]"
@@ -971,13 +971,13 @@
                     }                                                                                                                                                                                                                                                                                                          
                 }
             }
-        }, 
+        },    
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-RootCertificateAuthority",
+            "name": "Deploy-EnterprisegCertificateAuthority",
             "dependsOn": [
-                "Create-ActiveDirectory-OUs"
+                "Deploy-PowerShell-ExecutionPolicy"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -996,10 +996,10 @@
                         "value": "[variables('SchedulesAPIVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('rcaname')]"
+                        "value": "[variables('ecaname')]"
                     },
                     "computerIP": {
-                        "value": "[variables('rcaIP')]"
+                        "value": "[variables('ecaIP')]"
                     },
                     "Publisher": {
                         "value": "MicrosoftWindowsServer"
@@ -1008,143 +1008,16 @@
                         "value": "WindowsServer"
                     },
                     "OSSku": {
-                        "value": "[parameters('RCAOSSku')]"
+                        "value": "[parameters('ECAOSSku')]"
                     },
                     "OSVersion": {
-                        "value": "[parameters('RCAOSVersion')]"
+                        "value": "[parameters('ECAOSVersion')]"
                     },
                     "LicenseType": {
                         "value": "[parameters('WindowsServerLicenseType')]"
                     },
                     "VMSize": {
-                        "value": "[parameters('RCAVMSize')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnet1Name": {
-                        "value": "[variables('vnet1subnet1Name')]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
-                    "AutoShutdownEnabled": {
-                        "value": "[parameters('AutoShutdownEnabled')]"
-                    },
-                    "AutoShutdownTime": {
-                        "value": "[parameters('AutoShutdownTime')]"
-                    },
-                    "AutoShutdownEmail": {
-                        "value": "[parameters('AutoShutdownEmail')]"
-                    }
-                }
-            }
-        },         
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-RootCertificateAuthority",
-            "dependsOn": [
-                "Deploy-RootCertificateAuthority"
-            ],      
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/rootca.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "ExtensionsTypeHandlerVersion": {
-                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },                     
-                    "computerName": {
-                        "value": "[variables('rcaname')]"
-                    },            
-                    "RootCAName": {
-                        "value": "[parameters('RootCAName')]"
-                    },
-                    "RootCAHashAlgorithm": {
-                        "value": "[parameters('RootCAHashAlgorithm')]"
-                    },  
-                    "RootCAKeyLength": {
-                        "value": "[parameters('RootCAKeyLength')]"
-                    },                            
-                    "domainName": {
-                        "value": "[variables('ExternaldomainName')]"
-                    }, 
-                    "BaseDN": {
-                        "value": "[variables('BaseDN')]"
-                    },              
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },                                                                                                            
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },                                                                                                            
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
-                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-                }
-            }
-        },   
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-IssuingCertificateAuthority",
-            "dependsOn": [
-                "Configure-RootCertificateAuthority"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "NetworkInterfacesAPIVersion": {
-                        "value": "[variables('NetworkInterfacesAPIVersion')]"
-                    },
-                    "VirtualMachinesAPIVersion": {
-                        "value": "[variables('VirtualMachinesAPIVersion')]"
-                    },
-                    "SchedulesAPIVersion": {
-                        "value": "[variables('SchedulesAPIVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('icaname')]"
-                    },
-                    "computerIP": {
-                        "value": "[variables('icaIP')]"
-                    },
-                    "Publisher": {
-                        "value": "MicrosoftWindowsServer"
-                    },
-                    "Offer": {
-                        "value": "WindowsServer"
-                    },
-                    "OSSku": {
-                        "value": "[parameters('ICAOSSku')]"
-                    },
-                    "OSVersion": {
-                        "value": "[parameters('ICAOSVersion')]"
-                    },
-                    "LicenseType": {
-                        "value": "[parameters('WindowsServerLicenseType')]"
-                    },
-                    "VMSize": {
-                        "value": "[parameters('ICAVMSize')]"
+                        "value": "[parameters('ECAVMSize')]"
                     },
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
@@ -1174,12 +1047,12 @@
             }
         },
 		{
-			"condition": "[equals(parameters('ICAOSSku'),'2022-Datacenter')]",
+			"condition": "[equals(parameters('ECAOSSku'),'2022-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
-			"name": "DomainJoinIssuingCA-22",
+			"name": "DomainJoinEnterpriseCA-22",
 			"dependsOn": [
-				"Deploy-IssuingCertificateAuthority"
+				"Deploy-EnterpriseCertificateAuthority"
 			],      
 			"properties": {
 				"mode": "Incremental",
@@ -1195,7 +1068,7 @@
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },                     
 					"computerName": {
-						"value": "[variables('icaname')]"
+						"value": "[variables('ecaname')]"
 					},
 					"domainName": {
 						"value": "[variables('InternaldomainName')]"
@@ -1216,12 +1089,12 @@
 			}
 		},  
         {
-            "condition": "[equals(parameters('ICAOSSku'),'2019-Datacenter')]",
+            "condition": "[equals(parameters('ECAOSSku'),'2019-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "DomainJoinIssuingCA-19",
+            "name": "DomainJoinEnterpriseCA-19",
             "dependsOn": [
-                "Deploy-IssuingCertificateAuthority"
+				"Deploy-EnterpriseCertificateAuthority"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1237,7 +1110,7 @@
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('icaname')]"
+                        "value": "[variables('ecaname')]"
                     },
                     "domainName": {
                         "value": "[variables('InternaldomainName')]"
@@ -1258,12 +1131,12 @@
             }
         },	
         {
-            "condition": "[equals(parameters('ICAOSSku'),'2016-Datacenter')]",
+            "condition": "[equals(parameters('ECAOSSku'),'2016-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "DomainJoinIssuingCA-16",
+            "name": "DomainJoinEnterpriseCA-16",
             "dependsOn": [
-                "Deploy-IssuingCertificateAuthority"
+				"Deploy-EnterpriseCertificateAuthority"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1279,7 +1152,7 @@
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('icaname')]"
+                        "value": "[variables('ecaname')]"
                     },
                     "domainName": {
                         "value": "[variables('InternaldomainName')]"
@@ -1300,12 +1173,12 @@
             }
         },
         {
-            "condition": "[equals(parameters('ICAOSSku'),'2012-R2-Datacenter')]",
+            "condition": "[equals(parameters('ECAOSSku'),'2012-R2-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "DomainJoinIssuingCA-12R2",
+            "name": "DomainJoinEnterpriseCA-12R2",
             "dependsOn": [
-                "Deploy-IssuingCertificateAuthority"
+				"Deploy-EnterpriseCertificateAuthority"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1321,7 +1194,7 @@
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('icaname')]"
+                        "value": "[variables('ecaname')]"
                     },
                     "domainName": {
                         "value": "[variables('InternaldomainName')]"
@@ -1344,17 +1217,17 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-IssuingCertificateAuthority",
+            "name": "Configure-EnterpriseCertificateAuthority",
             "dependsOn": [
-                "DomainJoinIssuingCA-22",
-                "DomainJoinIssuingCA-19",
-                "DomainJoinIssuingCA-16",
-                "DomainJoinIssuingCA-12R2"        
+                "DomainJoinEnterpriseCA-22",
+                "DomainJoinEnterpriseCA-19",
+                "DomainJoinEnterpriseCA-16",
+                "DomainJoinEnterpriseCA-12R2"      
             ],      
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/issueca.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/enterpriseca.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1365,29 +1238,26 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },                                         
                     "computerName": {
-                        "value": "[variables('icaname')]"
-                    },                
-                    "NamingConvention": {
-                        "value": "[parameters('NamingConvention')]"
-                    },              
+                        "value": "[variables('ecaname')]"
+                    },                          
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },              
-                    "IssuingCAName": {
-                        "value": "[parameters('IssuingCAName')]"
+                    "domainName": {
+                        "value": "[variables('ExternaldomainName')]"
                     },              
-                    "RootCAName": {
-                        "value": "[parameters('RootCAName')]"
+                    "EnterpriseCAName": {
+                        "value": "[parameters('EnterpriseCAName')]"
                     },
-                    "RootCAIP": {
-                        "value": "[variables('rcaIP')]"
-                    },
-                    "IssuingCAHashAlgorithm": {
-                        "value": "[parameters('IssuingCAHashAlgorithm')]"
+                    "EnterpriseCAHashAlgorithm": {
+                        "value": "[parameters('EnterpriseCAHashAlgorithm')]"
                     },  
-                    "IssuingCAKeyLength": {
-                        "value": "[parameters('IssuingCAKeyLength')]"
-                    },                
+                    "EnterpriseCAKeyLength": {
+                        "value": "[parameters('EnterpriseCAKeyLength')]"
+                    },     
+                    "CATemplateScriptUrl": {
+                        "value": "[variables('CATemplateScriptUrl')]"
+                    },            
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },                                                                                                            
@@ -1406,106 +1276,9 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Grant-Issuing-Certificate-Authority-Request",
-            "dependsOn": [
-                "Configure-IssuingCertificateAuthority"
-            ],      
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/grantca.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "ExtensionsTypeHandlerVersion": {
-                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },                                         
-                    "computerName": {
-                        "value": "[variables('rcaname')]"
-                    },
-                    "NamingConvention": {
-                        "value": "[parameters('NamingConvention')]"
-                    },              
-                    "IssuingCAName": {
-                        "value": "[parameters('IssuingCAName')]"
-                    },              
-                    "RootCAName": {
-                        "value": "[parameters('RootCAName')]"
-                    },
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },                                                                                                            
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
-                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Finalize-Issuing-CertificateAuthority",
-            "dependsOn": [
-                "Grant-Issuing-Certificate-Authority-Request"
-            ],      
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/finalizeca.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "ExtensionsTypeHandlerVersion": {
-                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },                                                             
-                    "computerName": {
-                        "value": "[variables('icaname')]"
-                    },
-                    "RootCAIP": {
-                        "value": "[variables('rcaIP')]"
-                    },              
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
-                    },              
-                    "IssuingCAName": {
-                        "value": "[parameters('IssuingCAName')]"
-                    },              
-                    "RootCAName": {
-                        "value": "[parameters('RootCAName')]"
-                    },
-                    "domainName": {
-                        "value": "[variables('ExternaldomainName')]"
-                    },   
-                    "CATemplateScriptUrl": {
-                        "value": "[variables('CATemplateScriptUrl')]"
-                    },                 
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },                                                                                                            
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },              
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },                                                                                                            
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
-                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-OCSPServer",
             "dependsOn": [
-                "Grant-Issuing-Certificate-Authority-Request"
+                "Configure-EnterpriseCertificateAuthority"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1575,7 +1348,7 @@
             }
         },
 		{
-			"condition": "[equals(parameters('ICAOSSku'),'2022-Datacenter')]",
+			"condition": "[equals(parameters('OCSPOSSku'),'2022-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinOCSP-22",
@@ -1617,7 +1390,7 @@
 			}
 		}, 
 		{
-			"condition": "[equals(parameters('ICAOSSku'),'2019-Datacenter')]",
+			"condition": "[equals(parameters('OCSPOSSku'),'2019-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinOCSP-19",
@@ -1659,7 +1432,7 @@
 			}
 		},   
 		{
-			"condition": "[equals(parameters('ICAOSSku'),'2016-Datacenter')]",
+			"condition": "[equals(parameters('OCSPOSSku'),'2016-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinOCSP-16",
@@ -1701,7 +1474,7 @@
 			}
 		},  
 		{
-			"condition": "[equals(parameters('ICAOSSku'),'2012-R2-Datacenter')]",
+			"condition": "[equals(parameters('OCSPOSSku'),'2012-R2-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinOCSP-12R2",
@@ -1755,7 +1528,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ocsp.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ocspenterprise.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1777,12 +1550,9 @@
                     "Externaldomainname": {
                         "value": "[variables('ExternaldomainName')]"
                     },   
-                    "IssuingCAName": {
-                        "value": "[parameters('IssuingCAName')]"
+                    "EnterpriseCAName": {
+                        "value": "[parameters('EnterpriseCAName')]"
                     },              
-                    "RootCAName": {
-                        "value": "[parameters('RootCAName')]"
-                    },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },                                                                                                            

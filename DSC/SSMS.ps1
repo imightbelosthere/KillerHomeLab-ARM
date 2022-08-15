@@ -48,7 +48,7 @@
             SetScript =
             {
                 # Install SQL Management Studio
-                C:\SQLSoftware\SSMS-Setup-ENU.exe /install /quiet /norestart
+                Start-Process "C:\SQLSoftware\SSMS-Setup-ENU.exe" -ArgumentList "/install /quiet /norestart" -Wait
 
                 $EnableSQL = Get-NetFirewallRule "SQL-In-TCP" -ErrorAction 0
                 IF ($EnableSQL -eq $null) {New-NetFirewallRule -DisplayName "SQL-In-TCP" -Direction Inbound -LocalPort 1433 -Protocol TCP -Action Allow}

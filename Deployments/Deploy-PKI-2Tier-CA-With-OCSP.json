@@ -483,7 +483,7 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('2TPK-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('PKI2T-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
@@ -1634,7 +1634,7 @@
             }
         },
 		{
-			"condition": "[equals(parameters('ICAOSSku'),'2022-Datacenter')]",
+			"condition": "[equals(parameters('OCSPOSSku'),'2022-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinOCSP-22",
@@ -1676,7 +1676,7 @@
 			}
 		}, 
 		{
-			"condition": "[equals(parameters('ICAOSSku'),'2019-Datacenter')]",
+			"condition": "[equals(parameters('OCSPOSSku'),'2019-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinOCSP-19",
@@ -1718,7 +1718,7 @@
 			}
 		},   
 		{
-			"condition": "[equals(parameters('ICAOSSku'),'2016-Datacenter')]",
+			"condition": "[equals(parameters('OCSPOSSku'),'2016-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinOCSP-16",
@@ -1760,7 +1760,7 @@
 			}
 		},  
 		{
-			"condition": "[equals(parameters('ICAOSSku'),'2012-R2-Datacenter')]",
+			"condition": "[equals(parameters('OCSPOSSku'),'2012-R2-Datacenter')]",
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinOCSP-12R2",

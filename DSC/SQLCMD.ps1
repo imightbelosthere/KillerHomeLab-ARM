@@ -41,8 +41,8 @@
         {
             SetScript =
             {
-                # Install SQL Management Studio
-                msiexec.exe /i C:\SQLSoftware\MsSqlCmdLnUtils.msi /quiet IACCEPTMSSQLCMDLNUTILSLICENSETERMS=YES
+                # Install SQL Command Line
+                Start-Process "C:\SQLSoftware\MsSqlCmdLnUtils.msi" -ArgumentList "/quiet IACCEPTMSSQLCMDLNUTILSLICENSETERMS=YES" -Wait
             }
             GetScript =  { @{} }
             TestScript = { $false}
