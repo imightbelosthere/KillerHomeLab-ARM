@@ -106,7 +106,7 @@
                 IF ($ConfigureDatabases -eq $null) {                 
                     Set-Content -Path C:\DevOpsServerInstall\ConfigureDatabases.cmd -Value "$SQLCMD -S $ServerURL -d master -U $Username -P $Password -G -l 30 -i C:\DevOpsServerInstall\masterdb.sql -o C:\DevOpsServerInstall\masterdb.txt"
                     Add-Content -Path C:\DevOpsServerInstall\ConfigureDatabases.cmd -Value "$SQLCMD -S $ServerURL -d AzureDevOps_Configuration -U $Username -P $Password -G -l 30 -i C:\DevOpsServerInstall\devopsdb.sql -o C:\DevOpsServerInstall\devopsdb1.txt"
-                    Add-Content -Path C:\DevOpsServerInstall\ConfigureDatabases.cmd -Value "$SQLCMD -S $ServerURL -d zureDevOps_DefaultCollection -U $Username -P $Password -G -l 30 -i C:\DevOpsServerInstall\devopsdb.sql -o C:\DevOpsServerInstall\devopsdb2.txt"
+                    Add-Content -Path C:\DevOpsServerInstall\ConfigureDatabases.cmd -Value "$SQLCMD -S $ServerURL -d AzureDevOps_DefaultCollection -U $Username -P $Password -G -l 30 -i C:\DevOpsServerInstall\devopsdb.sql -o C:\DevOpsServerInstall\devopsdb2.txt"
                     C:\DevOpsServerInstall\ConfigureDatabases.cmd
                 }
             }
@@ -131,8 +131,8 @@
 
                 $Install = Get-ChildItem -Path C:\DevOpsServerInstall\InstallDevOpsServer.cmd -ErrorAction 0
                 IF ($Install -eq $null) {                 
-                    Set-Content -Path C:\DevOpsServerInstall\InstallDevOpsServer.cmd -Value "$TFSConfig unattend /create /type:NewServerAzure /unattendfile:C:\DevOpsServerInstall\AzureBasic.ini /inputs:$ServerURL"
-                    Add-Content -Path C:\DevOpsServerInstall\InstallDevOpsServer.cmd -Value "$TFSConfig unattend /configure /unattendfile:C:\DevOpsServerInstall\basic.ini"
+                    Set-Content -Path C:\DevOpsServerInstall\InstallDevOpsServer.cmd -Value "$TFSConfig unattend /create /type:NewServerAzure /unattendfile:C:\DevOpsServerInstall\AzureBasic.ini /inputs:SQLInstance=$ServerURL"
+                    Add-Content -Path C:\DevOpsServerInstall\InstallDevOpsServer.cmd -Value "$TFSConfig unattend /configure /unattendfile:C:\DevOpsServerInstall\AzureBasic.ini"
                     C:\DevOpsServerInstall\InstallDevOpsServer.cmd
                 }
             }
