@@ -1,4 +1,4 @@
-# zure DevOps Server 2022 with Azure SQL
+# Azure DevOps Server 2022 with Azure SQL
 <img src="./x_Images/DevOpsServerwithAzureSQL.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
