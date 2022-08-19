@@ -1,4 +1,5 @@
-<center><img src="./x_Images/ActiveDirectorySingleSite.svg" height="600"/></center>
+# Active Directory Single Site
+<p align="center"><img src="./x_Images/ActiveDirectorySingleSite.svg" height="600"/></p>
 
 This Deployment deploys the following items:
 
