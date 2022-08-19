@@ -11,6 +11,8 @@ This Deployment deploys the following items:
 - 1 - Issuing Certificate Authority Server
 - 1 - Online Certificate Status Protocol Server
 - 1 - Domain Joined Windows Workstation (Windows 11/10/7)
+- 1 - Network Security Group
+- 1 - Azure Public DNS Zone
 - 1 - Azure KeyVault with Secret contianing Deployment Password
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
@@ -32,6 +34,8 @@ If you can't remember the Password used during deployment it is also written to 
 
 If you can't remember the Username review the Deployment Input tab within your Resources Groups Deployment
 <img src="./x_Images/DeploymentUsername.png" width="300"/>
+
+In order to provide external Revocation
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
