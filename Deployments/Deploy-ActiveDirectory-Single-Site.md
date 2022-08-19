@@ -1,5 +1,6 @@
-This Templates deploys a Single Forest/Domain:
+This Deployment deploys the following items:
 
+- 1 - Bastion Host
 - 1 - Active Directory Forest/Domain
 - 1 - Domain Controller
 - 1 - Domain Joined Windows Workstation (Windows 11/10/7)
@@ -7,28 +8,15 @@ This Templates deploys a Single Forest/Domain:
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
-AD OU Structure:
-- [domain.com]
-- -- Accounts
-- --- End User
-- ---- Office 365
-- ---- Non-Office 365
-- --- Admin
-- --- Service
-- -- Groups
-- --- End User
-- --- Admin
-- -- Servers
-- --- Servers2012R2
-- --- Serverrs2016
-- --- Servers2019
-- --- Servers2022
-- -- MaintenanceServers
-- -- MaintenanceWorkstations
-- -- Workstations
-- --- Windows11
-- --- Windows10
-- --- Windows7
+- Configure 1st Domain Controller
+- Configure Reverse DNS Zones and Point Records
+- Configure Organizational Unit Structure
+- Domain Join Workstation
+
+All Virtual Machines can be accesses using the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed using the username and password supplied during setup.
+
+# To Prevent Lost Passwords the deployment writes your password to an Encrypted Secret within the deployed KeyVault.  For last Usernames simple review the Deployment Input tab within your Resources Groups Deployment
+
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
