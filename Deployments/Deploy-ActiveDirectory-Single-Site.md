@@ -1,5 +1,5 @@
 # Active Directory Single Site
-<img src="./x_Images/ActiveDirectorySingleSite.svg" height="600" width="1000"/>
+<img src="./x_Images/ActiveDirectorySingleSite.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
