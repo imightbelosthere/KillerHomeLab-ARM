@@ -1,5 +1,6 @@
 This Deployment deploys the following items:
 
+- 1 - Virtual Network
 - 1 - Bastion Host
 - 1 - Active Directory Forest/Domain
 - 1 - Domain Controller
@@ -13,10 +14,10 @@ The deployment leverages Desired State Configuration scripts to further customiz
 - Configure Organizational Unit Structure
 - Domain Join Workstation
 
-All Virtual Machines can be accesses using the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed using the username and password supplied during setup.
+All Virtual Machines can be accesses using the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed using the Username and Password provided during depoyment.  The password can be manually entered or retreived from the KeyVault that is creatd during deployment.
 
-To Prevent Lost Passwords the deployment writes your password to an Encrypted Secret within the deployed KeyVault.  
-<img src="./x_Images/DeploymentPassword.png" width="300"/>
+If you can't remember the password used during deployment it is also written to an Encrypted Secret within the deployed KeyVault and can be retrieved as shown below
+<img src="./x_Images/DeploymentPassword.png" width="600"/>
 
 For last Usernames simple review the Deployment Input tab within your Resources Groups Deployment
 <img src="./x_Images/DeploymentUsername.png" width="300"/>
