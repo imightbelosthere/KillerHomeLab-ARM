@@ -1,36 +1,37 @@
-This Templates deploys a Single Forest/Domain:
+# PKI 2-Tier Certificate Authority with OCSP
+<img src="./x_Images/2TierPKI.svg" height="600" width="800"/>
 
+This Deployment deploys the following items:
+
+- 1 - Virtual Network
+- 1 - Bastion Host
 - 1 - Active Directory Forest/Domain
 - 1 - Domain Controller
 - 1 - Offline Root Certificate Authority Server
 - 1 - Issuing Certificate Authority Server
 - 1 - Online Certificate Status Protocol Server
+- 1 - Domain Joined Windows Workstation (Windows 11/10/7)
 - 1 - Azure KeyVault with Secret contianing Deployment Password
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
-AD OU Structure:
-- [domain.com]
-- -- Accounts
-- --- End User
-- ---- Office 365
-- ---- Non-Office 365
-- --- Admin
-- --- Service
-- -- Groups
-- --- End User
-- --- Admin
-- -- Servers
-- --- Servers2012R2
-- --- Serverrs2016
-- --- Servers2019
-- --- Servers2022
-- -- MaintenanceServers
-- -- MaintenanceWorkstations
-- -- Workstations
-- --- Windows11
-- --- Windows10
-- --- Windows7
+- Configure 1st Domain Controller
+- Configure Organizational Unit Structure
+- Configure Reverse DNS Zones and Point Records
+- Configure Internal DNS PKI Records
+- Configure Root Certificate Authority
+- Configure Issuing Certificate Authority
+- Configure Online Certificate Status Protocol
+- Domain Join Workstation
+
+All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
+
+If you can't remember the Password used during deployment it is also written to an Encrypted Secret within the deployed KeyVault and can be retrieved as shown below:
+
+<img src="./x_Images/DeploymentPassword.png" width="600"/>
+
+If you can't remember the Username review the Deployment Input tab within your Resources Groups Deployment
+<img src="./x_Images/DeploymentUsername.png" width="300"/>
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
