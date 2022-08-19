@@ -3,69 +3,43 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "WebAppAPIVersion": {
-            "type": "string"
-        },        
+            "type": "string",
+            "metadata": {
+                "description": "Web App API Version"
+            }
+        },
         "WebAppName": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Web App Name"
+            }
         },
         "ServerFarmName": {
             "type": "string",
             "metadata": {
                 "description": "Service Plan Name"
-            }            
-        },
-        "alwaysOn": {
-            "type": "bool",
-            "metadata": {
-                "description": "True, False"
-            }               
-        },
-        "currentStack": {
-            "type": "string",
-            "metadata": {
-                "description": "dotnet"
-            }               
-        },
-        "phpVersion": {
-            "type": "string",
-            "metadata": {
-                "description": "PHP Version"
-            }                           
-        },
-        "netFrameworkVersion": {
-            "type": "string",
-            "metadata": {
-                "description": "DOT Net Version"
-            }                                       
+            }
         }
     },
-    "variables": {},
     "resources": [
         {
             "apiVersion": "[parameters('WebAppAPIVersion')]",
             "name": "[parameters('WebAppName')]",
             "type": "Microsoft.Web/sites",
             "location": "[resourceGroup().location]",
-            "tags": {},
-            "dependsOn": [],
             "properties": {
                 "name": "[parameters('WebAppName')]",
-                "siteConfig": {
-                    "appSettings": [],
-                    "metadata": [
-                        {
-                            "name": "CURRENT_STACK",
-                            "value": "[parameters('currentStack')]"
-                        }
-                    ],
-                    "phpVersion": "[parameters('phpVersion')]",
-                    "netFrameworkVersion": "[parameters('netFrameworkVersion')]",
-                    "alwaysOn": "[parameters('alwaysOn')]"
-                },
-                "serverFarmId": "[concat('/subscriptions/', subscription().id,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', parameters('ServerFarmName'))]",
+                "enabled": true,
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('ServerFarmName'))]",
                 "clientAffinityEnabled": true,
-                "virtualNetworkSubnetId": null
+                "httpsOnly": true
             }
         }
-    ]
+    ],
+    "outputs": {
+        "customDomainVerificationId": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Web/sites', parameters('WebAppName'))).customDomainVerificationId]"
+        }
+    }
 }

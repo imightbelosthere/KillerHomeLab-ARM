@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WebAppHostNameBindingAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "WebApp Host Name Binding API Version"
+            }
+        },
+        "WebAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Name"
+            }			
+        },
+        "CustomDomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Custom Domain Name"
+            }			
+        },
+        "CertificateThumbprint": {
+            "type": "string",
+            "metadata": {
+                "description": "Certificate Thumbprint"
+            }
+        }             
+    },
+    "variables": {
+        "SiteFQDN": "[concat(parameters('webAppName'), '.', parameters('CustomDomainName'))]"
+    },      
+    "resources": [
+        {
+            "name": "[concat(parameters('WebAppName'),'/',variables('SiteFQDN'))]",
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "[parameters('WebAppHostNameBindingAPIVersion')]",            
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "domainId": null,
+                "hostNameType": "Verified",
+                "siteName": "[parameters('WebAppName')]",
+                "sslState": "SniEnabled",
+                "thumbprint": "[parameters('CertificateThumbprint')]"
+            }
+        }        
+    ]
+}

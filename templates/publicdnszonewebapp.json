@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PublicDNSZoneAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Public DNS Zone API Version"
+            }
+        },        
+        "ZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS Zone Name"
+              }
+        },
+        "WebAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Name"
+            }			
+        },      
+        "ASUIDRecordTTL": {
+            "type": "string",
+            "metadata": {
+                "description": "ASUID TXT Record Time-to-Live"
+            }			
+        },                
+        "customDomainVerificationId": {
+            "type": "string",
+            "metadata": {
+                "description": "Custom Domain Verification Id"
+              }
+        }
+    },
+    "variables": {
+        "ASUIDRecord": "[concat('asuid.', parameters('webAppName'))]"
+    },    
+    "resources": [
+        {
+            "type": "Microsoft.Network/dnszones/TXT",
+            "name": "[concat(parameters('ZoneName'), '/', variables('ASUIDRecord'))]",
+            "apiVersion": "[parameters('PublicDNSZoneAPIVersion')]",
+            "location": "global",
+            "properties": {
+                "TTL": "[parameters('ASUIDRecordTTL')]",
+                "TXTRecords": [
+                    {
+                    "value": "[parameters('customDomainVerificationId')]"
+                    }
+                ]
+            }
+        }
+    ]
+}
