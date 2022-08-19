@@ -16,10 +16,10 @@ The deployment leverages Desired State Configuration scripts to further customiz
 All Virtual Machines can be accesses using the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed using the username and password supplied during setup.
 
 To Prevent Lost Passwords the deployment writes your password to an Encrypted Secret within the deployed KeyVault.  
-<img src="./x_Images/DeploymentUsername.png" width="300"/>
+<img src="./x_Images/DeploymentPassword.png" width="300"/>
 
 For last Usernames simple review the Deployment Input tab within your Resources Groups Deployment
-
+<img src="./x_Images/DeploymentUsername.png" width="300"/>
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
