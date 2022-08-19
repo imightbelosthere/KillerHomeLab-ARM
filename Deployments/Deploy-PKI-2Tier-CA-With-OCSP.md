@@ -35,7 +35,8 @@ If you can't remember the Password used during deployment it is also written to 
 If you can't remember the Username review the Deployment Input tab within your Resources Groups Deployment
 <img src="./x_Images/DeploymentUsername.png" width="300"/>
 
-In order to provide external Revocation
+This Deployment creates an Azure Public DNS Zone that is capable of providing resolution to external clients.  To use this capability the Name Servers defined within the Azure Public DNS Zone must be notated and used as the External Name Servers of your Name Registrar.  In order to locate these Name Servers naviate to the Azure Public DNS Zone as shown below:
+<img src="./x_Images/NameServers.png" width="300"/>
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
