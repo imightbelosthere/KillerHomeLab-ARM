@@ -1,4 +1,4 @@
-<img src="./x_Images/ActiveDirectorySingleSite.svg"/>
+<img src="./x_Images/ActiveDirectorySingleSite.svg" height="600"/>
 
 This Deployment deploys the following items:
 
