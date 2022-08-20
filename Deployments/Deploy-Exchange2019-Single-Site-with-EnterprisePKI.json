@@ -168,7 +168,7 @@
         },
         "AutoShutdownEmail": {
             "type": "string",
-            "defaultValue": "shutdowns@mcitpnetworks.com",
+            "defaultValue": "",
             "metadata": {
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
             }
@@ -200,7 +200,7 @@
         },        
         "adminUsername": {
             "type": "string",
-            "defaultValue": "dom-admin",
+            "defaultValue": "",
             "metadata": {
                 "description": "The name of the Administrator of the new VM and Domain"
             }
@@ -1885,7 +1885,130 @@
 					}
 				}
 			}
-		},          
+		},
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-ExchangeServer-01",
+            "dependsOn": [
+                "DomainJoinFileServer-01-22",
+                "DomainJoinFileServer-01-19",
+                "DomainJoinFileServer-01-16"                                
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-3disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('ex1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('FSOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('FSOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "DataDisk1Name": {
+                        "value": "Exchange"
+                    },            
+                    "DataDisk2Name": {
+                        "value": "Software"
+                    },                     
+                    "VMSize": {
+                        "value": "[parameters('EX1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+		{
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinExchangeServer-01-19",
+			"dependsOn": [
+				"Deploy-ExchangeServer-01"
+			],      
+			"properties": {
+				"mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+				"parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                    
+					"computerName": {
+						"value": "[variables('ex1name')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV19OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		},                           
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
