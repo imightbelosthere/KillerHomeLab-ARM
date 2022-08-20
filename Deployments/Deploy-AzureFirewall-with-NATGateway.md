@@ -1,4 +1,7 @@
-This Templates deploys a Azure Firewall with NAT Gateway:
+# Azure Firewall with NAT Gateway
+<img src="./x_Images/AzureFirewallwithNATGateway.svg" height="600" width="800"/>
+
+This Deployment deploys the following items:
 
 - 1 - Virtual Network
 - 1 - Bastion Host
@@ -8,9 +11,14 @@ This Templates deploys a Azure Firewall with NAT Gateway:
 - 1 - Windows Workstation (Windows 11/10/7)
 - 1 - Azure KeyVault with Secret contianing Deployment Password
 
-The deployment leverages Desired State Configuration scripts to further customize the following:
+All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 
-- TimeZone
+If you can't remember the Password used during deployment it is also written to an Encrypted Secret within the deployed KeyVault and can be retrieved as shown below:
+
+<img src="./x_Images/DeploymentPassword.png" width="600"/>
+
+If you can't remember the Username review the Deployment Input tab within your Resources Groups Deployment
+<img src="./x_Images/DeploymentUsername.png" width="300"/>
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
