@@ -450,23 +450,23 @@
             }
         }, 
         "FSOSSku": {
-        "type": "string",
-        "defaultValue": "2022-Datacenter",
-        "allowedValues": [
-            "2022-Datacenter",
-            "2019-Datacenter",
-            "2016-Datacenter"
-        ],      
-        "metadata": {
-            "description": "File Serever OS Sku"
-        }
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+                "2022-Datacenter",
+                "2019-Datacenter",
+                "2016-Datacenter"
+            ],      
+            "metadata": {
+                "description": "File Serever OS Sku"
+            }
         },                      
         "FSOSVersion": {
-        "type": "string",
-        "defaultValue": "latest",
-        "metadata": {
-            "description": "FS OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
-        }
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "FS OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+            }
         },        
         "FS1VMSize": {
             "type": "string",
@@ -574,7 +574,6 @@
         "wk1lastoctet": "201",        
         "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",
         "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",
-        "DCDataDisk1Name": "NTDS",
         "CATemplateScriptUrl": "https://elliottf.blob.core.windows.net/github/Scripts/Create_CA_Templates.ps1",              
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]", 
@@ -583,7 +582,6 @@
         "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
         "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
         "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]", 
-        "SRV12R2OUPath": "[concat('OU=Servers2012R2,OU=Servers,',variables('BaseDN'))]",
         "WIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('BaseDN'))]",
         "WIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('BaseDN'))]",
         "WIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('BaseDN'))]",    
@@ -591,9 +589,6 @@
         "DAG19Name": "[concat(parameters('NamingConvention'),'-19-dag01')]",
         "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]",
         "FromEmail": "[concat(parameters('adminUserName'),'@',variables('ExternaldomainName'))]",           
-        "PWSEXPolGPOName":  "PowerShell-ExecutionPolicy",
-        "PWSEXPolGPOGUID": "EC04DF04-A647-4A3E-9247-51B4CB137F5F",
-        "PWSEXPolGPOSASUrl": "https://elliottf.blob.core.windows.net/github/GPOs/PowerShell-ExecutionPolicy.zip",          
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
@@ -766,7 +761,7 @@
                         "value": "[parameters('WindowsServerLicenseType')]"
                     },
                     "DataDisk1Name": {
-                        "value": "[variables('DCDataDisk1Name')]"
+                        "value": "NTDS"
                     },
                     "VMSize": {
                         "value": "[parameters('DC1VMSize')]"
@@ -1066,7 +1061,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-ActiveDirectory-OUs",
             "dependsOn": [
-                "Configure-PKI-DNS-Records"
+                "Configure-Exchange-DNS-Records"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1130,19 +1125,18 @@
                     }
                 }
             }
-        },        
+        },
         {
-            "condition": "[equals(parameters('DC1OSSku'),'2012-R2-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-PowerShell-ExecutionPolicy",
+            "name": "Restart-DomainController-01_01",
             "dependsOn": [
-                "Create-ActiveDirectory-OUs"
-            ],            
+                "Create-ActiveDirectory-Site-01"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/gpo.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1151,37 +1145,25 @@
                     },
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },                    
+                    },
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "GPOName": {
-                        "value": "[variables('PWSEXPolGPOName')]"
-                    },     
-                    "GPOSASUrl": {
-                        "value": "[variables('PWSEXPolGPOSASUrl')]"
-                    },                                                                                                                          
-                    "GPOGUID": {
-                        "value": "[variables('PWSEXPolGPOGUID')]"
-                    },                                                                                                                                        
-                    "BaseDN": {
-                        "value": "[variables('BaseDN')]"
-                    },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
-                    },                                                                                                                                                                                                                                                                                                           
+                    },
                     "_artifactsLocationSasToken": {
                         "value": "[parameters('_artifactsLocationSasToken')]"
-                    }                                                                                                                                                                                                                                                                                                          
+                    }
                 }
             }
-        },    
+        },               
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-EnterprisegCertificateAuthority",
             "dependsOn": [
-                "Deploy-PowerShell-ExecutionPolicy"
+                "Create-ActiveDirectory-Site-01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2008,13 +1990,42 @@
 					}
 				}
 			}
-		},                           
+		},
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Prepare-ExchangeServer-01-Prereqs",
+            "dependsOn": [
+                "DomainJoinExchangeServer-01-19"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/prepareexchange19.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    }, 
+                    "ExchangeSASUrl": {
+                        "value": "[parameters('Exchange2019ISOUrl')]"
+                    },                                         
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                }
+            }
+        },                                   
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-NetworksecurityGroup-01",
             "dependsOn": [
-                "Configure-OCSP"      
+                "Prepare-ExchangeServer-01-Prereqs"      
             ],      
             "properties": {
                 "mode": "Incremental",
