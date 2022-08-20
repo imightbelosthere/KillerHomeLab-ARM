@@ -2046,14 +2046,14 @@
 			<rect x="0" y="552" width="99" height="27" class="st46"/>
 			<text x="21.98" y="560.7" class="st17" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Subnet1<v:newlineChar/><tspan
 						x="16.08" dy="1.2em" class="st18">x.x.1.0/24</tspan></text>		</g>
-		<g id="shape76-288" v:mID="76" v:groupContext="shape" transform="translate(599.1,-524.7)">
+		<g id="shape76-288" v:mID="76" v:groupContext="shape" transform="translate(619.35,-524.7)">
 			<title>Sheet.76</title>
 			<desc>Subnet2 x.x.2.0/24</desc>
 			<v:textBlock v:margins="rect(4,4,4,4)"/>
-			<v:textRect cx="72" cy="565.5" width="144.01" height="27"/>
-			<rect x="0" y="552" width="144" height="27" class="st46"/>
-			<text x="44.48" y="560.7" class="st17" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Subnet2<v:newlineChar/><tspan
-						x="38.58" dy="1.2em" class="st18">x.x.2.0/24</tspan></text>		</g>
+			<v:textRect cx="51.75" cy="565.5" width="103.5" height="27"/>
+			<rect x="0" y="552" width="103.5" height="27" class="st46"/>
+			<text x="24.23" y="560.7" class="st17" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Subnet2<v:newlineChar/><tspan
+						x="18.33" dy="1.2em" class="st18">x.x.2.0/24</tspan></text>		</g>
 		<g id="group1092-292" transform="translate(540.254,-83.7)" v:mID="1092" v:groupContext="group">
 			<title>Icon-networking-67</title>
 			<g id="shape1093-293" v:mID="1093" v:groupContext="shape">
