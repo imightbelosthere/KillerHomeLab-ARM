@@ -15,7 +15,6 @@ The deployment leverages Desired State Configuration scripts to further customiz
 - Configure 1st Domain Controller
 - Configure Reverse DNS Zones and Point Records
 - Configure Organizational Unit Structure
-- Domain Join Workstation
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 

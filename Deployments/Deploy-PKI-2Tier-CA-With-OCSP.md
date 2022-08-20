@@ -24,7 +24,6 @@ The deployment leverages Desired State Configuration scripts to further customiz
 - Configure Root Certificate Authority
 - Configure Issuing Certificate Authority
 - Configure Online Certificate Status Protocol
-- Domain Join Workstation
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 

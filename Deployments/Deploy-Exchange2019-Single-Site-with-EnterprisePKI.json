@@ -173,6 +173,31 @@
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
             }
         },
+        "ExchangeOrgName": {
+            "type": "string",
+            "defaultValue": "49ers",
+            "metadata": {
+                "description": "Enter an Exchange Organization Name"
+            }
+        },
+        "CU11": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],      
+            "metadata": {
+                "description": "Are you deploying Exchange 2019 CU11"
+            }
+        },    
+        "Exchange2019ISOUrl": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Enter a valid URL that points to the Exchange 2019 CU .ISO"
+            }
+        },        
         "adminUsername": {
             "type": "string",
             "defaultValue": "dom-admin",
@@ -186,6 +211,13 @@
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
         },
+        "ToEmail": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Enter Email Address to send completed status"
+            }
+        },               
         "AzureUserObjectID": {
             "type": "string",
             "defaultValue": "",
@@ -204,6 +236,17 @@
                 "description": "Windows Server OS License Type"
             }
         },
+        "WindowsClientLicenseType": {
+            "type": "string",
+            "defaultValue": "None",
+            "allowedValues": [
+                "None",
+                "Windows_Client"
+            ],      
+            "metadata": {
+                "description": "Windows Client OS License Type"
+            }
+        },        
         "NamingConvention": {
             "type": "string",
             "defaultValue": "khl",
@@ -408,7 +451,83 @@
             "metadata": {
                 "description": "OCSP VMSize"
             }
-        },                                   
+        }, 
+        "FSOSSku": {
+        "type": "string",
+        "defaultValue": "2022-Datacenter",
+        "allowedValues": [
+            "2022-Datacenter",
+            "2019-Datacenter",
+            "2016-Datacenter"
+        ],      
+        "metadata": {
+            "description": "File Serever OS Sku"
+        }
+        },                      
+        "FSOSVersion": {
+        "type": "string",
+        "defaultValue": "latest",
+        "metadata": {
+            "description": "FS OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+        }
+        },        
+        "FS1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "File Share Witeness Server1 VMSize"
+            }
+        },         
+        "EXOSSku": {
+            "type": "string",
+            "defaultValue": "2019-Datacenter",
+            "allowedValues": [
+                "2019-Datacenter"
+            ],      
+            "metadata": {
+                "description": "Exchange Server OS Sku"
+            }
+        },            
+        "EXOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "EX1 OS Version Number (Example:  2019-Datacenter=17763.3131.220505)"
+            }
+        },  
+        "EX1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D8s_v3",
+            "metadata": {
+                "description": "Exchange Server1 VMSize"
+            }
+        },  
+        "WK1OSSku": {
+            "type": "string",
+            "defaultValue": "Windows-11",
+            "allowedValues": [
+                "Windows-11",
+                "Windows-10",
+                "Windows-7"
+            ],
+            "metadata": {
+                "description": "Workstation1 OS Sku"
+            }
+        }, 
+        "WK1OSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "WK1 OS Version Number (Example:  Windows-11=22000.675.220507, Windows-10=19044.1706.220505, Windows-7=7601.25954.220506)"
+            }
+        },  
+        "WK1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Workstation1 VMSize"
+            }
+        },                                                            
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -447,6 +566,15 @@
         "ocspname": "[concat(parameters('NamingConvention'),'-ocsp-01')]",           
         "ocspIP": "[concat(parameters('vnet1ID'),'.1.',variables('ocsplastoctet'))]",                    
         "ocsplastoctet": "103",
+        "fs1name": "[concat(parameters('NamingConvention'),'-fs-01')]",           
+        "fs1IP": "[concat(parameters('vnet1ID'),'.1.',variables('fs1lastoctet'))]",  
+        "fs1lastoctet": "104",                                                              
+        "ex1name": "[concat(parameters('NamingConvention'),'-ex19-01')]",           
+        "ex1IP": "[concat(parameters('vnet1ID'),'.1.',variables('ex1lastoctet'))]",         
+        "ex1lastoctet": "110",    
+        "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",           
+        "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",        
+        "wk1lastoctet": "201",        
         "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",
         "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",
         "DCDataDisk1Name": "NTDS",
@@ -458,11 +586,17 @@
         "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
         "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
         "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]", 
-        "SRV12R2OUPath": "[concat('OU=Servers2012R2,OU=Servers,',variables('BaseDN'))]",     
+        "SRV12R2OUPath": "[concat('OU=Servers2012R2,OU=Servers,',variables('BaseDN'))]",
+        "WIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('BaseDN'))]",
+        "WIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('BaseDN'))]",
+        "WIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('BaseDN'))]",    
+        "DB1Name": "[concat(parameters('NamingConvention'),'-19-db01')]",
+        "DAG19Name": "[concat(parameters('NamingConvention'),'-19-dag01')]",
+        "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]",
+        "FromEmail": "[concat(parameters('adminUserName'),'@',variables('ExternaldomainName'))]",           
         "PWSEXPolGPOName":  "PowerShell-ExecutionPolicy",
         "PWSEXPolGPOGUID": "EC04DF04-A647-4A3E-9247-51B4CB137F5F",
         "PWSEXPolGPOSASUrl": "https://elliottf.blob.core.windows.net/github/GPOs/PowerShell-ExecutionPolicy.zip",          
-        "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]" ,
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
