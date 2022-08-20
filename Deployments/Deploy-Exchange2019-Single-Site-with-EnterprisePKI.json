@@ -377,8 +377,7 @@
             "allowedValues": [
                 "2022-Datacenter",
                 "2019-Datacenter",
-                "2016-Datacenter",
-                "2012-R2-Datacenter"
+                "2016-Datacenter"
             ],
             "metadata": {
                 "description": "Domain Controller1 OS Sku"
@@ -404,8 +403,7 @@
             "allowedValues": [
                 "2022-Datacenter",
                 "2019-Datacenter",
-                "2016-Datacenter",
-                "2012-R2-Datacenter"
+                "2016-Datacenter"
             ],
             "metadata": {
                 "description": "Enterprise CA OS Sku"
@@ -431,8 +429,7 @@
             "allowedValues": [
                 "2022-Datacenter",
                 "2019-Datacenter",
-                "2016-Datacenter",
-                "2012-R2-Datacenter"
+                "2016-Datacenter"
             ],
             "metadata": {
                 "description": "OCSP OS Sku"
@@ -1380,56 +1377,13 @@
             }
         },
         {
-            "condition": "[equals(parameters('ECAOSSku'),'2012-R2-Datacenter')]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "DomainJoinEnterpriseCA-12R2",
-            "dependsOn": [
-				"Deploy-EnterpriseCertificateAuthority"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "DJExtensionsTypeHandlerVersion": {
-                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('ecaname')]"
-                    },
-                    "domainName": {
-                        "value": "[variables('InternaldomainName')]"
-                    },
-                    "OUPath": {
-                        "value": "[variables('SRV12R2OUPath')]"
-                    },
-                    "domainJoinOptions": {
-                        "value": 3
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    }
-                }
-            }
-        },						
-        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Configure-EnterpriseCertificateAuthority",
             "dependsOn": [
                 "DomainJoinEnterpriseCA-22",
                 "DomainJoinEnterpriseCA-19",
-                "DomainJoinEnterpriseCA-16",
-                "DomainJoinEnterpriseCA-12R2"      
+                "DomainJoinEnterpriseCA-16"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -1680,48 +1634,6 @@
 				}
 			}
 		},  
-		{
-			"condition": "[equals(parameters('OCSPOSSku'),'2012-R2-Datacenter')]",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "[variables('DeploymentAPIVersion')]",
-			"name": "DomainJoinOCSP-12R2",
-			"dependsOn": [
-				"Deploy-OCSPServer"
-			],      
-			"properties": {
-				"mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-				"parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "DJExtensionsTypeHandlerVersion": {
-                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
-                    },                    
-					"computerName": {
-						"value": "[variables('ocspname')]"
-					},
-					"domainName": {
-						"value": "[variables('InternaldomainName')]"
-					},
-					"OUPath": {
-						"value": "[variables('SRV12R2OUPath')]"
-					},
-					"domainJoinOptions": {
-						"value": 3
-					},
-					"adminUsername": {
-						"value": "[parameters('adminUsername')]"
-					},                                                                                                            
-					"adminPassword": {
-						"value": "[parameters('adminPassword')]"
-					}
-				}
-			}
-		},  
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
@@ -1729,8 +1641,7 @@
             "dependsOn": [
                 "DomainJoinOCSP-22",
                 "DomainJoinOCSP-19",
-                "DomainJoinOCSP-16",
-                "DomainJoinOCSP-12R2"        
+                "DomainJoinOCSP-16"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -1775,6 +1686,206 @@
                 }
             }
         },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-FileServer-01",
+            "dependsOn": [
+                "Configure-EnterpriseCertificateAuthority"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('fs1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('fs1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('FSOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('FSOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('FS1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+		{
+			"condition": "[equals(parameters('FSOSSku'),'2022-Datacenter')]",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinFileServer-01-22",
+			"dependsOn": [
+				"Deploy-FileServer-01"
+			],      
+			"properties": {
+				"mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+				"parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                    
+					"computerName": {
+						"value": "[variables('fs1name')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV22OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		}, 
+		{
+			"condition": "[equals(parameters('FSOSSku'),'2019-Datacenter')]",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinFileServer-01-19",
+			"dependsOn": [
+				"Deploy-FileServer-01"
+			],      
+			"properties": {
+				"mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+				"parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                    
+					"computerName": {
+						"value": "[variables('fs1name')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV19OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		},   
+		{
+			"condition": "[equals(parameters('FSOSSku'),'2016-Datacenter')]",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinFileServer-01-16",
+			"dependsOn": [
+				"Deploy-FileServer-01"
+			],      
+			"properties": {
+				"mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+				"parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                    
+					"computerName": {
+						"value": "[variables('fs1name')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV16OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		},          
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
