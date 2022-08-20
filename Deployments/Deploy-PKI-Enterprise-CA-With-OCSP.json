@@ -836,12 +836,6 @@
                     "dc1lastoctet": {
                         "value": "[variables('dc1lastoctet')]"
                     },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },

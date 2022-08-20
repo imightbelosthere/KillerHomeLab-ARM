@@ -962,12 +962,6 @@
                     "dc1lastoctet": {
                         "value": "[variables('dc1lastoctet')]"
                     },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
@@ -1105,6 +1099,12 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
@@ -1129,7 +1129,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Restart-DomainController-01_01",
+            "name": "Restart-DomainController-01_02",
             "dependsOn": [
                 "Create-ActiveDirectory-Site-01"
             ],
@@ -1238,7 +1238,8 @@
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinEnterpriseCA-22",
 			"dependsOn": [
-				"Deploy-EnterpriseCertificateAuthority"
+				"Deploy-EnterpriseCertificateAuthority",
+                "Restart-DomainController-01_02"
 			],      
 			"properties": {
 				"mode": "Incremental",
@@ -2005,6 +2006,12 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                     
                     "computerName": {
                         "value": "[variables('ex1name')]"
                     }, 

@@ -228,7 +228,7 @@
                             "name": "[concat(parameters('computerName'),'_',parameters('DataDisk2Name'))]",
                             "caching": "None",
                             "diskSizeGB": "[variables('DataDiskSize')]",
-                            "lun": 0,
+                            "lun": 1,
                             "createOption": "Empty",
                             "managedDisk": {
                                 "storageAccountType": "[variables('storageAccountType')]"
