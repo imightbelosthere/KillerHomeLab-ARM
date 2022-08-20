@@ -20,18 +20,24 @@
                 "description": "Computer Name"
             }
         },
-        "ExternaldomainName": {
-            "type": "string",
-          "metadata": {
-            "description": "The External FQDN of the AD Domain created "
-          }
-        }, 
-        "ex1IP": {
+        "NamingConvention": {
             "type": "string",
             "metadata": {
-                "description": "IP used for Exchange Records"
+                "description": "Domain Naming Convention"
             }
-        },                                      
+        },
+        "BaseDN": {
+            "type": "string",
+            "metadata": {
+                "description": "Base Domain Distiguished Name"
+            }
+        },
+        "Site1Prefix": {
+            "type": "string",
+            "metadata": {
+                "description": "AD Site 1 Subnet"
+            }
+        },    
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -43,11 +49,11 @@
             "metadata": {
                 "description": "Auto-generated token to access _artifactsLocation"
             }
-        }                
+        }              
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CONFIGDNSEX19.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "CONFIGDNSEX19.ps1\\CONFIGDNSEX19"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CREATE1SITE.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "CREATE1SITE.ps1\\CREATE1SITE"
     },
     "resources": [
         {
@@ -64,8 +70,10 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
-                        "ExternaldomainName": "[parameters('ExternaldomainName')]",                                                                                      
-                        "ex1IP": "[parameters('ex1IP')]"
+                        "computerName": "[parameters('computerName')]",                            
+                        "NamingConvention": "[parameters('NamingConvention')]",
+                        "BaseDN": "[parameters('BaseDN')]",                            
+                        "Site1Prefix": "[parameters('Site1Prefix')]"
                     }
                 },
                 "protectedSettings": {                                              

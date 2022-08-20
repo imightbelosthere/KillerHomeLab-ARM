@@ -1029,6 +1029,44 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-Exchange-DNS-Records",
+            "dependsOn": [
+                "Configure-PKI-DNS-Records"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configdnsex19.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "ExternalDomainName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },                      
+                    "ex1IP": {
+                        "value": "[variables('ex1IP')]"
+                    },                                                                                                                          
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-ActiveDirectory-OUs",
             "dependsOn": [
                 "Configure-PKI-DNS-Records"
@@ -1061,6 +1099,41 @@
                 }
             }
         },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-ActiveDirectory-Site-01",
+            "dependsOn": [
+                "Create-ActiveDirectory-OUs"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/create1site.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "NamingConvention": {
+                        "value": "[parameters('NamingConvention')]"
+                    },                                                                                                                          
+                    "BaseDN": {
+                        "value": "[variables('BaseDN')]"
+                    },
+                    "Site1Prefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
         {
             "condition": "[equals(parameters('DC1OSSku'),'2012-R2-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
