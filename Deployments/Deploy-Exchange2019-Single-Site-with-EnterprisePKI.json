@@ -180,7 +180,7 @@
                 "description": "Enter an Exchange Organization Name"
             }
         },
-        "CU11": {
+        "PRECU11": {
             "type": "string",
             "defaultValue": "No",
             "allowedValues": [
@@ -188,7 +188,7 @@
                 "No"
             ],      
             "metadata": {
-                "description": "Are you deploying Exchange 2019 CU11"
+                "description": "Are you deploying Exchange 2019 a CU prior to CU11 (Example:  CU10, CU9)"
             }
         },    
         "Exchange2019ISOUrl": {
