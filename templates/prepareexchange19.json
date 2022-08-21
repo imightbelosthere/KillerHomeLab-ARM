@@ -41,7 +41,7 @@
     },
     "variables": {
         "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/PREPAREEXCHANGE19.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "PREPAREEXCHANGE19\\PREPAREEXCHANGE19"
+        "ConfigurationFunction": "PREPAREEXCHANGE19.ps1\\PREPAREEXCHANGE19"
     },
     "resources": [
         {

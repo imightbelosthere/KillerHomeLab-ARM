@@ -543,7 +543,7 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('PKIENT-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('EX19S-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
@@ -578,6 +578,7 @@
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]", 
         "DNSArmTemplate": "[if(equals(variables('InternaldomainName'),concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))), 'configdnsint.json', 'configdnsext.json')]",
+        "ExchangeLicenseTerms": "[if(equals(parameters('PRECU11'),'Yes'), '/IAcceptExchangeServerLicenseTerms', '/IAcceptExchangeServerLicenseTerms_DiagnosticDataOFF')]",        
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
         "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
         "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
@@ -2026,13 +2027,95 @@
                     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                 }
             }
-        },                                   
+        },  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-ExchangeServer-01_01",
+            "dependsOn": [
+                "Prepare-ExchangeServer-01-Prereqs"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Prepare-ActiveDirectory-for-Exchange",
+            "dependsOn": [
+                "Restart-ExchangeServer-01_01"    
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/prepareadexchange19.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "ExchangeOrgName": {
+                        "value": "[parameters('ExchangeOrgName')]"
+                    },
+                    "ExchangeLicenseTerms": {
+                        "value": "[variables('ExchangeLicenseTerms')]"
+                    },                                                          
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "dc1name": {
+                        "value": "[variables('dc1name')]"
+                    },                                                                                 
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                       
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                }
+            }
+        },   
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-NetworksecurityGroup-01",
             "dependsOn": [
-                "Prepare-ExchangeServer-01-Prereqs"      
+                "Prepare-ActiveDirectory-for-Exchange"    
             ],      
             "properties": {
                 "mode": "Incremental",

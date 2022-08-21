@@ -324,7 +324,10 @@
             SetScript =
             {
                 # Install .Net 4.8
+                $dotnet48 = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\FULL" -Name Version -ErrorAction 0
+                IF ($dotnet48.Version -notlike '4.8*'){
                 Start-Process "S:\ExchangeInstall\ndp48-x86-x64-allos-enu.exe" -ArgumentList "/q" -Wait
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
@@ -336,7 +339,10 @@
             SetScript =
             {
                 # Install IIS URL Rewrite 2.1
+                $URLRewrite2 = Get-WmiObject -Class Win32_Product | Where-Object {$_.Name -like 'IIS URL Rewrite Module 2'}
+                IF ($URLRewrite2 -eq $null){
                 Start-Process "S:\ExchangeInstall\rewrite_amd64_en-US.msi" -ArgumentList "/quiet" -Wait
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
