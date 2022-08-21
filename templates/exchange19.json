@@ -13,31 +13,37 @@
             "metadata": {
                 "description": "Extension Type Handler Version"
             }
-        },           
+        },         
         "computerName": {
             "type": "string",
             "metadata": {
                 "description": "Computer Name"
             }
         },
-        "ExchangeOrgname": {
+        "ExchangeLicenseTerms": {
             "type": "string",
             "metadata": {
-                "description": "Exchange Organization Name"
+                "description": "Exchange License Terms Argument"
             }
-        },   
-        "DC1Name": {
-            "type": "string",
-            "metadata": {
-                "description": "Domain Controller 1 Name"
-            }
-        },                                                                                     
+        },         
         "NetBiosDomain": {
             "type": "string",
             "metadata": {
                 "description": "NetBios Domain Name"
             }
         },
+        "SetupDC": {
+            "type": "string",
+            "metadata": {
+                "description": "Domain Controller used for Exchange Setup"
+            }
+        },                            
+        "DBName": {
+            "type": "string",
+            "metadata": {
+                "description": "Exchange Database Name"
+            }
+        },        
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -49,7 +55,7 @@
           "metadata": {
             "description": "The password for the Administrator account of the new VM and Domain"
           }
-        },                
+        },                 
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -64,8 +70,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/PREPAREADEXCHANGE1911.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "PREPAREADEXCHANGE1911.ps1\\PREPAREADEXCHANGE1911"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/EXCHANGE19.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "EXCHANGE19.ps1\\EXCHANGE19"
     },
     "resources": [
         {
@@ -83,9 +89,10 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "ExchangeOrgName": "[parameters('ExchangeOrgName')]",                                                        
-                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                            
-                            "DC1Name": "[parameters('DC1Name')]",                                                                                                                                                                                                                             
+                            "ExchangeLicenseTerms": "[parameters('ExchangeLicenseTerms')]",                                                                                    
+                            "NetBiosDomain": "[parameters('NetBiosdomain')]",          
+                            "DBName": "[parameters('DBName')]",       
+                            "SetupDC": "[parameters('SetupDC')]",                                                                                                        
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword1"

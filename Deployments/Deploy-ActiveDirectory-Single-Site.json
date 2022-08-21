@@ -195,7 +195,7 @@
         },
         "WindowsServerLicenseType": {
             "type": "string",
-            "defaultValue": "Windows_Server",
+            "defaultValue": "None",
             "allowedValues": [
                 "None",
                 "Windows_Server"
@@ -206,7 +206,7 @@
         },
         "WindowsClientLicenseType": {
             "type": "string",
-            "defaultValue": "Windows_Client",
+            "defaultValue": "None",
             "allowedValues": [
                 "None",
                 "Windows_Client"

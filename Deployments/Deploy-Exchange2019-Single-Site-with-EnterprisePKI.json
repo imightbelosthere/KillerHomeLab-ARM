@@ -227,7 +227,7 @@
         },
         "WindowsServerLicenseType": {
             "type": "string",
-            "defaultValue": "Windows_Server",
+            "defaultValue": "None",
             "allowedValues": [
                 "None",
                 "Windows_Server"
@@ -477,8 +477,9 @@
         },         
         "EXOSSku": {
             "type": "string",
-            "defaultValue": "2019-Datacenter",
+            "defaultValue": "2022-Datacenter",
             "allowedValues": [
+                "2022-Datacenter",
                 "2019-Datacenter"
             ],      
             "metadata": {
@@ -579,6 +580,7 @@
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]", 
         "DNSArmTemplate": "[if(equals(variables('InternaldomainName'),concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))), 'configdnsint.json', 'configdnsext.json')]",
         "ExchangeLicenseTerms": "[if(equals(parameters('PRECU11'),'Yes'), '/IAcceptExchangeServerLicenseTerms', '/IAcceptExchangeServerLicenseTerms_DiagnosticDataOFF')]",        
+        "ExchangeSecurityGroup": "[concat(parameters('NetBiosDomain'),'\\Exchange Trusted Subsystem')]",                
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
         "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
         "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
@@ -1908,10 +1910,10 @@
                         "value": "WindowsServer"
                     },
                     "OSSku": {
-                        "value": "[parameters('FSOSSku')]"
+                        "value": "[parameters('EXOSSku')]"
                     },
                     "OSVersion": {
-                        "value": "[parameters('FSOSVersion')]"
+                        "value": "[parameters('EXOSVersion')]"
                     },
                     "LicenseType": {
                         "value": "[parameters('WindowsServerLicenseType')]"
@@ -1953,6 +1955,49 @@
             }
         },
 		{
+			"condition": "[equals(parameters('EXOSSku'),'2022-Datacenter')]",            
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinExchangeServer-01-22",
+			"dependsOn": [
+				"Deploy-ExchangeServer-01"
+			],      
+			"properties": {
+				"mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+				"parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                    
+					"computerName": {
+						"value": "[variables('ex1name')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV22OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		},
+		{
+			"condition": "[equals(parameters('EXOSSku'),'2019-Datacenter')]",            
 			"type": "Microsoft.Resources/deployments",
 			"apiVersion": "[variables('DeploymentAPIVersion')]",
 			"name": "DomainJoinExchangeServer-01-19",
@@ -1998,6 +2043,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Prepare-ExchangeServer-01-Prereqs",
             "dependsOn": [
+                "DomainJoinExchangeServer-01-22",
                 "DomainJoinExchangeServer-01-19"
             ],      
             "properties": {
@@ -2109,13 +2155,104 @@
                     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                 }
             }
-        },   
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Grant-ExchangeTrustedSubSystem-LocalAdmin",
+            "dependsOn": [
+                "DomainJoinFileServer-01-22",        
+                "DomainJoinFileServer-01-19",        
+                "DomainJoinFileServer-01-16",                        
+                "Prepare-ActiveDirectory-for-Exchange"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/grantets.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                     
+                    "computerName": {
+                        "value": "[variables('fs1name')]"
+                    },              
+                    "ExchangeSecurityGroup": {
+                        "value": "[variables('ExchangeSecurityGroup')]"
+                    },                                                
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                }
+            }
+        },     
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-ExchangeServer-01",
+            "dependsOn": [
+                "DomainJoinExchangeServer-01-22",
+                "DomainJoinExchangeServer-01-19",
+                "Prepare-ActiveDirectory-for-Exchange",
+                "Grant-ExchangeTrustedSubSystem-LocalAdmin"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/exchange19.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                     
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },              
+                    "ExchangeLicenseTerms": {
+                        "value": "[variables('ExchangeLicenseTerms')]"
+                    }, 
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "SetupDC": {
+                        "value": "[variables('dc1name')]"
+                    },                                                                
+                    "DBName": {
+                        "value": "[variables('db1name')]"
+                    },       
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                                      
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                }
+            }
+        },               
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-NetworksecurityGroup-01",
             "dependsOn": [
-                "Prepare-ActiveDirectory-for-Exchange"    
+                "Install-ExchangeServer-01"    
             ],      
             "properties": {
                 "mode": "Incremental",

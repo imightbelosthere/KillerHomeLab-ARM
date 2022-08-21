@@ -195,7 +195,7 @@
         },
         "WindowsClientLicenseType": {
             "type": "string",
-            "defaultValue": "Windows_Client",
+            "defaultValue": "None",
             "allowedValues": [
                 "None",
                 "Windows_Client"

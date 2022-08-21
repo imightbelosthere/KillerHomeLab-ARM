@@ -15,11 +15,6 @@
 
     Node localhost
     {
-        LocalConfigurationManager
-        {
-            RebootNodeIfNeeded = $true
-        }
-
         xMountImage MountExchangeISO
         {
             ImagePath   = 'S:\ExchangeInstall\Exchange2019.iso'
@@ -40,8 +35,11 @@
                 # Create Exchange AD Deployment
                 (Get-ADDomainController -Filter *).Name | Foreach-Object { repadmin /syncall $_ (Get-ADDomain).DistinguishedName /AdeP }
 
-                L:\Setup.exe /PrepareSchema /DomainController:"$using:dc1Name" $ExchangeLicenseTerms
-                L:\Setup.exe /PrepareAD /on:"$using:ExchangeOrgName" /DomainController:"$using:dc1Name" $ExchangeLicenseTerms0000000000
+                $ExchangeServers = Get-ADGroup -Filter * | Where-Object {$_.Name -like 'Exchange Servers'}
+                IF ($ExchangeServers -eq $null){
+                L:\Setup.exe /PrepareSchema /DomainController:"$using:dc1Name" "$using:ExchangeLicenseTerms"
+                L:\Setup.exe /PrepareAD /on:"$using:ExchangeOrgName" /DomainController:"$using:dc1Name" "$using:ExchangeLicenseTerms"
+                }
 
                 (Get-ADDomainController -Filter *).Name | Foreach-Object { repadmin /syncall $_ (Get-ADDomain).DistinguishedName /AdeP }
             }
