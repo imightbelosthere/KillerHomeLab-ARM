@@ -805,7 +805,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-11",
             "dependsOn": [
-                "Restart-DomainController-01_01"
+                "Create-ActiveDirectory-OUs"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -880,7 +880,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-10",
             "dependsOn": [
-                "Restart-DomainController-01_01"
+                "Create-ActiveDirectory-OUs"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -955,7 +955,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-7",
             "dependsOn": [
-                "Restart-DomainController-01_01"
+                "Create-ActiveDirectory-OUs"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1030,7 +1030,6 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoin-Workstation-01-11",
             "dependsOn": [
-                "Create-ActiveDirectory-OUs",
                 "Deploy-Workstation-01-11",
                 "Deploy-Workstation-01-10",
                 "Deploy-Workstation-01-7"
@@ -1075,7 +1074,6 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoin-Workstation-01-10",
             "dependsOn": [
-                "Create-ActiveDirectory-OUs",
                 "Deploy-Workstation-01-11",
                 "Deploy-Workstation-01-10",
                 "Deploy-Workstation-01-7"
@@ -1120,7 +1118,6 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoin-Workstation-01-7",
             "dependsOn": [
-                "Create-ActiveDirectory-OUs",
                 "Deploy-Workstation-01-11",
                 "Deploy-Workstation-01-10",
                 "Deploy-Workstation-01-7"
