@@ -972,7 +972,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-EnterprisegCertificateAuthority",
+            "name": "Deploy-EnterpriseCertificateAuthority",
             "dependsOn": [
                 "Deploy-PowerShell-ExecutionPolicy"
             ],
