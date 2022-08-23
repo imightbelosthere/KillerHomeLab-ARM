@@ -1075,6 +1075,12 @@
                     "contentVersion": "1.0.0.0"
                 },
 				"parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                    
 					"computerName": {
 						"value": "[variables('dev1name')]"
 					},
@@ -1170,7 +1176,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/devopsserver2022.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/devopserver2022.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
