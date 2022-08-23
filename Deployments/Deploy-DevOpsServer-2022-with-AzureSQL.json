@@ -524,9 +524,15 @@
                     "subnet2Prefix": {
                         "value": "[variables('vnet1subnet2Prefix')]"
                     },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    },                    
                     "BastionsubnetPrefix": {
                         "value": "[variables('vnet1BastionsubnetPrefix')]"
-                    }
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    }                     
                 }
             }
         },
@@ -802,6 +808,9 @@
                     "InternalDomainName": {
                         "value": "[variables('InternalDomainName')]"
                     },
+                    "ExternalDomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },                    
                     "ReverseLookup1": {
                         "value": "[variables('ReverseLookup1')]"
                     },
