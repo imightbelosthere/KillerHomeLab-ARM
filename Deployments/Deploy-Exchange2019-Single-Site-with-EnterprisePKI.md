@@ -1,5 +1,5 @@
 # Exchange 2019 Single Site with Enterprise PKI
-<img src="./x_Images/EnterprisePKI.svg" height="600" width="800"/>
+<img src="./x_Images/Exchange2019SingleSite.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
