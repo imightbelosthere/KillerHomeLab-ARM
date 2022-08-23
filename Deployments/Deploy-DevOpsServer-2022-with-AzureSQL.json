@@ -920,7 +920,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnetName": {
-                        "value": "[variables('vnet1subnet2Name')]"
+                        "value": "[variables('vnet1subnet1Name')]"
                     },
                     "AzureADSQLAdmin": {
                         "value": "[parameters('AzureADSQLAdmin')]"
