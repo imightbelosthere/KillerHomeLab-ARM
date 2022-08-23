@@ -1,4 +1,4 @@
-﻿configuration RESTARTVM
+﻿configuration RESTARTDC
 {
    param
    (

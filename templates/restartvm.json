@@ -20,6 +20,12 @@
                 "description": "Computer Name"
             }
         },
+        "Identifier": {
+            "type": "string",
+            "metadata": {
+                "description": "Unique Identifier for Reboot Key generated for each deployoment"
+            }
+        },                 
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -52,8 +58,12 @@
                     "WMFVersion": "latest",
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                    "Properties": {}
-                }
+                    "Properties": {
+                        "Identifier": "[parameters('Identifier')]"                                                
+                    }
+                },
+                "protectedSettings": {
+                }                
             }
         }
     ]

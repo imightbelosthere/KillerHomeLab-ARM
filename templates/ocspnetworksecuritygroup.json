@@ -22,29 +22,29 @@
         }
     },
     "resources": [
-      {
-        "apiVersion": "[parameters('NetworkSecurityGroupAPIVersion')]",
-        "type": "Microsoft.Network/networkSecurityGroups",
-        "name": "[parameters('NetworkSecurityGroupName')]",
-        "location": "[resourceGroup().location]",
-        "properties": {
-          "securityRules": [
-            {
-              "name": "HTTP",
-              "properties": {
-                "description": "Opens Port HTTP (Port 80/TCP)",
-                "protocol": "Tcp",
-                "sourcePortRange": "*",
-                "destinationPortRange": "80",
-                "sourceAddressPrefix": "*",
-                "destinationAddressPrefix": "[parameters('OCSPPrivateIP')]",
-                "access": "Allow",
-                "priority": 100,
-                "direction": "Inbound"
-              }
-            } 
-          ]
+        {
+            "apiVersion": "[parameters('NetworkSecurityGroupAPIVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('NetworkSecurityGroupName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "HTTP",
+                        "properties": {
+                            "description": "Opens Port HTTP (Port 80/TCP)",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "80",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "[parameters('OCSPPrivateIP')]",
+                            "access": "Allow",
+                            "priority": 100,
+                            "direction": "Inbound"
+                        }
+                    } 
+                ]
+            }
         }
-      }
     ]
-  }
+}

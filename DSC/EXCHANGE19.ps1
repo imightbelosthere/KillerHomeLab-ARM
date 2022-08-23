@@ -2,7 +2,9 @@
 {
    param
    (
+        [String]$ComputerName,
         [String]$ExchangeLicenseTerms,
+        [String]$InternaldomainName,
         [String]$NetBiosDomain,
         [String]$DBName,
         [String]$SetupDC,
@@ -22,8 +24,8 @@
                 Set-Content -Path S:\ExchangeInstall\DeployExchange.cmd -Value "L:\Setup.exe $using:ExchangeLicenseTerms /Mode:Install /Role:Mailbox /DbFilePath:M:\$using:DBName\$using:DBName.edb /LogFolderPath:M:\$using:DBName /MdbName:$using:DBName /dc:$using:SetupDC"
                 }
 
-                $ExchangeExists = Get-ExchangeServer -ErrorAction 0
-                IF ($ExchangeExists -eq $null) {                 
+                $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "http://$using:computerName.$using:InternalDomainName/PowerShell/" -ErrorAction 0
+                IF ($Session -eq $null) {                 
                 S:\ExchangeInstall\DeployExchange.cmd
                 }
             }

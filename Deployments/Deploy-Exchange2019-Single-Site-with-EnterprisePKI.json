@@ -915,6 +915,9 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },                    
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
@@ -1152,6 +1155,9 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-2')]"
+                    },                    
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
@@ -2097,6 +2103,9 @@
                     "computerName": {
                         "value": "[variables('ex1name')]"
                     },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },                    
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
@@ -2219,7 +2228,10 @@
                     },                     
                     "computerName": {
                         "value": "[variables('ex1name')]"
-                    },              
+                    },            
+                    "InternaldomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },                                  
                     "ExchangeLicenseTerms": {
                         "value": "[variables('ExchangeLicenseTerms')]"
                     }, 
@@ -2246,18 +2258,575 @@
                     }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                 }
             }
-        },               
+        },    
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-ExchangeServer-01",
+            "dependsOn": [
+                "Install-ExchangeServer-01"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configexchange19.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "InternaldomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },              
+                    "ExternaldomainName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },                
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "BaseDN": {
+                        "value": "[variables('BaseDN')]"
+                    },                            
+                    "ConfigDC": {
+                        "value": "[variables('dc1name')]"
+                    },       
+                    "CAServerIP": {
+                        "value": "[variables('ecaIP')]"
+                    },                                                                                                                                                                                       
+                    "Site": {
+                        "value": "Site1"
+                    },                            
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                                               
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-DatabaseAvailabilityGroup",
+            "dependsOn": [
+                "Configure-ExchangeServer-01"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configdag.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "InternaldomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },               
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },              
+                    "ConfigDC": {
+                        "value": "[variables('dc1name')]"
+                    },       
+                    "Site1FSW": {
+                        "value": "[variables('fs1name')]"
+                    },                                                                                                                                                           
+                    "DAGName": {
+                        "value": "[variables('dag19name')]"
+                    },                                                                                                                                                           
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                                               
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                }
+            }
+        },  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-MailboxDatabaseCopy-DB01",
+            "dependsOn": [
+                "Configure-DatabaseAvailabilityGroup"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/addmbdbcopy.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "InternaldomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },               
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },              
+                    "ConfigDC": {
+                        "value": "[variables('dc1name')]"
+                    },       
+                    "DBName": {
+                        "value": "[variables('DB1Name')]"
+                    },                                                                                                                                                                                       
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                                               
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-ExchangeServer-01_02",
+            "dependsOn": [
+                "Add-MailboxDatabaseCopy-DB01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-2')]"
+                    },                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-11",
+            "dependsOn": [
+                "Restart-DomainController-01_01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-11"
+                    },
+                    "OSSku": {
+                        "value": "win11-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-10')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-10",
+            "dependsOn": [
+                "Restart-DomainController-01_01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-10"
+                    },
+                    "OSSku": {
+                        "value": "win10-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-7')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-7",
+            "dependsOn": [
+                "Restart-DomainController-01_01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-7"
+                    },
+                    "OSSku": {
+                        "value": "win7-enterprise"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoin-Workstation-01-11",
+            "dependsOn": [
+                "Create-ActiveDirectory-OUs",
+                "Deploy-Workstation-01-11",
+                "Deploy-Workstation-01-10",
+                "Deploy-Workstation-01-7"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('WIN11OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-10')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoin-Workstation-01-10",
+            "dependsOn": [
+                "Create-ActiveDirectory-OUs",
+                "Deploy-Workstation-01-11",
+                "Deploy-Workstation-01-10",
+                "Deploy-Workstation-01-7"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('WIN10OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-7')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoin-Workstation-01-7",
+            "dependsOn": [
+                "Create-ActiveDirectory-OUs",
+                "Deploy-Workstation-01-11",
+                "Deploy-Workstation-01-10",
+                "Deploy-Workstation-01-7"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('WIN7OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },                                                     
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-NetworksecurityGroup-01",
             "dependsOn": [
-                "Install-ExchangeServer-01"    
+                "Restart-ExchangeServer-01_02"    
             ],      
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ocspnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/exchangenetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -2269,7 +2838,10 @@
                     },                                                                                                      
                     "OCSPPrivateIP": {
                         "value": "[variables('ocspIP')]"
-                    }
+                    },
+                    "EX1PrivateIP": {
+                        "value": "[variables('ex1IP')]"
+                    }                    
                 }
             }
         },                                   
@@ -2418,9 +2990,94 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-PublicIP-to-ExchangeServer-01",
+            "dependsOn": [
+                "Associate-NSG-with-Subnet1",
+                "Associate-NSG-with-Subnet2"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-3disk-vm-pip.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },                    
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('ex1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('EXOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('EXOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "DataDisk1Name": {
+                        "value": "Exchange"
+                    },            
+                    "DataDisk2Name": {
+                        "value": "Software"
+                    },                    
+                    "VMSize": {
+                        "value": "[parameters('EX1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },                               
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-PublicDNSZone",
             "dependsOn": [
-                "Add-PublicIP-to-OCSPServer"
+                "Add-PublicIP-to-OCSPServer",
+                "Add-PublicIP-to-ExchangeServer-01"
             ],            
             "properties": {
                 "mode": "Incremental",
@@ -2466,6 +3123,122 @@
                     }                                                                                                                                                                                                                                                                                                       
                 }
             }
-        }        
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-PublicDNSZone-Exchange19-Records",
+            "dependsOn": [
+                "Create-PublicDNSZone-PKI-Records"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/publicdnszoneexchange19.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicDNSZoneAPIVersion": {
+                        "value": "[variables('PublicDNSZoneAPIVersion')]"
+                    },                            
+                    "ZoneName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },
+                    "OCSPRecord": {
+                        "value": "ocsp"
+                    },
+                    "OCSPPublicIP": {
+                        "value": "[reference('Add-PublicIP-to-OCSPServer').outputs.PublicIP.value]"             
+                    },
+                    "OWARecord": {
+                        "value": "owa2019"
+                    },
+                    "AutoDiscoverRecord": {
+                        "value": "autodiscover"
+                    },
+                    "OutlookRecord": {
+                        "value": "outlook2019"
+                    },
+                    "EASRecord": {
+                        "value": "eas2019"
+                    },
+                    "SMTP1Record": {
+                        "value": "smtp1"
+                    },    
+                    "EX1PublicIP": {
+                        "value": "[reference('Add-PublicIP-to-ExchangeServer-01').outputs.PublicIP.value]"             
+                    }                                                                                                                                                                                                                                                                                                                            
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Send-Deployment-Completion-Email",
+            "dependsOn": [
+                "Restart-ExchangeServer-01_02",
+                "Create-PublicDNSZone-Exchange19-Records"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/sendemail.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('ecaname')]"
+                    },
+                    "ToEmail": {
+                        "value": "[parameters('ToEmail')]"
+                    },              
+                    "FromEmail": {
+                        "value": "[variables('FromEmail')]"
+                    },
+                    "EnterpriseCAServerName": {
+                        "value": "[variables('ecaname')]"
+                    },                                                                                                                                      
+                    "EnterpriseCAName": {
+                        "value": "[parameters('EnterpriseCAName')]"
+                    },
+                    "InternalDomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "ExchangeServerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "NameServer1": {
+                        "value": "[reference('Create-PublicDNSZone').outputs.NameServer1.value]"             
+                    },                    
+                    "NameServer2": {
+                        "value": "[reference('Create-PublicDNSZone').outputs.NameServer2.value]"             
+                    },                                        
+                    "NameServer3": {
+                        "value": "[reference('Create-PublicDNSZone').outputs.NameServer3.value]"             
+                    },                                        
+                    "NameServer4": {
+                        "value": "[reference('Create-PublicDNSZone').outputs.NameServer4.value]"             
+                    },                                        
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                                               
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+                }
+            }
+        }                       
     ]
 }

@@ -13,43 +13,37 @@
             "metadata": {
                 "description": "Extension Type Handler Version"
             }
-        },         
+        },        
         "computerName": {
             "type": "string",
             "metadata": {
                 "description": "Computer Name"
             }
-        },
-        "ExchangeLicenseTerms": {
-            "type": "string",
-            "metadata": {
-                "description": "Exchange License Terms Argument"
-            }
-        },
+        },    
         "InternaldomainName": {
             "type": "string",
           "metadata": {
             "description": "The FQDN of the AD Domain created "
           }
-        },                 
+        },          
         "NetBiosDomain": {
             "type": "string",
             "metadata": {
                 "description": "NetBios Domain Name"
             }
-        },
-        "SetupDC": {
+        },                            
+        "ConfigDC": {
             "type": "string",
             "metadata": {
-                "description": "Domain Controller used for Exchange Setup"
+                "description": "Domain Controller used for Exchange Config"
             }
-        },                            
+        },                                                         
         "DBName": {
             "type": "string",
             "metadata": {
-                "description": "Exchange Database Name"
+                "description": "Database Name"
             }
-        },        
+        },                                                                                              
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -76,8 +70,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/EXCHANGE19.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "EXCHANGE19.ps1\\EXCHANGE19"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/ADDMBDBCOPY.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "ADDMBDBCOPY.ps1\\ADDMBDBCOPY"
     },
     "resources": [
         {
@@ -95,12 +89,11 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "ComputerName": "[parameters('ComputerName')]",                            
-                            "InternaldomainName": "[parameters('InternaldomainName')]",                
-                            "ExchangeLicenseTerms": "[parameters('ExchangeLicenseTerms')]",                                                                                                                                                                                    
-                            "NetBiosDomain": "[parameters('NetBiosdomain')]",          
-                            "DBName": "[parameters('DBName')]",       
-                            "SetupDC": "[parameters('SetupDC')]",                                                                                                        
+                            "ComputerName": "[parameters('ComputerName')]",
+                            "InternaldomainName": "[parameters('InternaldomainName')]",                                                                                    
+                            "NetBiosDomain": "[parameters('NetBiosDomain')]",        
+                            "ConfigDC": "[parameters('ConfigDC')]",        
+                            "DBName": "[parameters('DBName')]",                                                                                                                                                                                
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword1"

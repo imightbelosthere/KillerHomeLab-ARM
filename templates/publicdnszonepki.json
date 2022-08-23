@@ -29,16 +29,16 @@
     },
     "resources": [
         {
-        "type": "Microsoft.Network/dnszones/a",
-        "name": "[concat(parameters('ZoneName'), '/', parameters('OCSPRecord'))]",
-        "apiVersion": "[parameters('PublicDNSZoneAPIVersion')]",
-        "location": "global",
-        "properties": {
-            "TTL": 900,
-            "ARecords": [
-                {
-                    "ipv4Address": "[parameters('OCSPPublicIP')]"
-                }
+            "type": "Microsoft.Network/dnszones/a",
+            "name": "[concat(parameters('ZoneName'), '/', parameters('OCSPRecord'))]",
+            "apiVersion": "[parameters('PublicDNSZoneAPIVersion')]",
+            "location": "global",
+            "properties": {
+                "TTL": 900,
+                "ARecords": [
+                    {
+                        "ipv4Address": "[parameters('OCSPPublicIP')]"
+                    }
                 ]
             }
         }

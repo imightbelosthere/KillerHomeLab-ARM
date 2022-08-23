@@ -20,36 +20,48 @@
                 "description": "Computer Name"
             }
         },
-        "ExchangeLicenseTerms": {
-            "type": "string",
-            "metadata": {
-                "description": "Exchange License Terms Argument"
-            }
-        },
         "InternaldomainName": {
             "type": "string",
           "metadata": {
             "description": "The FQDN of the AD Domain created "
           }
-        },                 
+        },
+        "ExternaldomainName": {
+            "type": "string",
+          "metadata": {
+            "description": "The External FQDN of the AD Domain created "
+          }
+        },       
         "NetBiosDomain": {
             "type": "string",
             "metadata": {
                 "description": "NetBios Domain Name"
             }
-        },
-        "SetupDC": {
-            "type": "string",
-            "metadata": {
-                "description": "Domain Controller used for Exchange Setup"
-            }
-        },                            
-        "DBName": {
-            "type": "string",
-            "metadata": {
-                "description": "Exchange Database Name"
-            }
         },        
+        "BaseDN": {
+            "type": "string",
+            "metadata": {
+                "description": "Base Domain Distiguished Name"
+            }
+        },                        
+        "ConfigDC": {
+            "type": "string",
+            "metadata": {
+                "description": "Domain Controller used for Exchange Config"
+            }
+        },                                                         
+        "CAServerIP": {
+            "type": "string",
+            "metadata": {
+                "description": "CA Server IP"
+            }
+        },                                             
+        "Site": {
+            "type": "string",
+            "metadata": {
+                "description": "Site Name"
+            }
+        },                                                                                                        
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -61,7 +73,7 @@
           "metadata": {
             "description": "The password for the Administrator account of the new VM and Domain"
           }
-        },                 
+        },                
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -76,8 +88,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/EXCHANGE19.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "EXCHANGE19.ps1\\EXCHANGE19"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CONFIGEXCHANGE19.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "CONFIGEXCHANGE19.ps1\\CONFIGEXCHANGE19"
     },
     "resources": [
         {
@@ -95,12 +107,14 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "ComputerName": "[parameters('ComputerName')]",                            
-                            "InternaldomainName": "[parameters('InternaldomainName')]",                
-                            "ExchangeLicenseTerms": "[parameters('ExchangeLicenseTerms')]",                                                                                                                                                                                    
-                            "NetBiosDomain": "[parameters('NetBiosdomain')]",          
-                            "DBName": "[parameters('DBName')]",       
-                            "SetupDC": "[parameters('SetupDC')]",                                                                                                        
+                            "ComputerName": "[parameters('ComputerName')]",
+                            "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
+                            "ExternaldomainName": "[parameters('ExternaldomainName')]",   
+                            "NetBiosDomain": "[parameters('NetBiosDomain')]",        
+                            "BaseDN": "[parameters('BaseDN')]",                                                                                                               
+                            "ConfigDC": "[parameters('ConfigDC')]",                                                                                     
+                            "CAServerIP": "[parameters('CAServerIP')]",                                                                                                                                                                                
+                            "Site": "[parameters('Site')]",                                                                                                                                                                            
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword1"

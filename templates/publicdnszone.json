@@ -7,12 +7,12 @@
             "metadata": {
                 "description": "Public DNS Zone API Version"
             }
-        },            
+        },
         "ZoneName": {
             "type": "string",
             "metadata": {
                 "description": "DNS Zone Name"
-              }
+            }
         }
     },
     "resources": [
@@ -22,9 +22,26 @@
             "apiVersion": "[parameters('PublicDNSZoneAPIVersion')]",
             "location": "global",
             "tags": {},
-            "properties": {
-            },
+            "properties": {},
             "resources": []
         }
-    ]
+    ],
+    "outputs": {
+        "NameServer1": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnsZones', parameters('ZoneName'))).NameServers[0]]"
+        },
+        "NameServer2": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnsZones', parameters('ZoneName'))).NameServers[1]]"
+        },
+        "NameServer3": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnsZones', parameters('ZoneName'))).NameServers[2]]"
+        },
+        "NameServer4": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/dnsZones', parameters('ZoneName'))).NameServers[3]]"
+        }
+    }
 }
