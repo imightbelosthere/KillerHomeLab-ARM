@@ -870,6 +870,12 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                     
                     "computerName": {
                         "value": "[variables('adcname')]"
                     },               
