@@ -12,8 +12,8 @@ Click the button below to deploy
 [![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-ActiveDirectory-Single-Site.json)
 
 
-# [ADFS and WAP with WID Single-Site - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-ActiveDirectory-Single-Site.md)
-<img src="Deployments/x_Images/ActiveDirectorySingleSite.png" alt="Active Directory" width="150">
+# [ADFS and WAP with WID Single-Site - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-ADFS-and-WAP-with-WID-Single-Site.md)
+<img src="Deployments/x_Images/ADFSSingleSiteWID.png" alt="ADFS and WAP with WID" width="150">
 Click the button below to deploy
 
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-ADFS-and-WAP-with-WID-Single-Site.json)
