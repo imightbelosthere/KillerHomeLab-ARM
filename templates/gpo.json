@@ -76,14 +76,14 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "GPOName": "[parameters('GPOName')]",
-                            "GPOSASUrl": "[parameters('GPOSASUrl')]",                            
-                            "GPOGUID": "[parameters('GPOGUID')]", 
-                            "BaseDN": "[parameters('BaseDN')]"
-                        }
+                    "Properties": {
+                        "GPOName": "[parameters('GPOName')]",
+                        "GPOSASUrl": "[parameters('GPOSASUrl')]",                            
+                        "GPOGUID": "[parameters('GPOGUID')]", 
+                        "BaseDN": "[parameters('BaseDN')]"
                     }
                 }
             }
+        }
     ]
 }

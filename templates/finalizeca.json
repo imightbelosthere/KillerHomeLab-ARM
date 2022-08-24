@@ -99,18 +99,18 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "RootCAIP": "[parameters('RootCAIP')]",                                                        
-                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
-                            "IssuingCAName": "[parameters('IssuingCAName')]",
-                            "RootCAName": "[parameters('RootCAName')]",                            
-                            "domainName": "[parameters('domainName')]",
-                            "CATemplateScriptUrl": "[parameters('CATemplateScriptUrl')]",                            
-                            "AdminCreds": {
-                                "UserName": "[parameters('adminUsername')]",
-                                "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
-                            }
+                    "Properties": {
+                        "RootCAIP": "[parameters('RootCAIP')]",                                                        
+                        "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
+                        "IssuingCAName": "[parameters('IssuingCAName')]",
+                        "RootCAName": "[parameters('RootCAName')]",                            
+                        "domainName": "[parameters('domainName')]",
+                        "CATemplateScriptUrl": "[parameters('CATemplateScriptUrl')]",                            
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
                         }
+                    }
                 },
                 "protectedSettings": {
                     "Items": {

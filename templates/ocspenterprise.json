@@ -87,18 +87,17 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "computerName": "[parameters('computerName')]",
-                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
-                            "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
-                            "ExternaldomainName": "[parameters('ExternaldomainName')]",  
-                            "EnterpriseCAName": "[parameters('EnterpriseCAName')]",
-                            "AdminCreds": {
-                                "UserName": "[parameters('adminUsername')]",
-                                "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
-                            }
-
+                    "Properties": {
+                        "computerName": "[parameters('computerName')]",
+                        "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
+                        "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
+                        "ExternaldomainName": "[parameters('ExternaldomainName')]",  
+                        "EnterpriseCAName": "[parameters('EnterpriseCAName')]",
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
                         }
+                    }
                 },
                 "protectedSettings": {
                     "Items": {

@@ -69,11 +69,11 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "NamingConvention": "[parameters('NamingConvention')]",                            
-                            "IssuingCAName": "[parameters('IssuingCAName')]",
-                            "RootCAName": "[parameters('RootCAName')]"
-                        }
+                    "Properties": {
+                        "NamingConvention": "[parameters('NamingConvention')]",                            
+                        "IssuingCAName": "[parameters('IssuingCAName')]",
+                        "RootCAName": "[parameters('RootCAName')]"
+                    }
                 }
             }
         }

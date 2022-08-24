@@ -51,8 +51,8 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                        }
+                    "Properties": {
+                    }
                 },
                 "protectedSettings": {
                 }                

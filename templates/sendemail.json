@@ -124,22 +124,22 @@
                     "WMFVersion": "latest",                                    
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "ToEmail": "[parameters('ToEmail')]",                                                        
-                            "FromEmail": "[parameters('FromEmail')]",
-                            "EnterpriseCAServerName": "[parameters('EnterpriseCAServerName')]",                                                                                                                                            
-                            "EnterpriseCAName": "[parameters('EnterpriseCAName')]",
-                            "NameServer1": "[parameters('NameServer1')]",
-                            "NameServer2": "[parameters('NameServer2')]",
-                            "NameServer3": "[parameters('NameServer3')]",                                                        
-                            "NameServer4": "[parameters('NameServer4')]",                            
-                            "InternalDomainName": "[parameters('InternalDomainName')]",
-                            "ExchangeServerName": "[parameters('ExchangeServerName')]",                            
-                            "AdminCreds": {
-                                "UserName": "[parameters('adminUsername')]",
-                                "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
-                            }
+                    "Properties": {
+                        "ToEmail": "[parameters('ToEmail')]",                                                        
+                        "FromEmail": "[parameters('FromEmail')]",
+                        "EnterpriseCAServerName": "[parameters('EnterpriseCAServerName')]",                                                                                                                                            
+                        "EnterpriseCAName": "[parameters('EnterpriseCAName')]",
+                        "NameServer1": "[parameters('NameServer1')]",
+                        "NameServer2": "[parameters('NameServer2')]",
+                        "NameServer3": "[parameters('NameServer3')]",                                                        
+                        "NameServer4": "[parameters('NameServer4')]",                            
+                        "InternalDomainName": "[parameters('InternalDomainName')]",
+                        "ExchangeServerName": "[parameters('ExchangeServerName')]",                            
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
                         }
+                    }
                 },
                 "protectedSettings": {
                     "Items": {

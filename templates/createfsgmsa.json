@@ -65,12 +65,12 @@
                     "WMFVersion": "latest",                                        
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "NetBiosDomain": "[parameters('NetBiosDomain')]",
-                            "domainName": "[parameters('domainName')]"
-                        }
+                    "Properties": {
+                        "NetBiosDomain": "[parameters('NetBiosDomain')]",
+                        "domainName": "[parameters('domainName')]"
                     }
                 }
             }
+        }
     ]
 }

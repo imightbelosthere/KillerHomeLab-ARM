@@ -77,22 +77,22 @@
                     "WMFVersion": "latest",                                        
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "computerName": "[parameters('computerName')]",
-                            "AzureSQLServerFQDN": "[parameters('AzureSQLServerFQDN')]",
-                            "DevOpsServerSASUrl": "[parameters('DevOpsServerSASUrl')]",
-                            "AzureCreds": {
-                                "UserName": "[parameters('AzureUserPrincipal')]",
-                                "Password": "PrivateSettingsRef:AdminPassword1"
-                            }                                                                                   
-                        }
-                    },
-                    "protectedSettings": {
-                        "Items": {
-                            "AdminPassword1": "[parameters('AzureUserPassword')]"
-                        }
-                    }                                        
-                }
+                    "Properties": {
+                        "computerName": "[parameters('computerName')]",
+                        "AzureSQLServerFQDN": "[parameters('AzureSQLServerFQDN')]",
+                        "DevOpsServerSASUrl": "[parameters('DevOpsServerSASUrl')]",
+                        "AzureCreds": {
+                            "UserName": "[parameters('AzureUserPrincipal')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"
+                        }                                                                                   
+                    }
+                },
+                "protectedSettings": {
+                    "Items": {
+                        "AdminPassword1": "[parameters('AzureUserPassword')]"
+                    }
+                }                                        
             }
+        }
     ]
 }

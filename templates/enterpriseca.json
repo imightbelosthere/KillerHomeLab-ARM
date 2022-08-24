@@ -101,18 +101,18 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "NetBiosDomain": "[parameters('NetBiosDomain')]",
-                            "domainName": "[parameters('domainName')]",
-                            "EnterpriseCAName": "[parameters('EnterpriseCAName')]",
-                            "EnterpriseCAHashAlgorithm": "[parameters('EnterpriseCAHashAlgorithm')]",                            
-                            "EnterpriseCAKeyLength": "[parameters('EnterpriseCAKeyLength')]",   
-                            "CATemplateScriptUrl": "[parameters('CATemplateScriptUrl')]",                                                                                                                                                                                            
-                            "AdminCreds": {
-                                "UserName": "[parameters('adminUsername')]",
-                                "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
-                            }
+                    "Properties": {
+                        "NetBiosDomain": "[parameters('NetBiosDomain')]",
+                        "domainName": "[parameters('domainName')]",
+                        "EnterpriseCAName": "[parameters('EnterpriseCAName')]",
+                        "EnterpriseCAHashAlgorithm": "[parameters('EnterpriseCAHashAlgorithm')]",                            
+                        "EnterpriseCAKeyLength": "[parameters('EnterpriseCAKeyLength')]",   
+                        "CATemplateScriptUrl": "[parameters('CATemplateScriptUrl')]",                                                                                                                                                                                            
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
                         }
+                    }
                 },
                 "protectedSettings": {
                     "Items": {

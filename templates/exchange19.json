@@ -94,25 +94,25 @@
                     "WMFVersion": "latest",                                        
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "ComputerName": "[parameters('ComputerName')]",                            
-                            "InternaldomainName": "[parameters('InternaldomainName')]",                
-                            "ExchangeLicenseTerms": "[parameters('ExchangeLicenseTerms')]",                                                                                                                                                                                    
-                            "NetBiosDomain": "[parameters('NetBiosdomain')]",          
-                            "DBName": "[parameters('DBName')]",       
-                            "SetupDC": "[parameters('SetupDC')]",                                                                                                        
-                            "AdminCreds": {
-                                "UserName": "[parameters('adminUsername')]",
-                                "Password": "PrivateSettingsRef:AdminPassword1"
-                            }                                                                                   
-                        }
-                    },
-                    "protectedSettings": {
-                        "Items": {
-                            "AdminPassword1": "[parameters('adminPassword')]"
-                        }
-                    }                                        
-                }
+                    "Properties": {
+                        "ComputerName": "[parameters('ComputerName')]",                            
+                        "InternaldomainName": "[parameters('InternaldomainName')]",                
+                        "ExchangeLicenseTerms": "[parameters('ExchangeLicenseTerms')]",                                                                                                                                                                                    
+                        "NetBiosDomain": "[parameters('NetBiosdomain')]",          
+                        "DBName": "[parameters('DBName')]",       
+                        "SetupDC": "[parameters('SetupDC')]",                                                                                                        
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"
+                        }                                                                                   
+                    }
+                },
+                "protectedSettings": {
+                    "Items": {
+                        "AdminPassword1": "[parameters('adminPassword')]"
+                    }
+                }                                        
             }
+        }
     ]
 }

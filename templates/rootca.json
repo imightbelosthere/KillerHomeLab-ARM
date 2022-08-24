@@ -95,18 +95,18 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "domainName": "[parameters('domainName')]",
-                            "RootCAName": "[parameters('RootCAName')]",
-                            "RootCAHashAlgorithm": "[parameters('RootCAHashAlgorithm')]",                            
-                            "RootCAKeyLength": "[parameters('RootCAKeyLength')]",                                                        
-                            "BaseDN": "[parameters('BaseDN')]",                            
-                            "AdminCreds": {
-                                "UserName": "[parameters('adminUsername')]",
-                                "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
-                            }
-
+                    "Properties": {
+                        "domainName": "[parameters('domainName')]",
+                        "RootCAName": "[parameters('RootCAName')]",
+                        "RootCAHashAlgorithm": "[parameters('RootCAHashAlgorithm')]",                            
+                        "RootCAKeyLength": "[parameters('RootCAKeyLength')]",                                                        
+                        "BaseDN": "[parameters('BaseDN')]",                            
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
                         }
+
+                    }
                 },
                 "protectedSettings": {
                     "Items": {

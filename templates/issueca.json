@@ -107,20 +107,20 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "computerName": "[parameters('computerName')]",
-                            "NamingConvention": "[parameters('NamingConvention')]",                            
-                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                                                                               
-                            "IssuingCAName": "[parameters('IssuingCAName')]",
-                            "RootCAName": "[parameters('RootCAName')]",                            
-                            "RootCAIP": "[parameters('RootCAIP')]",     
-                            "IssuingCAHashAlgorithm": "[parameters('IssuingCAHashAlgorithm')]",                            
-                            "IssuingCAKeyLength": "[parameters('IssuingCAKeyLength')]",                                                                                                                                       
-                            "AdminCreds": {
-                                "UserName": "[parameters('adminUsername')]",
-                                "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
-                            }
+                    "Properties": {
+                        "computerName": "[parameters('computerName')]",
+                        "NamingConvention": "[parameters('NamingConvention')]",                            
+                        "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                                                                               
+                        "IssuingCAName": "[parameters('IssuingCAName')]",
+                        "RootCAName": "[parameters('RootCAName')]",                            
+                        "RootCAIP": "[parameters('RootCAIP')]",     
+                        "IssuingCAHashAlgorithm": "[parameters('IssuingCAHashAlgorithm')]",                            
+                        "IssuingCAKeyLength": "[parameters('IssuingCAKeyLength')]",                                                                                                                                       
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
                         }
+                    }
                 },
                 "protectedSettings": {
                     "Items": {

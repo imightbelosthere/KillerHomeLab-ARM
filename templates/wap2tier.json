@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ExtensionsAPIVersion": {
@@ -13,11 +13,17 @@
             "metadata": {
                 "description": "Extension Type Handler Version"
             }
-        },            
+        },          
         "computerName": {
             "type": "string",
             "metadata": {
                 "description": "Computer Name"
+            }
+        },
+        "NetBiosDomain": {
+            "type": "string",
+            "metadata": {
+                "description": "NetBios Domain Name"
             }
         },  
         "ExternalDomainName": {
@@ -25,19 +31,25 @@
             "metadata": {
                 "description": "The FQDN of the AD Domain created "
           }
-        },            
-        "NetBiosDomain": {
+        },                        
+        "ADFSServerIP": {
             "type": "string",
             "metadata": {
-                "description": "NetBios Domain Name"
+                "description": "ADFS IP"
             }
-        },
-        "EnterpriseCAName": {
+        },                          
+        "IssuingCAName": {
             "type": "string",
             "metadata": {
-                "description": "Enterprise CA Name"
+                "description": "Issuing CA Name"
             }
         },
+        "RootCAName": {
+            "type": "string",
+            "metadata": {
+                "description": "Root CA Name"
+            }
+        },                
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -49,7 +61,7 @@
           "metadata": {
             "description": "The password for the Administrator account of the new VM and Domain"
           }
-        },                
+        },         
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -64,8 +76,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/FIRSTADFSENT.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "FIRSTADFSENT.ps1\\FIRSTADFSENT"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/WAP2TIER.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "WAP2TIER.ps1\\WAP2TIER"
     },
     "resources": [
         {
@@ -83,20 +95,22 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
+                        "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
+                        "ADFSServerIP": "[parameters('ADFSServerIP')]",                            
                         "ExternalDomainName": "[parameters('ExternalDomainName')]",
-                        "NetBiosDomain": "[parameters('NetBiosDomain')]",  
-                        "EnterpriseCAName": "[parameters('EnterpriseCAName')]",
+                        "IssuingCAName": "[parameters('IssuingCAName')]",
+                        "RootCAName": "[parameters('RootCAName')]",                                                        
                         "AdminCreds": {
                             "UserName": "[parameters('adminUsername')]",
-                            "Password": "PrivateSettingsRef:AdminPassword1"
-                        }                                                                                   
+                            "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
+                        }
                     }
                 },
                 "protectedSettings": {
                     "Items": {
                         "AdminPassword1": "[parameters('adminPassword')]"
                     }
-                }                                        
+                }                
             }
         }
     ]

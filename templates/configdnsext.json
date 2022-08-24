@@ -87,18 +87,18 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                        "Properties": {
-                            "computerName": "[parameters('computerName')]",
-                            "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                                                    
-                            "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
-                            "ExternaldomainName": "[parameters('ExternaldomainName')]",                                                                                    
-                            "ReverseLookup1": "[parameters('ReverseLookup1')]",
-                            "ForwardLookup1": "[parameters('ForwardLookup1')]",                                                        
-                            "dc1lastoctet": "[parameters('dc1lastoctet')]"                                                                                                                                                                                                                                                                         
-                        }
+                    "Properties": {
+                        "computerName": "[parameters('computerName')]",
+                        "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                                                    
+                        "InternaldomainName": "[parameters('InternaldomainName')]",                                                        
+                        "ExternaldomainName": "[parameters('ExternaldomainName')]",                                                                                    
+                        "ReverseLookup1": "[parameters('ReverseLookup1')]",
+                        "ForwardLookup1": "[parameters('ForwardLookup1')]",                                                        
+                        "dc1lastoctet": "[parameters('dc1lastoctet')]"                                                                                                                                                                                                                                                                         
+                    }
                 },
-                    "protectedSettings": {                                               
-                    }                
+                "protectedSettings": {                                               
+                }                
             }
         }
     ]
