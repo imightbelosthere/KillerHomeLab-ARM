@@ -33,7 +33,7 @@ Exchange
 - Configure Exchange File Share Witness
 - Prepare Active Directory for Exchange
 - Install Exchange
-- Request/Receive Exchange 2019 SAN Certificate from Issuing CA
+- Request/Receive Exchange 2019 SAN Certificate from Enterprise CA
 - Exchange 2019 Certificate Enablement
 - Exchange Virtual Directory Internal/External Configuration
 - Exchange Virtual Directory Authentication Configuration

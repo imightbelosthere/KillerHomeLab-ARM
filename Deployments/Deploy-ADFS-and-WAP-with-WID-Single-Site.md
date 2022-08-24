@@ -14,6 +14,13 @@ This Deployment deploys the following items:
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
+ADFS
+- Configure Internal DNS ADFS Records
+- Configure ADFS Server
+- Configure WAP Server
+- Create WAP/ADFS Trust
+- Request/Receive ADFS SAN Certificate from Enterprise CA
+
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 

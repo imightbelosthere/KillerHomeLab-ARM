@@ -215,6 +215,13 @@
                 "description": "Windows Server OS License Type"
             }
         },
+        "AzureADConnectDownloadUrl": {
+            "type": "string",
+            "defaultValue": "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi",      
+            "metadata": {
+                "description": "Download Location of Latest Azure AD Connect"
+            }
+        },          
         "NamingConvention": {
             "type": "string",
             "defaultValue": "khl",
@@ -446,6 +453,9 @@
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]",         
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
+        "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
+        "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
+        "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]", 
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
@@ -608,6 +618,272 @@
                     }
                 }
             }
-        }        
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-Federated-Service-GroupManaged-ServiceAccount",
+            "dependsOn": [
+               "Configure-ADFS-DNS-Records"
+            ],           
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/createfsgmsa.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },              
+                    "DomainName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },                                          
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                           
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-ADConnect-Server",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('adcname')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('adcIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('ADCOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('ADCOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('ADCVMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+		{
+			"condition": "[equals(parameters('ADCOSSku'),'2022-Datacenter')]",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinADConnect-22",
+			"dependsOn": [
+				"Deploy-ADConnect-Server"
+			],      
+			"properties": {
+				"mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+				"parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                     
+					"computerName": {
+						"value": "[variables('adcname')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV22OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		},  
+        {
+            "condition": "[equals(parameters('ADCOSSku'),'2019-Datacenter')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoinADConnect-19",
+            "dependsOn": [
+				"Deploy-ADConnect-Server"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('adcname')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('SRV19OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },	
+        {
+            "condition": "[equals(parameters('ADCOSSku'),'2016-Datacenter')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoinADConnect-16",
+            "dependsOn": [
+				"Deploy-ADConnect-Server-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('adcname')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('SRV16OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2021-04-01",
+      "name": "downloadaaddc",
+      "dependsOn": [
+        "DomainJoinADC-22",
+        "DomainJoinADC-19",
+        "DomainJoinADC-16"
+      ],      
+      "properties": {
+          "mode": "Incremental",
+          "templateLink": {
+              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/downloadaaddc.json', parameters('_artifactsLocationSasToken')))]",
+              "contentVersion": "1.0.0.0"
+          },
+          "parameters": {
+              "computerName": {
+                  "value": "[variables('adcname')]"
+              },               
+              "AzureADConnectDownloadUrl": {
+                  "value": "[parameters('AzureADConnectDownloadUrl')]"
+              },                            
+              "_artifactsLocation": {
+                "value": "[parameters('_artifactsLocation')]"
+              },                                                                                                            
+              "_artifactsLocationSasToken": {
+                "value": "[parameters('_artifactsLocationSasToken')]"
+              }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+          }
+      }
+    },                        
     ]
 }
