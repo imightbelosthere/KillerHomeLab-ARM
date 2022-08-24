@@ -811,6 +811,206 @@
                     }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-ADFS-Server-01",
+            "dependsOn": [
+				"Create-Federated-Service-GroupManaged-ServiceAccount"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('adfs1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('adfs1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('ADFSOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('ADFSOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('ADFS1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+		{
+			"condition": "[equals(parameters('ADFSOSSku'),'2022-Datacenter')]",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinADFSServer-22",
+			"dependsOn": [
+				"Deploy-ADFS-Server-01"
+			],      
+			"properties": {
+				"mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+				"parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                     
+					"computerName": {
+						"value": "[variables('adfs1name')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV22OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		},  
+        {
+            "condition": "[equals(parameters('ADFSOSSku'),'2019-Datacenter')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoinADFSServer-19",
+            "dependsOn": [
+				"Deploy-ADFS-Server-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('adfs1name')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('SRV19OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },	
+        {
+            "condition": "[equals(parameters('ADFSOSSku'),'2016-Datacenter')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoinADFSServer-16",
+            "dependsOn": [
+				"Deploy-ADFS-Server-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('adfs1name')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('SRV16OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        }        
     ]
 }
