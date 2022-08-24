@@ -854,36 +854,36 @@
                 }
             }
         },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2021-04-01",
-      "name": "downloadaaddc",
-      "dependsOn": [
-        "DomainJoinADC-22",
-        "DomainJoinADC-19",
-        "DomainJoinADC-16"
-      ],      
-      "properties": {
-          "mode": "Incremental",
-          "templateLink": {
-              "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/downloadaaddc.json', parameters('_artifactsLocationSasToken')))]",
-              "contentVersion": "1.0.0.0"
-          },
-          "parameters": {
-              "computerName": {
-                  "value": "[variables('adcname')]"
-              },               
-              "AzureADConnectDownloadUrl": {
-                  "value": "[parameters('AzureADConnectDownloadUrl')]"
-              },                            
-              "_artifactsLocation": {
-                "value": "[parameters('_artifactsLocation')]"
-              },                                                                                                            
-              "_artifactsLocationSasToken": {
-                "value": "[parameters('_artifactsLocationSasToken')]"
-              }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-          }
-      }
-    },                        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Download-ADConnect",
+            "dependsOn": [
+                "DomainJoinADConnect-22",
+                "DomainJoinADConnect-19",
+                "DomainJoinADConnect-16"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/downloadadconnect.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "computerName": {
+                        "value": "[variables('adcname')]"
+                    },               
+                    "AzureADConnectDownloadUrl": {
+                        "value": "[parameters('AzureADConnectDownloadUrl')]"
+                    },                            
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        }
     ]
 }
