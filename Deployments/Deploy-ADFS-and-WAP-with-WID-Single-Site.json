@@ -661,6 +661,9 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-ADConnect-Server",
+            "dependsOn": [
+				"Create-Federated-Service-GroupManaged-ServiceAccount"
+            ],            
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
