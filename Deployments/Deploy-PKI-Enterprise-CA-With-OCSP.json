@@ -262,7 +262,7 @@
         },
         "ExternalDomain": {
             "type": "string",
-            "defaultValue": "killerhomelab",
+            "defaultValue": "sub1.killerhomelab",
             "metadata": {
                 "description": "External DNS Domain"
             }
