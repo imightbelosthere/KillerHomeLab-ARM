@@ -1011,6 +1011,111 @@
                     }
                 }
             }
-        }        
+        },
+        {
+            "condition": "[equals(parameters('PKIDeploymentType'),'2-Tier-PKI')]",      
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-First-ADFS-2-Tier-PKI",
+            "dependsOn": [
+                "Create-Federated-Service-GroupManaged-ServiceAccount",
+                "DomainJoinADFSServer-22",
+                "DomainJoinADFSServer-19",
+                "DomainJoinADFSServer-16"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/firstadfs2tier.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                      
+                    "computerName": {
+                        "value": "[variables('adfs1name')]"
+                    },             
+                    "ExternalDomainName": {
+                        "value": "[variables('ExternalDomainName')]"
+                    },          
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },              
+                    "IssuingCAName": {
+                        "value": "[parameters('IssuingCAName')]"
+                    },              
+                    "RootCAName": {
+                        "value": "[parameters('RootCAName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('PKIDeploymentType'),'Enterprise-PKI')]",      
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-First-ADFS-Enterprise-PKI",
+            "dependsOn": [
+                "Create-Federated-Service-GroupManaged-ServiceAccount",
+                "DomainJoinADFSServer-22",
+                "DomainJoinADFSServer-19",
+                "DomainJoinADFSServer-16"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/firstadfsent.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                      
+                    "computerName": {
+                        "value": "[variables('adfs1name')]"
+                    },         
+                    "ExternalDomainName": {
+                        "value": "[variables('ExternalDomainName')]"
+                    },          
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },              
+                    "EnterpriseCAName": {
+                        "value": "[parameters('EnterpriseCAName')]"
+                    },              
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        }                
     ]
 }
