@@ -818,7 +818,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoinADConnect-16",
             "dependsOn": [
-				"Deploy-ADConnect-Server-01"
+				"Deploy-ADConnect-Server"
             ],
             "properties": {
                 "mode": "Incremental",
