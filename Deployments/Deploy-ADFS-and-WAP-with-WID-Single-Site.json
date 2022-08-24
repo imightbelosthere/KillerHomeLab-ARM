@@ -148,6 +148,17 @@
                 "description": "Time Zone"
             }
         },
+        "PKIDeploymentType": {
+            "type": "string",
+            "defaultValue": "Enterprise-PKI",
+            "allowedValues": [
+                "2-Tier-PKI",
+                "Enterprise-PKI"
+            ],      
+            "metadata": {
+                "description": "Type of PKI Environment Previously Deployed"
+            }
+        },        
         "AutoShutdownEnabled": {
             "type": "string",
             "defaultValue": "No",
@@ -202,17 +213,6 @@
             ],
             "metadata": {
                 "description": "Windows Server OS License Type"
-            }
-        },
-        "WindowsClientLicenseType": {
-            "type": "string",
-            "defaultValue": "None",
-            "allowedValues": [
-                "None",
-                "Windows_Client"
-            ],
-            "metadata": {
-                "description": "Windows Client OS License Type"
             }
         },
         "NamingConvention": {
@@ -271,6 +271,52 @@
                 "description": "Top-Level Domain Name"
             }
         },
+        "ExternalDomain": {
+            "type": "string",
+            "defaultValue": "killerhomelab",
+            "metadata": {
+                "description": "External DNS Domain"
+            }
+        },    
+        "ExternalTLD": {
+            "type": "string",
+            "defaultValue": "com",
+            "allowedValues": [
+                "com",
+                "net",
+                "org",
+                "edu",
+                "gov",
+                "mil",
+                "us",
+                "tk",
+                "ml"
+            ],      
+            "metadata": {
+                "description": "External Top-Level Domain Name"
+            }
+        }, 
+        "RootCAName": {
+            "type": "string",
+            "defaultValue": "Offline Root CA",
+            "metadata": {
+                "description": "Offline Root CA Name"
+            }
+        },                    
+        "IssuingCAName": {
+            "type": "string",
+            "defaultValue": "Issuing CA",
+            "metadata": {
+                "description": "Issuing CA Name"
+            }
+        },     
+        "EnterpriseCAName": {
+            "type": "string",
+            "defaultValue": "Enterprise CA",
+            "metadata": {
+                "description": "Enterprise CA Name"
+            }
+        },                            
         "vnet1ID": {
             "type": "string",
             "defaultValue": "172.16",
@@ -278,6 +324,84 @@
                 "description": "VNet1 Prefix"
             }
         },
+        "ADCOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+                "2022-Datacenter",
+                "2019-Datacenter",
+                "2016-Datacenter"
+            ],      
+            "metadata": {
+                "description": "ADC OS Sku"
+            }
+        },
+        "ADCOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "ADC OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+            }
+        },     
+        "WAPOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+                "2022-Datacenter",
+                "2019-Datacenter",
+                "2016-Datacenter"
+            ],      
+            "metadata": {
+                "description": "WAP1 OS Sku"
+            }
+        },
+        "WAPOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "WAP1 OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+            }
+        },         
+        "ADFSOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+                "2022-Datacenter",
+                "2019-Datacenter",
+                "2016-Datacenter"
+            ],      
+            "metadata": {
+                "description": "ADFS1 OS Sku"
+            }
+        },
+        "ADFSOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "ADFS1 OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+            }
+        },         
+        "ADCVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "AD Connect VMSize"
+            }
+        },        
+        "ADFS1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "ADFS 1 VMSize"
+            }
+        },     
+        "WAP1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "WAP 1 VMSize"
+            }
+        },                            
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -320,6 +444,7 @@
         "wap1IP": "[concat(parameters('vnet1ID'),'.1.',variables('wap1lastoctet'))]",            
         "wap1lastoctet": "122",        
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
+        "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]",         
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
@@ -445,6 +570,44 @@
                     }
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-ADFS-DNS-Records",
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configdnsadfs.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "ExternalDomainName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },                                                                                                                   
+                    "adfs1IP": {
+                        "value": "[variables('adfs1IP')]"
+                    }, 
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        }        
     ]
 }
