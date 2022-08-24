@@ -26,12 +26,6 @@
             Name   = 'ADFS-Federation'
         }
 
-        TimeZone SetTimeZone
-        {
-            IsSingleInstance = 'Yes'
-            TimeZone         = $TimeZone
-        }
-
         File MachineConfig
         {
             Type = 'Directory'
