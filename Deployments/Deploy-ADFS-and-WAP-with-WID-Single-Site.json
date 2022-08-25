@@ -1606,11 +1606,62 @@
             "condition": "[equals(parameters('ExchangeExists'),'Yes')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-Exchange-CertificateBased-Authentication",
+            "name": "Configure-ADFS-CertificateBased-Authentication",
             "dependsOn": [
                 "Add-PublicIP-to-WAPServer-01",
                 "Create-PublicDNSZone-ADFS-Records",                       
                 "Create-PublicDNSZone-ADFS-and-WAPExchange-Records"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/adfscertauth.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('adfs1name')]"
+                    },
+                    "ExchangeExistsVersion": {
+                        "value": "[parameters('ExchangeExistsVersion')]"
+                    },       
+                    "ExternalDomainName": {
+                        "value": "[variables('ExternalDomainName')]"
+                    },      
+                    "EXServerIP": {
+                        "value": "[variables('ex1IP')]"
+                    },                                                
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },                               
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('ExchangeExists'),'Yes')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-WAP-CertificateBased-Authentication",
+            "dependsOn": [
+                "Configure-ADFS-CertificateBased-Authentication"
             ],      
             "properties": {
                 "mode": "Incremental",

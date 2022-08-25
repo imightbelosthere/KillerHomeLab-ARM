@@ -99,7 +99,7 @@ Configuration WAPCERTAUTH
                 # Configure Publishing Rules
                 $owa20WPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Outlook Web App 20$using:ExchangeExistsVersion"} -ErrorAction 0
                 IF ($owa20WPR -eq $Null){
-                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa20/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa20/" -Name "Outlook Web App 20$using:ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Outlook Web App 20$using:ExchangeExistsVersion"
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa/" -Name "Outlook Web App 20$using:ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Outlook Web App 20$using:ExchangeExistsVersion"
                 }
 
                 $ECPWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Admin Center (EAC) 20$using:ExchangeExistsVersion"} -ErrorAction 0
