@@ -358,78 +358,81 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-VirtualNetwork-01",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "vnetprefix": {
-                        "value": "[variables('vnet1Prefix')]"
-                    },
-                    "subnet1Name": {
-                        "value": "[variables('vnet1subnet1Name')]"
-                    },
-                    "subnet1Prefix": {
-                        "value": "[variables('vnet1subnet1Prefix')]"
-                    },
-                    "subnet2Name": {
-                        "value": "[variables('vnet1subnet2Name')]"
-                    },
-                    "subnet2Prefix": {
-                        "value": "[variables('vnet1subnet2Prefix')]"
-                    },
-                    "GatewaysubnetPrefix": {
-                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
-                    },
-                    "BastionsubnetPrefix": {
-                        "value": "[variables('vnet1BastionsubnetPrefix')]"
-                    },
-                    "FirewallsubnetPrefix": {
-                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
-                    }
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-BastionHost-01",
+            "name": "Deploy-ExchangeServer-01",
             "dependsOn": [
-                "Deploy-VirtualNetwork-01"
+                "DomainJoinFileServer-01-22",
+                "DomainJoinFileServer-01-19",
+                "DomainJoinFileServer-01-16"                                
             ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/bastionhost.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-3disk-vm.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "BastionHostAPIVersion": {
-                        "value": "[variables('BastionHostAPIVersion')]"
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
                     },
-                    "PublicIPAddressesAPIVersion": {
-                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
                     },
-                    "publicIPAddressName": {
-                        "value": "[concat(variables('vnet1Name'),'-Bastion-pip')]"
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
                     },
-                    "AllocationMethod": {
-                        "value": "Static"
+                    "computerName": {
+                        "value": "[parameters('SQLServerName')]"
+                    },
+                    "computerIP": {
+                        "value":  "[parameters('SQLServerIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value":  "[parameters('SQLOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('SQLOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "DataDisk1Name": {
+                        "value": "SQLDatabases"
+                    },            
+                    "DataDisk2Name": {
+                        "value": "SQLLogs"
+                    },                     
+                    "VMSize": {
+                        "value": "[parameters('SQLVMSize')]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[parameters('ExistingVNetName')]"
                     },
-                    "subnetName": {
-                        "value": "AzureBastionSubnet"
+                    "subnet1Name": {
+                        "value": "[parameters('ExistingSubnetName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
                     }
                 }
             }

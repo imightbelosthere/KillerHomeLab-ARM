@@ -1,14 +1,16 @@
-# Description
-<img src="./x_Images/xxx.svg" height="600" width="800"/>
+# SQL Server using an Existing Subnet
+<img src="./x_Images/SQLServerwithVNet.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
-- 1 - Virtual Network
-- 1 - Bastion Host
+- 1 - SQL Server
 - 1 - Azure KeyVault with Secret contianing Deployment Password
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
+SQL Deployment
+- Install SQL Server 2017/2019/2022
+- Installs SQL Management Studio
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 
