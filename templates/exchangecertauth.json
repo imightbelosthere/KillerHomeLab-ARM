@@ -95,6 +95,7 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
+                        "computerName": "[parameters('computerName')]", 
                         "NetBiosDomain": "[parameters('NetBiosDomain')]", 
                         "ExchangeExistsVersion": "[parameters('ExchangeExistsVersion')]",                                                                                     
                         "InternalDomainName": "[parameters('InternalDomainName')]",
