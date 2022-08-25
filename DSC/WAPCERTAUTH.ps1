@@ -97,15 +97,18 @@ Configuration WAPCERTAUTH
                 $exthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=owa20$using:ExchangeExistsVersion.$using:ExternalDomainName"}).Thumbprint
 
                 # Configure Publishing Rules
-                $owa20WPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Outlook Web App $ExchangeExistsVersion"}
+                $owa20WPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Outlook Web App 20$using:ExchangeExistsVersion"} -ErrorAction 0
                 IF ($owa20WPR -eq $Null){
-                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa20/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa20/" -Name "Outlook Web App $ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Outlook Web App $ExchangeExistsVersion"
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa20/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa20/" -Name "Outlook Web App 20$using:ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Outlook Web App 20$using:ExchangeExistsVersion"
                 }
 
-                $ECPWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Admin Center (EAC) $ExchangeExistsVersion"}
+                $ECPWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Admin Center (EAC) 20$using:ExchangeExistsVersion"} -ErrorAction 0
                 IF ($ECPWPR -eq $Null){
-                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/ecp/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/ecp/" -Name "Exchange Admin Center (EAC) $ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Exchange Admin Center (EAC) $ExchangeExistsVersion"
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/ecp/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/ecp/" -Name "Exchange Admin Center (EAC) 20$using:ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Exchange Admin Center (EAC) 20$using:ExchangeExistsVersion"
                 }
+
+                $AUTOWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Autodiscover"} -ErrorAction 0
+                Add-WebApplicationProxyApplication -BackendServerUrl "https://autodiscover.$ExternalDomainName/Autodiscover/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://autodiscover.$ExternalDomainName/Autodiscover/" -Name "Exchange Autodiscover" -ExternalPreauthentication "PassThrough" 
 
             }
             GetScript =  { @{} }
