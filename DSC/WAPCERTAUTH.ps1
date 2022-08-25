@@ -129,7 +129,7 @@ Configuration WAPCERTAUTH
 
                 $EAS20WPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange ActiveSync 20$using:ExchangeExistsVersion"} -ErrorAction 0
                 IF ($EAS20WPR -eq $Null){
-                    Add-WebApplicationProxyApplication -BackendServerUrl "https://eas20$using:ExchangeExistsVersion.$ExternalDomainName/Microsoft-Server-ActiveSync/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://eas20$using:ExchangeExistsVersion.$ExternalDomainName/Microsoft-Server-ActiveSync/" -Name "Exchange ActiveSync 20$using:ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Exchange ActiveSync 20$using:ExchangeExistsVersion"
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://eas20$using:ExchangeExistsVersion.$ExternalDomainName/Microsoft-Server-ActiveSync/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://eas20$using:ExchangeExistsVersion.$ExternalDomainName/Microsoft-Server-ActiveSync/" -Name "Exchange ActiveSync 20$using:ExchangeExistsVersion" -ExternalPreAuthentication "PassThrough"
                 }
             }
             GetScript =  { @{} }
