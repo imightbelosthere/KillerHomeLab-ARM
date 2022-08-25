@@ -1321,7 +1321,7 @@
             "condition": "[equals(parameters('ExchangeExists'),'No')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-NetworksecurityGroup-01",
+            "name": "Deploy-NetworksecurityGroup-01-for-Federation",
             "dependsOn": [
                 "Deploy-WAP-Server-01" 
             ],      
@@ -1351,7 +1351,7 @@
             "condition": "[equals(parameters('ExchangeExists'),'Yes')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-NetworksecurityGroup-01",
+            "name": "Deploy-NetworksecurityGroup-01-for-Federation-with-Exchange",
             "dependsOn": [
                 "Deploy-WAP-Server-01" 
             ],      
