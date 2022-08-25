@@ -170,6 +170,17 @@
                 "description": "Does Exchange exist in your current environment"
             }
         },          
+        "ExchangeExistsVersion": {
+            "type": "string",
+            "defaultValue": "19",
+            "allowedValues": [
+                "19",
+                "16"
+            ],      
+            "metadata": {
+                "description": "Does Exchange exist in your current environment"
+            }
+        },        
         "AutoShutdownEnabled": {
             "type": "string",
             "defaultValue": "No",
@@ -478,7 +489,8 @@
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
-        "NetworkSecurityGroupAPIVersion": "2022-01-01",         
+        "NetworkSecurityGroupAPIVersion": "2022-01-01", 
+        "PublicDNSZoneAPIVersion": "2018-05-01",                 
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
@@ -1379,6 +1391,233 @@
                     }
                 }
             }
-        }                                                
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-Subnet1",
+            "dependsOn": [
+                "Deploy-NetworksecurityGroup-01-for-Federation",
+                "Deploy-NetworksecurityGroup-01-for-Federation-with-Exchange"                
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },                                                                                                            
+                    "subnetPrefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    }, 
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    }                                                                                                                                                                                                                             
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-Subnet2",
+            "dependsOn": [
+                "Associate-NSG-with-Subnet1"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },                                                                                                            
+                    "subnetPrefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    }, 
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    }                                                                                                                                                                                                                             
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-PublicIP-to-WAPServer-01",
+            "dependsOn": [
+                "Associate-NSG-with-Subnet1",
+                "Associate-NSG-with-Subnet2"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-pip.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },                    
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wap1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wap1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('WAPOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WAPOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WAP1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('ExchangeExists'),'No')]",                                    
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-PublicDNSZone-ADFS-Records",
+            "dependsOn": [
+                "Add-PublicIP-to-WAPServer-01"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/publicdnszoneadfs.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicDNSZoneAPIVersion": {
+                        "value": "[variables('PublicDNSZoneAPIVersion')]"
+                    },                            
+                    "ZoneName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },
+                    "OCSPRecord": {
+                        "value": "ocsp"
+                    },
+                    "OCSPPublicIP": {
+                        "value": "[reference('Add-PublicIP-to-OCSPServer').outputs.PublicIP.value]"             
+                    },
+                    "WAP1Record": {
+                        "value": "adfs"
+                    },
+                    "WAPPublicIP": {
+                        "value": "[reference('Add-PublicIP-to-WAPServer-01').outputs.PublicIP.value]"             
+                    }                                                                                                                                                                                                                                                                                                                         
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('ExchangeExists'),'No')]",                                    
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-PublicDNSZone-ADFS-and-WAPExchange-Records",
+            "dependsOn": [
+                "Add-PublicIP-to-WAPServer-01"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/publicdnszoneadfsandexchange.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicDNSZoneAPIVersion": {
+                        "value": "[variables('PublicDNSZoneAPIVersion')]"
+                    },                            
+                    "ZoneName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },
+                    "OCSPRecord": {
+                        "value": "ocsp"
+                    },
+                    "OCSPPublicIP": {
+                        "value": "[reference('Add-PublicIP-to-OCSPServer').outputs.PublicIP.value]"             
+                    },
+                    "WAP1Record": {
+                        "value": "adfs"
+                    },
+                    "OWARecord": {
+                        "value": "[concat('owa20',parameters('ExchangeExistsVersion'))]"
+                    },
+                    "AutoDiscoverRecord": {
+                        "value": "autodiscover"
+                    },
+                    "OutlookRecord": {
+                        "value": "[concat('outlook20',parameters('ExchangeExistsVersion'))]"
+                    },
+                    "EASRecord": {
+                        "value": "[concat('eas20',parameters('ExchangeExistsVersion'))]"
+                    },                    
+                    "WAPPublicIP": {
+                        "value": "[reference('Add-PublicIP-to-WAPServer-01').outputs.PublicIP.value]"             
+                    }                                                                                                                                                                                                                                                                                                                         
+                }
+            }
+        }                                                                             
     ]
 }
