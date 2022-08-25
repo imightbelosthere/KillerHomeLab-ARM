@@ -68,8 +68,8 @@ Configuration WAPCERTAUTH
                 }
 
                 #Check if Exchange Certificate already exists if NOT Import
-                $exthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=owa$using:ExchangeExistsVersion.$using:ExternalDomainName"}).Thumbprint
-                IF ($exthumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\EX-Certificates\owa$using:ExchangeExistsVersion.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
+                $exthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=owa20$using:ExchangeExistsVersion.$using:ExternalDomainName"}).Thumbprint
+                IF ($exthumbprint -eq $null) {Import-PfxCertificate -FilePath "C:\EX-Certificates\owa20$using:ExchangeExistsVersion.$using:ExternalDomainName.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password}
             }
             GetScript =  { @{} }
             TestScript = { $false}
@@ -94,17 +94,17 @@ Configuration WAPCERTAUTH
                 [System.Management.Automation.PSCredential ]$Creds = New-Object System.Management.Automation.PSCredential ($using:DomainCreds.UserName), $using:DomainCreds.Password
 
                 # Get Exchange Certificate
-                $exthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=owa$using:ExchangeExistsVersion.$using:ExternalDomainName"}).Thumbprint
+                $exthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=owa20$using:ExchangeExistsVersion.$using:ExternalDomainName"}).Thumbprint
 
                 # Configure Publishing Rules
-                $OWAWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Outlook Web App $ExchangeExistsVersion"}
-                IF ($OWAWPR -eq $Null){
-                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa$using:ExchangeExistsVersion.$ExternalDomainName/owa/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa$using:ExchangeExistsVersion.$ExternalDomainName/owa/" -Name "Outlook Web App $ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Outlook Web App $ExchangeExistsVersion"
+                $owa20WPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Outlook Web App $ExchangeExistsVersion"}
+                IF ($owa20WPR -eq $Null){
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa20/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa20/" -Name "Outlook Web App $ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Outlook Web App $ExchangeExistsVersion"
                 }
 
                 $ECPWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Admin Center (EAC) $ExchangeExistsVersion"}
                 IF ($ECPWPR -eq $Null){
-                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa$using:ExchangeExistsVersion.$ExternalDomainName/ecp/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa$using:ExchangeExistsVersion.$ExternalDomainName/ecp/" -Name "Exchange Admin Center (EAC) $ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Exchange Admin Center (EAC) $ExchangeExistsVersion"
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/ecp/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/ecp/" -Name "Exchange Admin Center (EAC) $ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Exchange Admin Center (EAC) $ExchangeExistsVersion"
                 }
 
             }
