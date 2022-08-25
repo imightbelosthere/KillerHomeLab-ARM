@@ -32,14 +32,6 @@ Configuration WAP2TIER
             GetScript =  { @{} }
             TestScript = { $false}
         }
-
-        File Certificates
-        {
-            Type = 'Directory'
-            DestinationPath = 'C:\Certificates'
-            Ensure = "Present"
-            DependsOn = '[Script]AllowRemoteCopy'
-        }
                 
         # Install Web Application Proxy
         WindowsFeature Web-Application-Proxy
@@ -60,9 +52,8 @@ Configuration WAP2TIER
             Type = "Directory"
             Recurse = $true
             SourcePath = "\\$ADFSServerIP\c$\WAP-Certificates"
-            DestinationPath = "C:\Certificates\"
+            DestinationPath = "C:\WAP-Certificates\"
             Credential = $Admincreds
-            DependsOn = '[File]Certificates'
         }
 
         Script ConfigureWAPCertificates

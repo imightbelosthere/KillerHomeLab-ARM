@@ -97,8 +97,8 @@ Configuration WAPCERTAUTH
                 $exthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=owa20$using:ExchangeExistsVersion.$using:ExternalDomainName"}).Thumbprint
 
                 # Configure Publishing Rules
-                $owa20WPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Outlook Web App 20$using:ExchangeExistsVersion"} -ErrorAction 0
-                IF ($owa20WPR -eq $Null){
+                $OWA20WPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Outlook Web App 20$using:ExchangeExistsVersion"} -ErrorAction 0
+                IF ($OWA20WPR -eq $Null){
                     Add-WebApplicationProxyApplication -BackendServerUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://owa20$using:ExchangeExistsVersion.$ExternalDomainName/owa/" -Name "Outlook Web App 20$using:ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Outlook Web App 20$using:ExchangeExistsVersion"
                 }
 
@@ -108,8 +108,29 @@ Configuration WAPCERTAUTH
                 }
 
                 $AUTOWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Autodiscover"} -ErrorAction 0
-                Add-WebApplicationProxyApplication -BackendServerUrl "https://autodiscover.$ExternalDomainName/Autodiscover/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://autodiscover.$ExternalDomainName/Autodiscover/" -Name "Exchange Autodiscover" -ExternalPreauthentication "PassThrough" 
+                IF ($AUTOWPR -eq $Null){
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://autodiscover.$ExternalDomainName/Autodiscover/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://autodiscover.$ExternalDomainName/Autodiscover/" -Name "Exchange Autodiscover" -ExternalPreauthentication "PassThrough" 
+                }
 
+                $OABWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Offline Address Book 20$using:ExchangeExistsVersion"} -ErrorAction 0
+                IF ($OABWPR -eq $Null){
+                Add-WebApplicationProxyApplication -BackendServerUrl "https://outlook20$using:ExchangeExistsVersion.$ExternalDomainName/OAB/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://outlook20$using:ExchangeExistsVersion.$ExternalDomainName/OAB/" -Name "Exchange Offline Address Book 20$using:ExchangeExistsVersion" -ExternalPreauthentication "PassThrough" 
+                }
+
+                $EWSWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Web Services 20$using:ExchangeExistsVersion"} -ErrorAction 0
+                IF ($EWSWPR -eq $Null){
+                Add-WebApplicationProxyApplication -BackendServerUrl "https://outlook20$using:ExchangeExistsVersion.$ExternalDomainName/EWS/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://outlook20$using:ExchangeExistsVersion.$ExternalDomainName/EWS/" -Name "Exchange Web Services 20$using:ExchangeExistsVersion" -ExternalPreauthentication "PassThrough" 
+                }
+
+                $MAPIWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange Outlook Anywhere 20$using:ExchangeExistsVersion"} -ErrorAction 0
+                IF ($MAPIWPR -eq $Null){
+                Add-WebApplicationProxyApplication -BackendServerUrl "https://outlook20$using:ExchangeExistsVersion.$ExternalDomainName/MAPI/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://outlook20$using:ExchangeExistsVersion.$ExternalDomainName/MAPI/" -Name "Exchange Outlook Anywhere 20$using:ExchangeExistsVersion" -ExternalPreauthentication "PassThrough" 
+                }
+
+                $EAS20WPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "Exchange ActiveSync 20$using:ExchangeExistsVersion"} -ErrorAction 0
+                IF ($EAS20WPR -eq $Null){
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://eas20$using:ExchangeExistsVersion.$ExternalDomainName/Microsoft-Server-ActiveSync/" -ExternalCertificateThumbprint $exthumbprint -ExternalUrl "https://eas20$using:ExchangeExistsVersion.$ExternalDomainName/Microsoft-Server-ActiveSync/" -Name "Exchange ActiveSync 20$using:ExchangeExistsVersion" -ExternalPreAuthentication ADFS -ADFSRelyingPartyName "Exchange ActiveSync 20$using:ExchangeExistsVersion"
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}

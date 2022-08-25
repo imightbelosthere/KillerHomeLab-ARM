@@ -459,6 +459,7 @@
         "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",    
         "ocspIP": "[concat(parameters('vnet1ID'),'.1.',variables('ocsplastoctet'))]",                    
         "ocsplastoctet": "103",
+        "ex1name": "[concat(parameters('NamingConvention'),'-ex19-01')]",                   
         "ex1IP": "[concat(parameters('vnet1ID'),'.1.',variables('ex1lastoctet'))]",         
         "ex1lastoctet": "110",                             
         "adcname": "[concat(parameters('NamingConvention'),'-adc-01')]",           
@@ -1606,7 +1607,7 @@
             "condition": "[equals(parameters('ExchangeExists'),'Yes')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-ADFS-CertificateBased-Authentication",
+            "name": "Configure-ADFS1-CertificateBased-Authentication",
             "dependsOn": [
                 "Add-PublicIP-to-WAPServer-01",
                 "Create-PublicDNSZone-ADFS-Records",                       
@@ -1659,9 +1660,9 @@
             "condition": "[equals(parameters('ExchangeExists'),'Yes')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-WAP-CertificateBased-Authentication",
+            "name": "Configure-WAP1-CertificateBased-Authentication",
             "dependsOn": [
-                "Configure-ADFS-CertificateBased-Authentication"
+                "Configure-ADFS1-CertificateBased-Authentication"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -1690,6 +1691,60 @@
                     },        
                     "EXServerIP": {
                         "value": "[variables('ex1IP')]"
+                    },                                                   
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },                                                                                     
+        {
+            "condition": "[equals(parameters('ExchangeExists'),'Yes')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-Exchange1-CertificateBased-Authentication",
+            "dependsOn": [
+                "Configure-WAP1-CertificateBased-Authentication"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/exchangecertauth.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('ex1name')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },    
+                    "ExchangeExistsVersion": {
+                        "value": "[parameters('ExchangeExistsVersion')]"
+                    },                                                                       
+                    "InternalDomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },                            
+                    "ExternalDomainName": {
+                        "value": "[variables('ExternalDomainName')]"
+                    },        
+                    "ADFSServerIP": {
+                        "value": "[variables('adfs1IP')]"
                     },                                                   
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"

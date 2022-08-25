@@ -1,8 +1,8 @@
-﻿configuration ADFSAUTH
+﻿configuration EXCHANGECERTAUTH
 {
    param
    (
-        [String]$ExchangeVersion,
+        [String]$ExchangeExistsVersion,
         [String]$ComputerName,
         [String]$InternaldomainName,
         [String]$ExternaldomainName,
@@ -15,18 +15,13 @@
 
     Node localhost
     {
-        LocalConfigurationManager
-        {
-            RebootNodeIfNeeded = $true
-        }
-
         File CopyADFSCertsFromADFS
         {
             Ensure = "Present"
             Type = "Directory"
             Recurse = $true
             SourcePath = "\\$ADFSServerIP\c$\ADFS-Certificates"
-            DestinationPath = "C:\Certificates\"
+            DestinationPath = "C:\ADFS-Certificates\"
             Credential = $DomainCreds
         }
 
@@ -43,7 +38,7 @@
                     
                     $ADFSThumbprint = Get-Content -Path C:\Certificates\ADFSSigningThumb.txt
                     
-                    $uris = @("https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa/","https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp/")
+                    $uris = @("https://owa20$using:ExchangeExistsVersion.$using:ExternalDomainName/owa/","https://owa20$using:ExchangeExistsVersion.$using:ExternalDomainName/ecp/")
 
                     Set-OrganizationConfig -AdfsIssuer "https://adfs.$using:ExternalDomainName/adfs/ls/" -AdfsAudienceUris $uris -AdfsSignCertificateThumbprint $ADFSThumbprint
                 }

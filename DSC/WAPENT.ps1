@@ -31,14 +31,6 @@ Configuration WAPENT
             GetScript =  { @{} }
             TestScript = { $false}
         }
-
-        File Certificates
-        {
-            Type = 'Directory'
-            DestinationPath = 'C:\Certificates'
-            Ensure = "Present"
-            DependsOn = '[Script]AllowRemoteCopy'
-        }
                 
         # Install Web Application Proxy
         WindowsFeature Web-Application-Proxy
@@ -61,7 +53,6 @@ Configuration WAPENT
             SourcePath = "\\$ADFSServerIP\c$\WAP-Certificates"
             DestinationPath = "C:\WAP-Certificates\"
             Credential = $Admincreds
-            DependsOn = '[File]Certificates'
         }
 
         Script ConfigureWAPCertificates
