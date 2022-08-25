@@ -159,6 +159,17 @@
                 "description": "Type of PKI Environment Previously Deployed"
             }
         },        
+        "ExchangeExists": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "No",
+                "Yes"
+            ],      
+            "metadata": {
+                "description": "Does Exchange exist in your current environment"
+            }
+        },          
         "AutoShutdownEnabled": {
             "type": "string",
             "defaultValue": "No",
@@ -440,7 +451,11 @@
         "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
         "dc1IP": "[concat(parameters('vnet1ID'),'.1.',variables('dc1lastoctet'))]", 
         "dc1lastoctet": "101",                
-        "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",                      
+        "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",    
+        "ocspIP": "[concat(parameters('vnet1ID'),'.1.',variables('ocsplastoctet'))]",                    
+        "ocsplastoctet": "103",
+        "ex1IP": "[concat(parameters('vnet1ID'),'.1.',variables('ex1lastoctet'))]",         
+        "ex1lastoctet": "110",                             
         "adcname": "[concat(parameters('NamingConvention'),'-adc-01')]",           
         "adcIP": "[concat(parameters('vnet1ID'),'.1.',variables('adclastoctet'))]", 
         "adclastoctet": "120",           
@@ -456,12 +471,14 @@
         "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
         "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
         "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]", 
+        "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]",        
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
+        "NetworkSecurityGroupAPIVersion": "2022-01-01",         
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
@@ -1299,6 +1316,69 @@
                     }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
                 }
             }
-        }                                   
+        },
+        {
+            "condition": "[equals(parameters('ExchangeExists'),'No')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-NetworksecurityGroup-01",
+            "dependsOn": [
+                "Deploy-WAP-Server-01" 
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/wapocspnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },                    
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    },                                                                                                      
+                    "OCSPPrivateIP": {
+                        "value": "[variables('ocspIP')]"
+                    },                                                                                                     
+                    "WAP1PrivateIP": {
+                        "value": "[variables('WAP1IP')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('ExchangeExists'),'Yes')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-NetworksecurityGroup-01",
+            "dependsOn": [
+                "Deploy-WAP-Server-01" 
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/wapexchangenetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },                    
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    },                                                                                                      
+                    "OCSPPrivateIP": {
+                        "value": "[variables('ocspIP')]"
+                    }, 
+                    "EX1PrivateIP": {
+                        "value": "[variables('ex1IP')]"
+                    },                                                                                                                       
+                    "WAP1PrivateIP": {
+                        "value": "[variables('WAP1IP')]"
+                    }
+                }
+            }
+        }                                                
     ]
 }

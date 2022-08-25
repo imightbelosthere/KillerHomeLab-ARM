@@ -25,7 +25,13 @@
             "metadata": {
                 "description": "Exchange Private IP Address"
             }
-        }      
+        },
+        "WAP1PrivateIP": {
+            "type": "string",
+            "metadata": {
+                "description": "WAP1 Private IP Address"
+            }
+        }       
     },
     "resources": [
         {
@@ -57,7 +63,7 @@
                             "sourcePortRange": "*",
                             "destinationPortRange": "443",
                             "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "[parameters('EX1PrivateIP')]",
+                            "destinationAddressPrefix": "[parameters('WAP1PrivateIP')]",
                             "access": "Allow",
                             "priority": 200,
                             "direction": "Inbound"
