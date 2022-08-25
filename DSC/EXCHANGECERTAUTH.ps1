@@ -36,7 +36,7 @@
                 $OrgConfig = Get-OrganizationConfig
                 IF ($OrgConfig.AdfsIssuer -eq $Null){
                     
-                    $ADFSThumbprint = Get-Content -Path C:\Certificates\ADFSSigningThumb.txt
+                    $ADFSThumbprint = Get-Content -Path C:\ADFS-Certificates\ADFSSigningThumb.txt
                     
                     $uris = @("https://owa20$using:ExchangeExistsVersion.$using:ExternalDomainName/owa/","https://owa20$using:ExchangeExistsVersion.$using:ExternalDomainName/ecp/")
 
