@@ -1455,6 +1455,8 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Add-PublicIP-to-WAPServer-01",
             "dependsOn": [
+                "Configure-First-WAP-2-Tier-PKI",
+                "Configure-First-WAP-Enterprise-PKI",                
                 "Associate-NSG-with-Subnet1",
                 "Associate-NSG-with-Subnet2"
             ],
@@ -1559,7 +1561,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('ExchangeExists'),'No')]",                                    
+            "condition": "[equals(parameters('ExchangeExists'),'Yes')]",                                    
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-PublicDNSZone-ADFS-and-WAPExchange-Records",
