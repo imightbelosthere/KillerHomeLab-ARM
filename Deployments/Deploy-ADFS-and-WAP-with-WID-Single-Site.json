@@ -1549,12 +1549,6 @@
                     "ZoneName": {
                         "value": "[variables('ExternaldomainName')]"
                     },
-                    "OCSPRecord": {
-                        "value": "ocsp"
-                    },
-                    "OCSPPublicIP": {
-                        "value": "[reference('Add-PublicIP-to-OCSPServer').outputs.PublicIP.value]"             
-                    },
                     "WAP1Record": {
                         "value": "adfs"
                     },
@@ -1584,12 +1578,6 @@
                     },                            
                     "ZoneName": {
                         "value": "[variables('ExternaldomainName')]"
-                    },
-                    "OCSPRecord": {
-                        "value": "ocsp"
-                    },
-                    "OCSPPublicIP": {
-                        "value": "[reference('Add-PublicIP-to-OCSPServer').outputs.PublicIP.value]"             
                     },
                     "WAP1Record": {
                         "value": "adfs"
