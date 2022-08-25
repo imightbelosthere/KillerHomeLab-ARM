@@ -1554,7 +1554,7 @@
                     "ADFS1Record": {
                         "value": "adfs"
                     },
-                    "WAPPublicIP": {
+                    "WAP1PublicIP": {
                         "value": "[reference('Add-PublicIP-to-WAPServer-01').outputs.PublicIP.value]"             
                     }                                                                                                                                                                                                                                                                                                                         
                 }
@@ -1596,7 +1596,7 @@
                     "EASRecord": {
                         "value": "[concat('eas20',parameters('ExchangeExistsVersion'))]"
                     },                    
-                    "WAPPublicIP": {
+                    "WAP1PublicIP": {
                         "value": "[reference('Add-PublicIP-to-WAPServer-01').outputs.PublicIP.value]"             
                     }                                                                                                                                                                                                                                                                                                                         
                 }
