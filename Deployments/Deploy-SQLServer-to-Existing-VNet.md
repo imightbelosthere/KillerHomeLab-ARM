@@ -26,15 +26,14 @@ Parameters that support changes
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
+- ExistingVNetName. Enter the complete name of an Existing Virtual Network
+- ExistingSubnetName. Enter the complete name of an Existing Virtual Network Subnet
+- SQLServerIP. Enter an IP Address that belongs to ExistingSubnetName
+- SQLServerName. Enter the name for the SQL Server
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
-- WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
-- Naming Convention. Enter a name that will be used as a naming prefix for (Servers, VNets, etc) you are using.
-- Sub DNS Domain.  OPTIONALLY, enter a valid DNS Sub Domain. (Example:  sub1. or sub1.sub2.    This entry must end with a DOT )
-- Sub DNS BaseDN.  OPTIONALLY, enter a valid DNS Sub Base DN. (Example:  DC=sub1, or DC=sub1,DC=sub2,    This entry must end with a COMMA )
-- Net Bios Domain.  Enter a valid Net Bios Domain Name (Example:  killerhomelab).
-- Internal Domain.  Enter a valid Internal Domain (Exmaple:  killerhomelab)
-- InternalTLD.  Select a valid Top-Level Domain using the Pull-Down Menu.
-- Vnet1ID.  Enter first 2 octets of your desired Address Space for Virtual Network 1 (Example:  10.1)
+- SQLSASURL. Enter a valid URL that points to the SQL 2019 or 2017 .ISO
+- SQLOSVersion. Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) - SQL OS vERSION
+- SQLVMSize. Enter a Valid VM Size based on which Region the VM is deployed.

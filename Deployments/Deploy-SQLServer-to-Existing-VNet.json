@@ -173,6 +173,30 @@
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
             }
         },
+        "ExistingVNetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Complete Name of existing VNet"
+            }
+        },
+        "ExistingSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Complete Name of existing Subnet"
+            }
+        },    
+        "SQLServerIP": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Server IP Address"
+            }
+        },   
+        "SQLServerName": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Server Name"
+            }
+        },         
         "adminUsername": {
             "type": "string",
             "defaultValue": "",
@@ -204,86 +228,45 @@
                 "description": "Windows Server OS License Type"
             }
         },
-        "WindowsClientLicenseType": {
+        "SQLSASUrl": {
             "type": "string",
-            "defaultValue": "None",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Enter a valid URL that points to the SQL 2019, 2017 or 2016 .ISO"
+            }
+        },
+        "SQLOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
             "allowedValues": [
-                "None",
-                "Windows_Client"
-            ],
+                "2022-Datacenter",
+                "2019-Datacenter",
+                "2016-Datacenter"
+            ],            
             "metadata": {
-                "description": "Windows Client OS License Type"
+                "description": "SQL OS Sku"
             }
         },
-        "NamingConvention": {
+        "SQLOSVersion": {
             "type": "string",
-            "defaultValue": "khl",
-            "maxLength": 4,
+            "defaultValue": "latest",
             "metadata": {
-                "description": "VNet1 Name"
+                "description": "SQL OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
             }
         },
-        "SubDNSDomain": {
+        "SQLVMSize": {
             "type": "string",
-            "defaultValue": "sub1.",
+            "defaultValue": "Standard_D8s_v3",
             "metadata": {
-                "description": "Sub DNS Domain Name Example:  sub1. must include a DOT AT END"
+                "description": "SQL VMSize"
             }
-        },
-        "SubDNSBaseDN": {
-            "type": "string",
-            "defaultValue": "DC=sub1,",
-            "metadata": {
-                "description": "Sub DNS Domain Name Example:  DC=sub2,DC=sub1, must include COMMA AT END"
-            }
-        },
-        "NetBiosDomain": {
-            "type": "string",
-            "defaultValue": "sub1",
-            "maxLength": 15,
-            "metadata": {
-                "description": "NetBios Domain Name should the same name as the SubDNSDomain parameter minus the COMMA AT END if the SubDNSDomain and SubDNSBaseDN parameters are used to specify a Sub DNS Naming Structure, but it should be unique if these parameters aren't used."
-            }
-        },
-        "InternalDomain": {
-            "type": "string",
-            "defaultValue": "killerhomelab",
-            "metadata": {
-                "description": "NetBios Domain Name"
-            }
-        },
-        "InternalTLD": {
-            "type": "string",
-            "defaultValue": "com",
-            "allowedValues": [
-                "com",
-                "net",
-                "org",
-                "edu",
-                "gov",
-                "mil",
-                "us",
-                "tk",
-                "ml",
-                "local"
-            ],
-            "metadata": {
-                "description": "Top-Level Domain Name"
-            }
-        },
-        "vnet1ID": {
-            "type": "string",
-            "defaultValue": "172.16",
-            "metadata": {
-                "description": "VNet1 Prefix"
-            }
-        },
+        }, 
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/main/"
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -296,31 +279,16 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('ADSS-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('SQLEV-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
-        "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
-        "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
-        "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
-        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
-        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",
-        "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",
-        "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
-        "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
-        "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
-        "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
-        "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
-        "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
-        "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
-        "VirtualNetworkAPIVersion": "2020-11-01",
-        "ExtensionsTypeHandlerVersion": "2.83",
-        "DJExtensionsTypeHandlerVersion": "1.3"
+        "ExtensionsTypeHandlerVersion": "2.83"
     },
     "resources": [
         {
@@ -358,12 +326,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-ExchangeServer-01",
-            "dependsOn": [
-                "DomainJoinFileServer-01-22",
-                "DomainJoinFileServer-01-19",
-                "DomainJoinFileServer-01-16"                                
-            ],
+            "name": "Deploy-SQLServer-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -436,6 +399,73 @@
                     }
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-SQLServer",
+            "dependsOn": [
+                "Deploy-SQLServer-01"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/sql.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "computerName": {
+                        "value": "[parameters('SQLServerName')]"
+                    },
+                    "SQLSASUrl": {
+                        "value": "[parameters('SQLSASUrl')]"
+                    },                                                                     
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-SQL-Management-Studio",
+            "dependsOn": [
+               "Install-SQLServer"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ssms.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('SQLServerName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        }                
     ]
 }
