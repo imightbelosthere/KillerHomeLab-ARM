@@ -1631,7 +1631,7 @@
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },    
-                    "'ExchangeExistsVersion": {
+                    "ExchangeExistsVersion": {
                         "value": "[parameters('ExchangeExistsVersion')]"
                     },                                                                       
                     "ExternalDomainName": {
