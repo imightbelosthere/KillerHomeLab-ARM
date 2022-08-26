@@ -1,5 +1,5 @@
 # SQL Server StandAlone using an Existing Subnet
-<img src="./x_Images/SQLServerwithVNet.svg" height="600" width="800"/>
+<img src="./x_Images/SQLServerStandAlonewithVNet" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
