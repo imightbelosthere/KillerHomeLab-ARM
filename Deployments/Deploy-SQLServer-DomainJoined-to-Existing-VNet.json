@@ -319,7 +319,7 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('SQLEV-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('SQLEVDJ-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
@@ -494,7 +494,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoinSQLServer-19",
             "dependsOn": [
-				"Deploy-EnterpriseCertificateAuthority"
+				"Deploy-SQLServer-01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -536,7 +536,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoinSQLServer-16",
             "dependsOn": [
-				"Deploy-EnterpriseCertificateAuthority"
+				"Deploy-SQLServer-01"
             ],
             "properties": {
                 "mode": "Incremental",
