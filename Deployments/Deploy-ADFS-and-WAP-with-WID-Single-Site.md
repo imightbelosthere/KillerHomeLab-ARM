@@ -1,6 +1,12 @@
 # Deploy-ADFS-and-WAP-with-WID-Single-Site
 <img src="./x_Images/ADFSSingleSiteWID.svg" height="600" width="800"/>
 
+This Templates IS MEANT TO BE USED AS AN ADD-ON to the following labs: **** THE PARAMETERS SPECIFIED FOR THIS ADD-ON LAB MUST MATCH THE PARAMETERS OF THE BASE LAB THAT IT WILL BE ADDED TO ****
+
+- Deploy-PKI-2Tier-CA-With-OCSP
+- Deploy-PKI-Enterprise-CA-With-OCSP
+- Deploy-Exchange2019-Single-Site-with-EnterprisePKI
+
 This Deployment deploys the following items:
 
 - 1 - Virtual Network
@@ -14,13 +20,24 @@ This Deployment deploys the following items:
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
-ADFS
+DNS
 - Configure Internal DNS ADFS Records
+
+AD Connect
+- Download Lastest Version of AD Connect to AD Connect Server
+
+ADFS
+- Request/Receive ADFS SAN Certificate from Enterprise CA
+- Copy Exchange Certificate (If ExchangeExists)
 - Configure ADFS Server
+
+WAP
+- Copy AFS Certificates
+- Import ADFS Certificates
+- Copy Exchange Certificate (If ExchangeExists)
+- Import Exchange Certificates (If ExchangeExists)
 - Configure WAP Server
 - Create WAP/ADFS Trust
-- Request/Receive ADFS SAN Certificate from Enterprise CA
-
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 

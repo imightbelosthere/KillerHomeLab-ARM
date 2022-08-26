@@ -1,6 +1,10 @@
 # SQL Server StandAlone using an Existing Subnet
 <img src="./x_Images/SQLServerStandAlonewithVNet" height="600" width="800"/>
 
+This Templates IS MEANT TO BE USED AS AN ADD-ON to the following labs: **** THE PARAMETERS SPECIFIED FOR THIS ADD-ON LAB MUST MATCH THE PARAMETERS OF THE BASE LAB THAT IT WILL BE ADDED TO ****
+
+- ANY EXISTING DEPLOYMENT WITH A VNET
+
 This Deployment deploys the following items:
 
 - 1 - SQL Server
