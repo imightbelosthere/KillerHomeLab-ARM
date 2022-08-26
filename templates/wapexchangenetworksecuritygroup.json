@@ -70,6 +70,20 @@
                         }
                     },
                     {
+                        "name": "CERTAUTH",
+                        "properties": {
+                            "description": "Opens Port HTTPS (Port 49443/TCP)",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "49443",
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "[parameters('WAP1PrivateIP')]",
+                            "access": "Allow",
+                            "priority": 201,
+                            "direction": "Inbound"
+                        }
+                    },                    
+                    {
                             "name": "SMTP",
                             "properties": {
                             "description": "Opens Port SMTP (Port 25/TCP)",
