@@ -1,4 +1,4 @@
-# SQL Server using an Existing Subnet
+# SQL Server StandAlone using an Existing Subnet
 <img src="./x_Images/SQLServerwithVNet.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
@@ -35,5 +35,5 @@ Parameters that support changes
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
 - SQLSASURL. Enter a valid URL that points to the SQL 2019 or 2017 .ISO
-- SQLOSVersion. Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) - SQL OS vERSION
+- SQLOSVersion. Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) - SQL OS Version
 - SQLVMSize. Enter a Valid VM Size based on which Region the VM is deployed.
