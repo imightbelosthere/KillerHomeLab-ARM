@@ -154,6 +154,9 @@
                     {
                         "name": "ipconfig1",
                         "properties": {
+                          "publicIPAddress": {
+                              "id": "[resourceId ('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+                              },                             
                             "privateIPAllocationMethod": "Static",
                             "privateIPAddress": "[variables('Nic1IPAddress')]",
                             "subnet": {
