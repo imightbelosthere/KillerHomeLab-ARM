@@ -1,0 +1,161 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DeploymentAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Deployment API Version"
+            }
+        },
+        "AVDApplicationGroupAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Virtual Desktop Application Group API Version"
+            }
+        },         
+        "appGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Application Group to be created."
+            }
+        },
+        "NamingConvention": {
+            "type": "string",
+            "metadata": {
+                "description": "Naming Convention"
+            }
+        }, 
+        "HostPoolARMPath": {
+            "type": "string",
+            "metadata": {
+                "description": "Host Pool ARM Path"
+            }
+        }, 
+        "deploymentId": {
+            "type": "string",
+            "metadata": {
+                "description": "GUID for the deployment"
+            },
+            "defaultValue": ""            
+        },        
+        "selectedApps": {
+            "type": "array",
+            "metadata": {
+                "description": "Selected apps to add in Application Group"
+            },
+            "defaultValue": []
+        },
+        "RoleAssignmentGuid": {
+            "type": "string",
+          "metadata": {
+            "description": "Role Assignment GUID"
+          }
+        },
+        "PrincipalID": {
+            "type": "string",
+          "metadata": {
+            "description": "PrincipalID"
+          }
+        },     
+        "RoleDefinitionID": {
+            "type": "string",
+          "metadata": {
+            "description": "Role Definition ID"
+          }
+        },                             
+        "roleAssignments": {
+            "type": "array",
+            "metadata": {
+                "description": "Selected Role Assignments to add in Application Group"
+            },
+            "defaultValue": [
+                {
+                    "name": "[parameters('RoleAssignmentGuid')]",
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "properties": {
+                        "principalId": "[parameters('PrincipalID')]"
+                    }
+                }                
+            ]
+        }        
+    },
+    "variables": {
+        "noRoleAssignments": "[empty(parameters('roleAssignments'))]",
+        "noSelectedApps": "[empty(parameters('selectedApps'))]",
+        "desktopVirtualizationUserRoleDefinition": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', parameters('RoleDefinitionID'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DesktopVirtualization/applicationgroups",
+            "apiVersion": "[parameters('AVDApplicationGroupAPIVersion')]",
+            "name": "[parameters('appGroupName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "hostpoolarmpath": "[parameters('HostPoolARMPath')]",
+                "friendlyName": "[concat(parameters('NamingConvention'), 'Remote App')]",
+                "description": "Remote Application Group",                
+                "applicationGroupType": "RemoteApp"
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('DeploymentAPIVersion')]",
+            "name": "[concat('Asgmt', copyIndex(), '-linkedTemplate2-', parameters('deploymentId'))]",
+            "condition": "[not(variables('noRoleAssignments'))]",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "type": "Microsoft.DesktopVirtualization/applicationgroups/providers/roleAssignments",
+                            "apiVersion": "[parameters('AVDApplicationGroupAPIVersion')]",
+                            "name": "[concat(parameters('appGroupName'), '/Microsoft.Authorization/', parameters('roleAssignments')[CopyIndex()].name)]",
+                            "properties": {
+                                "principalId": "[parameters('roleAssignments')[CopyIndex()].properties.principalId]",
+                                "roleDefinitionId": "[variables('desktopVirtualizationUserRoleDefinition')]"
+                            }
+                        }
+                    ]
+                }
+            },
+            "copy": {
+                "name": "role-assignments-loop",
+                "count": "[if(variables('noRoleAssignments'), 1, length(parameters('roleAssignments')))]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DesktopVirtualization/applicationgroups', parameters('appGroupName'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[parameters('DeploymentAPIVersion')]",
+            "name": "[concat('App', copyIndex(), '-linkedTemplate2-', parameters('deploymentId'))]",
+            "condition": "[not(variables('noSelectedApps'))]",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "name": "[concat(parameters('appGroupName'), '/', parameters('selectedApps')[CopyIndex()].name)]",
+                            "apiVersion": "2021-07-12",
+                            "type": "Microsoft.DesktopVirtualization/applicationgroups/applications",
+                            "properties": "[parameters('selectedApps')[CopyIndex()].properties]"
+                        }
+                    ]
+                }
+            },
+            "copy": {
+                "name": "applications-loop",
+                "count": "[if(variables('noselectedApps'), 1, length(parameters('selectedApps')))]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.DesktopVirtualization/applicationgroups', parameters('appGroupName'))]"
+            ]
+        }
+    ]
+}

@@ -872,14 +872,14 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AzureVirtualDesktop-DesktopGroup",   
+            "name": "Deploy-AzureVirtualDesktop-DesktopApplicationGroup",   
             "dependsOn": [
                 "Deploy-AzureVirtualDesktop-HostedPool"
             ],   
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/avdapplicationgroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/avddesktopapplicationgroup.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -909,6 +909,195 @@
                     }                                                                                                                                                                                                                           
                 }
             }
-        }                    
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AzureVirtualDesktop-RemoteApplicationGroup",   
+            "dependsOn": [
+                "Deploy-AzureVirtualDesktop-DesktopApplicationGroup"
+            ],   
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/avdremoteapplicationgroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentAPIVersion": {
+                        "value": "[variables('DeploymentAPIVersion')]"
+                    },
+                    "AVDApplicationGroupAPIVersion": {
+                        "value": "[variables('AVDApplicationGroupAPIVersion')]"
+                    },                     
+                    "AppGroupName": {
+                        "value": "[variables('RemoteAppGroupName')]"
+                    }, 
+                    "NamingConvention": {
+                        "value": "[parameters('NamingConvention')]"
+                    },             
+                    "HostPoolARMPath": {
+                        "value": "[variables('HostPoolARMPath')]"
+                    },
+                    "selectedApps": {
+                        "value": [
+                            {
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('RemoteAppGroupName'),'/applications/Excel')]",
+                                "name": "Excel",
+                                "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
+                                "properties": {
+                                    "applicationType": "Inbuilt",
+                                    "friendlyName": "",
+                                    "description": "",
+                                    "filePath": "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE",
+                                    "iconPath": "C:\\Program Files\\Microsoft Office\\Root\\VFS\\Windows\\Installer\\{90160000-000F-0000-1000-0000000FF1CE}\\xlicons.exe",
+                                    "iconIndex": 0,
+                                    "commandLineSetting": "DoNotAllow",
+                                    "commandLineArguments": "",
+                                    "showInPortal": true
+                                }
+                            },
+                            {
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('RemoteAppGroupName'),'/applications/Microsoft Edge')]",
+                                "name": "Microsoft Edge",
+                                "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
+                                "properties": {
+                                    "applicationType": "Inbuilt",
+                                    "friendlyName": "",
+                                    "description": "",
+                                    "filePath": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+                                    "iconPath": "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+                                    "iconIndex": 0,
+                                    "commandLineSetting": "DoNotAllow",
+                                    "commandLineArguments": "",
+                                    "showInPortal": true
+                                }
+                            },
+                            {
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('RemoteAppGroupName'),'/applications/OneDrive')]",
+                                "name": "OneDrive",
+                                "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
+                                "properties": {
+                                    "applicationType": "Inbuilt",
+                                    "friendlyName": "",
+                                    "description": "",
+                                    "filePath": "C:\\Program Files (x86)\\Microsoft OneDrive\\OneDrive.exe",
+                                    "iconPath": "C:\\Program Files (x86)\\Microsoft OneDrive\\OneDrive.exe",
+                                    "iconIndex": 1,
+                                    "commandLineSetting": "DoNotAllow",
+                                    "commandLineArguments": "",
+                                    "showInPortal": true
+                                }
+                            },
+                            {
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('RemoteAppGroupName'),'/applications/OneNote')]",                        
+                                "name": "OneNote",
+                                "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
+                                "properties": {
+                                    "applicationType": "Inbuilt",
+                                    "friendlyName": "",
+                                    "description": "",
+                                    "filePath": "C:\\Program Files\\Microsoft Office\\root\\Office16\\ONENOTE.EXE",
+                                    "iconPath": "C:\\Program Files\\Microsoft Office\\Root\\VFS\\Windows\\Installer\\{90160000-000F-0000-1000-0000000FF1CE}\\joticon.exe",
+                                    "iconIndex": 0,
+                                    "commandLineSetting": "DoNotAllow",
+                                    "commandLineArguments": "",
+                                    "showInPortal": true
+                                }
+                            },
+                            {
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('RemoteAppGroupName'),'/applications/Outlook')]",
+                                "name": "Outlook",
+                                "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
+                                "properties": {
+                                    "applicationType": "Inbuilt",
+                                    "friendlyName": "",
+                                    "description": "",
+                                    "filePath": "C:\\Program Files\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE",
+                                    "iconPath": "C:\\Program Files\\Microsoft Office\\Root\\VFS\\Windows\\Installer\\{90160000-000F-0000-1000-0000000FF1CE}\\outicon.exe",
+                                    "iconIndex": 0,
+                                    "commandLineSetting": "DoNotAllow",
+                                    "commandLineArguments": "",
+                                    "showInPortal": true
+                                }
+                            },
+                            {
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('RemoteAppGroupName'),'/applications/PowerPoint')]",                        
+                                "name": "PowerPoint",
+                                "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
+                                "properties": {
+                                    "applicationType": "Inbuilt",
+                                    "friendlyName": "",
+                                    "description": "",
+                                    "filePath": "C:\\Program Files\\Microsoft Office\\root\\Office16\\POWERPNT.EXE",
+                                    "iconPath": "C:\\Program Files\\Microsoft Office\\Root\\VFS\\Windows\\Installer\\{90160000-000F-0000-1000-0000000FF1CE}\\pptico.exe",
+                                    "iconIndex": 0,
+                                    "commandLineSetting": "DoNotAllow",
+                                    "commandLineArguments": "",
+                                    "showInPortal": true
+                                }
+                            },
+                            {
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('RemoteAppGroupName'),'/applications/Remote Desktop Connection')]",
+                                "name": "Remote Desktop Connection",
+                                "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
+                                "properties": {
+                                    "applicationType": "Inbuilt",
+                                    "friendlyName": "",
+                                    "description": "",
+                                    "filePath": "C:\\Windows\\system32\\mstsc.exe",
+                                    "iconPath": "C:\\Windows\\system32\\mstsc.exe",
+                                    "iconIndex": 0,
+                                    "commandLineSetting": "DoNotAllow",
+                                    "commandLineArguments": "",
+                                    "showInPortal": true
+                                }
+                            },
+                            {
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('RemoteAppGroupName'),'/applications/Windows PowerShell ISE')]",
+                                "name": "Windows PowerShell ISE",
+                                "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
+                                "properties": {
+                                    "applicationType": "Inbuilt",
+                                    "friendlyName": "",
+                                    "description": "",
+                                    "filePath": "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\PowerShell_ISE.exe",
+                                    "iconPath": "C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\powershell_ise.exe",
+                                    "iconIndex": 0,
+                                    "commandLineSetting": "DoNotAllow",
+                                    "commandLineArguments": "",
+                                    "showInPortal": true
+                                }
+                            },
+                            {
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('RemoteAppGroupName'),'/applications/Word')]",
+                                "name": "Word",
+                                "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
+                                "properties": {
+                                    "applicationType": "Inbuilt",
+                                    "friendlyName": "",
+                                    "description": "",
+                                    "filePath": "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE",
+                                    "iconPath": "C:\\Program Files\\Microsoft Office\\Root\\VFS\\Windows\\Installer\\{90160000-000F-0000-1000-0000000FF1CE}\\wordicon.exe",
+                                    "iconIndex": 0,
+                                    "commandLineSetting": "DoNotAllow",
+                                    "commandLineArguments": "",
+                                    "showInPortal": true
+                                }
+                            }                    
+                        ]
+                    },            
+                    "RoleAssignmentGUID": {
+                        "value": "[parameters('roleAssignmentGuid2')]"
+                    },
+                    "PrincipalID": {
+                        "value": "[parameters('PrincipalID')]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('RoleDefinitionID')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                            
+                }
+            }
+        }                           
     ]
 }
