@@ -23,6 +23,7 @@
             SourcePath = "\\$ADFSServerIP\c$\ADFS-Certificates"
             DestinationPath = "C:\ADFS-Certificates\"
             Credential = $DomainCreds
+            Force = $true
         }
 
         Script ConfigureExchangeADFSCert
@@ -32,16 +33,12 @@
                 # Connect to Exchange
                 $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri "http://$using:computerName.$using:InternalDomainName/PowerShell/"
                 Import-PSSession $Session
-
-                $OrgConfig = Get-OrganizationConfig
-                IF ($OrgConfig.AdfsIssuer -eq $Null){
                     
-                    $ADFSThumbprint = Get-Content -Path C:\ADFS-Certificates\ADFSSigningThumb.txt
+                $ADFSThumbprint = Get-Content -Path C:\ADFS-Certificates\ADFSSigningThumb.txt
                     
-                    $uris = @("https://owa20$using:ExchangeExistsVersion.$using:ExternalDomainName/owa/","https://owa20$using:ExchangeExistsVersion.$using:ExternalDomainName/ecp/")
+                $uris = @("https://owa20$using:ExchangeExistsVersion.$using:ExternalDomainName/owa/","https://owa20$using:ExchangeExistsVersion.$using:ExternalDomainName/ecp/")
 
-                    Set-OrganizationConfig -AdfsIssuer "https://adfs.$using:ExternalDomainName/adfs/ls/" -AdfsAudienceUris $uris -AdfsSignCertificateThumbprint $ADFSThumbprint
-                }
+                Set-OrganizationConfig -AdfsIssuer "https://adfs.$using:ExternalDomainName/adfs/ls/" -AdfsAudienceUris $uris -AdfsSignCertificateThumbprint $ADFSThumbprint
 
                 # ADFS on FORMS off
                 Set-EcpVirtualDirectory -Identity "$using:computerName\ecp (Default Web Site)" -AdfsAuthentication $true -BasicAuthentication $false -DigestAuthentication $false -FormsAuthentication $false -WindowsAuthentication $false
