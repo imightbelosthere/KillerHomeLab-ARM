@@ -19,7 +19,19 @@
             "metadata": {
                 "description": "Computer Name"
             }
-        },  
+        }, 
+        "SQLExists": {
+            "type": "string",
+            "metadata": {
+                "description": "Deploy ADFS to existing SQL Instance"
+          }
+        },         
+        "SQLHost": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Server used by ADFS"
+          }
+        },                 
         "ExternalDomainName": {
             "type": "string",
             "metadata": {
@@ -83,6 +95,8 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
+                        "SQLExists": "[parameters('SQLExists')]",
+                        "SQLHost": "[parameters('SQLHost')]",
                         "ExternalDomainName": "[parameters('ExternalDomainName')]",
                         "NetBiosDomain": "[parameters('NetBiosDomain')]",  
                         "EnterpriseCAName": "[parameters('EnterpriseCAName')]",

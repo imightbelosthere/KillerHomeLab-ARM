@@ -1,5 +1,5 @@
-# Deploy-ADFS-and-WAP-with-SQL-Single-Site
-<img src="./x_Images/ADFSSingleSiteSQL.svg" height="600" width="800"/>
+# Deploy-ADFS-WAP-and-ADConnect-Single-Site
+<img src="./x_Images/ADFSSingleSite.svg" height="600" width="800"/>
 
 THE FOLLOWING DEPLOYMENT(S) MUST ALREADY EXIST IN ORDER TO USE THIS DEPLOYMENT DUE TO ADFS USING SQL:
 
@@ -60,6 +60,8 @@ Parameters that support changes
 - PKIDeploymentType.  Type of PKI Environment Previously Deployed.  Select (2-Tier-PKI or Enterprise-PKI)
 - ExchangeExists.  Does Exchange exist in your current environment.  Select (Yes or No)
 - ExchangeExistsVersion.  Version of Exchange if Exchange Esists in current Environment 20(19) or 20(16).  Select (19 or 16)
+- SQLExists.  Deploy ADFS to existing SQL Instance.  Select (Yes or No)
+- SQLHost.  Enter a SQL Server Name for ADFS to use (Example: KHL-SQL-01)
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)

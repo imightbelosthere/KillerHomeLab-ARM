@@ -1,17 +1,20 @@
-﻿configuration FIRSTADFSENT
+﻿configuration FIRSTADFSwithSQL
 {
    param
    (
-        [String]$SQLExists,
+        [String]$ExchangeVersion,
         [String]$SQLHost,
-        [String]$ExternalDomainName,           
+        [String]$TimeZone,
+        [String]$ExternalDomainName,
         [String]$NetBiosDomain,
-        [String]$EnterpriseCAName,
+        [String]$IssuingCAName,
+        [String]$RootCAName,     
         [System.Management.Automation.PSCredential]$Admincreds
 
 
     )
-    Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
+    Import-DscResource -ModuleName xPSDesiredStateConfiguration # Used for xRemoteFile
+    Import-DscResource -ModuleName ComputerManagementDsc # Used for TimeZone
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
@@ -26,6 +29,12 @@
         {
             Ensure = 'Present'
             Name   = 'ADFS-Federation'
+        }
+
+        TimeZone SetTimeZone
+        {
+            IsSingleInstance = 'Yes'
+            TimeZone         = $TimeZone
         }
 
         File MachineConfig
@@ -158,11 +167,19 @@
                 }
 
                 # Export Root CA
-                $EnterpriseCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:EnterpriseCAName.cer" -ErrorAction 0
-                IF ($EnterpriseCert -eq $null)
+                $RootCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:RootCAName.cer" -ErrorAction 0
+                IF ($RootCert -eq $null)
                 {
-                    $EnterpriseExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:EnterpriseCAName*"}
-                    Export-Certificate -Cert $EnterpriseExport -FilePath "C:\WAP-Certificates\$using:EnterpriseCAName.cer" -Type CER
+                    $RootExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:RootCAName*"}
+                    Export-Certificate -Cert $RootExport -FilePath "C:\WAP-Certificates\$using:RootCAName.cer" -Type CER
+                }
+
+                # Export Issuing CA
+                $IssueCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:IssuingCAName.cer" -ErrorAction 0
+                IF ($IssueCert -eq $null)
+                {
+                    $IssuingExport = Get-ChildItem -Path cert:\Localmachine\CA\ | Where-Object {$_.Subject -like "CN=$using:IssuingCAName*"}
+                    Export-Certificate -Cert $IssuingExport -FilePath "C:\WAP-Certificates\$using:IssuingCAName.cer" -Type CER
                 }
             }
             GetScript =  { @{} }
@@ -174,9 +191,22 @@
         {
             SetScript =
             {
-                $RulesFile = Get-ChildItem -Path C:\ADFS-Certificates\ADFSSigningThumb.txt -ErrorAction 0
+                $RulesFile = Get-ChildItem -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -ErrorAction 0
                 IF ($RulesFile -eq $null)
                 {
+                # Create Issuance Authorization Rules File
+                Set-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -Value '@RuleTemplate = "AllowAllAuthzRule"'
+                Add-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -Value '=> issue(Type = "http://schemas.microsoft.com/authorization/claims/permit",'
+                Add-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt -Value 'Value = "true");'
+
+                # Create Issuance Transform Rules File
+                Set-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value '@RuleName = "ActiveDirectoryUserSID"'
+                Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value 'c:[Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname", Issuer == "AD AUTHORITY"]'
+                Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value '=> issue(store = "Active Directory", types = ("http://schemas.microsoft.com/ws/2008/06/identity/claims/primarysid"), query = ";objectSID;{0}", param = c.Value);'
+                Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value '@RuleName = "ActiveDirectoryUPN"'
+                Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value 'c:[Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname", Issuer == "AD AUTHORITY"]'
+                Add-Content -Path C:\MachineConfig\IssuanceTransformRules.txt -Value '=> issue(store = "Active Directory", types = ("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn"), query = ";userPrincipalName;{0}", param = c.Value);'
+
                 # Get Service Communication Certificate
                 $ServiceThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs.$using:ExternalDomainName"}).Thumbprint
 
@@ -184,14 +214,15 @@
                 $SigningThumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=adfs-signing.$using:ExternalDomainName"}).Thumbprint
 
                 Import-Module ADFS
-
-                IF ("$Using:SQLExists" -eq 'No'){
-                Install-AdfsFarm -CertificateThumbprint $ServiceThumbprint -FederationServiceName "adfs.$using:ExternalDomainName" -GroupServiceAccountIdentifier "$using:NetBiosDomain\FsGmsa$"
-                }
-
-                IF ("$Using:SQLExists" -eq 'Yes'){
                 Install-AdfsFarm -CertificateThumbprint $ServiceThumbprint -FederationServiceName "adfs.$using:ExternalDomainName" -GroupServiceAccountIdentifier "$using:NetBiosDomain\FsGmsa$" -SQLConnectionString "Data Source=$using:SQLHost;Initial Catalog=ADFSConfiguration;Integrated Security=True;Min Pool Size=20"
-                }
+                
+                # Create Relying Pary Trust Script
+                [string]$IssuanceAuthorizationRules=Get-Content -Path C:\MachineConfig\IssuanceAuthorizationRules.txt
+                [string]$IssuanceTransformRules=Get-Content -Path C:\MachineConfig\IssuanceTransformRules.txt
+
+                # Create Relying Party Trusts
+                Add-ADFSRelyingPartyTrust -Name "Outlook Web App $using:ExchangeVersion" -Enabled $true -Notes "This is a trust for https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa/" -WSFedEndpoint "https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa/" -Identifier "https://owa$using:ExchangeVersion.$using:ExternalDomainName/owa/" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
+                Add-ADFSRelyingPartyTrust -Name "Exchange Admin Center (EAC) $using:ExchangeVersion" -Enabled $true -Notes "This is a trust for https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp/" -WSFedEndpoint "https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp/" -Identifier "https://owa$using:ExchangeVersion.$using:ExternalDomainName/ecp/" -IssuanceTransformRules $IssuanceTransformRules -IssuanceAuthorizationRules $IssuanceAuthorizationRules
 
                 # Turn off Certificate Auto Certificate Rollover
                 Set-ADFSProperties -AutoCertificateRollover $False
