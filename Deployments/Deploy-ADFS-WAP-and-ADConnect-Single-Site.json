@@ -454,7 +454,7 @@
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/main/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
