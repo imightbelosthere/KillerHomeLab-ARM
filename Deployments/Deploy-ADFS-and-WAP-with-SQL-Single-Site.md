@@ -1,5 +1,9 @@
-# Deploy-ADFS-and-WAP-with-WID-Single-Site
-<img src="./x_Images/ADFSSingleSiteWID.svg" height="600" width="800"/>
+# Deploy-ADFS-and-WAP-with-SQL-Single-Site
+<img src="./x_Images/ADFSSingleSiteSQL.svg" height="600" width="800"/>
+
+THE FOLLOWING DEPLOYMENT(S) MUST ALREADY EXIST IN ORDER TO USE THIS DEPLOYMENT DUE TO ADFS USING SQL:
+
+- Deploy-SQLServer-DomainJoined-to-Existing-VNet
 
 ONE OF THE FOLLOWING DEPLOYMENT(S) MUST ALREADY EXIST IN ORDER TO USE THIS DEPLOYMENT TO GENERATE ADFS CERTIFICATES:
 
