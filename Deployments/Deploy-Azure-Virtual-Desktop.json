@@ -1275,9 +1275,6 @@
                     },
                     "VirtualMachinesAPIVersion": {
                         "value": "[variables('VirtualMachinesAPIVersion')]"
-                    },
-                    "SchedulesAPIVersion": {
-                        "value": "[variables('SchedulesAPIVersion')]"
                     },                    
                     "ExtensionsAPIVersion": {
                         "value": "[variables('ExtensionsAPIVersion')]"
@@ -1301,22 +1298,22 @@
                         "value": "Office-365"
                     },
                     "OSSku": {
-                    "value": "win10-21h2-avd-m365"
+                        "value": "win10-21h2-avd-m365"
                     },                                          
                     "OSVersion": {
-                    "value": "[parameters('SHOSVersion')]"
+                        "value": "[parameters('SHOSVersion')]"
                     },              
                     "LicenseType": {
-                    "value": "[parameters('WindowsClientLicenseType')]"
+                        "value": "[parameters('WindowsClientLicenseType')]"
                     },              
                     "VMSize": {
                         "value": "[parameters('WK1VMSize')]"
                     },
                     "vnetName": {
-                    "value": "[variables('vnet1Name')]"
+                        "value": "[variables('vnet1Name')]"
                     },            
                     "subnet1Name": {
-                    "value": "[variables('vnet1subnet2Name')]"
+                        "value": "[variables('vnet1subnet2Name')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -1349,7 +1346,7 @@
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
                     "_artifactsLocationSasToken": {
-                    "value": "[parameters('_artifactsLocationSasToken')]"
+                        "value": "[parameters('_artifactsLocationSasToken')]"
                     }                                                                                                                                                                                                                                                                                                
                 }
             }
