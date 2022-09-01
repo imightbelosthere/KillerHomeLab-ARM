@@ -546,7 +546,8 @@
         "AADHostPoolARMPath": "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', variables('AADHostPoolName'))]",        
         "WorkSpaceName": "[concat(variables('ADHostPoolName'),'-WorkSpace')]",   
         "SessionHostTemplate": "[concat('{\"domain\":\"',variables('InternaldomainName'), '\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOS'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('WK1VMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('WK1OSSKU'),'\"}')]",      
-        "rdshPrefix": "[concat(parameters('NamingConvention'),'-')]",    
+        "adrdshPrefix": "[concat(parameters('NamingConvention'),'-ad-')]",    
+        "aadrdshPrefix": "[concat(parameters('NamingConvention'),'-aad-')]",            
         "RoleDefinitionID": "1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63",
         "Ring": 1,
         "add4Hours": "[dateTimeAdd(parameters('baseTime'), 'PT4H')]",
@@ -1563,7 +1564,7 @@
                         "value": "[parameters('adminPassword')]"
                     },  
                     "rdshPrefix": {
-                        "value": "[variables('rdshPrefix')]"
+                        "value": "[variables('adrdshPrefix')]"
                     },                                                                                                                                                                          
                     "rdshNumberOfInstances": {
                         "value": "[parameters('vmNumberOfInstances')]"
@@ -1659,7 +1660,7 @@
                         "value": "[parameters('adminPassword')]"
                     },  
                     "rdshPrefix": {
-                        "value": "[variables('rdshPrefix')]"
+                        "value": "[variables('adrdshPrefix')]"
                     },                                                                                                                                                                          
                     "rdshNumberOfInstances": {
                         "value": "[parameters('vmNumberOfInstances')]"
@@ -1749,7 +1750,7 @@
                         "value": "[parameters('adminPassword')]"
                     },  
                     "rdshPrefix": {
-                        "value": "[variables('rdshPrefix')]"
+                        "value": "[variables('aadrdshPrefix')]"
                     },                                                                                                                                                                          
                     "rdshNumberOfInstances": {
                         "value": "[parameters('vmNumberOfInstances')]"
@@ -1845,7 +1846,7 @@
                         "value": "[parameters('adminPassword')]"
                     },  
                     "rdshPrefix": {
-                        "value": "[variables('rdshPrefix')]"
+                        "value": "[variables('aadrdshPrefix')]"
                     },                                                                                                                                                                          
                     "rdshNumberOfInstances": {
                         "value": "[parameters('vmNumberOfInstances')]"
