@@ -543,9 +543,11 @@
         "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]", 
         "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
         "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]",
+        "AvailabilitySetsAPIVersion": "2022-03-01",
         "AVDHostPoolAPIVersion": "2022-02-10-preview",              
         "AVDApplicationGroupAPIVersion": "2022-02-10-preview",
         "AVDApplicationGroupAuthorizationAPIVersion": "2022-01-01-preview",
+        "AVDWorkSpaceAPIVersion": "2022-04-01-preview",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
@@ -1103,6 +1105,263 @@
                     }                                                                                                                                                                                                                                                                                                                                                                            
                 }
             }
-        }                           
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-To-Workspace",   
+            "dependsOn": [
+                "Deploy-AzureVirtualDesktop-DesktopApplicationGroup",
+                "Deploy-AzureVirtualDesktop-RemoteApplicationGroup"
+            ],   
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/avdworkspace.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AVDWorkSpaceAPIVersion": {
+                        "value": "[variables('AVDWorkSpaceAPIVersion')]"
+                    },                      
+                    "WorkSpaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },  
+                    "AppGroup1Name": {
+                        "value": "[variables('DesktopAppGroupName')]"
+                    },        
+                    "AppGroup2Name": {
+                        "value": "[variables('RemoteAppGroupName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-SessionHost-Availability-Set",   
+            "dependsOn": [
+                "Deploy-To-Workspace"
+            ],   
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/availabilityset.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AvailabilitySetsAPIVersion": {
+                        "value": "[variables('AvailabilitySetsAPIVersion')]"
+                    },
+                    "AvailabilitySetName": {
+                        "value": "[variables('AvailabilitySetName')]"
+                    },
+                    "availabilitySetUpdateDomainCount": {
+                        "value": "[parameters('availabilitySetUpdateDomainCount')]"
+                    },
+                    "availabilitySetFaultDomainCount": {
+                        "value": "[parameters('availabilitySetFaultDomainCount')]"
+                    } 
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('SHOS'),'win11-21h2-avd-m365')]",      
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DeploySessionHosts-Win11-M365",   
+            "dependsOn": [
+                "Deploy-SessionHost-Availability-Set"
+            ],   
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/adsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },                    
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                                        
+                    "availabilitySetName": {
+                        "value": "[variables('availabilitySetName')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Office-365"
+                    },
+                    "OSSku": {
+                        "value": "win11-21h2-avd-m365"
+                    },                                          
+                    "OSVersion": {
+                        "value": "[parameters('SHOSVersion')]"
+                    },              
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },              
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },            
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },  
+                    "rdshPrefix": {
+                        "value": "[variables('rdshPrefix')]"
+                    },                                                                                                                                                                          
+                    "rdshNumberOfInstances": {
+                        "value": "[parameters('vmNumberOfInstances')]"
+                    },
+                    "vmInitialNumber": {
+                        "value": "[parameters('vmInitialNumber')]"
+                    },       
+                    "hostpoolToken": {
+                        "value": "[reference('DeployHostedPool').outputs.RegistrationInfoToken.value]"             
+                    },             
+                    "hostpoolName": {
+                        "value": "[variables('hostpoolName')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },            
+                    "OUPath": {
+                        "value": "[variables('WIN11OUPath')]"
+                    },            
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('SHOS'),'win10-21h2-avd-m365')]",      
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DeploySessionHosts-Win10-M365",   
+            "dependsOn": [
+                "Deploy-SessionHost-Availability-Set"
+            ],   
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/adsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },                    
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },                      
+                    "availabilitySetName": {
+                        "value": "[variables('availabilitySetName')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Office-365"
+                    },
+                    "OSSku": {
+                    "value": "win10-21h2-avd-m365"
+                    },                                          
+                    "OSVersion": {
+                    "value": "[parameters('SHOSVersion')]"
+                    },              
+                    "LicenseType": {
+                    "value": "[parameters('WindowsClientLicenseType')]"
+                    },              
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                    "value": "[variables('vnet1Name')]"
+                    },            
+                    "subnet1Name": {
+                    "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },  
+                    "rdshPrefix": {
+                        "value": "[variables('rdshPrefix')]"
+                    },                                                                                                                                                                          
+                    "rdshNumberOfInstances": {
+                        "value": "[parameters('vmNumberOfInstances')]"
+                    },
+                    "vmInitialNumber": {
+                        "value": "[parameters('vmInitialNumber')]"
+                    },       
+                    "hostpoolToken": {
+                        "value": "[reference('DeployHostedPool').outputs.RegistrationInfoToken.value]"             
+                    },             
+                    "hostpoolName": {
+                        "value": "[variables('hostpoolName')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },            
+                    "OUPath": {
+                        "value": "[variables('WIN10OUPath')]"
+                    },            
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                    "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                
+                }
+            }
+        }                                                        
     ]
 }

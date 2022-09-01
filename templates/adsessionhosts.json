@@ -1,0 +1,305 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkInterfacesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "NetworkInterfaces API Version"
+            }
+        },
+        "VirtualMachinesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "VirtualMachines API Version"
+            }
+        },
+        "ExtensionsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "ExtensionsTypeHandlerVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Extension Type Handler Version"
+            }
+        },        
+        "DJExtensionsTypeHandlerVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "JSON Active Directory Domain Join Extension Type Handler Version"
+            }
+        },                
+        "availabilitySetName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of avaiability set to be used when create the VMs."
+            }
+        },        
+        "TimeZone": {
+            "type": "string",      
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },
+        "Publisher": {
+            "type": "string",
+            "metadata": {
+                "description": "Image Publisher"
+            }
+        },
+        "Offer": {
+            "type": "string",
+            "metadata": {
+                "description": "Image Publisher Offer"
+            }
+        },   
+        "OSSku": {
+            "type": "string",
+            "metadata": {
+                "description": "OS Sku"
+            }
+        },                   
+        "OSVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "OS Version"
+            }
+        },
+        "licenseType": {
+            "type": "string",
+            "metadata": {
+                "description": "License Type (Windows_Server or None)"
+            }
+        },                 
+        "VMSize": {
+            "type": "string",
+            "metadata": {
+                "description": "VMSize"
+            }
+        },        
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET Name that contains the domain controller"
+            }
+        },
+        "subnet1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing subnet name that contains the domain controller"
+          }
+        },
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        },
+        "rdshPrefix": {
+            "type": "string",
+            "metadata": {
+            "description": "This prefix will be used in combination with the VM number to create the VM name. This value includes the dash, so if using “rdsh” as the prefix, VMs would be named “rdsh-0”, “rdsh-1”, etc. You should use a unique prefix to reduce name collisions in Active Directory."
+            }
+        },
+        "rdshNumberOfInstances": {
+            "type": "int",
+            "metadata": {
+            "description": "Number of session hosts that will be created and added to the hostpool."
+            }
+        },  
+        "vmInitialNumber": {
+            "type": "int",
+            "metadata": {
+            "description": "VM name prefix initial number."
+            }
+        },
+        "hostpoolToken": {
+            "type": "string",
+            "metadata": {
+            "description": "The token for adding VMs to the hostpool"
+            }
+        },
+        "hostpoolName": {
+            "type": "string",
+            "metadata": {
+            "description": "The name of the hostpool"
+            }
+        }, 
+        "domainName": {
+            "type": "string",
+          "metadata": {
+            "description": "The FQDN of the AD Domain created "
+          }
+        }, 
+        "OUPath": {
+          "type": "string",
+          "metadata": {
+              "description": "Organizational Unit Path"
+          }
+        },                       
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            }
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation"
+            }
+        }
+    },
+    "variables": {
+        "vmAvailabilitySetResourceId": {
+            "id": "[resourceId('Microsoft.Compute/availabilitySets/', parameters('availabilitySetName'))]"
+        },
+        "storageAccountType": "Premium_LRS",
+        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
+        "ModulesURL1": "[uri(parameters('_artifactsLocation'), concat('DSC/ADDSESSIONHOST.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction1": "ADDSESSIONHOST.ps1\\ADDSESSIONHOST"        
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')), '-nic1')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "rdsh-nic-loop",
+                "count": "[parameters('rdshNumberOfInstances')]"
+            },            
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('subnet1Id')]"
+                            }
+                        }
+                    }
+                ],
+                "enableAcceleratedNetworking": false
+            }
+        },      
+        {
+            "name": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')))]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "[parameters('VirtualMachinesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "rdsh-vm-loop",
+                "count": "[parameters('rdshNumberOfInstances')]"
+            },            
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')), '-nic1')]"
+            ],
+            "properties": {
+                "licenseType": "[parameters('licenseType')]",
+                "hardwareProfile": {
+                    "vmSize": "[parameters('VMSize')]"
+                },
+                "availabilitySet": "[variables('vmAvailabilitySetResourceId')]",
+                "osProfile": {
+                    "computerName": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')))]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "WindowsConfiguration": {
+                        "timeZone": "[parameters('TimeZone')]"
+                    }                      
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[parameters('Publisher')]",
+                        "offer": "[parameters('Offer')]",
+                        "sku": "[parameters('OSSku')]",
+                        "version": "[parameters('OSVersion')]"
+                    },
+                    "osDisk": {
+                        "name": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')), '_OSDisk')]",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[variables('storageAccountType')]"
+                        }
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')), '-nic1'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "apiVersion": "[parameters('ExtensionsAPIVersion')]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')), '/', 'dscextension')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "rdsh-vm-loop"
+            ],
+            "copy": {
+                "name": "rdsh-dsc-loop",
+                "count": "[parameters('rdshNumberOfInstances')]"
+            },
+            "properties": {
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "[parameters('ExtensionsTypeHandlerVersion')]",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "WMFVersion": "latest",            
+                    "modulesUrl": "[variables('ModulesURL1')]",
+                    "configurationFunction": "[variables('ConfigurationFunction1')]",
+                    "properties": {
+                        "hostPoolName": "[parameters('hostpoolName')]",
+                        "registrationInfoToken": "[parameters('hostpoolToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "[parameters('ExtensionsAPIVersion')]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('rdshPrefix'), add(copyindex(), parameters('vmInitialNumber')), '/', 'DomainJoin')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "rdsh-dsc-loop"
+            ],
+            "copy": {
+                "name": "rdsh-domain-join-loop",
+                "count": "[parameters('rdshNumberOfInstances')]"
+            },
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "JsonADDomainExtension",
+                "typeHandlerVersion": "[parameters('DJExtensionsTypeHandlerVersion')]",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "name": "[parameters('domainName')]",
+                    "ouPath": "[parameters('OUPath')]",
+                    "user": "[concat(parameters('domainName'), '\\', parameters('adminUsername'))]",
+                    "restart": "true",
+                    "options": "3"
+                },
+                "protectedSettings": {
+                    "password": "[parameters('adminPassword')]"
+                }
+            }
+        }
+    ]
+}

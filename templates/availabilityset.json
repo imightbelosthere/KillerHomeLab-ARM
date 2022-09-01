@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {   
+        "AvailabilitySetsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Availability API Version"
+            }
+        },         
+        "AvailabilitySetName": {
+            "type": "String",
+            "metadata": {
+                "description": "Preferred Availability Set Name to display"
+            }
+        },    
+        "availabilitySetUpdateDomainCount": {
+            "type": "Int",
+            "metadata": {
+                "description": "Preferred Availability Set Update Domain Count"
+            }
+        },    
+        "availabilitySetFaultDomainCount": {
+            "type": "Int",
+            "metadata": {
+                "description": "Preferred Availability Set Fault Domain Count"
+            }
+        }
+    },
+    "variables": {
+        "avSetSku": "Aligned"                
+    },    
+    "resources": [
+        {
+            "name": "[parameters('availabilitySetName')]",
+            "type": "Microsoft.Compute/availabilitySets",            
+            "apiVersion": "[parameters('AvailabilitySetsAPIVersion')]",
+            "location": "[resourceGroup().location]", 
+            "properties": {
+                "platformUpdateDomainCount": "[parameters('availabilitySetUpdateDomainCount')]",
+                "platformFaultDomainCount": "[parameters('availabilitySetFaultDomainCount')]"
+            },
+            "sku": {
+                "name": "[variables('avSetSKU')]"
+            }
+        }                      
+    ] 
+}

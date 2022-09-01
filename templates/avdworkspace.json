@@ -1,0 +1,47 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AVDWorkSpaceAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "AVD Workspace API Version"
+            }
+        },        
+        "WorkSpaceName": {
+            "type": "String",
+            "metadata": {
+                "description": "Preferred Workspace Name to display"
+            }
+        },  
+        "AppGroup1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Application Group to be created."
+            }
+        },
+        "AppGroup2Name": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Application Group to be created."
+            }
+        }
+    },
+    "variables": {
+        "allApplicationGroupReferences": [
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AppGroup1Name'))]",
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AppGroup2Name'))]"
+        ]
+    },    
+    "resources": [
+        {
+            "name": "[parameters('workSpaceName')]",
+            "type": "Microsoft.DesktopVirtualization/workspaces",
+            "apiVersion": "[parameters('AVDWorkSpaceAPIVersion')]",
+            "location": "[resourceGroup().location]",          
+            "properties": {
+                "applicationGroupReferences": "[variables('allapplicationGroupReferences')]"
+            }
+        }
+    ] 
+}
