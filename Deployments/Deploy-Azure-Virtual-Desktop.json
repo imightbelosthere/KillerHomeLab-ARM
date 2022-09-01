@@ -1176,10 +1176,7 @@
                     },
                     "VirtualMachinesAPIVersion": {
                         "value": "[variables('VirtualMachinesAPIVersion')]"
-                    },
-                    "SchedulesAPIVersion": {
-                        "value": "[variables('SchedulesAPIVersion')]"
-                    },                    
+                    },                  
                     "ExtensionsAPIVersion": {
                         "value": "[variables('ExtensionsAPIVersion')]"
                     },
