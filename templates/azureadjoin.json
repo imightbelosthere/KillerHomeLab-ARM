@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ExtensionsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "AADJExtensionsTypeHandlerVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "JSON Azure Active Directory Domain Join Extension Type Handler Version"
+            }
+        },
+        "computerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer Name"
+            }
+        }
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('computerName'), '/AADLoginForWindows')]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "[parameters('ExtensionsAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publisher": "Microsoft.Azure.ActiveDirectory",
+                "type": "AADLoginForWindows",
+                "typeHandlerVersion": "[parameters('AADJExtensionsTypeHandlerVersion')]",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "mdmId": ""
+                }
+            }
+        }
+    ]
+}

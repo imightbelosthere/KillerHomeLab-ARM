@@ -13,7 +13,13 @@
             "metadata": {
                 "description": "Azure Virtual Desktop Application Group API Version"
             }
-        },         
+        },  
+        "AVDApplicationGroupAuthorizationAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Virtual Desktop Application Group Authorization API Version"
+            }
+        },               
         "appGroupName": {
             "type": "string",
             "metadata": {
@@ -111,7 +117,7 @@
                     "resources": [
                         {
                             "type": "Microsoft.DesktopVirtualization/applicationgroups/providers/roleAssignments",
-                            "apiVersion": "[parameters('AVDApplicationGroupAPIVersion')]",
+                            "apiVersion": "[parameters('AVDApplicationGroupAuthorizationAPIVersion')]",
                             "name": "[concat(parameters('appGroupName'), '/Microsoft.Authorization/', parameters('roleAssignments')[CopyIndex()].name)]",
                             "properties": {
                                 "principalId": "[parameters('roleAssignments')[CopyIndex()].properties.principalId]",

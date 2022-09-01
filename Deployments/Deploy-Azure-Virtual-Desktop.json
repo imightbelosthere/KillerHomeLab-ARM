@@ -544,7 +544,8 @@
         "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
         "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]",
         "AVDHostPoolAPIVersion": "2022-02-10-preview",              
-        "AVDApplicationGroupAPIVersion": "2022-02-10-preview",                      
+        "AVDApplicationGroupAPIVersion": "2022-02-10-preview",
+        "AVDApplicationGroupAuthorizationAPIVersion": "2022-01-01-preview",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
@@ -553,7 +554,8 @@
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "ExtensionsTypeHandlerVersion": "2.83",
-        "DJExtensionsTypeHandlerVersion": "1.3"
+        "DJExtensionsTypeHandlerVersion": "1.3",
+        "AADDJExtensionsTypeHandlerVersion": "1.0"        
     },
     "resources": [
         {
@@ -929,7 +931,10 @@
                     },
                     "AVDApplicationGroupAPIVersion": {
                         "value": "[variables('AVDApplicationGroupAPIVersion')]"
-                    },                     
+                    },     
+                    "AVDApplicationGroupAuthorizationAPIVersion": {
+                        "value": "[variables('AVDApplicationGroupAuthorizationAPIVersion')]"
+                    },                                         
                     "AppGroupName": {
                         "value": "[variables('RemoteAppGroupName')]"
                     }, 
