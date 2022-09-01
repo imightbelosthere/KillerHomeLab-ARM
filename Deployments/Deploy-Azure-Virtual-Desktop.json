@@ -1235,7 +1235,7 @@
                         "value": "[parameters('vmInitialNumber')]"
                     },       
                     "hostpoolToken": {
-                        "value": "[reference('Deploy-AzureVirtualDesktop-HostedPool').outputs.RegistrationInfoToken.value]"             
+                        "value": "[reference('Deploy-AzureVirtualDesktop-AD-HostedPool').outputs.RegistrationInfoToken.value]"             
                     },             
                     "hostpoolName": {
                         "value": "[variables('ADhostpoolName')]"
@@ -1334,7 +1334,7 @@
                         "value": "[parameters('vmInitialNumber')]"
                     },       
                     "hostpoolToken": {
-                        "value": "[reference('Deploy-AzureVirtualDesktop-HostedPool').outputs.RegistrationInfoToken.value]"             
+                        "value": "[reference('Deploy-AzureVirtualDesktop-AD-HostedPool').outputs.RegistrationInfoToken.value]"             
                     },             
                     "hostpoolName": {
                         "value": "[variables('ADhostpoolName')]"
