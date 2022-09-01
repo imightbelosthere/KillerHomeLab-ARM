@@ -1604,7 +1604,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/adsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/aadsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1660,7 +1660,7 @@
                         "value": "[parameters('adminPassword')]"
                     },  
                     "rdshPrefix": {
-                        "value": "[variables('adrdshPrefix')]"
+                        "value": "[variables('aadrdshPrefix')]"
                     },                                                                                                                                                                          
                     "rdshNumberOfInstances": {
                         "value": "[parameters('vmNumberOfInstances')]"
@@ -1750,7 +1750,7 @@
                         "value": "[parameters('adminPassword')]"
                     },  
                     "rdshPrefix": {
-                        "value": "[variables('aadrdshPrefix')]"
+                        "value": "[variables('adrdshPrefix')]"
                     },                                                                                                                                                                          
                     "rdshNumberOfInstances": {
                         "value": "[parameters('vmNumberOfInstances')]"
@@ -1790,7 +1790,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/adsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/aadsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
