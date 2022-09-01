@@ -568,7 +568,7 @@
         "VirtualMachinesAPIVersion": "2022-03-01",
         "ExtensionsTypeHandlerVersion": "2.83",
         "DJExtensionsTypeHandlerVersion": "1.3",
-        "AADDJExtensionsTypeHandlerVersion": "1.0"        
+        "AADJExtensionsTypeHandlerVersion": "1.0"        
     },
     "resources": [
         {
@@ -1620,8 +1620,8 @@
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
-                    "AADDJExtensionsTypeHandlerVersion": {
-                        "value": "[variables('AADDJExtensionsTypeHandlerVersion')]"
+                    "AADJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('AADJExtensionsTypeHandlerVersion')]"
                     },                                        
                     "availabilitySetName": {
                         "value": "[variables('AADAvailabilitySetName')]"
@@ -1806,8 +1806,8 @@
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
-                    "AADDJExtensionsTypeHandlerVersion": {
-                        "value": "[variables('AADDJExtensionsTypeHandlerVersion')]"
+                    "AADJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('AADJExtensionsTypeHandlerVersion')]"
                     },                      
                     "availabilitySetName": {
                         "value": "[variables('AADAvailabilitySetName')]"
