@@ -14,23 +14,37 @@
                 "description": "Preferred Workspace Name to display"
             }
         },  
-        "AppGroup1Name": {
+        "ADDesktopAppGroupName": {
             "type": "string",
             "metadata": {
-                "description": "The name of the Application Group to be created."
+                "description": "Active Directory Desktop Application Group"
             }
         },
-        "AppGroup2Name": {
+        "ADRemoteAppGroupName": {
             "type": "string",
             "metadata": {
-                "description": "The name of the Application Group to be created."
+                "description": "Active Directory Remote Application Group"
             }
-        }
+        },
+        "AADDesktopAppGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Active Directory Desktop Application Group"
+            }
+        },
+        "AADRemoteAppGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Active Directory Remote Application Group"
+            }
+        }        
     },
     "variables": {
         "allApplicationGroupReferences": [
-            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AppGroup1Name'))]",
-            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AppGroup2Name'))]"
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('ADDesktopAppGroupName'))]",
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('ADRemoteAppGroupName'))]",
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADDesktopAppGroupName'))]",
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADRemoteAppGroupName'))]"            
         ]
     },    
     "resources": [
