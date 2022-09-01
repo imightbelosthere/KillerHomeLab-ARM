@@ -367,14 +367,6 @@
                 "description": "Sub DNS Domain Name Example:  DC=sub2,DC=sub1, must include COMMA AT END"
             }
         },
-        "NetBiosDomain": {
-            "type": "string",
-            "defaultValue": "sub1",
-            "maxLength": 15,
-            "metadata": {
-                "description": "NetBios Domain Name should the same name as the SubDNSDomain parameter minus the COMMA AT END if the SubDNSDomain and SubDNSBaseDN parameters are used to specify a Sub DNS Naming Structure, but it should be unique if these parameters aren't used."
-            }
-        },
         "InternalDomain": {
             "type": "string",
             "defaultValue": "killerhomelab",
@@ -522,7 +514,6 @@
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
         "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",    
         "HostPoolARMPath": "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', variables('HostPoolName'))]",         
-        "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",            
         "adcname": "[concat(parameters('NamingConvention'),'-adc-01')]",           
         "adcIP": "[concat(parameters('vnet1ID'),'.1.',variables('adclastoctet'))]", 
         "adclastoctet": "120",                           
@@ -1244,7 +1235,7 @@
                         "value": "[parameters('vmInitialNumber')]"
                     },       
                     "hostpoolToken": {
-                        "value": "[reference('DeployHostedPool').outputs.RegistrationInfoToken.value]"             
+                        "value": "[reference('Deploy-AzureVirtualDesktop-HostedPool').outputs.RegistrationInfoToken.value]"             
                     },             
                     "hostpoolName": {
                         "value": "[variables('hostpoolName')]"
@@ -1343,7 +1334,7 @@
                         "value": "[parameters('vmInitialNumber')]"
                     },       
                     "hostpoolToken": {
-                        "value": "[reference('DeployHostedPool').outputs.RegistrationInfoToken.value]"             
+                        "value": "[reference('Deploy-AzureVirtualDesktop-HostedPool').outputs.RegistrationInfoToken.value]"             
                     },             
                     "hostpoolName": {
                         "value": "[variables('hostpoolName')]"
