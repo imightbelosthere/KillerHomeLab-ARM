@@ -538,7 +538,7 @@
         "AVDHostPoolAPIVersion": "2022-02-10-preview",              
         "AVDApplicationGroupAPIVersion": "2022-02-10-preview",
         "AVDApplicationGroupAuthorizationAPIVersion": "2022-01-01-preview",
-        "AVDWorkSpaceAPIVersion": "2022-04-01-preview",
+        "AVDWorkSpaceAPIVersion": "2022-02-10-preview",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
