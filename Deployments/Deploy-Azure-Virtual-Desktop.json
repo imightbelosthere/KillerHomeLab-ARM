@@ -545,7 +545,8 @@
         "AADAvailabilitySetName": "[concat(variables('ADHostPoolName'),'-AAD-AVSet')]",                          
         "AADHostPoolARMPath": "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', variables('AADHostPoolName'))]",        
         "WorkSpaceName": "[concat(variables('ADHostPoolName'),'-WorkSpace')]",   
-        "SessionHostTemplate": "[concat('{\"domain\":\"',variables('InternaldomainName'), '\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOS'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('WK1VMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('WK1OSSKU'),'\"}')]",      
+        "ADSessionHostTemplate": "[concat('{\"domain\":\"',variables('InternaldomainName'), '\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOS'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('WK1VMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('WK1OSSKU'),'\"}')]",
+        "AADSessionHostTemplate": "[concat('{\"domain\":\"\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOS'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('WK1VMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('WK1OSSKU'),'\"}')]",
         "adrdshPrefix": "[concat(parameters('NamingConvention'),'-adsh-')]",    
         "aadrdshPrefix": "[concat(parameters('NamingConvention'),'-aadsh-')]",            
         "RoleDefinitionID": "1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63",
@@ -867,7 +868,7 @@
                         "value": "[parameters('loadBalancerType')]"
                     },
                     "vmTemplate": {
-                        "value": "[variables('SessionHostTemplate')]"
+                        "value": "[variables('ADSessionHostTemplate')]"
                     },
                     "tokenExpirationTime": {
                         "value": "[variables('add4Hours')]"
@@ -917,7 +918,7 @@
                         "value": "[parameters('loadBalancerType')]"
                     },
                     "vmTemplate": {
-                        "value": "[variables('SessionHostTemplate')]"
+                        "value": "[variables('AADSessionHostTemplate')]"
                     },
                     "tokenExpirationTime": {
                         "value": "[variables('add4Hours')]"
@@ -1244,7 +1245,7 @@
                     "selectedApps": {
                         "value": [
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('ADRemoteAppGroupName'),'/applications/Excel')]",
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/Excel')]",
                                 "name": "Excel",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
