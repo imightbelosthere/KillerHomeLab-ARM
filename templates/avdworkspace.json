@@ -37,14 +37,28 @@
             "metadata": {
                 "description": "Azure Active Directory Remote Application Group"
             }
-        }        
+        },
+        "AADDDesktopAppGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Active Directory Domain Services Desktop Application Group"
+            }
+        },
+        "AADDRemoteAppGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Active Directory Domain Services Remote Application Group"
+            }
+        }                      
     },
     "variables": {
         "allApplicationGroupReferences": [
             "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('ADDesktopAppGroupName'))]",
             "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('ADRemoteAppGroupName'))]",
             "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADDesktopAppGroupName'))]",
-            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADRemoteAppGroupName'))]"            
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADRemoteAppGroupName'))]",
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADDDesktopAppGroupName'))]",
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADDDesktopAppGroupName'))]"                                   
         ]
     },    
     "resources": [
