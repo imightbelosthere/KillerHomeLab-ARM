@@ -291,7 +291,7 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "name": "[parameters('domainName')]",
-                    "user": "[concat(parameters('adminUsername'), '@', parameters('domainName'))]",
+                    "user": "[concat(parameters('adminUsername'))]",
                     "restart": "true",
                     "options": "3"
                 },
