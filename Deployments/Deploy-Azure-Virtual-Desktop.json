@@ -301,7 +301,20 @@
             "metadata": {
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
-        },      		        
+        },
+        "AzureUserPrincipal": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Azure User Principal with AAD DC Administrators rights"
+            }
+        },
+        "AzureUserPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Azure User Password"
+            }
+        },              		        
         "AzureUserObjectID": {
             "type": "string",
             "defaultValue": "",
@@ -2033,8 +2046,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AADD-SessionHosts-Win11-M365",   
             "dependsOn": [
-                "Deploy-AAD-SessionHost-Availability-Set",
-                "Deploy-AAD-SessionHosts-Win11-M365"
+                "Deploy-AADD-SessionHost-Availability-Set"
             ],   
             "properties": {
                 "mode": "Incremental",
@@ -2089,11 +2101,11 @@
                         "value": "[variables('vnet1subnet2Name')]"
                     },
                     "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
+                        "value": "[parameters('AzureUserPrincipal')]"
                     },
                     "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },  
+                        "value": "[parameters('AzureUserPassword')]"
+                    },    
                     "rdshPrefix": {
                         "value": "[variables('aaddrdshPrefix')]"
                     },                                                                                                                                                                          
@@ -2313,8 +2325,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AADD-SessionHosts-Win10-M365",   
             "dependsOn": [
-                "Deploy-AAD-SessionHost-Availability-Set",
-                "Deploy-AAD-SessionHosts-Win10-M365"
+                "Deploy-AADD-SessionHost-Availability-Set"
             ],   
             "properties": {
                 "mode": "Incremental",
@@ -2369,10 +2380,10 @@
                         "value": "[variables('vnet1subnet2Name')]"
                     },
                     "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
+                        "value": "[parameters('AzureUserPrincipal')]"
                     },
                     "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
+                        "value": "[parameters('AzureUserPassword')]"
                     },  
                     "rdshPrefix": {
                         "value": "[variables('aaddrdshPrefix')]"
