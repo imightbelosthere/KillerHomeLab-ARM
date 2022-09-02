@@ -2055,8 +2055,8 @@
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
-                    "AADJExtensionsTypeHandlerVersion": {
-                        "value": "[variables('AADJExtensionsTypeHandlerVersion')]"
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },                                        
                     "availabilitySetName": {
                         "value": "[variables('AADDAvailabilitySetName')]"
@@ -2332,8 +2332,8 @@
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
-                    "AADJExtensionsTypeHandlerVersion": {
-                        "value": "[variables('AADJExtensionsTypeHandlerVersion')]"
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },                      
                     "availabilitySetName": {
                         "value": "[variables('AADDAvailabilitySetName')]"
