@@ -58,7 +58,7 @@
             "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADDesktopAppGroupName'))]",
             "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADRemoteAppGroupName'))]",
             "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADDDesktopAppGroupName'))]",
-            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADDDesktopAppGroupName'))]"                                   
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADDRemoteAppGroupName'))]"                                   
         ]
     },    
     "resources": [
