@@ -2385,7 +2385,10 @@
                     },             
                     "hostpoolName": {
                         "value": "[variables('AADDhostpoolName')]"
-                    },            
+                    },
+                    "domainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },                                            
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
