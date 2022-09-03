@@ -309,6 +309,13 @@
                 "description": "Azure User Principal with AAD DC Administrators rights"
             }
         },
+        "ManagedDomain": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Azure Managed Domain"
+            }
+        },        
         "AzureUserPassword": {
             "type": "securestring",
             "metadata": {
@@ -2122,8 +2129,8 @@
                         "value": "[variables('AADDhostpoolName')]"
                     },
                     "domainName": {
-                        "value": "[variables('InternalDomainName')]"
-                    },                                
+                        "value": "[parameters('ManagedDomain')]"
+                    },                                      
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
@@ -2401,7 +2408,7 @@
                         "value": "[variables('AADDhostpoolName')]"
                     },
                     "domainName": {
-                        "value": "[variables('InternalDomainName')]"
+                        "value": "[parameters('ManagedDomain')]"
                     },                                            
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
