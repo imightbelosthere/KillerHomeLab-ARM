@@ -302,14 +302,14 @@
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
         },
-        "AzureUserPrincipal": {
+        "AzureUserName": {
             "type": "string",
             "defaultValue": "",
             "metadata": {
                 "description": "Azure User Principal with AAD DC Administrators rights"
             }
         },
-        "ManagedDomain": {
+        "ManagedDomainName": {
             "type": "string",
             "defaultValue": "",
             "metadata": {
@@ -2108,9 +2108,15 @@
                         "value": "[variables('vnet1subnet2Name')]"
                     },
                     "adminUsername": {
-                        "value": "[parameters('AzureUserPrincipal')]"
+                        "value": "[parameters('adminUsername')]"
                     },
                     "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                      
+                    "AzureUserName": {
+                        "value": "[parameters('AzureUserName')]"
+                    },
+                    "AzureUserPassword": {
                         "value": "[parameters('AzureUserPassword')]"
                     },    
                     "rdshPrefix": {
@@ -2129,8 +2135,11 @@
                         "value": "[variables('AADDhostpoolName')]"
                     },
                     "domainName": {
-                        "value": "[parameters('ManagedDomain')]"
-                    },                                      
+                        "value": "[variables('InternaldomainName')]"
+                    },  
+                    "ManagedDomainName": {
+                        "value": "[parameters('ManagedDomainName')]"
+                    },                                                            
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
@@ -2387,9 +2396,15 @@
                         "value": "[variables('vnet1subnet2Name')]"
                     },
                     "adminUsername": {
-                        "value": "[parameters('AzureUserPrincipal')]"
+                        "value": "[parameters('adminUsername')]"
                     },
                     "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                      
+                    "AzureUserName": {
+                        "value": "[parameters('AzureUserName')]"
+                    },
+                    "AzureUserPassword": {
                         "value": "[parameters('AzureUserPassword')]"
                     },  
                     "rdshPrefix": {
@@ -2408,8 +2423,11 @@
                         "value": "[variables('AADDhostpoolName')]"
                     },
                     "domainName": {
-                        "value": "[parameters('ManagedDomain')]"
-                    },                                            
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "ManagedDomainName": {
+                        "value": "[parameters('ManagedDomainName')]"
+                    },                                                                  
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            

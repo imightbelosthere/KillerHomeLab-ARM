@@ -104,6 +104,18 @@
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
         },
+        "AzureUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure UserName"
+            }
+        },        
+        "AzureUserPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Azure User Password"
+            }
+        },               
         "rdshPrefix": {
             "type": "string",
             "metadata": {
@@ -134,12 +146,18 @@
             "description": "The name of the hostpool"
             }
         }, 
-        "domainName": {
+        "DomainName": {
             "type": "string",
           "metadata": {
             "description": "The FQDN of the AD Domain created "
           }
-        },                        
+        },
+        "ManagedDomainName": {
+            "type": "string",
+          "metadata": {
+            "description": "Azure Managed Domain"
+          }
+        },                                
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -157,6 +175,7 @@
         "vmAvailabilitySetResourceId": {
             "id": "[resourceId('Microsoft.Compute/availabilitySets/', parameters('availabilitySetName'))]"
         },
+        "AzureUserPrincipal": "[concat(parameters('AzureUsername'),'@',parameters('ManagedDomainName'))]",
         "storageAccountType": "Premium_LRS",
         "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
         "ModulesURL1": "[uri(parameters('_artifactsLocation'), concat('DSC/ADDSESSIONHOST.zip', parameters('_artifactsLocationSasToken')))]",
@@ -290,13 +309,13 @@
                 "typeHandlerVersion": "[parameters('DJExtensionsTypeHandlerVersion')]",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
-                    "name": "[parameters('domainName')]",
-                    "user": "[concat(parameters('adminUsername'))]",
+                    "name": "[parameters('DomainName')]",
+                    "user": "[concat(variables('AzureUserPrincipal'))]",
                     "restart": "true",
                     "options": "3"
                 },
                 "protectedSettings": {
-                    "password": "[parameters('adminPassword')]"
+                    "password": "[parameters('AzureUserPassword')]"
                 }
             }
         }
