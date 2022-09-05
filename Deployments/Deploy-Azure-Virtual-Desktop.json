@@ -173,6 +173,18 @@
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
             }
         },
+        "VirtualDesktopADType": {
+            "type": "string",
+            "defaultValue": "AzureActiveDirectory",
+            "allowedValues": [
+                "AzureActiveDirectory",
+                "AzureActiveDirectoryDomainServices",
+                "ActiveDirectory"
+            ],      
+            "metadata": {
+                "description": "Virtual Desktop Active Directory Type"
+            }
+        },        
         "hostpoolType": {
             "defaultValue": "Pooled",      
             "allowedValues": [
@@ -1111,6 +1123,7 @@
             }
         },        
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'AzureActiveDirectoryDomainServices')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AADD-DesktopApplicationGroup",   
@@ -1153,6 +1166,7 @@
             }
         },                
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'ActiveDirectory')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AD-RemoteApplicationGroup",   
@@ -1345,6 +1359,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'AzureActiveDirectory')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AAD-RemoteApplicationGroup",   
@@ -1537,6 +1552,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'AzureActiveDirectoryDomainServices')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AADD-RemoteApplicationGroup",   
@@ -1775,6 +1791,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'ActiveDirectory')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AD-SessionHost-Availability-Set",   
@@ -1804,6 +1821,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'AzureActiveDirectory')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AAD-SessionHost-Availability-Set",   
@@ -1833,6 +1851,7 @@
             }
         },        
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'AzureActiveDirectoryDomainServices')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AADD-SessionHost-Availability-Set",   
@@ -1862,7 +1881,7 @@
             }
         },                
         {
-            "condition": "[equals(parameters('SHOS'),'win11-21h2-avd-m365')]",      
+            "condition": "[and(equals(parameters('SHOS'),'win11-21h2-avd-m365'), equals(parameters('VirtualDesktopADType'),'ActiveDirectory'))]",      
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AD-SessionHosts-Win11-M365",   
@@ -1958,7 +1977,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('SHOS'),'win11-21h2-avd-m365')]",      
+            "condition": "[and(equals(parameters('SHOS'),'win11-21h2-avd-m365'), equals(parameters('VirtualDesktopADType'),'AzureActiveDirectory'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AAD-SessionHosts-Win11-M365",   
@@ -2048,7 +2067,7 @@
             }
         },        
         {
-            "condition": "[equals(parameters('SHOS'),'win11-21h2-avd-m365')]",      
+            "condition": "[and(equals(parameters('SHOS'),'win11-21h2-avd-m365'), equals(parameters('VirtualDesktopADType'),'AzureActiveDirectoryDomainServices'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AADD-SessionHosts-Win11-M365",   
@@ -2150,7 +2169,7 @@
             }
         },                
         {
-            "condition": "[equals(parameters('SHOS'),'win10-21h2-avd-m365')]",      
+            "condition": "[and(equals(parameters('SHOS'),'win10-21h2-avd-m365'), equals(parameters('VirtualDesktopADType'),'ActiveDirectory'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AD-SessionHosts-Win10-M365",   
@@ -2246,7 +2265,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('SHOS'),'win10-21h2-avd-m365')]",      
+            "condition": "[and(equals(parameters('SHOS'),'win10-21h2-avd-m365'), equals(parameters('VirtualDesktopADType'),'AzureActiveDirectory'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AAD-SessionHosts-Win10-M365",   
@@ -2336,7 +2355,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('SHOS'),'win10-21h2-avd-m365')]",      
+            "condition": "[and(equals(parameters('SHOS'),'win10-21h2-avd-m365'), equals(parameters('VirtualDesktopADType'),'AzureActiveDirectoryDomainServices'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AADD-SessionHosts-Win10-M365",   
