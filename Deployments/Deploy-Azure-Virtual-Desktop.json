@@ -892,6 +892,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'ActiveDirectory')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AD-HostedPool",            
@@ -939,6 +940,7 @@
             }
         },        
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'AzureActiveDirectory')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AAD-HostedPool",
@@ -989,6 +991,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'AzureActiveDirectoryDomainServices')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AADD-HostedPool",
@@ -1040,6 +1043,7 @@
             }
         },                        
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'ActiveDirectory')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AD-DesktopApplicationGroup",   
@@ -1082,6 +1086,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('VirtualDesktopADType'),'AzureActiveDirectory')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AAD-DesktopApplicationGroup",   
