@@ -512,7 +512,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AAD-DesktopApplicationGroup",   
             "dependsOn": [
-               "Deploy-Azure-Virtual-Desktop-AzureActiveDirectory"
+               "Deploy-AzureVirtualDesktop-AAD-HostedPool"
             ],   
             "properties": {
                 "mode": "Incremental",
