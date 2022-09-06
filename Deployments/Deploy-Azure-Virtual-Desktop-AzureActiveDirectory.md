@@ -1,5 +1,5 @@
 # Deploy Azure Virtual Desktop for Azure Active Directory Add-On
-<img src="./x_Images/AzureVirtualDesktopAddOn.svg" height="600" width="800"/>
+<img src="./x_Images/AzureVirtualDesktopAzureActiveDirectoryAddOn.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
@@ -33,3 +33,4 @@ Parameters that support changes
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - Naming Convention. Enter a name that will be used as a naming prefix for (Servers, VNets, etc) you are using.
 - SHOSSku.  Select win11-21h2-avd-m365 or win10-21h2-avd-m365 Session Host OS Sku
+- SHVMSize.  Enter a Valid size for the Deployments Session Hosts

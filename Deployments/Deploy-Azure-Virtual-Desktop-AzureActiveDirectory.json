@@ -349,29 +349,18 @@
                 "description": "Session Host Operating System"
             }
         },    
-            "SHOSVersion": {
+        "SHOSVersion": {
             "type": "string",
             "defaultValue": "latest",
             "metadata": {
                 "description": "Session Host OS Version Number (Example:  22000.675.220510, Windows-10=19044.1706.220510)"
             }
-        },
-        "WK1OSSku": {
-            "type": "string",
-            "defaultValue": "Windows-11",
-            "allowedValues": [
-                "Windows-11",
-                "Windows-10"
-            ],
-            "metadata": {
-                "description": "Workstation1 OS Sku"
-            }
-        },        
-        "WK1VMSize": {
+        },       
+        "SHVMSize": {
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
             "metadata": {
-                "description": "Workstation1 VMSize"
+                "description": "Session Host VMSize"
             }
         },        
         "_artifactsLocation": {
@@ -402,7 +391,7 @@
         "AADRemoteAppGroupName": "[concat(variables('AADHostPoolName'),'-AAD-RAG')]",
         "AADAvailabilitySetName": "[concat(variables('AADHostPoolName'),'-AAD-AVSet')]",                          
         "AADHostPoolARMPath": "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', variables('AADHostPoolName'))]",        
-        "AADSessionHostTemplate": "[concat('{\"domain\":\"\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOSSku'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('WK1VMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('WK1OSSKU'),'\"}')]",
+        "AADSessionHostTemplate": "[concat('{\"domain\":\"\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOSSku'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('SHVMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('SHOSSku'),'\"}')]",
         "WorkSpaceName": "[concat(variables('AADHostPoolName'),'-WorkSpace')]",                    
         "RoleDefinitionID": "1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63",
         "Ring": 1,
@@ -845,7 +834,7 @@
                         "value": "[parameters('WindowsClientLicenseType')]"
                     },              
                     "VMSize": {
-                        "value": "[parameters('WK1VMSize')]"
+                        "value": "[parameters('SHVMSize')]"
                     },
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
@@ -935,7 +924,7 @@
                         "value": "[parameters('WindowsClientLicenseType')]"
                     },              
                     "VMSize": {
-                        "value": "[parameters('WK1VMSize')]"
+                        "value": "[parameters('SHVMSize')]"
                     },
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
