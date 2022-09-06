@@ -396,20 +396,14 @@
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",    
-        "ADHostPoolName": "[concat(parameters('NamingConvention'),'-AD-Hosted-Pool')]",
-        "ADDesktopAppGroupName": "[concat(variables('ADHostPoolName'),'-AD-DAG')]",    
-        "ADRemoteAppGroupName": "[concat(variables('ADHostPoolName'),'-AD-RAG')]",   
         "aadrdshPrefix": "[concat(parameters('NamingConvention'),'-aadsh-')]",   
         "AADHostPoolName": "[concat(parameters('NamingConvention'),'-AAD-Hosted-Pool')]",
         "AADDesktopAppGroupName": "[concat(variables('AADHostPoolName'),'-AAD-DAG')]",    
         "AADRemoteAppGroupName": "[concat(variables('AADHostPoolName'),'-AAD-RAG')]",
-        "AADAvailabilitySetName": "[concat(variables('ADHostPoolName'),'-AAD-AVSet')]",                          
+        "AADAvailabilitySetName": "[concat(variables('AADHostPoolName'),'-AAD-AVSet')]",                          
         "AADHostPoolARMPath": "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', variables('AADHostPoolName'))]",        
         "AADSessionHostTemplate": "[concat('{\"domain\":\"\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOSSku'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('WK1VMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('WK1OSSKU'),'\"}')]",
-        "AADDHostPoolName": "[concat(parameters('NamingConvention'),'-AADD-Hosted-Pool')]",
-        "AADDDesktopAppGroupName": "[concat(variables('AADDHostPoolName'),'-AADD-DAG')]",    
-        "AADDRemoteAppGroupName": "[concat(variables('AADDHostPoolName'),'-AADD-RAG')]",
-        "WorkSpaceName": "[concat(variables('ADHostPoolName'),'-WorkSpace')]",                    
+        "WorkSpaceName": "[concat(variables('AADHostPoolName'),'-WorkSpace')]",                    
         "RoleDefinitionID": "1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63",
         "Ring": 1,
         "add4Hours": "[dateTimeAdd(parameters('baseTime'), 'PT4H')]",
@@ -761,24 +755,12 @@
                     "WorkSpaceName": {
                         "value": "[variables('WorkSpaceName')]"
                     },  
-                    "ADDesktopAppGroupName": {
-                        "value": "[variables('ADDesktopAppGroupName')]"
-                    },        
-                    "ADRemoteAppGroupName": {
-                        "value": "[variables('ADRemoteAppGroupName')]"
-                    },
                     "AADDesktopAppGroupName": {
                         "value": "[variables('AADDesktopAppGroupName')]"
                     },        
                     "AADRemoteAppGroupName": {
                         "value": "[variables('AADRemoteAppGroupName')]"
-                    },
-                    "AADDDesktopAppGroupName": {
-                        "value": "[variables('AADDDesktopAppGroupName')]"
-                    },
-                    "AADDRemoteAppGroupName": {
-                        "value": "[variables('AADDRemoteAppGroupName')]"
-                    }                                                          
+                    }
                 }
             }
         },
