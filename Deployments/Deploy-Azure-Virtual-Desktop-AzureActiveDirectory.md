@@ -4,6 +4,18 @@
 This Deployment deploys the following items:
 
 - 1 - Azure KeyVault with Secret contianing Deployment Password
+- 1 - Azure Virtual Desktop Host Pool
+- 1 - Azure Virtual Desktop Application Group
+- 1 - Azure Virtual Desktop Desktop Application
+- 1 - Azure Virtual Desktop Remote Application
+- 1 - Azure Virtual Desktop Workspace
+- 1 - Azure Virtual Desktop Session Hosts Availability Set
+- x - Azure Virtual Desktop Session Hosts
+
+The deployment leverages Desired State Configuration scripts to further customize the following:
+
+Session Hosts
+- Use supplied OS SKu and add VM to Session Host Pool
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 
