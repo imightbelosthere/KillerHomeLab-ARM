@@ -36,13 +36,13 @@ configuration ADDSESSIONHOST
 
             WindowsOptionalFeature RSAT-ActiveDirectory
             {
-                Ensure = "Present"
+                Ensure = "Enable"
                 Name = "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
             }
 
             WindowsOptionalFeature RSAT-DNS
             {
-                Ensure = "Present"
+                Ensure = "Enable"
                 Name = "Rsat.Dns.Tools~~~~0.0.1.0"
             }
 
