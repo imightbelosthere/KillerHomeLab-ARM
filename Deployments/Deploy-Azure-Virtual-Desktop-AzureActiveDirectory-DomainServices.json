@@ -147,7 +147,7 @@
             "metadata": {
                 "description": "Time Zone"
             }
-        },   
+        },
         "hostpoolType": {
             "defaultValue": "Pooled",      
             "allowedValues": [
@@ -276,7 +276,27 @@
             "metadata": {
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
-        },      		        
+        },
+        "AzureUserName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Azure User Principal with AAD DC Administrators rights"
+            }
+        },
+        "ManagedDomainName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Azure Managed Domain"
+            }
+        },        
+        "AzureUserPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Azure User Password"
+            }
+        },              		        
         "AzureUserObjectID": {
             "type": "string",
             "defaultValue": "",
@@ -284,7 +304,7 @@
                 "description": "Deployment Account Object ID"
             }
         },
-        "WVDGroupObjectID": {
+        "PrincipalID": {
             "defaultValue": "",        
             "type": "string",
             "metadata": {
@@ -301,7 +321,7 @@
             "metadata": {
                 "description": "Windows Client OS License Type"
             }
-        },        
+        },              
         "NamingConvention": {
             "type": "string",
             "defaultValue": "khl",
@@ -310,20 +330,53 @@
                 "description": "VNet1 Name"
             }
         },
+        "SubDNSDomain": {
+            "type": "string",
+            "defaultValue": "sub1.",
+            "metadata": {
+                "description": "Sub DNS Domain Name Example:  sub1. must include a DOT AT END"
+            }
+        },
+        "InternalDomain": {
+            "type": "string",
+            "defaultValue": "killerhomelab",
+            "metadata": {
+                "description": "NetBios Domain Name"
+            }
+        },
+        "InternalTLD": {
+            "type": "string",
+            "defaultValue": "com",
+            "allowedValues": [
+                "com",
+                "net",
+                "org",
+                "edu",
+                "gov",
+                "mil",
+                "us",
+                "tk",
+                "ml",
+                "local"
+            ],
+            "metadata": {
+                "description": "Top-Level Domain Name"
+            }
+        },       
         "roleAssignmentGuid1": {
             "type": "string",
             "defaultValue": "[newGuid()]",
             "metadata": {
                 "description": "A new GUID used to identify the role assignment"
             }
-        },
+        },   
         "roleAssignmentGuid2": {
             "type": "string",
             "defaultValue": "[newGuid()]",
             "metadata": {
                 "description": "A new GUID used to identify the role assignment"
             }
-        },                
+        },
         "WVDTokenPhrase": {
             "defaultValue": "[newGuid()]",
             "type": "string",
@@ -362,7 +415,7 @@
             "metadata": {
                 "description": "Session Host VMSize"
             }
-        },        
+        },                
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -381,18 +434,19 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('AVDAAD-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('AVDAADD-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",    
-        "aadrdshPrefix": "[concat(parameters('NamingConvention'),'-aadsh-')]",   
-        "AADHostPoolName": "[concat(parameters('NamingConvention'),'-AAD-Hosted-Pool')]",
-        "AADDesktopAppGroupName": "[concat(variables('AADHostPoolName'),'-AAD-DAG')]",    
-        "AADRemoteAppGroupName": "[concat(variables('AADHostPoolName'),'-AAD-RAG')]",
-        "AADAvailabilitySetName": "[concat(variables('AADHostPoolName'),'-AAD-AVSet')]",                          
-        "AADHostPoolARMPath": "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', variables('AADHostPoolName'))]",        
-        "AADSessionHostTemplate": "[concat('{\"domain\":\"\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOSSku'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('SHVMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('SHOSSku'),'\"}')]",
-        "WorkSpaceName": "[concat(variables('AADHostPoolName'),'-WorkSpace')]",                    
+        "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
+        "aaddrdshPrefix": "[concat(parameters('NamingConvention'),'-aaddsh-')]",   
+        "AADDHostPoolName": "[concat(parameters('NamingConvention'),'-AADD-Hosted-Pool')]",
+        "AADDDesktopAppGroupName": "[concat(variables('AADDHostPoolName'),'-AADD-DAG')]",    
+        "AADDRemoteAppGroupName": "[concat(variables('AADDHostPoolName'),'-AADD-RAG')]",
+        "AADDAvailabilitySetName": "[concat(variables('AADDHostPoolName'),'-AADD-AVSet')]",                          
+        "AADDHostPoolARMPath": "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', variables('AADDHostPoolName'))]",        
+        "AADDSessionHostTemplate": "[concat('{\"domain\":\"',variables('InternaldomainName'), '\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOSSku'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('SHVMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('SHOSSku'),'\"}')]",                
+        "WorkSpaceName": "[concat(variables('AADDHostPoolName'),'-WorkSpace')]",                    
         "RoleDefinitionID": "1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63",
         "Ring": 1,
         "add4Hours": "[dateTimeAdd(parameters('baseTime'), 'PT4H')]",
@@ -408,7 +462,7 @@
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "ExtensionsTypeHandlerVersion": "2.83",
-        "AADJExtensionsTypeHandlerVersion": "1.0"        
+        "DJExtensionsTypeHandlerVersion": "1.3"
     },
     "resources": [
         {
@@ -446,11 +500,11 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AzureVirtualDesktop-AAD-HostedPool",                   
+            "name": "Deploy-AzureVirtualDesktop-AADD-HostedPool",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/avdhostpoolaad.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/avdhostpool.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -458,7 +512,7 @@
                         "value": "[variables('AVDHostPoolAPIVersion')]"
                     },                    
                     "HostPoolName": {
-                        "value": "[variables('AADHostPoolName')]"
+                        "value": "[variables('AADDHostPoolName')]"
                     },
                     "HostPoolType": {
                         "value": "[parameters('HostPoolType')]"
@@ -473,7 +527,7 @@
                         "value": "[parameters('loadBalancerType')]"
                     },
                     "vmTemplate": {
-                        "value": "[variables('AADSessionHostTemplate')]"
+                        "value": "[variables('AADDSessionHostTemplate')]"
                     },
                     "tokenExpirationTime": {
                         "value": "[variables('add4Hours')]"
@@ -489,13 +543,13 @@
                     }                                                                                                                   
                 }
             }
-        },
+        },                        
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AzureVirtualDesktop-AAD-DesktopApplicationGroup",   
+            "name": "Deploy-AzureVirtualDesktop-AADD-DesktopApplicationGroup",   
             "dependsOn": [
-               "Deploy-AzureVirtualDesktop-AAD-HostedPool"
+               "Deploy-AzureVirtualDesktop-AADD-HostedPool"
             ],   
             "properties": {
                 "mode": "Incremental",
@@ -504,39 +558,39 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "DeploymentAPIVersion": {
+                    "DeploymgentAPIVersion": {
                         "value": "[variables('DeploymentAPIVersion')]"
                     },
                     "AVDApplicationGroupAPIVersion": {
                         "value": "[variables('AVDApplicationGroupAPIVersion')]"
                     },                    
                     "AppGroupName": {
-                        "value": "[variables('AADDesktopAppGroupName')]"
+                        "value": "[variables('AADDDesktopAppGroupName')]"
                     }, 
                     "NamingConvention": {
                         "value": "[parameters('NamingConvention')]"
                     },
                     "HostPoolARMPath": {
-                        "value": "[variables('AADHostPoolARMPath')]"
+                        "value": "[variables('AADDHostPoolARMPath')]"
                     },
                     "RoleAssignmentGUID": {
                         "value": "[parameters('roleAssignmentGuid1')]"
                     },
                     "PrincipalID": {
-                        "value": "[parameters('WVDGroupObjectID')]"
+                        "value": "[parameters('PrincipalID')]"
                     },
                     "RoleDefinitionID": {
                         "value": "[variables('RoleDefinitionID')]"
                     }                                                                                                                                                                                                                           
                 }
             }
-        },        
+        },                
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AzureVirtualDesktop-AAD-RemoteApplicationGroup",   
+            "name": "Deploy-AzureVirtualDesktop-AADD-RemoteApplicationGroup",   
             "dependsOn": [
-                "Deploy-AzureVirtualDesktop-AAD-DesktopApplicationGroup"
+                "Deploy-AzureVirtualDesktop-AADD-DesktopApplicationGroup"
             ],   
             "properties": {
                 "mode": "Incremental",
@@ -555,18 +609,18 @@
                         "value": "[variables('AVDApplicationGroupAuthorizationAPIVersion')]"
                     },                                         
                     "AppGroupName": {
-                        "value": "[variables('AADRemoteAppGroupName')]"
+                        "value": "[variables('AADDRemoteAppGroupName')]"
                     }, 
                     "NamingConvention": {
                         "value": "[parameters('NamingConvention')]"
                     },             
                     "HostPoolARMPath": {
-                        "value": "[variables('AADHostPoolARMPath')]"
+                        "value": "[variables('AADDHostPoolARMPath')]"
                     },
                     "selectedApps": {
                         "value": [
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/Excel')]",
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADDRemoteAppGroupName'),'/applications/Excel')]",
                                 "name": "Excel",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
@@ -582,7 +636,7 @@
                                 }
                             },
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/Microsoft Edge')]",
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADDRemoteAppGroupName'),'/applications/Microsoft Edge')]",
                                 "name": "Microsoft Edge",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
@@ -598,7 +652,7 @@
                                 }
                             },
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/OneDrive')]",
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADDRemoteAppGroupName'),'/applications/OneDrive')]",
                                 "name": "OneDrive",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
@@ -614,7 +668,7 @@
                                 }
                             },
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/OneNote')]",                        
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADDRemoteAppGroupName'),'/applications/OneNote')]",                        
                                 "name": "OneNote",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
@@ -630,7 +684,7 @@
                                 }
                             },
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/Outlook')]",
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADDRemoteAppGroupName'),'/applications/Outlook')]",
                                 "name": "Outlook",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
@@ -646,7 +700,7 @@
                                 }
                             },
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/PowerPoint')]",                        
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADDRemoteAppGroupName'),'/applications/PowerPoint')]",                        
                                 "name": "PowerPoint",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
@@ -662,7 +716,7 @@
                                 }
                             },
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/Remote Desktop Connection')]",
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADDRemoteAppGroupName'),'/applications/Remote Desktop Connection')]",
                                 "name": "Remote Desktop Connection",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
@@ -678,7 +732,7 @@
                                 }
                             },
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/Windows PowerShell ISE')]",
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADDRemoteAppGroupName'),'/applications/Windows PowerShell ISE')]",
                                 "name": "Windows PowerShell ISE",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
@@ -694,7 +748,7 @@
                                 }
                             },
                             {
-                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADRemoteAppGroupName'),'/applications/Word')]",
+                                "id": "[concat('/subscriptions/',subscription().id,'/resourcegroups/',resourceGroup().name, '/providers/Microsoft.DesktopVirtualization/applicationgroups/',variables('AADDRemoteAppGroupName'),'/applications/Word')]",
                                 "name": "Word",
                                 "type": "Microsoft.WindowsVirualDesktop/applicationGroups/applications",
                                 "properties": {
@@ -715,22 +769,21 @@
                         "value": "[parameters('roleAssignmentGuid2')]"
                     },
                     "PrincipalID": {
-                        "value": "[parameters('WVDGroupObjectID')]"
+                        "value": "[parameters('PrincipalID')]"
                     },
                     "RoleDefinitionID": {
                         "value": "[variables('RoleDefinitionID')]"
                     }                                                                                                                                                                                                                                                                                                                                                                            
                 }
             }
-        },
+        },                
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-To-Workspace",   
             "dependsOn": [
-                "Deploy-AzureVirtualDesktop-AAD-DesktopApplicationGroup",
-                "Deploy-AzureVirtualDesktop-AAD-RemoteApplicationGroup"
-            ],   
+                "Deploy-AzureVirtualDesktop-AADD-DesktopApplicationGroup",
+                "Deploy-AzureVirtualDesktop-AADD-RemoteApplicationGroup"                         ],   
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -745,18 +798,18 @@
                         "value": "[variables('WorkSpaceName')]"
                     },  
                     "DesktopAppGroupName": {
-                        "value": "[variables('AADDesktopAppGroupName')]"
-                    },        
+                        "value": "[variables('AADDDesktopAppGroupName')]"
+                    },
                     "RemoteAppGroupName": {
-                        "value": "[variables('AADRemoteAppGroupName')]"
-                    }
+                        "value": "[variables('AADDRemoteAppGroupName')]"
+                    }                                                          
                 }
             }
         },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AAD-SessionHost-Availability-Set",   
+            "name": "Deploy-AADD-SessionHost-Availability-Set",   
             "dependsOn": [
                 "Deploy-To-Workspace"
             ],   
@@ -771,7 +824,7 @@
                         "value": "[variables('AvailabilitySetsAPIVersion')]"
                     },
                     "AvailabilitySetName": {
-                        "value": "[variables('AADAvailabilitySetName')]"
+                        "value": "[variables('AADDAvailabilitySetName')]"
                     },
                     "availabilitySetUpdateDomainCount": {
                         "value": "[parameters('availabilitySetUpdateDomainCount')]"
@@ -781,19 +834,19 @@
                     } 
                 }
             }
-        },        
+        },                
         {
             "condition": "[equals(parameters('SHOSSku'),'win11-21h2-avd-m365')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AAD-SessionHosts-Win11-M365",   
+            "name": "Deploy-AADD-SessionHosts-Win11-M365",   
             "dependsOn": [
-                "Deploy-AAD-SessionHost-Availability-Set"
+                "Deploy-AADD-SessionHost-Availability-Set"
             ],   
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/aadsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/aaddsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -809,11 +862,11 @@
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
-                    "AADJExtensionsTypeHandlerVersion": {
-                        "value": "[variables('AADJExtensionsTypeHandlerVersion')]"
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },                                        
                     "availabilitySetName": {
-                        "value": "[variables('AADAvailabilitySetName')]"
+                        "value": "[variables('AADDAvailabilitySetName')]"
                     },
                     "TimeZone": {
                         "value": "[parameters('TimeZone')]"
@@ -847,9 +900,15 @@
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
-                    },  
+                    },                      
+                    "AzureUserName": {
+                        "value": "[parameters('AzureUserName')]"
+                    },
+                    "AzureUserPassword": {
+                        "value": "[parameters('AzureUserPassword')]"
+                    },    
                     "rdshPrefix": {
-                        "value": "[variables('aadrdshPrefix')]"
+                        "value": "[variables('aaddrdshPrefix')]"
                     },                                                                                                                                                                          
                     "rdshNumberOfInstances": {
                         "value": "[parameters('vmNumberOfInstances')]"
@@ -858,11 +917,17 @@
                         "value": "[parameters('vmInitialNumber')]"
                     },       
                     "hostpoolToken": {
-                        "value": "[reference('Deploy-AzureVirtualDesktop-AAD-HostedPool').outputs.RegistrationInfoToken.value]"             
+                        "value": "[reference('Deploy-AzureVirtualDesktop-AADD-HostedPool').outputs.RegistrationInfoToken.value]"             
                     },             
                     "hostpoolName": {
-                        "value": "[variables('AADhostpoolName')]"
-                    },            
+                        "value": "[variables('AADDhostpoolName')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },  
+                    "ManagedDomainName": {
+                        "value": "[parameters('ManagedDomainName')]"
+                    },                                                            
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
@@ -871,19 +936,19 @@
                     }                                                                                                                                                                                                                                                                                                
                 }
             }
-        },        
+        },                
         {
             "condition": "[equals(parameters('SHOSSku'),'win10-21h2-avd-m365')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AAD-SessionHosts-Win10-M365",   
+            "name": "Deploy-AADD-SessionHosts-Win10-M365",   
             "dependsOn": [
-                "Deploy-AAD-SessionHost-Availability-Set"
+                "Deploy-AADD-SessionHost-Availability-Set"
             ],   
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/aadsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/aaddsessionhosts.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -899,11 +964,11 @@
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
-                    "AADJExtensionsTypeHandlerVersion": {
-                        "value": "[variables('AADJExtensionsTypeHandlerVersion')]"
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },                      
                     "availabilitySetName": {
-                        "value": "[variables('AADAvailabilitySetName')]"
+                        "value": "[variables('AADDAvailabilitySetName')]"
                     },
                     "TimeZone": {
                         "value": "[parameters('TimeZone')]"
@@ -937,9 +1002,15 @@
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
+                    },                      
+                    "AzureUserName": {
+                        "value": "[parameters('AzureUserName')]"
+                    },
+                    "AzureUserPassword": {
+                        "value": "[parameters('AzureUserPassword')]"
                     },  
                     "rdshPrefix": {
-                        "value": "[variables('aadrdshPrefix')]"
+                        "value": "[variables('aaddrdshPrefix')]"
                     },                                                                                                                                                                          
                     "rdshNumberOfInstances": {
                         "value": "[parameters('vmNumberOfInstances')]"
@@ -948,11 +1019,17 @@
                         "value": "[parameters('vmInitialNumber')]"
                     },       
                     "hostpoolToken": {
-                        "value": "[reference('Deploy-AzureVirtualDesktop-AAD-HostedPool').outputs.RegistrationInfoToken.value]"             
+                        "value": "[reference('Deploy-AzureVirtualDesktop-AADD-HostedPool').outputs.RegistrationInfoToken.value]"             
                     },             
                     "hostpoolName": {
-                        "value": "[variables('AADhostpoolName')]"
-                    },            
+                        "value": "[variables('AADDhostpoolName')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "ManagedDomainName": {
+                        "value": "[parameters('ManagedDomainName')]"
+                    },                                                                  
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
@@ -961,6 +1038,6 @@
                     }                                                                                                                                                                                                                                                                                                
                 }
             }
-        }
+        }                                                                                                                                                   
     ]
 }

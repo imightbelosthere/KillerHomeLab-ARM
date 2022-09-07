@@ -14,13 +14,13 @@
                 "description": "Preferred Workspace Name to display"
             }
         },  
-        "AADDesktopAppGroupName": {
+        "DesktopAppGroupName": {
             "type": "string",
             "metadata": {
                 "description": "Azure Active Directory Desktop Application Group"
             }
         },
-        "AADRemoteAppGroupName": {
+        "RemoteAppGroupName": {
             "type": "string",
             "metadata": {
                 "description": "Azure Active Directory Remote Application Group"
@@ -29,8 +29,8 @@
     },
     "variables": {
         "allApplicationGroupReferences": [
-            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADDesktopAppGroupName'))]",
-            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('AADRemoteAppGroupName'))]"
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('DesktopAppGroupName'))]",
+            "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/applicationgroups', parameters('RemoteAppGroupName'))]"
         ]
     },    
     "resources": [
