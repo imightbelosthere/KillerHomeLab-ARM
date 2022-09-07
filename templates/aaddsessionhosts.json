@@ -92,6 +92,18 @@
                 "description": "Existing subnet name that contains the domain controller"
           }
         },
+        "aaddsIP1": {
+            "type": "string",
+            "metadata": {
+                "description": "IP Address of Azure AD Domain Services Domain Controller 1"
+          }
+        },        
+        "aaddsIP2": {
+            "type": "string",
+            "metadata": {
+                "description": "IP Address of Azure AD Domain Services Domain Controller 2"
+          }
+        },                
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -202,7 +214,13 @@
                             }
                         }
                     }
-                ],              
+                ],
+                "dnsSettings": {
+                    "dnsServers": [
+                        "[parameters('aaddsIP1')]",
+                        "[parameters('aaddsIP2')]"
+                    ]
+                },                
                 "enableAcceleratedNetworking": false
             }
         },      

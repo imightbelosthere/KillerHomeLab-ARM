@@ -547,62 +547,9 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Update-VNet1-DNS",
-            "dependsOn": [
-                "Deploy-VirtualNetwork-01"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetdns.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "vnetprefix": {
-                        "value": "[variables('vnet1Prefix')]"
-                    },
-                    "subnet1Name": {
-                        "value": "[variables('vnet1subnet1Name')]"
-                    },
-                    "subnet1Prefix": {
-                        "value": "[variables('vnet1subnet1Prefix')]"
-                    },
-                    "subnet2Name": {
-                        "value": "[variables('vnet1subnet2Name')]"
-                    },
-                    "subnet2Prefix": {
-                        "value": "[variables('vnet1subnet2Prefix')]"
-                    },
-                    "GatewaysubnetPrefix": {
-                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
-                    },                    
-                    "BastionsubnetPrefix": {
-                        "value": "[variables('vnet1BastionsubnetPrefix')]"
-                    },
-                    "FirewallsubnetPrefix": {
-                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
-                    },
-                    "DNSServerIP": {
-                        "value": [
-                            "[variables('aaddsIP1')]",
-                            "[variables('aaddsIP2')]"
-                        ]
-                    }
-                }
-            }
-        },        
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureAD-DomainServices",
             "dependsOn": [
-               "Update-VNet1-DNS"
+               "Deploy-VirtualNetwork-01"
             ],                        
             "properties": {
                 "mode": "Incremental",
@@ -1132,6 +1079,12 @@
                     "subnet1Name": {
                         "value": "[variables('vnet1subnet2Name')]"
                     },
+                    "aaddsIP1": {
+                        "value": "[variables('aaddsIP1')]"
+                    },                                
+                    "aaddsIP2": {
+                        "value": "[variables('aaddsIP2')]"
+                    },                                                    
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },
