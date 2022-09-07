@@ -43,10 +43,13 @@ Parameters that support changes
 - availabilitySetFaultDomainCount. The platform fault domain count of avaiability set to be created.
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
+- Azure UserName.  Existing User name of Managed Azure Account with "Virtual Machine User Login" rights
+- Azure User Password.  Existing Password for Managed Azure Account with "Virtual Machine User Login" rights 
+- Managed Domain Name.  Managed Azure Domain (Example:  killerhomelab.onmicrosoft.com or killerhomelab.onmicrosoft.us)
+- Azure AD Domain Services Domain.  Choosen name for Azure Active Directory Services Domain Services Name (Example:  killerhomelab.com)
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment
-- WVDGroupObjectID.  Object ID of Azure AD Group to Grant Azure Virtual Desktop Access To.
+- AVDGroupObjectID.  Object ID of Azure AD Group to Grant Azure Virtual Desktop Access To.
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - Naming Convention. Enter a name that will be used as a naming prefix for (Servers, VNets, etc) you are using.
-- Azure AD Domain Servcies Domain.  Enter a valid Domain Name for Active Directory Domain Services(Exmaple:  killerhomelab.com)
 - SHOSSku.  Select win11-21h2-avd-m365 or win10-21h2-avd-m365 Session Host OS Sku
 - SHVMSize.  Enter a Valid size for the Deployments Session Hosts
