@@ -447,7 +447,8 @@
         "AADDAvailabilitySetName": "[concat(variables('AADDHostPoolName'),'-AADD-AVSet')]",                          
         "AADDHostPoolARMPath": "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', variables('AADDHostPoolName'))]",        
         "AADDSessionHostTemplate": "[concat('{\"domain\":\"',parameters('AzureADDomainServicesDomain'), '\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOSSku'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('SHVMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('SHOSSku'),'\"}')]",                
-        "WorkSpaceName": "[concat(variables('AADDHostPoolName'),'-WorkSpace')]",                    
+        "WorkSpaceName": "[concat(variables('AADDHostPoolName'),'-WorkSpace')]",      
+        "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]" ,                      
         "RoleDefinitionID": "1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63",
         "Ring": 1,
         "add4Hours": "[dateTimeAdd(parameters('baseTime'), 'PT4H')]",
@@ -462,6 +463,7 @@
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
+        "NetworkSecurityGroupAPIVersion": "2022-01-01",                
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",        
         "ExtensionsTypeHandlerVersion": "2.83",
@@ -547,9 +549,96 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-NetworksecurityGroup-01",
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01"      
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/aaddsnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },                    
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    }
+                }
+            }
+        },                                   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-Subnet1",
+            "dependsOn": [
+                "Deploy-NetworksecurityGroup-01"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },                                                                                                            
+                    "subnetPrefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    }, 
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    }                                                                                                                                                                                                                             
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-Subnet2",
+            "dependsOn": [
+                "Associate-NSG-with-Subnet1"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },                                                                                                            
+                    "subnetPrefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    }, 
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    }                                                                                                                                                                                                                             
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureAD-DomainServices",
             "dependsOn": [
-               "Deploy-VirtualNetwork-01"
+               "Associate-NSG-with-Subnet2"
             ],                        
             "properties": {
                 "mode": "Incremental",

@@ -5,6 +5,7 @@ This Deployment deploys the following items:
 
 - 1 - Azure KeyVault with Secret contianing Deployment Password
 - 1 - Virtual Network
+- 1 - Network Security Group
 - 1 - Azure AD Domain Services Instance
 - 1 - Azure Virtual Desktop Host Pool
 - 1 - Azure Virtual Desktop Application Group

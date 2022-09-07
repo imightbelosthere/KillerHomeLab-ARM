@@ -1,0 +1,56 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkSecurityGroupAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group API Version"
+            }
+        },
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name"
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "[parameters('NetworkSecurityGroupAPIVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('NetworkSecurityGroupName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "AllowPSRemoting",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "5986",
+                            "sourceAddressPrefix": "AzureActiveDirectoryDomainServices",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 301,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "AllowRD",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "3389",
+                            "sourceAddressPrefix": "CorpNetSaw",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 201,
+                            "direction": "Inbound"
+                        }
+                    }                     
+                ]
+            }
+        }
+    ]
+}
