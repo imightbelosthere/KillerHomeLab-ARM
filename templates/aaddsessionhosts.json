@@ -202,13 +202,7 @@
                             }
                         }
                     }
-                ],
-                "dnsSettings": {
-                    "dnsServers": [
-                        "10.10.10.68",
-                        "10.10.10.69"
-                    ]
-                },                
+                ],              
                 "enableAcceleratedNetworking": false
             }
         },      

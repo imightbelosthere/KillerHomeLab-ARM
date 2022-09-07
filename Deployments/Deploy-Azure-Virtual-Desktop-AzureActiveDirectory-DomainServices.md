@@ -4,6 +4,8 @@
 This Deployment deploys the following items:
 
 - 1 - Azure KeyVault with Secret contianing Deployment Password
+- 1 - Virtual Network
+- 1 - Azure AD Domain Services Instance
 - 1 - Azure Virtual Desktop Host Pool
 - 1 - Azure Virtual Desktop Application Group
 - 1 - Azure Virtual Desktop Desktop Application
@@ -28,6 +30,7 @@ If you can't remember the Username review the Deployment Input tab within your R
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
+- AzureADDomainServicesSku.  Select Standard, Enterprise or Premium Sku
 - HostPoolType.  Set this parameter to Personal if you would like to enable Persistent Desktop experience. Defaults to false.
 - personalDesktopAssignmentType.  
 - maxSessionLimit.  Maximum number of sessions.
@@ -44,8 +47,6 @@ Parameters that support changes
 - WVDGroupObjectID.  Object ID of Azure AD Group to Grant Azure Virtual Desktop Access To.
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - Naming Convention. Enter a name that will be used as a naming prefix for (Servers, VNets, etc) you are using.
-- Sub DNS Domain.  OPTIONALLY, enter a valid DNS Sub Domain. (Example:  sub1. or sub1.sub2.    This entry must end with a DOT )
-- Internal Domain.  Enter a valid Internal Domain (Exmaple:  killerhomelab)
-- InternalTLD.  Select a valid Top-Level Domain using the Pull-Down Menu.
+- Azure AD Domain Servcies Domain.  Enter a valid Domain Name for Active Directory Domain Services(Exmaple:  killerhomelab.com)
 - SHOSSku.  Select win11-21h2-avd-m365 or win10-21h2-avd-m365 Session Host OS Sku
 - SHVMSize.  Enter a Valid size for the Deployments Session Hosts

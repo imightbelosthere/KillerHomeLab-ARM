@@ -148,6 +148,18 @@
                 "description": "Time Zone"
             }
         },
+        "AzureADDomainServicesSku": {
+            "defaultValue": "Standard",      
+            "allowedValues": [
+                "Standard",
+                "Enterprise",
+                "Premium"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Azure Active Directory Domain Services Sku"
+            }
+        },   
         "hostpoolType": {
             "defaultValue": "Pooled",      
             "allowedValues": [
@@ -330,39 +342,20 @@
                 "description": "VNet1 Name"
             }
         },
-        "SubDNSDomain": {
+        "AzureADDomainServicesDomain": {
             "type": "string",
-            "defaultValue": "sub1.",
-            "metadata": {
-                "description": "Sub DNS Domain Name Example:  sub1. must include a DOT AT END"
-            }
-        },
-        "InternalDomain": {
-            "type": "string",
-            "defaultValue": "killerhomelab",
+            "defaultValue": "killerhomelab.com",
             "metadata": {
                 "description": "NetBios Domain Name"
             }
         },
-        "InternalTLD": {
+        "vnet1ID": {
             "type": "string",
-            "defaultValue": "com",
-            "allowedValues": [
-                "com",
-                "net",
-                "org",
-                "edu",
-                "gov",
-                "mil",
-                "us",
-                "tk",
-                "ml",
-                "local"
-            ],
+            "defaultValue": "172.16",
             "metadata": {
-                "description": "Top-Level Domain Name"
+                "description": "VNet1 Prefix"
             }
-        },       
+        },            
         "roleAssignmentGuid1": {
             "type": "string",
             "defaultValue": "[newGuid()]",
@@ -437,15 +430,23 @@
         "KeyVaultName": "[concat('AVDAADD-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
-        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",    
-        "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
+        "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
+        "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
+        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
+        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",
+        "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",
+        "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
+        "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
+        "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",    
+        "aaddsIP1": "[concat(parameters('vnet1ID'),'.1.4')]", 
+        "aaddsIP2": "[concat(parameters('vnet1ID'),'.1.5')]", 
         "aaddrdshPrefix": "[concat(parameters('NamingConvention'),'-aaddsh-')]",   
         "AADDHostPoolName": "[concat(parameters('NamingConvention'),'-AADD-Hosted-Pool')]",
         "AADDDesktopAppGroupName": "[concat(variables('AADDHostPoolName'),'-AADD-DAG')]",    
         "AADDRemoteAppGroupName": "[concat(variables('AADDHostPoolName'),'-AADD-RAG')]",
         "AADDAvailabilitySetName": "[concat(variables('AADDHostPoolName'),'-AADD-AVSet')]",                          
         "AADDHostPoolARMPath": "[resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', variables('AADDHostPoolName'))]",        
-        "AADDSessionHostTemplate": "[concat('{\"domain\":\"',variables('InternaldomainName'), '\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOSSku'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('SHVMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('SHOSSku'),'\"}')]",                
+        "AADDSessionHostTemplate": "[concat('{\"domain\":\"',parameters('AzureADDomainServicesDomain'), '\",\"galleryImageOffer\":\"office-365\",\"galleryImagePublisher\":\"MicrosoftWindowsDesktop\",\"galleryImageSKU\":\"',parameters('SHOSSku'),'\",\"imageType\":\"Gallery\",\"imageUri\":null,\"customImageId\":null,\"namePrefix\":\"', parameters('NamingConvention'),'\",\"osDiskType\":\"',parameters('vmDiskType'),'\",\"useManagedDisks\":true,\"vmSize\":{\"id\":\"',parameters('SHVMSize'),'\",\"cores\":2,\"ram\":8},\"galleryItemId\":\"MicrosoftWindowsDesktop.office-365',parameters('SHOSSku'),'\"}')]",                
         "WorkSpaceName": "[concat(variables('AADDHostPoolName'),'-WorkSpace')]",                    
         "RoleDefinitionID": "1d18fff3-a72a-46b5-b4a9-0b38a3cd7e63",
         "Ring": 1,
@@ -455,12 +456,14 @@
         "AVDApplicationGroupAPIVersion": "2022-02-10-preview",
         "AVDApplicationGroupAuthorizationAPIVersion": "2022-01-01-preview",
         "AVDWorkSpaceAPIVersion": "2022-02-10-preview",
+        "AzureADDSAPIVersion": "2021-05-01",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "VirtualMachinesAPIVersion": "2022-03-01",
+        "VirtualNetworkAPIVersion": "2020-11-01",        
         "ExtensionsTypeHandlerVersion": "2.83",
         "DJExtensionsTypeHandlerVersion": "1.3"
     },
@@ -500,7 +503,139 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-VirtualNetwork-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    },                    
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet1BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    }                    
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-VNet1-DNS",
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetdns.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    },                    
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet1BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    },
+                    "DNSServerIP": {
+                        "value": [
+                            "[variables('aaddsIP1')]",
+                            "[variables('aaddsIP2')]"
+                        ]
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AzureAD-DomainServices",
+            "dependsOn": [
+               "Update-VNet1-DNS"
+            ],                        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/azureaddomainservices.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AzureADDSAPIVersion": {
+                        "value": "[variables('AzureADDSAPIVersion')]"
+                    },
+                    "DomainName": {
+                        "value": "[parameters('AzureADDomainServicesDomain')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "Sku": {
+                        "value": "[parameters('AzureADDomainServicesSku')]"
+                    }                                        
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AADD-HostedPool",
+            "dependsOn": [
+               "Deploy-AzureAD-DomainServices"
+            ],            
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -923,7 +1058,7 @@
                         "value": "[variables('AADDhostpoolName')]"
                     },
                     "domainName": {
-                        "value": "[variables('InternaldomainName')]"
+                        "value": "[parameters('AzureADDomainServicesDomain')]"
                     },  
                     "ManagedDomainName": {
                         "value": "[parameters('ManagedDomainName')]"
@@ -1025,7 +1160,7 @@
                         "value": "[variables('AADDhostpoolName')]"
                     },
                     "domainName": {
-                        "value": "[variables('InternaldomainName')]"
+                        "value": "[parameters('AzureADDomainServicesDomain')]"
                     },
                     "ManagedDomainName": {
                         "value": "[parameters('ManagedDomainName')]"
