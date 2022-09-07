@@ -296,19 +296,26 @@
                 "description": "Azure User Principal with AAD DC Administrators rights"
             }
         },
-        "ManagedDomainName": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Azure Managed Domain"
-            }
-        },        
         "AzureUserPassword": {
             "type": "securestring",
             "metadata": {
                 "description": "Azure User Password"
             }
-        },              		        
+        },
+        "ManagedDomainName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Azure Managed Domain (Example:  killerhomelab.onmicrosoft.com or killerhomelab.onmicrosoft.us)"
+            }
+        },
+        "AzureADDomainServicesDomain": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "NetBios Domain Name (Example: killerhomelab.com)"
+            }
+        },                                    		        
         "AzureUserObjectID": {
             "type": "string",
             "defaultValue": "",
@@ -340,13 +347,6 @@
             "maxLength": 4,
             "metadata": {
                 "description": "VNet1 Name"
-            }
-        },
-        "AzureADDomainServicesDomain": {
-            "type": "string",
-            "defaultValue": "killerhomelab.com",
-            "metadata": {
-                "description": "NetBios Domain Name"
             }
         },
         "vnet1ID": {
