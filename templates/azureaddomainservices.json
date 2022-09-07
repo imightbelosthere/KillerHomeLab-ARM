@@ -27,7 +27,7 @@
             }
         },
         "Sku": {
-            "type": "object",
+            "type": "string",
             "metadata": {
                 "description": "Azure Active Directory Domain Services Sku"
             }
