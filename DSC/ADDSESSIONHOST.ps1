@@ -40,9 +40,21 @@ configuration ADDSESSIONHOST
                 Name = "RDS-RD-Server"
             }
 
+            WindowsFeature RSATADDS
+            {
+                Ensure = "Present"
+                Name = "RSAT-ADDS-Tools"
+            }
+
+            WindowsFeature RSATDNS
+            {
+                Ensure = "Present"
+                Name = "RSAT-DNS-Server"
+            }
+
             Script ExecuteRdAgentInstallServer
             {
-                DependsOn = "[WindowsOptionalFeature]RSAT-ActiveDirectory", "[WindowsOptionalFeature]RSAT-DNS", "[WindowsFeature]RDS-RD-Server"
+                DependsOn = "[WindowsFeature]RDS-RD-Server"
                 GetScript = {
                     return @{'Result' = ''}
                 }
@@ -58,18 +70,6 @@ configuration ADDSESSIONHOST
         {
             "$(get-date) - rdshIsServer = false: $rdshIsServer" | out-file c:\windows\temp\rdshIsServerResult.txt -Append
 
-            WindowsOptionalFeature RSAT-ActiveDirectory
-            {
-                Ensure = "Enable"
-                Name = "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
-            }
-
-            WindowsOptionalFeature RSAT-DNS
-            {
-                Ensure = "Enable"
-                Name = "Rsat.Dns.Tools~~~~0.0.1.0"
-            }
-
             Script ExecuteRdAgentInstallClient
             {
                 GetScript = {
@@ -77,6 +77,16 @@ configuration ADDSESSIONHOST
                 }
                 SetScript = {
                     & "$using:ScriptPath\Script-AddRdshServer.ps1" -HostPoolName $using:HostPoolName -RegistrationInfoToken $using:RegistrationInfoToken
+
+                    $RSATDNS = Get-WindowsCapability -Online | Where-Object {$_.Name -like 'RSAT.ActiveDirectory*'}
+                    IF ($RSATDNS.State -ne 'Installed'){
+                        Add-WindowsCapability -Name $RSATDNS.Name -Online
+                    }
+
+                    $RSATAD = Get-WindowsCapability -Online | Where-Object {$_.Name -like 'RSAT.ActiveDirectory*'}
+                    IF ($RSATAD.State -ne 'Installed'){
+                        Add-WindowsCapability -Name $RSATAD.Name -Online
+                    }
                 }
                 TestScript = {
                     return (Test-path "Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\RDInfraAgent")
