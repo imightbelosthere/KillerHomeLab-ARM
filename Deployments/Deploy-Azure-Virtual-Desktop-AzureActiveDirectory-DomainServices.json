@@ -1066,12 +1066,19 @@
                     "subnet1Name": {
                         "value": "[variables('vnet1subnet2Name')]"
                     },
+                    
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
-                    },                      
+                    },
+                    "aaddsIP1": {
+                        "value": "[variables('aaddsIP1')]"
+                    },                                
+                    "aaddsIP2": {
+                        "value": "[variables('aaddsIP2')]"
+                    },                                                                                              
                     "AzureUserName": {
                         "value": "[parameters('AzureUserName')]"
                     },
