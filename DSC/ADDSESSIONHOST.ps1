@@ -34,18 +34,6 @@ configuration ADDSESSIONHOST
         {
             "$(get-date) - rdshIsServer = true: $rdshIsServer" | out-file c:\windows\temp\rdshIsServerResult.txt -Append
 
-            WindowsOptionalFeature RSAT-ActiveDirectory
-            {
-                Ensure = "Enable"
-                Name = "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
-            }
-
-            WindowsOptionalFeature RSAT-DNS
-            {
-                Ensure = "Enable"
-                Name = "Rsat.Dns.Tools~~~~0.0.1.0"
-            }
-
             WindowsFeature RDS-RD-Server
             {
                 Ensure = "Present"
@@ -69,6 +57,18 @@ configuration ADDSESSIONHOST
         else
         {
             "$(get-date) - rdshIsServer = false: $rdshIsServer" | out-file c:\windows\temp\rdshIsServerResult.txt -Append
+
+            WindowsOptionalFeature RSAT-ActiveDirectory
+            {
+                Ensure = "Enable"
+                Name = "Rsat.ActiveDirectory.DS-LDS.Tools~~~~0.0.1.0"
+            }
+
+            WindowsOptionalFeature RSAT-DNS
+            {
+                Ensure = "Enable"
+                Name = "Rsat.Dns.Tools~~~~0.0.1.0"
+            }
 
             Script ExecuteRdAgentInstallClient
             {

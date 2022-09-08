@@ -1,6 +1,12 @@
 # Deploy Azure Virtual Desktop for Azure Active Directory Domain Services Add-On
 <img src="./x_Images/AzureVirtualDesktopAzureActiveDirectoryDomainServicesAddOn.svg" height="600" width="800"/>
 
+THE FOLLOWING TASKS MUST BE DONE PRIOR TO THIS DEPLOYMENT:
+
+- User Performing deployment must be added to the "Virtual Machine User Login" Role
+
+- Deploy-SQLServer-DomainJoined-to-Existing-VNet
+
 This Deployment deploys the following items:
 
 - 1 - Azure KeyVault with Secret contianing Deployment Password
