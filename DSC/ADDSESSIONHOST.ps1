@@ -78,7 +78,7 @@ configuration ADDSESSIONHOST
                 SetScript = {
                     & "$using:ScriptPath\Script-AddRdshServer.ps1" -HostPoolName $using:HostPoolName -RegistrationInfoToken $using:RegistrationInfoToken
 
-                    $RSATDNS = Get-WindowsCapability -Online | Where-Object {$_.Name -like 'RSAT.ActiveDirectory*'}
+                    $RSATDNS = Get-WindowsCapability -Online | Where-Object {$_.Name -like 'RSAT.Dns*'}
                     IF ($RSATDNS.State -ne 'Installed'){
                         Add-WindowsCapability -Name $RSATDNS.Name -Online
                     }
