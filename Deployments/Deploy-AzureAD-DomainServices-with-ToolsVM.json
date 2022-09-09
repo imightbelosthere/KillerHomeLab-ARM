@@ -217,13 +217,6 @@
             "metadata": {
                 "description": "Azure User Password"
             }
-        },        
-        "AzureADDomainServicesDomain": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "NetBios Domain Name (Example: killerhomelab.com)"
-            }
         },
         "ManagedDomainName": {
             "type": "string",
@@ -231,7 +224,14 @@
             "metadata": {
                 "description": "Azure Managed Domain (Example:  killerhomelab.onmicrosoft.com or killerhomelab.onmicrosoft.us)"
             }
-        },        
+        },                        
+        "AzureADDomainServicesDomain": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "NetBios Domain Name (Example: killerhomelab.com)"
+            }
+        },
         "WindowsServerLicenseType": {
             "type": "string",
             "defaultValue": "None",
