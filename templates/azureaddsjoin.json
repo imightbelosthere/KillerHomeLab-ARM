@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ExtensionsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "DJExtensionsTypeHandlerVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "JSON Active Directory Domain Join Extension Type Handler Version"
+            }
+        },         
+        "computerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer Name"
+            }
+        },
+        "AzureUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure UserName"
+            }
+        },
+        "AzureUserPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Azure User Password"
+            }
+        },              
+        "ManagedDomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Managed Domain"
+            }
+        },
+        "AzureADDomainServicesDomain": {
+            "type": "string",
+            "metadata": {
+                "description": "The FQDN of the Azure AD Domain Services Domain "
+            }
+        }                              
+    },
+    "variables": {
+        "AzureUserPrincipal": "[concat(parameters('AzureUsername'),'@',parameters('ManagedDomainName'))]"
+    },    
+    "resources": [
+        {
+            "name": "[concat(parameters('computerName'), '/AzureADDomainServicesJoin')]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "[parameters('ExtensionsAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "JsonADDomainExtension",
+                "typeHandlerVersion": "[parameters('DJExtensionsTypeHandlerVersion')]",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "name": "[parameters('AzureADDomainServicesDomain')]",
+                    "user": "[concat(variables('AzureUserPrincipal'))]",
+                    "restart": "true",
+                    "options": "3"
+                },
+                "protectedSettings": {
+                    "password": "[parameters('AzureUserPassword')]"
+                }                
+            }
+        }
+    ]
+}
