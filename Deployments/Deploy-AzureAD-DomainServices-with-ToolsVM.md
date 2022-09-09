@@ -1,5 +1,5 @@
-# Deploy Azure Active Directory Domain Services
-<img src="./x_Images/AzureActiveDirectoryDomainServices.svg" height="600" width="800"/>
+# Deploy Azure AD Domain Services with Tools VM
+<img src="./x_Images/AzureADDomainServices.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
@@ -7,7 +7,7 @@ This Deployment deploys the following items:
 - 1 - Virtual Network
 - 1 - Network Security Group
 - 1 - Azure AD Domain Services Instance
-- 1 - Azure AD Domain Services Domain-Joined Server
+- 1 - Azure AD Domain Services Domain-Joined Server Tools VM (RSAT: AD & DNS)
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 
