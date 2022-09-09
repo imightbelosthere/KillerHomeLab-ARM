@@ -313,6 +313,8 @@
         "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
         "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
         "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
+        "aaddsIP1": "[concat(parameters('vnet1ID'),'.1.4')]", 
+        "aaddsIP2": "[concat(parameters('vnet1ID'),'.1.5')]",         
         "adtoolsname": "[concat(parameters('NamingConvention'),'-adtools-01')]",           
         "adtoolsIP": "[concat(parameters('vnet1ID'),'.2.',variables('adtoolslastoctet'))]",
         "adtoolslastoctet": "210",             
@@ -370,7 +372,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetdns.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -403,7 +405,13 @@
                     },
                     "FirewallsubnetPrefix": {
                         "value": "[variables('vnet1FirewallsubnetPrefix')]"
-                    }                    
+                    },
+                    "DNSServerIP": {
+                        "value": [
+                            "[variables('aaddsIP1')]",
+                            "[variables('aaddsIP2')]"
+                        ]
+                    }
                 }
             }
         },
