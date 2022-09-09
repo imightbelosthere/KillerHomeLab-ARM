@@ -20,7 +20,7 @@ Click the button below to deploy
 [![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-ADFS-WAP-and-ADConnect-Single-Site.json)
 
 # [Azure Active Directory Domain Services - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-AzureAzureActiveDirectory-DomainServices.md)
-<img src="Deployments/x_Images/AzureVirtualDesktopAddOn.png" alt="Azure Virtual Desktop Azure Active Directory Domain Services Add-On" width="150">
+<img src="Deployments/x_Images/AzureActiveDirectoryDomainServices.png" alt="Azure Active Directory Domain Services" width="150">
 Click the button below to deploy
 
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-AzureActiveDirectory-DomainServices.json)
