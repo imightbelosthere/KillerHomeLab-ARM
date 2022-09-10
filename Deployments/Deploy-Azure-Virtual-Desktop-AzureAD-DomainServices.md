@@ -8,7 +8,7 @@ THE FOLLOWING DEPLOYMENT MUST ALREADY EXIST TO USE THIS DEPLOYMENT:
 THE FOLLOWING TASKS MUST BE DONE PRIOR CONNECTING TO SESSION HOST:
 
 - Azure AD Group pre-created that will be granted Workspace Access
-- Session Host Logon requires membership within the Azure AD Group 
+- Session Host Logon Account requires membership within the Azure AD Group Created Above
 
 This Deployment deploys the following items:
 
