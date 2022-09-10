@@ -1,9 +1,14 @@
 # Deploy Azure Virtual Desktop for Azure AD Domain Services Add-On
 <img src="./x_Images/AzureVirtualDesktopAzureActiveDirectoryDomainServicesAddOn.svg" height="600" width="800"/>
 
-THE FOLLOWING TASKS MUST BE DONE PRIOR TO THIS DEPLOYMENT:
+THE FOLLOWING DEPLOYMENT MUST ALREADY EXIST TO USE THIS DEPLOYMENT:
 
-- User Performing deployment must be added to the "Virtual Machine User Login" Role
+- Deploy-AzureAD-DomainServices
+
+THE FOLLOWING TASKS MUST BE DONE PRIOR CONNECTING TO SESSION HOST:
+
+- Azure AD Group pre-created that will be granted Workspace Access
+- Session Host Logon requires membership within the Azure AD Group 
 
 This Deployment deploys the following items:
 
@@ -22,7 +27,7 @@ This Deployment deploys the following items:
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
 Session Hosts
-- Use supplied OS SKu and add VM to Session Host Pool
+- In order to acces AVD Resource accounts need to be granted or have membership in a group with "Virtual Machine Login User Login
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 
@@ -35,7 +40,6 @@ If you can't remember the Username review the Deployment Input tab within your R
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
-- AzureADDomainServicesSku.  Select Standard, Enterprise or Premium Sku
 - HostPoolType.  Set this parameter to Personal if you would like to enable Persistent Desktop experience. Defaults to false.
 - personalDesktopAssignmentType.  
 - maxSessionLimit.  Maximum number of sessions.
