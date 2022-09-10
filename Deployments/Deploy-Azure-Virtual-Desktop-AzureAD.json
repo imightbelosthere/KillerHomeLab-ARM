@@ -263,7 +263,14 @@
             "metadata": {
                 "description": "The platform fault domain count of avaiability set to be created."
             }
-        },                      
+        },
+        "vnet1ID": {
+            "type": "string",
+            "defaultValue": "172.16",
+            "metadata": {
+                "description": "VNet1 Prefix"
+            }
+        },                              
         "adminUsername": {
             "type": "string",
             "defaultValue": "",
@@ -361,13 +368,6 @@
             "defaultValue": "Standard_D2s_v3",
             "metadata": {
                 "description": "Session Host VMSize"
-            }
-        },
-        "vnet1ID": {
-            "type": "string",
-            "defaultValue": "172.16",
-            "metadata": {
-                "description": "VNet1 Prefix"
             }
         },                
         "_artifactsLocation": {
