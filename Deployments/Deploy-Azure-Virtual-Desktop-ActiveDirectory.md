@@ -1,5 +1,5 @@
 # Deploy Azure Virtual Desktop Active Directory Add-On
-<img src="./x_Images/AzureVirtualDesktopAD43AddOn.svg" height="600" width="800"/>
+<img src="./x_Images/AzureVirtualDesktopADAddOn.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
