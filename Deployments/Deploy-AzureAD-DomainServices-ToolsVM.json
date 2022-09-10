@@ -377,10 +377,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-ADDS-ToolsServer",   
-            "dependsOn": [
-                "Deploy-AzureAD-DomainServices"
-            ],                   
+            "name": "Deploy-ADDS-ToolsServer",                      
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
