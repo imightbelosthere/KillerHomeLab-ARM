@@ -1,12 +1,10 @@
-# Deploy Azure AD Domain Services with Tools VM
-<img src="./x_Images/AzureADDomainServices.svg" height="600" width="800"/>
+# Deploy Azure AD Domain Services Tools VM
+<img src="./x_Images/AzureADDomainServicesToolsVM.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
 - 1 - Azure KeyVault with Secret contianing Deployment Password
-- 1 - Virtual Network
-- 1 - Network Security Group
-- 1 - Azure AD Domain Services Instance
+- 1 - Bastion Host
 - 1 - Azure AD Domain Services Domain-Joined Server Tools VM (RSAT: AD & DNS)
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
@@ -23,7 +21,6 @@ Parameters that support changes
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
-- AzureADDomainServicesSku.  Select Standard, Enterprise or Premium Sku
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
