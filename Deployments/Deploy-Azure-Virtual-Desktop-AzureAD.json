@@ -362,7 +362,14 @@
             "metadata": {
                 "description": "Session Host VMSize"
             }
-        },        
+        },
+        "vnet1ID": {
+            "type": "string",
+            "defaultValue": "172.16",
+            "metadata": {
+                "description": "VNet1 Prefix"
+            }
+        },                
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -384,7 +391,14 @@
         "KeyVaultName": "[concat('AVDAAD-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
-        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",    
+        "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
+        "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
+        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
+        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",
+        "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",
+        "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
+        "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
+        "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
         "aadrdshPrefix": "[concat(parameters('NamingConvention'),'-aadsh-')]",   
         "AADHostPoolName": "[concat(parameters('NamingConvention'),'-AAD-Hosted-Pool')]",
         "AADDesktopAppGroupName": "[concat(variables('AADHostPoolName'),'-AAD-DAG')]",    
@@ -407,6 +421,7 @@
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "VirtualMachinesAPIVersion": "2022-03-01",
+        "VirtualNetworkAPIVersion": "2020-11-01",        
         "ExtensionsTypeHandlerVersion": "2.83",
         "AADJExtensionsTypeHandlerVersion": "1.0"        
     },
@@ -446,7 +461,54 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-VirtualNetwork-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet1BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AzureVirtualDesktop-AAD-HostedPool",                   
+            "dependsOn": [
+               "Deploy-VirtualNetwork-01"
+            ],   
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
