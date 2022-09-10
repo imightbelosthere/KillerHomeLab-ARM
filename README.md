@@ -4,8 +4,7 @@
 
 ### Click on the desired Lab to Deploy
 
-### [Active Directory Single-Site - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-ActiveDirectory-Single-Site.md)
-<img src="Deployments/x_Images/ActiveDirectorySingleSite.png" alt="Active Directory" width="150">
+### [Active Directory Single-Site - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-ActiveDirectory-Single-Site.md)<img src="Deployments/x_Images/ActiveDirectorySingleSite.png" alt="Active Directory" width="150">
 
 #### Click the button below for the Azure cloud you would like to Deploy to
 
