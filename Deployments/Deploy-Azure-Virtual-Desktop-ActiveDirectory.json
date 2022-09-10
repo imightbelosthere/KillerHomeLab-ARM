@@ -172,19 +172,7 @@
             "metadata": {
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
             }
-        },
-        "VirtualDesktopADType": {
-            "type": "string",
-            "defaultValue": "AzureActiveDirectory",
-            "allowedValues": [
-                "AzureActiveDirectory",
-                "AzureActiveDirectoryDomainServices",
-                "ActiveDirectory"
-            ],      
-            "metadata": {
-                "description": "Virtual Desktop Active Directory Type"
-            }
-        },        
+        },     
         "hostpoolType": {
             "defaultValue": "Pooled",      
             "allowedValues": [
@@ -313,27 +301,7 @@
             "metadata": {
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
-        },
-        "AzureUserName": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Azure User Principal with AAD DC Administrators rights"
-            }
-        },
-        "ManagedDomainName": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Azure Managed Domain"
-            }
-        },        
-        "AzureUserPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Azure User Password"
-            }
-        },              		        
+        },          		        
         "AzureUserObjectID": {
             "type": "string",
             "defaultValue": "",
@@ -341,13 +309,13 @@
                 "description": "Deployment Account Object ID"
             }
         },
-        "PrincipalID": {
+        "AVDGroupObjectID": {
             "defaultValue": "",        
             "type": "string",
             "metadata": {
-                "description": "Object ID of Group that requires WVD Access"
+                "description": "Object ID of Group that requires AVD Access"
             }
-        },        
+        },       
         "WindowsServerLicenseType": {
             "type": "string",
             "defaultValue": "None",
@@ -917,7 +885,7 @@
                         "value": "[parameters('roleAssignmentGuid1')]"
                     },
                     "PrincipalID": {
-                        "value": "[parameters('PrincipalID')]"
+                        "value": "[parameters('AVDGroupObjectID')]"
                     },
                     "RoleDefinitionID": {
                         "value": "[variables('RoleDefinitionID')]"
@@ -1109,7 +1077,7 @@
                         "value": "[parameters('roleAssignmentGuid2')]"
                     },
                     "PrincipalID": {
-                        "value": "[parameters('PrincipalID')]"
+                        "value": "[parameters('AVDGroupObjectID')]"
                     },
                     "RoleDefinitionID": {
                         "value": "[variables('RoleDefinitionID')]"
@@ -1367,6 +1335,6 @@
                     }                                                                                                                                                                                                                                                                                                
                 }
             }
-        }
+        }     
     ]
 }

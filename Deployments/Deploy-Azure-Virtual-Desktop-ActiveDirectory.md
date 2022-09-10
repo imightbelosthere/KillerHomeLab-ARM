@@ -20,6 +20,16 @@ Parameters that support changes
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
+- HostPoolType.  Set this parameter to Personal if you would like to enable Persistent Desktop experience. Defaults to false.
+- personalDesktopAssignmentType.  
+- maxSessionLimit.  Maximum number of sessions.
+- loadBalancerType.  Type of load balancer algorithm.
+- validationEnvironment.  Whether to use validation enviroment.
+- VMDiskType.  The VM disk type for the VM: HDD or SSD. (StandardSSD_LRS, Premium_LRS or Standard_LRS.)
+- VMNumberOfInstances.  How Many Session Hosts you will need. (Example:  2)
+- VMInitialNumber.  Starting number for Session Host Numeric's portion of Name. (Example: 0)
+- availabilitySetUpdateDomainCount. The platform update domain count of avaiability set to be created.
+- availabilitySetFaultDomainCount. The platform fault domain count of avaiability set to be created.
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment
