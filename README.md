@@ -1,8 +1,8 @@
 # Collection of Labs to Deploy within Azure for Self-Study or Proof Of Concept
 
-## All labs with VM's deploy a Bastion Host for Remote Desktop access
+### All labs with VM's deploy a Bastion Host for Remote Desktop access
 
-## Click on the desired Lab to Deploy
+### Click on the desired Lab to Deploy
 
 ### [Active Directory Single-Site - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-ActiveDirectory-Single-Site.md)
 <img src="Deployments/x_Images/ActiveDirectorySingleSite.png" alt="Active Directory" width="150">
