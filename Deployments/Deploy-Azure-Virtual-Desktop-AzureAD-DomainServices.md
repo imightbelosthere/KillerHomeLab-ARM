@@ -1,4 +1,4 @@
-# Deploy Azure Virtual Desktop for Azure Active Directory Domain Services Add-On
+# Deploy Azure Virtual Desktop for Azure AD Domain Services Add-On
 <img src="./x_Images/AzureVirtualDesktopAzureActiveDirectoryDomainServicesAddOn.svg" height="600" width="800"/>
 
 THE FOLLOWING TASKS MUST BE DONE PRIOR TO THIS DEPLOYMENT:
