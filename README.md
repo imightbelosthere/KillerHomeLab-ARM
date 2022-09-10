@@ -40,6 +40,13 @@ Click the button below to deploy
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-DevOpsServer-2022-with-AzureSQL.json)
 [![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-DevOpsServer-2022-with-AzureSQL.json)
 
+# [Azure Virtual Desktop for Active Directory Add-On - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-Azure-Virtual-Desktop-ActiveDirectory.md)
+<img src="Deployments/x_Images/AzureVirtualDesktopAzureADDSAddOn.png" alt="Azure Virtual Desktop for ActiveDirectory Add-On" width="150">
+Click the button below to deploy
+
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-Virtual-Desktop-ActiveDirectory.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-Virtual-Desktop-ActiveDirectory.json)
+
 # [Azure Virtual Desktop for Azure AD - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-Azure-Virtual-Desktop-AzureAD.md)
 <img src="Deployments/x_Images/AzureVirtualDesktopAzureAD.png" alt="Azure Virtual Desktop Azure AD" width="150">
 Click the button below to deploy
