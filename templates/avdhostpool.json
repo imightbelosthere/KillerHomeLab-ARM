@@ -94,7 +94,7 @@
 "outputs": {
     "RegistrationInfoToken": {
         "type": "string",
-        "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', parameters('HostPoolName')), parameters('AVDHostPoolAPIVersion')).RegistrationInfo.Token]"
+        "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.DesktopVirtualization/hostpools', parameters('HostPoolName'))).RegistrationInfo.Token]"
     }
   }
 }
