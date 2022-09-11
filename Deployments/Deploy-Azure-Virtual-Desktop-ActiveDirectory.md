@@ -1,6 +1,12 @@
 # Deploy Azure Virtual Desktop Active Directory Add-On
 <img src="./x_Images/AzureVirtualDesktopADAddOn.svg" height="600" width="800"/>
 
+
+THE FOLLOWING DEPLOYMENTS MUST ALREADY EXIST TO USE THIS DEPLOYMENT:
+
+- "Deploy-PKI-2Tier-CA-With-OCSP (PKIDeploymentType = 2-Tier-PKI)" OR "Deploy-PKI-Enterprise-CA-With-OCSP (PKIDeploymentType = Enterprise-PKI)
+- Deploy-ADFS-WAP-and-ADConnect-Single-Site
+
 This Deployment deploys the following items:
 
 - 1 - Azure KeyVault with Secret contianing Deployment Password

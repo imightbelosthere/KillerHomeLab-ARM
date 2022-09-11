@@ -19,19 +19,19 @@
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-ADFS-WAP-and-ADConnect-Single-Site.json)
 [![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-ADFS-WAP-and-ADConnect-Single-Site.json)
 
-### [Azure AD Domain Services - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-AzureAD-DomainServices.md)
+### [Azure AD Domain Services - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-AzureAD-DomainServices.md)
 
 #### Click the button below for the Azure cloud you would like to Deploy to
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-AzureAD-DomainServices.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-AzureAD-DomainServices.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-AzureAD-DomainServices.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-AzureAD-DomainServices.json)
 
-### [Azure AD Domain Services Tools VM - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-AzureAD-DomainServices-ToolsVM.md)
+### [Azure AD Domain Services Tools VM - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-AzureAD-DomainServices-ToolsVM.md)
 
 #### Click the button below for the Azure cloud you would like to Deploy to
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-AzureAD-DomainServices-ToolsVM.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-AzureAD-DomainServices-ToolsVM.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-AzureAD-DomainServices-ToolsVM.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-AzureAD-DomainServices-ToolsVM.json)
 
 ### [Azure DevOps Server 2022 with Azure SQL - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-DevOpsServer-2022-with-AzureSQL.md)
 
@@ -40,26 +40,26 @@
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-DevOpsServer-2022-with-AzureSQL.json)
 [![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-DevOpsServer-2022-with-AzureSQL.json)
 
-### [Azure Virtual Desktop for Active Directory Add-On - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-Azure-Virtual-Desktop-ActiveDirectory.md)
+### [Azure Virtual Desktop for Active Directory Add-On - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-Azure-Virtual-Desktop-ActiveDirectory.md)
 
 #### Click the button below for the Azure cloud you would like to Deploy to
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-Virtual-Desktop-ActiveDirectory.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-Virtual-Desktop-ActiveDirectory.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-Azure-Virtual-Desktop-ActiveDirectory.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-Azure-Virtual-Desktop-ActiveDirectory.json)
 
-### [Azure Virtual Desktop for Azure AD - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-Azure-Virtual-Desktop-AzureAD.md)
-
-#### Click the button below for the Azure cloud you would like to Deploy to
-
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-Virtual-Desktop-AzureAD.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-Virtual-Desktop-AzureAD.json)
-
-### [Azure Virtual Desktop for Azure AD Domain Services Add-On - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-Azure-Virtual-Desktop-AzureAD-DomainServices.md)
+### [Azure Virtual Desktop for Azure AD - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-Azure-Virtual-Desktop-AzureAD.md)
 
 #### Click the button below for the Azure cloud you would like to Deploy to
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-Virtual-Desktop-AzureAD-DomainServices.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-Virtual-Desktop-AzureAD-DomainServices.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-Azure-Virtual-Desktop-AzureAD.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-Azure-Virtual-Desktop-AzureAD.json)
+
+### [Azure Virtual Desktop for Azure AD Domain Services Add-On - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-Azure-Virtual-Desktop-AzureAD-DomainServices.md)
+
+#### Click the button below for the Azure cloud you would like to Deploy to
+
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-Azure-Virtual-Desktop-AzureAD-DomainServices.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-Azure-Virtual-Desktop-AzureAD-DomainServices.json)
 
 ### [Azure Firewall with NAT Gateway - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-AzureFirewall-with-NATGateway.md)
 
