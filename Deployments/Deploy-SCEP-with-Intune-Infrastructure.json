@@ -173,6 +173,13 @@
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
             }
         },
+        "NDESServiceAccount": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Prove an NDES Service Account Name"
+            }
+        },        
         "adminUsername": {
             "type": "string",
             "defaultValue": "",
@@ -481,7 +488,7 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('PKIENT-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('SCEPWAP-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
@@ -511,6 +518,7 @@
         "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",
         "DCDataDisk1Name": "NTDS",
         "CATemplateScriptUrl": "https://elliottf.blob.core.windows.net/github/Scripts/Create_CA_Templates.ps1",              
+        "SCEPCATemplateScriptUrl": "https://elliottf.blob.core.windows.net/github/Scripts/Create_SCEP_CA_Template.ps1",
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]", 
         "DNSArmTemplate": "[if(equals(variables('InternaldomainName'),concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))), 'configdnsint.json', 'configdnsext.json')]",
@@ -985,12 +993,62 @@
             }
         },
         {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-NDES-ServiceAccount",
+            "dependsOn": [
+                "Create-ActiveDirectory-OUs"
+            ],
+            "properties": {
+                "mode": "Incremental",
+            "templateLink": {
+                "uri": "[uri(parameters('_artifactsLocation'), concat('templates/createaduser.json', parameters('_artifactsLocationSasToken')))]",
+                "contentVersion": "1.0.0.0"
+            },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "DomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },                    
+                    "BaseDN": {
+                        "value": "[variables('BaseDN')]"
+                    },
+                    "Account": {
+                        "value": "[parameters('NDESServiceAccount')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                        
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
+        {
             "condition": "[equals(parameters('DC1OSSku'),'2012-R2-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-PowerShell-ExecutionPolicy",
             "dependsOn": [
-                "Create-ActiveDirectory-OUs"
+                "Create-NDES-ServiceAccount"
             ],            
             "properties": {
                 "mode": "Incremental",
@@ -1329,13 +1387,57 @@
                     }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
                 }
             }
-        },        				
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-SCEP-Certificate-Template",
+            "dependsOn": [
+                "Configure-EnterpriseCertificateAuthority"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/scepcatemplate.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('ecaname')]"
+                    },                          
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },              
+                    "CATemplateScriptUrl": {
+                        "value": "[variables('SCEPCATemplateScriptUrl')]"
+                    },            
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },                				
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-OCSPServer",
             "dependsOn": [
-                "Configure-EnterpriseCertificateAuthority"
+                "Add-SCEP-Certificate-Template"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1867,6 +1969,65 @@
 				}
 			}
 		},
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Prepare-NDES-Server",
+            "dependsOn": [
+                "DomainJoinNDES-22",
+                "DomainJoinNDES-19",
+				"DomainJoinNDES-16",
+                "DomainJoinNDES-12R2"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/preparendes.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('wap1name')]"
+                    },
+                    "NamingConvention": {
+                        "value": "[parameters('NamingConvention')]"
+                    },                       
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },                                                
+                    "InternalDomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },        
+                    "EnterpriseCAName": {
+                        "value": "[parameters('EnterpriseCAName')]"
+                    },
+                    "EnterpriseCAServer": {
+                        "value": "[variables('ecaname')]"
+                    },
+                    "Account": {
+                        "value": "[parameters('NDESServiceAccount')]"
+                    },                                                                                               
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },                
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
