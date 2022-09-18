@@ -1993,7 +1993,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },                    
                     "computerName": {
-                        "value": "[variables('wap1name')]"
+                        "value": "[variables('ndesname')]"
                     },
                     "NamingConvention": {
                         "value": "[parameters('NamingConvention')]"
