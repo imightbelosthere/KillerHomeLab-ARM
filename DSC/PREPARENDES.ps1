@@ -56,7 +56,7 @@
         WindowsFeature  NET-Framework-45-ASPNET
         {
             Ensure = 'Present'
-            Name = ' NET-Framework-45-ASPNET'
+            Name = 'NET-Framework-45-ASPNET'
         }
         
         WindowsFeature NET-WCF-HTTP-Activation45
@@ -81,8 +81,8 @@
         {
             SetScript =
             {
-                $AccountCheck = Get-LocalGroupMember -Group IIS_IUSR -Member "$using:NetBiosDomain\$using:Account" -ErrorAction 0
-                IF ($AccountCheck -eq $null){Add-LocalGroupMember -Member "$using:NetBiosDomain\$using:Account" -Group IIS_IUSR}
+                $AccountCheck = Get-LocalGroupMember -Group IIS_IUSRS -Member "$using:NetBiosDomain\$using:Account" -ErrorAction 0
+                IF ($AccountCheck -eq $null){Add-LocalGroupMember -Member "$using:NetBiosDomain\$using:Account" -Group IIS_IUSRS}
             }
             GetScript =  { @{} }
             TestScript = { $false}
