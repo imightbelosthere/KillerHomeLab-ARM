@@ -3,8 +3,7 @@
    param
    (
         [String]$NetBiosDomain,
-        [String]$SCEPCATemplateScriptUrl,
-
+        [String]$CATemplateScriptUrl,
         [System.Management.Automation.PSCredential]$Admincreds
     )
 
@@ -35,7 +34,7 @@
         xRemoteFile DownloadCreateCATemplates
         {
             DestinationPath = "C:\CertEnroll\Create_SCEP_CA_Template.ps1"
-            Uri             = $SCEPCATemplateScriptUrl
+            Uri             = $CATemplateScriptUrl
             UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
             DependsOn = '[Registry]SchUseStrongCrypto', '[Registry]SchUseStrongCrypto64'
         }
