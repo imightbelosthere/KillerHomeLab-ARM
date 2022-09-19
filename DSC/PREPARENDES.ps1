@@ -12,6 +12,8 @@
         [System.Management.Automation.PSCredential]$Admincreds   
     )
 
+    [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($AdminCreds.UserName)", $AdminCreds.Password)
+
     Node localhost
     {
         File NDESSoftware
@@ -88,6 +90,18 @@
             TestScript = { $false}
         }
 
+        Script SetSPN
+        {
+            SetScript =
+            {
+                setspn –s "http/$using:computerName.$using:InternalDomainName" "$using:NetBiosDomain\$using:Account"
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            DependsOn = '[Script]GrantIISIUSR'
+            PsDscRunAsCredential = $DomainCreds
+        }
+
         Script ConfigureNDES
         {
             SetScript =
@@ -95,12 +109,11 @@
                 $LoadCreds = "$using:AdminCreds"
                 $Password = $AdminCreds.Password
 
-                setspn –s "http/$using:computerName.$using:InternalDomainName" "$using:NetBiosDomain\$using:Account"
                 Install-AdcsNetworkDeviceEnrollmentService -ServiceAccountName "$using:NetBiosDomain\$using:Account" -ServiceAccountPassword $Password -CAConfig "$using:EnterpriseCAServer\$using:EnterpriseCAName" -RAName "$using:NamingConvention-NDES-RA" -RACountry "US" -RACompany "$using:NamingConvention" -SigningProviderName "Microsoft Strong Cryptographic Provider" -SigningKeyLength 4096 -EncryptionProviderName "Microsoft Strong Cryptographic Provider" -EncryptionKeyLength 4096
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[Script]GrantIISIUSR'
+            DependsOn = '[Script]SetSPN'
         }
     }
 }
