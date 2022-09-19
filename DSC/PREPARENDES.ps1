@@ -94,7 +94,7 @@
         {
             SetScript =
             {
-                setspn –s "http/$using:computerName.$using:InternalDomainName" "$using:NetBiosDomain\$using:Account"
+                c:\windows\system32\setspn.exe -f –s "http/$using:computerName.$using:InternalDomainName" "$using:NetBiosDomain\$using:Account"
             }
             GetScript =  { @{} }
             TestScript = { $false}
