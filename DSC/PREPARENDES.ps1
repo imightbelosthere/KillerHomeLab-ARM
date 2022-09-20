@@ -94,7 +94,11 @@
         {
             SetScript =
             {
-                c:\windows\system32\setspn.exe -f –s "http/$using:computerName.$using:InternalDomainName" "$using:NetBiosDomain\$using:Account"
+                $file = Get-Item -Path "C:\NDES-Software\SETSPN.cmd" -ErrorAction 0
+                IF ($file -eq $Null){
+                Set-Content -Path C:\NDES-Software\SETSPN.cmd -Value "c:\windows\system32\setspn.exe -f –s http/$using:computerName.$using:InternalDomainName $using:NetBiosDomain\$using:Account"
+                C:\NDES-Software\SETSPN.cmd
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
