@@ -112,27 +112,42 @@
         {
             SetScript =
             {
-                $Load = "$using:DomainCreds"
-                $Domain = $DomainCreds.GetNetworkCredential().Domain
-                $Username = $DomainCreds.GetNetworkCredential().UserName
-                $Password = $DomainCreds.GetNetworkCredential().Password
-
-                $file = Get-Item -Path "C:\NDES-Software\Install_NDES.ps1" -ErrorAction 0
-                IF ($file -eq $Null){
-                    Set-Content -Path C:\NDES-Software\Install_NDES.ps1 -Value "Install-AdcsNetworkDeviceEnrollmentService -ServiceAccountName $using:NetBiosDomain\$using:Account -ServiceAccountPassword $Password -CAConfig $using:EnterpriseCAServer\$using:EnterpriseCAName -RAName $using:NamingConvention-NDES-RA -RACountry 'US' -RACompany $using:NamingConvention -SigningProviderName 'Microsoft Strong Cryptographic Provider' -SigningKeyLength 4096 -EncryptionProviderName 'Microsoft Strong Cryptographic Provider' -EncryptionKeyLength 4096"
-                }
-
-                # Install NDES
-                $scheduledtask = Get-ScheduledTask "Install NDES" -ErrorAction 0
-                $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\Install_NDES.ps1' -WorkingDirectory 'C:\NDES-Software'
-                IF ($scheduledtask -eq $null) {
-                    Register-ScheduledTask -Action $action -TaskName "Install NDES" -Description "Install NDES Role" -User $Domain\$Username -Password $Password
-                    Start-ScheduledTask "Install NDES"
-                }
+                $Admincreds.Password = $Password
+                Install-AdcsNetworkDeviceEnrollmentService -ServiceAccountName "$using:NetBiosDomain\$using:Account" -ServiceAccountPassword $Password -CAConfig "$using:EnterpriseCAServer\$using:EnterpriseCAName" -RAName "$using:NamingConvention-NDES-RA" -RACountry 'US' -RACompany "$using:NamingConvention" -SigningProviderName 'Microsoft Strong Cryptographic Provider' -SigningKeyLength 4096 -EncryptionProviderName 'Microsoft Strong Cryptographic Provider' -EncryptionKeyLength 4096 -Confirm:$False
             }
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[Script]SetSPN'
+        }
+
+        Registry EncryptionTemplate
+        {
+            Key                         = 'HKLM:\SOFTWARE\Microsoft\Cryptography\MSCEP'
+            ValueName                   = 'EncryptionTemplate'
+            ValueType                   = 'String'
+            ValueData                   =  'SCEPCertificate'
+            Ensure                      = 'Present'
+            DependsOn = '[Script]ConfigureNDES'
+        }
+
+        Registry SignatureTemplate
+        {
+            Key                         = 'HKLM:\SOFTWARE\Microsoft\Cryptography\MSCEP'
+            ValueName                   = 'SignatureTemplate'
+            ValueType                   = 'String'
+            ValueData                   =  'SCEPCertificate'
+            Ensure                      = 'Present'
+            DependsOn = '[Script]ConfigureNDES'
+        }
+
+        Registry GeneralPurposeTemplate
+        {
+            Key                         = 'HKLM:\SOFTWARE\Microsoft\Cryptography\MSCEP'
+            ValueName                   = 'GeneralPurposeTemplate'
+            ValueType                   = 'String'
+            ValueData                   =  'SCEPCertificate'
+            Ensure                      = 'Present'
+            DependsOn = '[Script]ConfigureNDES'
         }
     }
 }

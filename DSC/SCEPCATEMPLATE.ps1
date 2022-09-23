@@ -53,7 +53,7 @@
                 $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\Create_SCEP_CA_Template.ps1' -WorkingDirectory 'C:\CertEnroll'
                 IF ($scheduledtask -eq $null) {
                 Register-ScheduledTask -Action $action -TaskName "Create SCEP CA Template" -Description "Create SCEP CA Templates" -User $Domain\$Username -Password $Password
-                Start-ScheduledTask "Create CA Templates"
+                Start-ScheduledTask "Create SCEP CA Templates"
                 }
             }
             GetScript =  { @{} }
