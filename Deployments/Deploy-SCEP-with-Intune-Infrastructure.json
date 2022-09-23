@@ -2003,7 +2003,10 @@
                     },                                                
                     "InternalDomainName": {
                         "value": "[variables('InternaldomainName')]"
-                    },        
+                    },
+                    "ExternalDomainName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },                            
                     "EnterpriseCAName": {
                         "value": "[parameters('EnterpriseCAName')]"
                     },
