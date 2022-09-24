@@ -26,10 +26,10 @@
                 "description": "NetBios Domain Name"
             }
         },                
-        "CATemplateScriptUrl": {
+        "SCEPCATemplateScriptUrl": {
             "type": "string",
             "metadata": {
-                "description": "URL to PowerShell Script for CA Template Creation"
+                "description": "URL to PowerShell Script for SCEP CA Template Creation"
             }
         },                     
         "adminUsername": {
@@ -77,7 +77,7 @@
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
                         "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
-                        "CATemplateScriptUrl": "[parameters('CATemplateScriptUrl')]",                            
+                        "SCEPCATemplateScriptUrl": "[parameters('SCEPCATemplateScriptUrl')]",                            
                         "AdminCreds": {
                             "UserName": "[parameters('adminUsername')]",
                             "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   

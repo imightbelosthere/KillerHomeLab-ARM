@@ -3,7 +3,7 @@
    param
    (
         [String]$NetBiosDomain,
-        [String]$CATemplateScriptUrl,
+        [String]$SCEPCATemplateScriptUrl,
         [System.Management.Automation.PSCredential]$Admincreds
     )
 
@@ -31,15 +31,15 @@
             Ensure                      = 'Present'
         }
 
-        xRemoteFile DownloadCreateCATemplates
+        xRemoteFile DownloadCreateSCEPCATemplate
         {
             DestinationPath = "C:\CertEnroll\Create_SCEP_CA_Template.ps1"
-            Uri             = $CATemplateScriptUrl
+            Uri             = $SCEPCATemplateScriptUrl
             UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
             DependsOn = '[Registry]SchUseStrongCrypto', '[Registry]SchUseStrongCrypto64'
         }
 
-        Script CreateCATemplates
+        Script CreateSCEPCATemplates
         {
             SetScript =
             {
@@ -48,17 +48,16 @@
                 $Username = $DomainCreds.GetNetworkCredential().UserName
                 $Password = $DomainCreds.GetNetworkCredential().Password 
 
-                # Create CA Templates
-                $scheduledtask = Get-ScheduledTask "Create SCEP CA Template" -ErrorAction 0
+                # Create SCEP CA Templates
+                $scheduledtask = Get-ScheduledTask "Create SCEP CA Templates" -ErrorAction 0
                 $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\Create_SCEP_CA_Template.ps1' -WorkingDirectory 'C:\CertEnroll'
                 IF ($scheduledtask -eq $null) {
-                Register-ScheduledTask -Action $action -TaskName "Create SCEP CA Template" -Description "Create SCEP CA Templates" -User $Domain\$Username -Password $Password
+                Register-ScheduledTask -Action $action -TaskName "Create SCEP CA Templates" -Description "Create SCEP CA Template" -User $Domain\$Username -Password $Password
                 Start-ScheduledTask "Create SCEP CA Templates"
                 }
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[xRemoteFile]DownloadCreateCATemplates'
+            DependsOn = '[xRemoteFile]DownloadCreateSCEPCATemplate'
         }
-    }
 }
