@@ -60,4 +60,5 @@
             TestScript = { $false}
             DependsOn = '[xRemoteFile]DownloadCreateSCEPCATemplate'
         }
+    }
 }
