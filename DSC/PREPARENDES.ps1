@@ -113,7 +113,8 @@
         {
             SetScript =
             {
-                $Admincreds.Password = $Password
+                $Load = "$using:AdminCreds"
+                $Password = $Admincreds.Password
                 Install-AdcsNetworkDeviceEnrollmentService -ServiceAccountName "$using:NetBiosDomain\$using:Account" -ServiceAccountPassword $Password -CAConfig "$using:EnterpriseCAServer\$using:EnterpriseCAName" -RAName "$using:NamingConvention-NDES-RA" -RACountry 'US' -RACompany "$using:NamingConvention" -SigningProviderName 'Microsoft Strong Cryptographic Provider' -SigningKeyLength 4096 -EncryptionProviderName 'Microsoft Strong Cryptographic Provider' -EncryptionKeyLength 4096 -Confirm:$False
             }
             GetScript =  { @{} }
