@@ -4,7 +4,6 @@
    (
         [String]$NetBiosDomain,
         [String]$ServiceAccountName,
-        [String]$SCEPCATemplateScriptUrl,
         [System.Management.Automation.PSCredential]$Admincreds
     )
 
@@ -14,32 +13,6 @@
 
     Node localhost
     {
-        Registry SchUseStrongCrypto
-        {
-            Key                         = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319'
-            ValueName                   = 'SchUseStrongCrypto'
-            ValueType                   = 'Dword'
-            ValueData                   =  '1'
-            Ensure                      = 'Present'
-        }
-
-        Registry SchUseStrongCrypto64
-        {
-            Key                         = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319'
-            ValueName                   = 'SchUseStrongCrypto'
-            ValueType                   = 'Dword'
-            ValueData                   =  '1'
-            Ensure                      = 'Present'
-        }
-
-        xRemoteFile DownloadCreateSCEPCATemplate
-        {
-            DestinationPath = "C:\CertEnroll\Create_SCEP_CA_Template.ps1"
-            Uri             = $SCEPCATemplateScriptUrl
-            UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
-            DependsOn = '[Registry]SchUseStrongCrypto', '[Registry]SchUseStrongCrypto64'
-        }
-
         Script CreateSCEPCATemplates
         {
             SetScript =
@@ -113,7 +86,6 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[xRemoteFile]DownloadCreateSCEPCATemplate'
         }
     }
 }

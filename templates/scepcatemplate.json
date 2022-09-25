@@ -31,13 +31,7 @@
             "metadata": {
                 "description": "NDES Service Account Name"
             }
-        },               
-        "SCEPCATemplateScriptUrl": {
-            "type": "string",
-            "metadata": {
-                "description": "URL to PowerShell Script for SCEP CA Template Creation"
-            }
-        },                     
+        },                                    
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -83,7 +77,6 @@
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
                         "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
-                        "SCEPCATemplateScriptUrl": "[parameters('SCEPCATemplateScriptUrl')]",                            
                         "ServiceAccountName": "[parameters('ServiceAccountName')]",                            
                         "AdminCreds": {
                             "UserName": "[parameters('adminUsername')]",
