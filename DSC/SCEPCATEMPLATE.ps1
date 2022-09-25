@@ -24,6 +24,7 @@
 
 
                 $ServiceAccountTransfer = "$using:ServiceAccountName"
+                $AdObj = '$AdObj'
                 $ServiceAccount = '"'+$ServiceAccountTransfer+'"'
                 Set-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value '# Set AD Context'
                 Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value '$ConfigContext = ([ADSI]"LDAP://RootDSE").ConfigurationNamingContext'

@@ -120,7 +120,7 @@
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[Script]SetSPN'
-            Credential = $DomainCreds
+            PsDscRunAsCredential = $DomainCreds
         }
 
         Registry EncryptionTemplate
