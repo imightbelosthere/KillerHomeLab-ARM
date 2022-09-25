@@ -25,7 +25,13 @@
             "metadata": {
                 "description": "NetBios Domain Name"
             }
-        },                
+        }, 
+        "ServiceAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "NDES Service Account Name"
+            }
+        },               
         "SCEPCATemplateScriptUrl": {
             "type": "string",
             "metadata": {
@@ -78,6 +84,7 @@
                     "Properties": {
                         "NetBiosDomain": "[parameters('NetBiosDomain')]",                                                        
                         "SCEPCATemplateScriptUrl": "[parameters('SCEPCATemplateScriptUrl')]",                            
+                        "ServiceAccountName": "[parameters('ServiceAccountName')]",                            
                         "AdminCreds": {
                             "UserName": "[parameters('adminUsername')]",
                             "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   

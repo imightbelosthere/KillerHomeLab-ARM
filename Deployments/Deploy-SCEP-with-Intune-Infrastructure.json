@@ -518,7 +518,7 @@
         "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",
         "DCDataDisk1Name": "NTDS",
         "CATemplateScriptUrl": "https://elliottf.blob.core.windows.net/github/Scripts/Create_CA_Templates.ps1",              
-        "SCEPCATemplateScriptUrl": "https://elliottf.blob.core.windows.net/github/Scripts/Create_SCEP_CA_Template.ps1",
+        "SCEPCATemplateScriptUrl": "zhttps://elliottf.blob.core.windows.net/github/Scripts/Create_SCEP_CA_Template.ps1",
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]", 
         "DNSArmTemplate": "[if(equals(variables('InternaldomainName'),concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))), 'configdnsint.json', 'configdnsext.json')]",
@@ -1413,7 +1413,10 @@
                     },                          
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
-                    },              
+                    },
+                    "ServiceAccountName": {
+                        "value": "ndes-svc"
+                    },                                 
                     "SCEPCATemplateScriptUrl": {
                         "value": "[variables('SCEPCATemplateScriptUrl')]"
                     },            
