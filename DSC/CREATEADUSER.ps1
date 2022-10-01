@@ -13,16 +13,20 @@
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
+    $UserExists = Get-ADUser -Filter * | Where-Object {$_.Name -like $Account}
+
     Node localhost
     {
+        if ($UserExists -eq $null){
         ADUser CreateAccount
-        {
-            Ensure     = 'Present'
-            UserName   = $Account
-            DomainName = $DomainName
-            Path       = "OU=Service,OU=Accounts,$BaseDN"
-            Password = $DomainCreds
-            Enabled = $True
+            {
+                Ensure     = 'Present'
+                UserName   = $Account
+                DomainName = $DomainName
+                Path       = "OU=Service,OU=Accounts,$BaseDN"
+                Password = $DomainCreds
+                Enabled = $True
+            }
         }
     }
 }

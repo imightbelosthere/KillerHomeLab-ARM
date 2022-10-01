@@ -71,12 +71,6 @@
                 Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value '$NewSCEPTempl.psbase.ObjectSecurity.SetAccessRule($ACE)'
                 Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value '$NewSCEPTempl.psbase.commitchanges()'
 
-                Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value '# Add Templates'
-                Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value 'certsrv'
-                Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value 'Start-Sleep 30'
-                Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value 'Restart-Service CertSvc'
-                Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value "Add-CATemplate -Name 'SCEPCertificate' -Force"
-
                 # Create SCEP CA Templates
                 $scheduledtask = Get-ScheduledTask "Create SCEP CA Templates" -ErrorAction 0
                 $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\Create_SCEP_CA_Template.ps1' -WorkingDirectory 'C:\CertEnroll'
@@ -87,6 +81,22 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
+        }
+
+        Script AddSCEPCertificate
+        {
+            SetScript =
+            {
+                # Add Template
+                certsrv
+                Start-Sleep 30
+                Restart-Service CertSvc
+                Add-CATemplate -Name 'SCEPCertificate' -Force
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            PsDscRunAsCredential = $DomainCreds
+            DependsOn = '[Script]CreateSCEPCATemplates'
         }
     }
 }

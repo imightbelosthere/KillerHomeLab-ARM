@@ -45,13 +45,6 @@ Configuration WAPINTUNE
             Name = 'RSAT-RemoteAccess'
         }
 
-        File WAPCertificates
-        {
-            Type = 'Directory'
-            DestinationPath = 'C:\WAP-Certificates'
-            Ensure = "Present"
-        }
-
         File CopyServiceCommunicationCertFromNDES
         {
             Ensure = "Present"
@@ -60,7 +53,6 @@ Configuration WAPINTUNE
             SourcePath = "\\$NDESServerIP\c$\WAP-Certificates"
             DestinationPath = "C:\WAP-Certificates\"
             Credential = $Admincreds
-            DependsOn = '[File]WAPCertificates'
         }
 
         Script ConfigureWAPCertificates
