@@ -75,7 +75,7 @@
                 Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value 'certsrv'
                 Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value 'Start-Sleep 30'
                 Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value 'Restart-Service CertSvc'
-                Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value 'Add-CATemplate -Name "SCEPCertificate" -Force'
+                Add-Content -Path C:\CertEnroll\Create_SCEP_CA_Template.ps1 -Value "Add-CATemplate -Name 'SCEPCertificate' -Force"
 
                 # Create SCEP CA Templates
                 $scheduledtask = Get-ScheduledTask "Create SCEP CA Templates" -ErrorAction 0

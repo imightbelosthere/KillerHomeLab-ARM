@@ -115,7 +115,11 @@
             {
                 $Load = "$using:DomainCreds"
                 $Password = $Domaincreds.Password
-                Install-AdcsNetworkDeviceEnrollmentService -ServiceAccountName "$using:NetBiosDomain\$using:Account" -ServiceAccountPassword $Password -CAConfig "$using:EnterpriseCAServer\$using:EnterpriseCAName" -RAName "$using:NamingConvention-NDES-RA" -RACountry 'US' -RACompany "$using:NamingConvention" -SigningProviderName 'Microsoft Strong Cryptographic Provider' -SigningKeyLength 4096 -EncryptionProviderName 'Microsoft Strong Cryptographic Provider' -EncryptionKeyLength 4096 -Credential $DomainCreds -Confirm:$False
+
+                $Feature = Get-WindowsFeature | Where-Object {$_.Name -like 'ADCS-Device-Enrollment'}
+                IF ($Feature.Installed -ne 'True'){
+                    Install-AdcsNetworkDeviceEnrollmentService -ServiceAccountName "$using:NetBiosDomain\$using:Account" -ServiceAccountPassword $Password -CAConfig "$using:EnterpriseCAServer\$using:EnterpriseCAName" -RAName "$using:NamingConvention-NDES-RA" -RACountry 'US' -RACompany "$using:NamingConvention" -SigningProviderName 'Microsoft Strong Cryptographic Provider' -SigningKeyLength 4096 -EncryptionProviderName 'Microsoft Strong Cryptographic Provider' -EncryptionKeyLength 4096 -Credential $DomainCreds -Confirm:$False
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
@@ -172,6 +176,10 @@
                 # Export Service Communication Certificate
                 $CertFile = Get-ChildItem -Path "C:\WAP-Certificates\ndes.$using:ExternalDomainName.pfx" -ErrorAction 0
                 IF ($CertFile -eq $Null) {Get-ChildItem -Path cert:\LocalMachine\my\$thumbprint | Export-PfxCertificate -FilePath "C:\WAP-Certificates\ndes.$using:ExternalDomainName.pfx" -Password $Password}
+
+                # Enable Certificate Copy
+                $EnableSMB = Get-NetFirewallRule "FPS-SMB-In-TCP" -ErrorAction 0
+                IF ($EnableSMB -ne $null) {Enable-NetFirewallRule -Name "FPS-SMB-In-TCP"}
             }
             GetScript =  { @{} }
             TestScript = { $false}
