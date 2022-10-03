@@ -517,7 +517,6 @@
         "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",
         "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",
         "DCDataDisk1Name": "NTDS",
-        "CATemplateScriptUrl": "https://elliottf.blob.core.windows.net/github/Scripts/Create_CA_Templates.ps1",              
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]", 
         "DNSArmTemplate": "[if(equals(variables('InternaldomainName'),concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))), 'configdnsint.json', 'configdnsext.json')]",
@@ -1369,9 +1368,6 @@
                     "EnterpriseCAKeyLength": {
                         "value": "[parameters('EnterpriseCAKeyLength')]"
                     },     
-                    "CATemplateScriptUrl": {
-                        "value": "[variables('CATemplateScriptUrl')]"
-                    },            
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },                                                                                                            
@@ -1390,53 +1386,9 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Add-SCEP-Certificate-Template",
-            "dependsOn": [
-                "Configure-EnterpriseCertificateAuthority"
-            ],      
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/scepcatemplate.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "ExtensionsTypeHandlerVersion": {
-                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },                                         
-                    "computerName": {
-                        "value": "[variables('ecaname')]"
-                    },                          
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
-                    },
-                    "ServiceAccountName": {
-                        "value": "ndes-svc"
-                    },                                           
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },                                                                                                            
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },                                                                                                            
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
-                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-                }
-            }
-        },                				
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-OCSPServer",
             "dependsOn": [
-                "Add-SCEP-Certificate-Template"
+                "Configure-EnterpriseCertificateAuthority"
             ],
             "properties": {
                 "mode": "Incremental",
