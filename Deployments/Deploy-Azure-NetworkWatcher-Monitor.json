@@ -536,7 +536,7 @@
                     "workspaceName": {
                         "value": "[variables('WorkSpaceName')]"
                     },
-                    "location": {
+                    "WorkspaceLocation": {
                         "value": "[parameters('WorkspaceLocation')]"
                     },                    
                     "sku": {
