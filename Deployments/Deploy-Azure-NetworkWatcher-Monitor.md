@@ -46,7 +46,6 @@ Parameters that support changes
 - Admin Password.  Enter a valid Admin Password
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
-- WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - Naming Convention. Enter a name that will be used as a naming prefix for (Servers, VNets, etc) you are using.
 - Vnet1ID.  Enter first 2 octets of your desired Address Space for Region 1 VNet 1 (Example:  172.16)
 - Vnet2ID.  Enter first 2 octets of your desired Address Space for Region 1 VNet 1 (Example:  172.17)

@@ -278,17 +278,6 @@
                 "description": "Windows Server OS License Type"
             }
         },
-        "WindowsClientLicenseType": {
-            "type": "string",
-            "defaultValue": "None",
-            "allowedValues": [
-                "None",
-                "Windows_Client"
-            ],
-            "metadata": {
-                "description": "Windows Client OS License Type"
-            }
-        },
         "NamingConvention": {
             "type": "string",
             "defaultValue": "khl",
@@ -358,7 +347,7 @@
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('NWCM-', variables('Identifier'))]",
-        "SecretName": "[concat(resourceGroup().Name,'-Password')]",
+        "SecretName": "[concat(deployment().Name,'-Password')]",
         "WorkSpaceName": "[concat(parameters('NamingConvention'),'-LAW-',parameters('UniqueID'))]",        
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
