@@ -347,7 +347,7 @@
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('NWCM-', variables('Identifier'))]",
-        "SecretName": "[concat(deployment().Name,'-Password')]",
+        "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
         "WorkSpaceName": "[concat(parameters('NamingConvention'),'-LAW-',parameters('UniqueID'))]",        
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
