@@ -269,9 +269,9 @@ Configuration ENTERPRISECA
 
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value 'certsrv'
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value 'Start-Sleep 30'
-                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value 'Add-CATemplate -Name 'WebServer1' -Force'
-                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value 'Add-CATemplate -Name 'OCSPResponseSigning1' -Force'
-                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value 'Add-CATemplate -Name 'SCEPCertificate1' -Force'
+                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value 'Add-CATemplate -Name "WebServer1" -Force'
+                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value 'Add-CATemplate -Name "OCSPResponseSigning1" -Force'
+                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value 'Add-CATemplate -Name "SCEPCertificate1" -Force'
 
                 # Create CA Templates
                 $scheduledtask = Get-ScheduledTask "Create CA Templates" -ErrorAction 0
