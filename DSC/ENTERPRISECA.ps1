@@ -135,7 +135,7 @@ Configuration ENTERPRISECA
                 $Password = $DomainCreds.GetNetworkCredential().Password
 
                 $msPKIRAApplicationPolicies = '"msPKI-RA-Application-Policies"'
-                $msPKIAsymmetric = 'msPKI-Asymmetric-Algorithm`PZPWSTR`RSA`msPKI-Hash-Algorithm`PZPWSTR`SHA256`'
+                $msPKIAsymmetric = "'"+'msPKI-Asymmetric-Algorithm`PZPWSTR`RSA`msPKI-Hash-Algorithm`PZPWSTR`SHA256`'+"'"
                 $msPKI = '$NewOCSPTempl'+".put($msPKIRAApplicationPolicies, $msPKIAsymmetric)"
 
                 # Create CA Template Script
