@@ -258,7 +258,7 @@ Configuration ENTERPRISECA
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$NewSCEPTempl | select *'
 
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$acl = $NewSCEPTempl.psbase.ObjectSecurity'
-                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$acl | select -ExpandProperty Access']
+                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$acl | select -ExpandProperty Access'
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$AdObj = New-Object System.Security.Principal.NTAccount("Authenticated Users")'
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$identity = $AdObj.Translate([System.Security.Principal.SecurityIdentifier])'
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$adRights = "ReadProperty, ExtendedRight, GenericExecute"'
