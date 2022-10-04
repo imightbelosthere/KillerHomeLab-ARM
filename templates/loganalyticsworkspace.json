@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogAnalyticsWorkspaceAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace API Version"
+            }
+        },    
+        "workspaceName": {
+            "type": "string",
+            "metadata": {
+            "description": "Specifies the name of the workspace."
+            }
+        },    
+        "location": {
+            "type": "string",
+            "metadata": {
+            "description": "Specifies the location in which to create the workspace."
+            }
+        },
+        "sku": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies the service tier of the workspace: Standalone, PerNode, Per-GB"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "name": "[parameters('workspaceName')]",
+            "apiVersion": "[parameters('LogAnalyticsWorkspaceAPIVersion')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sku": {
+                    "name": "[parameters('sku')]"
+                },
+                "features": {
+                    "searchVersion": 1
+                }
+            }
+        }    
+   ]
+}
