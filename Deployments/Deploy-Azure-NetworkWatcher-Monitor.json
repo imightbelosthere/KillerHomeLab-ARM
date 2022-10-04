@@ -536,6 +536,9 @@
                     "workspaceName": {
                         "value": "[variables('WorkSpaceName')]"
                     },
+                    "location": {
+                        "value": "[parameters('WorkspaceLocation')]"
+                    },                    
                     "sku": {
                         "value": "PerGB2018"
                     }            

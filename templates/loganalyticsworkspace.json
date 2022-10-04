@@ -13,7 +13,13 @@
             "metadata": {
             "description": "Specifies the name of the workspace."
             }
-        },    
+        },
+        "WorkspaceLocation": {
+            "type": "string",
+            "metadata": {
+            "description": "Specifies the location in which to create the workspace."
+            }
+        },            
         "sku": {
             "type": "string",
             "metadata": {
@@ -26,7 +32,7 @@
             "type": "Microsoft.OperationalInsights/workspaces",
             "name": "[parameters('workspaceName')]",
             "apiVersion": "[parameters('LogAnalyticsWorkspaceAPIVersion')]",
-            "location": "[deployment().location]",
+            "location": "[parameters('WorkspaceLocation')]",
             "properties": {
                 "sku": {
                     "name": "[parameters('sku')]"
