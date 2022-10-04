@@ -134,7 +134,9 @@ Configuration ENTERPRISECA
                 $Username = $DomainCreds.GetNetworkCredential().UserName
                 $Password = $DomainCreds.GetNetworkCredential().Password
 
-                $msPKIRAApplicationPolicies = $NewOCSPTempl.put("msPKI-RA-Application-Policies",'msPKI-Asymmetric-Algorithm`PZPWSTR`RSA`msPKI-Hash-Algorithm`PZPWSTR`SHA256`')
+                $msPKIRAApplicationPolicies = '"msPKI-RA-Application-Policies"'
+                $msPKIAsymmetric = 'msPKI-Asymmetric-Algorithm`PZPWSTR`RSA`msPKI-Hash-Algorithm`PZPWSTR`SHA256`'
+                $msPKI = '$NewOCSPTempl'+".put($msPKIRAApplicationPolicies, $msPKIAsymmetric)"
 
                 # Create CA Template Script
                 Set-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '# Set AD Context'
@@ -194,7 +196,7 @@ Configuration ENTERPRISECA
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$NewOCSPTempl.put("pKIExtendedKeyUsage","1.3.6.1.5.5.7.3.9")'
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$NewOCSPTempl.put("pKIDefaultCSPs","1,Microsoft Software Key Storage Provider")'
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$NewOCSPTempl.put("msPKI-RA-Signature","0")'
-                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value "$msPKIRAApplicationPolicies"
+                Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value "$msPKI"
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$NewOCSPTempl.put("msPKI-Enrollment-Flag","20480")'
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$NewOCSPTempl.put("msPKI-Private-Key-Flag","0")'
                 Add-Content -Path C:\CertEnroll\Create_CA_Template.ps1 -Value '$NewOCSPTempl.put("msPKI-Certificate-Name-Flag","402653184")'
