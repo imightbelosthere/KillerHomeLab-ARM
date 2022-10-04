@@ -2,6 +2,69 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptiondeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "Region1RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-01",
+            "metadata": {
+                "description": "Region 1 Resource Group"
+            }
+        },        
+        "Region2": {
+            "type": "string",
+            "defaultValue": "USGovTexas", 
+            "metadata": {
+                "description": "Choose Region (Example: USGovTexas)"
+            }
+        },
+        "Region2RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-02",
+            "metadata": {
+                "description": "Region 2 Resource Group"
+            }
+        },        
+        "Region3": {
+            "type": "string",
+            "defaultValue": "USGovArizona", 
+            "metadata": {
+                "description": "Choose Region (Example: USGovArizona)"
+            }
+        }, 
+        "Region3RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-03",
+            "metadata": {
+                "description": "Region 3 Resource Group"
+            }
+        },                               
+        "Region4": {
+            "type": "string",
+            "defaultValue": "USDoDEast", 
+            "metadata": {
+                "description": "Choose Region (Example: USDoDEast)"
+            }
+        },
+        "Region4RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-04",
+            "metadata": {
+                "description": "Region 4 Resource Group"
+            }
+        },                                        
+        "Region5": {
+            "type": "string",
+            "defaultValue": "USDoDCentral", 
+            "metadata": {
+                "description": "Choose Region (Example: USDoDCentral)"
+            }
+        },
+        "Region5RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-05",
+            "metadata": {
+                "description": "Region 5 Resource Group"
+            }
+        },                                                                                      
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -148,76 +211,6 @@
                 "description": "Time Zone"
             }
         },
-        "ResourceGroup1": {
-            "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-01",
-            "metadata": {
-                "description": "Region 1 Resource Group"
-            }
-        },
-        "ResourceGroup2": {
-            "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-02",
-            "metadata": {
-                "description": "Region 2 Resource Group"
-            }
-        },
-        "ResourceGroup3": {
-            "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-03",
-            "metadata": {
-                "description": "Region 3 Resource Group"
-            }
-        },
-        "ResourceGroup4": {
-            "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-04",
-            "metadata": {
-                "description": "Region 4 Resource Group"
-            }
-        },
-        "ResourceGroup5": {
-            "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-05",
-            "metadata": {
-                "description": "Region 5 Resource Group"
-            }
-        },                                
-        "Location1": {
-            "type": "string",
-            "defaultValue": "USGovVirginia", 
-            "metadata": {
-                "description": "Choose Region (Example: USGovVirginia)"
-            }
-        },        
-        "Location2": {
-            "type": "string",
-            "defaultValue": "USGovTexas", 
-            "metadata": {
-                "description": "Choose Region (Example: USGovTexas)"
-            }
-        },
-        "Location3": {
-            "type": "string",
-            "defaultValue": "USGovArizona", 
-            "metadata": {
-                "description": "Choose Region (Example: USGovArizona)"
-            }
-        },                        
-        "Location4": {
-            "type": "string",
-            "defaultValue": "USDoDEast", 
-            "metadata": {
-                "description": "Choose Region (Example: USDoDEast)"
-            }
-        },                                
-        "Location5": {
-            "type": "string",
-            "defaultValue": "USDoDCentral", 
-            "metadata": {
-                "description": "Choose Region (Example: USDoDCentral)"
-            }
-        },                                        
         "AutoShutdownEnabled": {
             "type": "string",
             "defaultValue": "No",
@@ -432,7 +425,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-ResourceGroup-01",
-            "location": "[parameters('Location1')]",
+            "location": "[deployment().location]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -444,11 +437,8 @@
                         "value": "[variables('ResourceGroupAPIVersion')]"
                     },
                     "ResourceGroupName": {
-                        "value": "[parameters('ResourceGroup1')]"
-                    },
-                    "location": {
-                        "value": "[parameters('Location1')]"
-                    }            
+                        "value": "[parameters('Region1RG')]"
+                    }    
                 }
             }
         },        
@@ -456,7 +446,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-ResourceGroup-02",
-            "location": "[parameters('Location2')]",
+            "location": "[parameters('Region2')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -468,10 +458,7 @@
                         "value": "[variables('ResourceGroupAPIVersion')]"
                     },
                     "ResourceGroupName": {
-                        "value": "[parameters('ResourceGroup2')]"
-                    },
-                    "location": {
-                        "value": "[parameters('Location2')]"
+                        "value": "[parameters('Region2RG')]"
                     }            
                 }
             }
@@ -480,7 +467,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-ResourceGroup-03",
-            "location": "[parameters('Location3')]",
+            "location": "[parameters('Region3')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -492,11 +479,8 @@
                         "value": "[variables('ResourceGroupAPIVersion')]"
                     },
                     "ResourceGroupName": {
-                        "value": "[parameters('ResourceGroup3')]"
-                    },
-                    "location": {
-                        "value": "[parameters('Location3')]"
-                    }            
+                        "value": "[parameters('Region3RG')]"
+                    }          
                 }
             }
         },                        
@@ -504,7 +488,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-ResourceGroup-04",
-            "location": "[parameters('Location4')]",
+            "location": "[parameters('Region4')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -516,11 +500,8 @@
                         "value": "[variables('ResourceGroupAPIVersion')]"
                     },
                     "ResourceGroupName": {
-                        "value": "[parameters('ResourceGroup4')]"
-                    },
-                    "location": {
-                        "value": "[parameters('Location4')]"
-                    }            
+                        "value": "[parameters('Region4RG')]"
+                    }
                 }
             }
         },                        
@@ -528,7 +509,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-ResourceGroup-05",
-            "location": "[parameters('Location5')]",
+            "location": "[parameters('Region5')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -540,11 +521,8 @@
                         "value": "[variables('ResourceGroupAPIVersion')]"
                     },
                     "ResourceGroupName": {
-                        "value": "[parameters('ResourceGroup5')]"
-                    },
-                    "location": {
-                        "value": "[parameters('Location5')]"
-                    }            
+                        "value": "[parameters('Region5RG')]"
+                    }
                 }
             }
         },                        
@@ -552,7 +530,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-LogAnalysticsWorkspace",
-            "resourceGroup":  "[parameters('ResourceGroup1')]",
+            "resourceGroup":  "[parameters('Region1RG')]",
             "dependsOn": [
                 "Create-ResourceGroup-01"
             ], 
@@ -569,9 +547,6 @@
                     "workspaceName": {
                         "value": "[variables('WorkSpaceName')]"
                     },
-                    "location": {
-                        "value": "[parameters('WorkspaceLocation')]"
-                    },
                     "sku": {
                         "value": "PerGB2018"
                     }            
@@ -582,7 +557,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Password-KeyVault-with-Secret",
-            "resourceGroup":  "[parameters('ResourceGroup1')]",
+            "resourceGroup":  "[parameters('Region1RG')]",
             "dependsOn": [
                 "Create-ResourceGroup-01"
             ],             
@@ -618,7 +593,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-VirtualNetwork-01",
-            "resourceGroup":  "[parameters('ResourceGroup1')]",
+            "resourceGroup":  "[parameters('Region1RG')]",
             "dependsOn": [
                 "Create-ResourceGroup-01"
             ],             
@@ -666,7 +641,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-VirtualNetwork-02",
-            "resourceGroup":  "[parameters('ResourceGroup2')]",
+            "resourceGroup":  "[parameters('Region2RG')]",
             "dependsOn": [
                 "Create-ResourceGroup-02"
             ],            
@@ -714,7 +689,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-VirtualNetwork-03",
-            "resourceGroup":  "[parameters('ResourceGroup3')]",
+            "resourceGroup":  "[parameters('Region3RG')]",
             "dependsOn": [
                 "Create-ResourceGroup-03"
             ],            
@@ -762,7 +737,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-VirtualNetwork-04",
-            "resourceGroup":  "[parameters('ResourceGroup4')]",
+            "resourceGroup":  "[parameters('Region4RG')]",
             "dependsOn": [
                 "Create-ResourceGroup-04"
             ],            
@@ -810,7 +785,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-VirtualNetwork-05",
-            "resourceGroup":  "[parameters('ResourceGroup5')]",
+            "resourceGroup":  "[parameters('Region5RG')]",
             "dependsOn": [
                 "Create-ResourceGroup-05"
             ],            
@@ -858,7 +833,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-BastionHost-01",
-            "resourceGroup":  "[parameters('ResourceGroup1')]",            
+            "resourceGroup":  "[parameters('Region1RG')]",            
             "dependsOn": [
                 "Deploy-VirtualNetwork-01"
             ],

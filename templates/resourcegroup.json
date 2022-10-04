@@ -13,12 +13,6 @@
             "metadata": {
                 "description": "Name of the ResourceGroup"
             }
-        },
-        "Location": {
-            "type": "string",
-            "metadata": {
-            "description": "Region of Resources"
-            }
         }
     },
     "resources": [
@@ -26,7 +20,7 @@
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[parameters('ResourceGroupAPIVersion')]",
             "name": "[parameters('ResourceGroupName')]",
-            "location": "[parameters('Location')]",
+            "location": "[deployment().location]",  
             "tags": {
             },
             "properties": {}

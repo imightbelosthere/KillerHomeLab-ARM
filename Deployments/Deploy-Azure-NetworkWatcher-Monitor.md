@@ -29,17 +29,16 @@ If you can't remember the Username review the Deployment Input tab within your R
 <img src="./x_Images/DeploymentUsername.png" width="300"/>
 
 Parameters that support changes
+- Region1RG.  Resource Group for Region 1 Resources.
+- Region2.  Location for Region 2 Resources.
+- Region2RG.  Resource Group for Region 2 Resources.
+- Region3.  Location for Region 3 Resources.
+- Region3RG.  Resource Group for Region 3 Resources.
+- Region4.  Location for Region 4 Resources.
+- Region4RG.  Resource Group for Region 4 Resources.
+- Region5.  Location for Region 5 Resources.
+- Region5RG.  Resource Group for Region 5 Resources.
 - TimeZone.  Select an appropriate Time Zone.
-- ResourceGroup1.  Resource Group for Region 1 Resources.
-- ResourceGroup2.  Resource Group for Region 2 Resources.
-- ResourceGroup3.  Resource Group for Region 3 Resources.
-- ResourceGroup4.  Resource Group for Region 4 Resources.
-- ResourceGroup5.  Resource Group for Region 5 Resources.
-- Location1.  Location for Region 1 Resources.
-- Location2.  Location for Region 2 Resources.
-- Location3.  Location for Region 3 Resources.
-- Location4.  Location for Region 4 Resources.
-- Location5.  Location for Region 5 Resources.
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
