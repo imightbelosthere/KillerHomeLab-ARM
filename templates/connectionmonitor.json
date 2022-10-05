@@ -1,0 +1,450 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ConnectionMonitorAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Connection  Monitor API Version"
+            }
+        },          
+        "CMName": {
+            "type": "string",
+            "metadata": {
+                "description": "Connection Monitor Name"
+            }
+        },
+        "Region1RG": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 1 Resource Group"
+            }
+        },
+        "Region1": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 1 Location"
+            }
+        },                                
+        "Region1VM": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 1 VM"
+            }
+        },                                          
+        "Region2RG": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 2 Resource Group"
+            }
+        },                              
+        "Region2": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 2 Location"
+            }
+        },                                      
+        "Region2VM": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 2 VM"
+            }
+        },                                              
+        "Region3RG": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 3 Resource Group"
+            }
+        },                              
+        "Region3": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 3 Location"
+            }
+        },                                      
+        "Region3VM": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 3 VM"
+            }
+        },                  
+        "Region4RG": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 4 Resource Group"
+            }
+        },      
+        "Region4": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 4 Location"
+            }
+        },                                      
+        "Region4VM": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 4 VM"
+            }
+        },                                      
+        "Region5RG": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 5 Resource Group"
+            }
+        },                              
+        "Region5": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 5 Location"
+            }
+        },                                                                              
+        "Region5VM": {
+            "type": "string",
+            "metadata": {
+                "description": "Region 5 VM"
+            }
+        }      
+    },
+    "variables": { 
+        "VM1ID": "[resourceId(parameters('Region1RG'), 'Microsoft.Compute/virtualMachines', parameters('Region1VM'))]",                
+        "VM2ID": "[resourceId(parameters('Region2RG'), 'Microsoft.Compute/virtualMachines', parameters('Region2VM'))]",                
+        "VM3ID": "[resourceId(parameters('Region3RG'), 'Microsoft.Compute/virtualMachines', parameters('Region3VM'))]",                
+        "VM4ID": "[resourceId(parameters('Region4RG'), 'Microsoft.Compute/virtualMachines', parameters('Region4VM'))]",                
+        "VM5ID": "[resourceId(parameters('Region5RG'), 'Microsoft.Compute/virtualMachines', parameters('Region5VM'))]",                                                
+        "NWID": "[concat('NetworkWatcher_',resourceGroup().location, '/', parameters('CMName'))]",
+        "TestGroupName12": "[concat(parameters('Region1'),'-to-', parameters('Region2'))]",
+        "TestGroupName21": "[concat(parameters('Region2'),'-to-', parameters('Region1'))]",         
+        "TestGroupName13": "[concat(parameters('Region1'),'-to-', parameters('Region3'))]",        
+        "TestGroupName31": "[concat(parameters('Region3'),'-to-', parameters('Region1'))]",                
+        "TestGroupName14": "[concat(parameters('Region1'),'-to-', parameters('Region4'))]",                
+        "TestGroupName41": "[concat(parameters('Region4'),'-to-', parameters('Region1'))]",                
+        "TestGroupName15": "[concat(parameters('Region1'),'-to-', parameters('Region5'))]",                
+        "TestGroupName51": "[concat(parameters('Region5'),'-to-', parameters('Region1'))]",                        
+        "TestGroupName23": "[concat(parameters('Region2'),'-to-', parameters('Region3'))]",                        
+        "TestGroupName32": "[concat(parameters('Region3'),'-to-', parameters('Region2'))]",                                
+        "TestGroupName24": "[concat(parameters('Region2'),'-to-', parameters('Region4'))]",                                
+        "TestGroupName42": "[concat(parameters('Region4'),'-to-', parameters('Region2'))]",                                        
+        "TestGroupName25": "[concat(parameters('Region2'),'-to-', parameters('Region5'))]",                                        
+        "TestGroupName52": "[concat(parameters('Region5'),'-to-', parameters('Region2'))]",                                                
+        "TestGroupName34": "[concat(parameters('Region3'),'-to-', parameters('Region4'))]",                                                
+        "TestGroupName43": "[concat(parameters('Region4'),'-to-', parameters('Region3'))]",                                                        
+        "TestGroupName35": "[concat(parameters('Region3'),'-to-', parameters('Region5'))]",                                                        
+        "TestGroupName53": "[concat(parameters('Region5'),'-to-', parameters('Region3'))]",                                                                
+        "TestGroupName45": "[concat(parameters('Region4'),'-to-', parameters('Region5'))]",                                                                
+        "TestGroupName54": "[concat(parameters('Region5'),'-to-', parameters('Region4'))]"         
+      },      
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkWatchers/connectionMonitors",
+            "apiVersion": "[parameters('ConnectionMonitorAPIVersion')]",
+            "name": "[variables('NWID')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "endpoints": [
+                    {
+                        "name": "[parameters('Region1VM')]",
+                        "resourceId": "[variables('VM1ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region2VM')]",
+                        "resourceId": "[variables('VM2ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region3VM')]",
+                        "resourceId": "[variables('VM3ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region4VM')]",
+                        "resourceId": "[variables('VM4ID')]",
+                        "type": "AzureVM"
+                    },                                 
+                    {
+                        "name": "[parameters('Region5VM')]",
+                        "resourceId": "[variables('VM5ID')]",
+                        "type": "AzureVM"
+                    }
+                ],
+                "testConfigurations": [
+                    {
+                        "name": "Web-Traffic",
+                        "testFrequencySec": 30,
+                        "protocol": "Tcp",
+                        "successThreshold": {
+                            "checksFailedPercent": 10,
+                            "roundTripTimeMs": 100
+                        },
+                        "tcpConfiguration": {
+                            "port": 80,
+                            "disableTraceRoute": false
+                        }
+                    }
+                ],
+                "testGroups": [
+                    {
+                        "name": "[variables('TestGroupName12')]",
+                        "sources": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName21')]",
+                        "sources": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName13')]",
+                        "sources": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region3VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName31')]",
+                        "sources": [
+                            "[parameters('Region3VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName14')]",
+                        "sources": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region4VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName41')]",
+                        "sources": [
+                            "[parameters('Region4VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },                    
+                    {
+                        "name": "[variables('TestGroupName15')]",
+                        "sources": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName51')]",
+                        "sources": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName23')]",
+                        "sources": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region3VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName32')]",
+                        "sources": [
+                            "[parameters('Region3VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName24')]",
+                        "sources": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region4VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName42')]",
+                        "sources": [
+                            "[parameters('Region4VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName25')]",
+                        "sources": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName52')]",
+                        "sources": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName34')]",
+                        "sources": [
+                            "[parameters('Region3VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region4VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+                    {
+                        "name": "[variables('TestGroupName43')]",
+                        "sources": [
+                            "[parameters('Region4VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region3VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName35')]",
+                        "sources": [
+                            "[parameters('Region3VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName53')]",
+                        "sources": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region3VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName45')]",
+                        "sources": [
+                            "[parameters('Region4VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName54')]",
+                        "sources": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region4VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                ]
+            }
+        }
+    ]
+}

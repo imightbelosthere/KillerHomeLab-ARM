@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DeploymentScriptAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Deployment Script API Version"
+            }
+        },        
+        "computerName": {
+            "type": "string",
+            "metadata": {
+                "description": "VM Name"
+            }
+        },
+        "WorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name"
+            }
+        },    
+        "WorkspaceResourceGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Worksapce Resource Group"
+            }
+        },        
+        "ManagedIDName": {
+            "type": "string",
+            "metadata": {
+                "description": "ManagedID"
+            }
+        },
+        "ScriptLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "Region of Resources"
+            }
+        },    
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            }
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation"
+            }
+        }                    
+    },
+    "variables": {
+        "ScriptURL": "[uri(parameters('_artifactsLocation'), concat('Scripts/ConnectToWorkspace.ps1', parameters('_artifactsLocationSasToken')))]",
+        "Location": "[resourceGroup().location]",
+        "VMResourceGroupName": "[resourceGroup().name]"
+    },
+    "resources": [
+        {
+          "type": "Microsoft.Resources/deploymentScripts",
+          "apiVersion": "[parameters('DeploymentScriptAPIVersion')]",
+          "name": "ConnectToWorkspace",
+          "location": "[parameters('ScriptLocation')]",
+          "kind": "AzurePowerShell",      
+          "identity": {
+            "type": "UserAssigned",
+            "userAssignedIdentities": {
+              "[resourceId(parameters('WorkspaceResourceGroup'), 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('ManagedIDName'))]": {
+              }
+            }
+          },
+          "properties": {
+            "azPowerShellVersion": "3.0",
+            "timeout": "PT1H",
+            "arguments": "[format(' -VM {0} -WorkspaceName {1} -WorkspaceResourceGroup {2} -VMResourceGroup {3} -Location {4}', parameters('computerName'), parameters('WorkspaceName'), parameters('WorkspaceResourceGroup'), variables('VMResourceGroupName'), variables('location'))]", // can pass an argument string, double quotes must be escaped
+            "primaryScriptUri": "[variables('ScriptURL')]",
+            "cleanupPreference": "OnSuccess",
+            "retentionInterval": "P1D"
+          }
+        }
+      ]
+    }

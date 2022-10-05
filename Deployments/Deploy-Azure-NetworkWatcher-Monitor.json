@@ -464,7 +464,9 @@
         "vm5IP": "[concat(parameters('vnet5ID'),'.1.',variables('vmlastoctet'))]",                                    
         "VMlastoctet": "10",        
         "BastionHostAPIVersion": "2021-08-01",
+        "ConnectionMonitorAPIVersion": "2022-01-01",
         "DeploymentAPIVersion": "2021-04-01",
+        "DeploymentScriptAPIVersion": "2020-10-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
@@ -2659,6 +2661,289 @@
                     }                                        
                 }
             }
-        }    
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region1-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region1RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region1RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm1name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "USGovVirginia"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region2-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region2RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region2RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm2name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "USGovVirginia"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region3-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region3RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region3RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm3name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "USGovVirginia"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region4-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region4RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region4RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm4name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "USGovVirginia"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region5-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region5RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region5RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm5name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "USGovVirginia"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-ConnectionMonitor",
+            "resourceGroup":  "NetworkWatcherRG",            
+            "dependsOn": [
+                "Connect-Region1-VM-to-Workspace",
+                "Connect-Region2-VM-to-Workspace",
+                "Connect-Region3-VM-to-Workspace",
+                "Connect-Region4-VM-to-Workspace",
+                "Connect-Region5-VM-to-Workspace" 
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectionmonitor.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ConnectionMonitorAPIVersion": {
+                        "value": "[variables('ConnectionMonitorAPIVersion')]"
+                    },                                        
+                    "CMName": {
+                        "value": "[variables('CMName')]"
+                    }, 
+                    "Region1RG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                          
+                    "Region1": {
+                        "value": "[deployment().location]"
+                    },                                
+                    "Region1VM": {
+                        "value": "[variables('vm1name')]"
+                    },                                                            
+                    "Region2RG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                          
+                    "Region2": {
+                        "value": "[parameters('Region2')]"
+                    },                                
+                    "Region2VM": {
+                        "value": "[variables('vm2name')]"
+                    },                                                            
+                    "Region3RG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                          
+                    "Region3": {
+                        "value": "[parameters('Region3')]"
+                    },                                
+                    "Region3VM": {
+                        "value": "[variables('vm3name')]"
+                    },                                
+                    "Region4RG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                          
+                    "Region4": {
+                        "value": "[parameters('Region4')]"
+                    },                                
+                    "Region4VM": {
+                        "value": "[variables('vm4name')]"
+                    },                    
+                    "Region5RG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                          
+                    "Region5": {
+                        "value": "[parameters('Region5')]"
+                    },                                
+                    "Region5VM": {
+                        "value": "[variables('vm5name')]"
+                    }                                                                                                                                
+                }
+            }
+        }                                                                         
     ]
 }
