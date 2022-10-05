@@ -2362,7 +2362,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Region2-VM-NW",
-            "resourceGroup":  "[parameters('Region1RG')]",                
+            "resourceGroup":  "[parameters('Region2RG')]",                
             "dependsOn": [
                 "Install-IIS-on-Region2-VM"
             ],            

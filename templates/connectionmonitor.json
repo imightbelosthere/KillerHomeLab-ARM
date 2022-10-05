@@ -111,7 +111,11 @@
         "VM3ID": "[resourceId(parameters('Region3RG'), 'Microsoft.Compute/virtualMachines', parameters('Region3VM'))]",                
         "VM4ID": "[resourceId(parameters('Region4RG'), 'Microsoft.Compute/virtualMachines', parameters('Region4VM'))]",                
         "VM5ID": "[resourceId(parameters('Region5RG'), 'Microsoft.Compute/virtualMachines', parameters('Region5VM'))]",                                                
-        "NWID": "[concat('NetworkWatcher_',resourceGroup().location, '/', parameters('CMName'))]",
+        "NW1ID": "[concat('NetworkWatcher_',parameters('Region1'), '/', parameters('CMName'))]",
+        "NW2ID": "[concat('NetworkWatcher_',parameters('Region2'), '/', parameters('CMName'))]",
+        "NW3ID": "[concat('NetworkWatcher_',parameters('Region3'), '/', parameters('CMName'))]",
+        "NW4ID": "[concat('NetworkWatcher_',parameters('Region4'), '/', parameters('CMName'))]",
+        "NW5ID": "[concat('NetworkWatcher_',parameters('Region5'), '/', parameters('CMName'))]",                                
         "TestGroupName12": "[concat(parameters('Region1'),'-to-', parameters('Region2'))]",
         "TestGroupName21": "[concat(parameters('Region2'),'-to-', parameters('Region1'))]",         
         "TestGroupName13": "[concat(parameters('Region1'),'-to-', parameters('Region3'))]",        
@@ -137,8 +141,8 @@
         {
             "type": "Microsoft.Network/networkWatchers/connectionMonitors",
             "apiVersion": "[parameters('ConnectionMonitorAPIVersion')]",
-            "name": "[variables('NWID')]",
-            "location": "[resourceGroup().location]",
+            "name": "[variables('NW1ID')]",
+            "location": "[parameters('Region1')]",
             "properties": {
                 "endpoints": [
                     {
@@ -197,38 +201,12 @@
                         "disable": false
                     },
                     {
-                        "name": "[variables('TestGroupName21')]",
-                        "sources": [
-                            "[parameters('Region2VM')]"
-                        ],
-                        "destinations": [
-                            "[parameters('Region1VM')]"
-                        ],
-                        "testConfigurations": [
-                            "Web-Traffic"
-                        ],
-                        "disable": false
-                    },
-                    {
                         "name": "[variables('TestGroupName13')]",
                         "sources": [
                             "[parameters('Region1VM')]"
                         ],
                         "destinations": [
                             "[parameters('Region3VM')]"
-                        ],
-                        "testConfigurations": [
-                            "Web-Traffic"
-                        ],
-                        "disable": false
-                    },
-                    {
-                        "name": "[variables('TestGroupName31')]",
-                        "sources": [
-                            "[parameters('Region3VM')]"
-                        ],
-                        "destinations": [
-                            "[parameters('Region1VM')]"
                         ],
                         "testConfigurations": [
                             "Web-Traffic"
@@ -249,19 +227,6 @@
                         "disable": false
                     },
                     {
-                        "name": "[variables('TestGroupName41')]",
-                        "sources": [
-                            "[parameters('Region4VM')]"
-                        ],
-                        "destinations": [
-                            "[parameters('Region1VM')]"
-                        ],
-                        "testConfigurations": [
-                            "Web-Traffic"
-                        ],
-                        "disable": false
-                    },                    
-                    {
                         "name": "[variables('TestGroupName15')]",
                         "sources": [
                             "[parameters('Region1VM')]"
@@ -273,11 +238,63 @@
                             "Web-Traffic"
                         ],
                         "disable": false
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkWatchers/connectionMonitors",
+            "apiVersion": "[parameters('ConnectionMonitorAPIVersion')]",
+            "name": "[variables('NW2ID')]",
+            "location": "[parameters('Region2')]",
+            "properties": {
+                "endpoints": [
+                    {
+                        "name": "[parameters('Region1VM')]",
+                        "resourceId": "[variables('VM1ID')]",
+                        "type": "AzureVM"
                     },
                     {
-                        "name": "[variables('TestGroupName51')]",
+                        "name": "[parameters('Region2VM')]",
+                        "resourceId": "[variables('VM2ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region3VM')]",
+                        "resourceId": "[variables('VM3ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region4VM')]",
+                        "resourceId": "[variables('VM4ID')]",
+                        "type": "AzureVM"
+                    },                                 
+                    {
+                        "name": "[parameters('Region5VM')]",
+                        "resourceId": "[variables('VM5ID')]",
+                        "type": "AzureVM"
+                    }
+                ],
+                "testConfigurations": [
+                    {
+                        "name": "Web-Traffic",
+                        "testFrequencySec": 30,
+                        "protocol": "Tcp",
+                        "successThreshold": {
+                            "checksFailedPercent": 10,
+                            "roundTripTimeMs": 100
+                        },
+                        "tcpConfiguration": {
+                            "port": 80,
+                            "disableTraceRoute": false
+                        }
+                    }
+                ],
+                "testGroups": [
+                    {
+                        "name": "[variables('TestGroupName21')]",
                         "sources": [
-                            "[parameters('Region5VM')]"
+                            "[parameters('Region2VM')]"
                         ],
                         "destinations": [
                             "[parameters('Region1VM')]"
@@ -301,38 +318,12 @@
                         "disable": false
                     },
                     {
-                        "name": "[variables('TestGroupName32')]",
-                        "sources": [
-                            "[parameters('Region3VM')]"
-                        ],
-                        "destinations": [
-                            "[parameters('Region2VM')]"
-                        ],
-                        "testConfigurations": [
-                            "Web-Traffic"
-                        ],
-                        "disable": false
-                    },
-                    {
                         "name": "[variables('TestGroupName24')]",
                         "sources": [
                             "[parameters('Region2VM')]"
                         ],
                         "destinations": [
                             "[parameters('Region4VM')]"
-                        ],
-                        "testConfigurations": [
-                            "Web-Traffic"
-                        ],
-                        "disable": false
-                    },
-                    {
-                        "name": "[variables('TestGroupName42')]",
-                        "sources": [
-                            "[parameters('Region4VM')]"
-                        ],
-                        "destinations": [
-                            "[parameters('Region2VM')]"
                         ],
                         "testConfigurations": [
                             "Web-Traffic"
@@ -351,11 +342,76 @@
                             "Web-Traffic"
                         ],
                         "disable": false
+                    }
+                ]
+            }
+        },        
+        {
+            "type": "Microsoft.Network/networkWatchers/connectionMonitors",
+            "apiVersion": "[parameters('ConnectionMonitorAPIVersion')]",
+            "name": "[variables('NW3ID')]",
+            "location": "[parameters('Region3')]",
+            "properties": {
+                "endpoints": [
+                    {
+                        "name": "[parameters('Region1VM')]",
+                        "resourceId": "[variables('VM1ID')]",
+                        "type": "AzureVM"
                     },
                     {
-                        "name": "[variables('TestGroupName52')]",
+                        "name": "[parameters('Region2VM')]",
+                        "resourceId": "[variables('VM2ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region3VM')]",
+                        "resourceId": "[variables('VM3ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region4VM')]",
+                        "resourceId": "[variables('VM4ID')]",
+                        "type": "AzureVM"
+                    },                                 
+                    {
+                        "name": "[parameters('Region5VM')]",
+                        "resourceId": "[variables('VM5ID')]",
+                        "type": "AzureVM"
+                    }
+                ],
+                "testConfigurations": [
+                    {
+                        "name": "Web-Traffic",
+                        "testFrequencySec": 30,
+                        "protocol": "Tcp",
+                        "successThreshold": {
+                            "checksFailedPercent": 10,
+                            "roundTripTimeMs": 100
+                        },
+                        "tcpConfiguration": {
+                            "port": 80,
+                            "disableTraceRoute": false
+                        }
+                    }
+                ],
+                "testGroups": [
+                    {
+                        "name": "[variables('TestGroupName31')]",
                         "sources": [
-                            "[parameters('Region5VM')]"
+                            "[parameters('Region3VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName32')]",
+                        "sources": [
+                            "[parameters('Region3VM')]"
                         ],
                         "destinations": [
                             "[parameters('Region2VM')]"
@@ -377,19 +433,6 @@
                             "Web-Traffic"
                         ],
                         "disable": false
-                    },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-                    {
-                        "name": "[variables('TestGroupName43')]",
-                        "sources": [
-                            "[parameters('Region4VM')]"
-                        ],
-                        "destinations": [
-                            "[parameters('Region3VM')]"
-                        ],
-                        "testConfigurations": [
-                            "Web-Traffic"
-                        ],
-                        "disable": false
                     },
                     {
                         "name": "[variables('TestGroupName35')]",
@@ -403,11 +446,89 @@
                             "Web-Traffic"
                         ],
                         "disable": false
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkWatchers/connectionMonitors",
+            "apiVersion": "[parameters('ConnectionMonitorAPIVersion')]",
+            "name": "[variables('NW4ID')]",
+            "location": "[parameters('Region4')]",
+            "properties": {
+                "endpoints": [
+                    {
+                        "name": "[parameters('Region1VM')]",
+                        "resourceId": "[variables('VM1ID')]",
+                        "type": "AzureVM"
                     },
                     {
-                        "name": "[variables('TestGroupName53')]",
+                        "name": "[parameters('Region2VM')]",
+                        "resourceId": "[variables('VM2ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region3VM')]",
+                        "resourceId": "[variables('VM3ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region4VM')]",
+                        "resourceId": "[variables('VM4ID')]",
+                        "type": "AzureVM"
+                    },                                 
+                    {
+                        "name": "[parameters('Region5VM')]",
+                        "resourceId": "[variables('VM5ID')]",
+                        "type": "AzureVM"
+                    }
+                ],
+                "testConfigurations": [
+                    {
+                        "name": "Web-Traffic",
+                        "testFrequencySec": 30,
+                        "protocol": "Tcp",
+                        "successThreshold": {
+                            "checksFailedPercent": 10,
+                            "roundTripTimeMs": 100
+                        },
+                        "tcpConfiguration": {
+                            "port": 80,
+                            "disableTraceRoute": false
+                        }
+                    }
+                ],
+                "testGroups": [
+                    {
+                        "name": "[variables('TestGroupName41')]",
                         "sources": [
-                            "[parameters('Region5VM')]"
+                            "[parameters('Region4VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName42')]",
+                        "sources": [
+                            "[parameters('Region4VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName43')]",
+                        "sources": [
+                            "[parameters('Region4VM')]"
                         ],
                         "destinations": [
                             "[parameters('Region3VM')]"
@@ -429,6 +550,97 @@
                             "Web-Traffic"
                         ],
                         "disable": false
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkWatchers/connectionMonitors",
+            "apiVersion": "[parameters('ConnectionMonitorAPIVersion')]",
+            "name": "[variables('NW5ID')]",
+            "location": "[parameters('Region5')]",
+            "properties": {
+                "endpoints": [
+                    {
+                        "name": "[parameters('Region1VM')]",
+                        "resourceId": "[variables('VM1ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region2VM')]",
+                        "resourceId": "[variables('VM2ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region3VM')]",
+                        "resourceId": "[variables('VM3ID')]",
+                        "type": "AzureVM"
+                    },
+                    {
+                        "name": "[parameters('Region4VM')]",
+                        "resourceId": "[variables('VM4ID')]",
+                        "type": "AzureVM"
+                    },                                 
+                    {
+                        "name": "[parameters('Region5VM')]",
+                        "resourceId": "[variables('VM5ID')]",
+                        "type": "AzureVM"
+                    }
+                ],
+                "testConfigurations": [
+                    {
+                        "name": "Web-Traffic",
+                        "testFrequencySec": 30,
+                        "protocol": "Tcp",
+                        "successThreshold": {
+                            "checksFailedPercent": 10,
+                            "roundTripTimeMs": 100
+                        },
+                        "tcpConfiguration": {
+                            "port": 80,
+                            "disableTraceRoute": false
+                        }
+                    }
+                ],
+                "testGroups": [
+                    {
+                        "name": "[variables('TestGroupName51')]",
+                        "sources": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region1VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName52')]",
+                        "sources": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region2VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
+                    },
+                    {
+                        "name": "[variables('TestGroupName53')]",
+                        "sources": [
+                            "[parameters('Region5VM')]"
+                        ],
+                        "destinations": [
+                            "[parameters('Region3VM')]"
+                        ],
+                        "testConfigurations": [
+                            "Web-Traffic"
+                        ],
+                        "disable": false
                     },
                     {
                         "name": "[variables('TestGroupName54')]",
@@ -442,9 +654,9 @@
                             "Web-Traffic"
                         ],
                         "disable": false
-                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                    }
                 ]
             }
-        }
+        }        
     ]
 }
