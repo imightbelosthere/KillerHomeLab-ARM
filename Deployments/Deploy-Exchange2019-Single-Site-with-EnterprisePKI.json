@@ -1408,9 +1408,6 @@
                     "EnterpriseCAKeyLength": {
                         "value": "[parameters('EnterpriseCAKeyLength')]"
                     },     
-                    "CATemplateScriptUrl": {
-                        "value": "[variables('CATemplateScriptUrl')]"
-                    },            
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },                                                                                                            
