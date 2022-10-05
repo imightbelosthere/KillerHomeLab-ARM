@@ -406,6 +406,7 @@
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",
+        "VirtualNetworkPeeringAPIVersion": "2022-01-01",
         "ExtensionsTypeHandlerVersion": "2.83",
         "DJExtensionsTypeHandlerVersion": "1.3"
     },
@@ -856,6 +857,806 @@
                     }
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet1-for-VNet2",
+            "resourceGroup":  "[parameters('Region1RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-02"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },            
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet2-for-VNet1",
+            "resourceGroup":  "[parameters('Region2RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-02"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                    
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet1-for-VNet3",
+            "resourceGroup":  "[parameters('Region1RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-03"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                            
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet3-for-VNet1",
+            "resourceGroup":  "[parameters('Region3RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-03"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet1-for-VNet4",
+            "resourceGroup":  "[parameters('Region1RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                                                                     
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet4-for-VNet1",
+            "resourceGroup":  "[parameters('Region4RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet1-for-VNet5",
+            "resourceGroup":  "[parameters('Region1RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                                            
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet5-for-VNet1",
+            "resourceGroup":  "[parameters('Region5RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet2-for-VNet3",
+            "resourceGroup":  "[parameters('Region2RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-03"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet3-for-VNet2",
+            "resourceGroup":  "[parameters('Region3RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-03"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                                                                                                                                                                                                                                                                                                  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet2-for-VNet4",
+            "resourceGroup":  "[parameters('Region2RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet4-for-VNet2",
+            "resourceGroup":  "[parameters('Region4RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet2-for-VNet5",
+            "resourceGroup":  "[parameters('Region2RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet5-for-VNet2",
+            "resourceGroup":  "[parameters('Region5RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet3-for-VNet4",
+            "resourceGroup":  "[parameters('Region3RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-03",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet4-for-VNet3",
+            "resourceGroup":  "[parameters('Region4RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-03",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet3-for-VNet5",
+            "resourceGroup":  "[parameters('Region3RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-03",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet5-for-VNet3",
+            "resourceGroup":  "[parameters('Region5RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-03",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet4-for-VNet5",
+            "resourceGroup":  "[parameters('Region4RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-04",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet5-for-VNet4",
+            "resourceGroup":  "[parameters('Region5RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-04",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SourceVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        }                                
     ]
 }
