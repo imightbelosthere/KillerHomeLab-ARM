@@ -2081,9 +2081,6 @@
                     },                    
                     "computerName": {
                         "value": "[variables('wap1name')]"
-                    },
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
                     },                            
                     "NDESServerIP": {
                         "value": "[variables('ndesIP')]"
