@@ -1795,6 +1795,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Region1-VM",
+            "resourceGroup":  "[parameters('Region1RG')]",                                              
             "dependsOn": [
                 "Deploy-VirtualNetwork-01"
             ],
@@ -1869,6 +1870,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Region2-VM",
+            "resourceGroup":  "[parameters('Region2RG')]",                                              
             "dependsOn": [
                 "Deploy-VirtualNetwork-02"
             ],
@@ -1943,6 +1945,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Region3-VM",
+            "resourceGroup":  "[parameters('Region3RG')]",                                              
             "dependsOn": [
                 "Deploy-VirtualNetwork-03"
             ],
@@ -2017,6 +2020,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Region4-VM",
+            "resourceGroup":  "[parameters('Region4RG')]",                                              
             "dependsOn": [
                 "Deploy-VirtualNetwork-04"
             ],
@@ -2091,6 +2095,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Region5-VM",
+            "resourceGroup":  "[parameters('Region5RG')]",                                  
             "dependsOn": [
                 "Deploy-VirtualNetwork-05"
             ],
