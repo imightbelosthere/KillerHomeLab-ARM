@@ -109,6 +109,62 @@
             PsDscRunAsCredential = $DomainCreds
         }
 
+        Script ConfigureCertificate
+        {
+            SetScript =
+            {
+                # Create Credentials
+                $Load = "$using:DomainCreds"
+                $Password = $DomainCreds.Password
+
+                # Get Certificate 2019 Certificate
+                $CertCheck = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=ndes.$using:ExternalDomainName"}
+                IF ($CertCheck -eq $Null) {
+                    Get-Certificate -Template WebServer1 -SubjectName "CN=ndes.$using:ExternalDomainName" -DNSName "ndes.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
+                }
+
+                $thumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=ndes.$using:ExternalDomainName"}).Thumbprint
+                (Get-ChildItem -Path Cert:\LocalMachine\My\$thumbprint).FriendlyName = "NDES Certificate"
+
+                # Export NDES Certificate
+                $CertFile = Get-ChildItem -Path "C:\WAP-Certificates\ndes.$using:ExternalDomainName.pfx" -ErrorAction 0
+                IF ($CertFile -eq $Null) {Get-ChildItem -Path cert:\LocalMachine\my\$thumbprint | Export-PfxCertificate -FilePath "C:\WAP-Certificates\ndes.$using:ExternalDomainName.pfx" -Password $Password}
+
+                # Export Root CA
+                $EnterpriseCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:EnterpriseCAName.cer" -ErrorAction 0
+                IF ($EnterpriseCert -eq $null)
+                {
+                    $EnterpriseExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:EnterpriseCAName*"}
+                    Export-Certificate -Cert $EnterpriseExport -FilePath "C:\WAP-Certificates\$using:EnterpriseCAName.cer" -Type CER
+                }
+
+                # Enable Certificate Copy
+                $EnableSMB = Get-NetFirewallRule "FPS-SMB-In-TCP" -ErrorAction 0
+                IF ($EnableSMB -ne $null) {Enable-NetFirewallRule -Name "FPS-SMB-In-TCP"}
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            DependsOn = "[Script]SetSPN"
+        }
+
+        Script ConfigureIIS
+        {
+            SetScript =
+            {
+                $BindingCheck = Get-WebBinding -Name "Default Web Site" -Protocol https -ErrorAction 0
+                IF ($BindingCheck -eq $Null){
+                    $wwwcert = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=ndes.$using:ExternalDomainName"})
+                    New-WebBinding -Name "Default Web Site" -IP "*" -Port 443 -Protocol https
+                    $Binding = Get-WebBinding -Name "Default Web Site" -Protocol https
+                    $Binding.AddSslCertificate($wwwcert.GetCertHashString(), "my")
+                }
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            PsDscRunAsCredential = $Admincreds
+            DependsOn = "[Script]ConfigureCertificate"
+        }
+
         Script ConfigureNDES
         {
             SetScript =
@@ -123,7 +179,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[Script]SetSPN'
+            DependsOn = '[Script]ConfigureIIS'
         }
 
         Registry EncryptionTemplate
@@ -154,62 +210,6 @@
             ValueData                   =  'SCEPCertificate'
             Ensure                      = 'Present'
             DependsOn = '[Script]ConfigureNDES'
-        }
-
-        Script ConfigureCertificate
-        {
-            SetScript =
-            {
-                # Create Credentials
-                $Load = "$using:DomainCreds"
-                $Password = $DomainCreds.Password
-
-                # Get Certificate 2019 Certificate
-                $CertCheck = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=ndes.$using:ExternalDomainName"}
-                IF ($CertCheck -eq $Null) {
-                    Get-Certificate -Template WebServer1 -SubjectName "CN=ndes.$using:ExternalDomainName" -DNSName "ndes.$using:ExternalDomainName" -CertStoreLocation "cert:\LocalMachine\My"
-                }
-
-                $thumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=ndes.$using:ExternalDomainName"}).Thumbprint
-                (Get-ChildItem -Path Cert:\LocalMachine\My\$thumbprint).FriendlyName = "NDES Certificate"
-
-                # Export NDES Certificate
-                $CertFile = Get-ChildItem -Path "C:\WAP-Certificates\ndes.$using:ExternalDomainName.pfx" -ErrorAction 0
-                IF ($CertFile -eq $Null) {Get-ChildItem -Path cert:\LocalMachine\my\$thumbprint | Export-PfxCertificate -FilePath "C:\WAP-Certificates\ndes.$using:ExternalDomainName.pfx" -Password $Password}
-
-                                # Export Root CA
-                $EnterpriseCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:EnterpriseCAName.cer" -ErrorAction 0
-                IF ($EnterpriseCert -eq $null)
-                {
-                    $EnterpriseExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:EnterpriseCAName*"}
-                    Export-Certificate -Cert $EnterpriseExport -FilePath "C:\WAP-Certificates\$using:EnterpriseCAName.cer" -Type CER
-                }
-
-                # Enable Certificate Copy
-                $EnableSMB = Get-NetFirewallRule "FPS-SMB-In-TCP" -ErrorAction 0
-                IF ($EnableSMB -ne $null) {Enable-NetFirewallRule -Name "FPS-SMB-In-TCP"}
-            }
-            GetScript =  { @{} }
-            TestScript = { $false}
-            DependsOn = "[Registry]EncryptionTemplate", "[Registry]SignatureTemplate", "[Registry]GeneralPurposeTemplate"
-        }
-
-        Script ConfigureIIS
-        {
-            SetScript =
-            {
-                $BindingCheck = Get-WebBinding -Name "Default Web Site" -Protocol https -ErrorAction 0
-                IF ($BindingCheck -eq $Null){
-                    $wwwcert = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=ndes.$using:ExternalDomainName"})
-                    New-WebBinding -Name "Default Web Site" -IP "*" -Port 443 -Protocol https
-                    $Binding = Get-WebBinding -Name "Default Web Site" -Protocol https
-                    $Binding.AddSslCertificate($wwwcert.GetCertHashString(), "my")
-                }
-            }
-            GetScript =  { @{} }
-            TestScript = { $false}
-            PsDscRunAsCredential = $Admincreds
-            DependsOn = "[Script]ConfigureCertificate"
         }
     }
 }
