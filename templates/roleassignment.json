@@ -7,26 +7,36 @@
             "metadata": {
                 "description": "Role Assignment API Version"
             }
-        },  
-        "ManagedIDName": {
+        },      
+        "PrincipalID": {
             "type": "string",
             "metadata": {
                 "description": "Managed ID Name"
             }
-        }
+        },
+        "RoleDefinitionID": {
+            "type": "string",
+            "metadata": {
+                "description": "Managed ID Name"
+            }
+        },
+        "roleAssignmentHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Role Assignment Hash Value"
+            }
+        }         
     },
     "resources": [
         {
-            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-            "name": "[parameters('ManagedIDName')]",
+            "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[parameters('RoleAssignmentAPIVersion')]",
-            "location": "[resourceGroup().location]"
+            "name":  "[guid(resourceGroup().id, parameters('roleAssignmentHash'))]",
+            "properties": {
+                "roleDefinitionId": "[parameters('RoleDefinitionId')]",
+                "principalId": "[parameters('PrincipalID')]",
+                "principalType": "ServicePrincipal"
+            }
         }
-    ],
-    "outputs": {
-        "manageduseridentity": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('ManagedIDName'))).principalId]"
-        }
-    }      
+    ]
 }

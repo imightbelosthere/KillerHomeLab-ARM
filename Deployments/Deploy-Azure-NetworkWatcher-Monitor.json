@@ -2388,33 +2388,6 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Region2-VM-NW",
-            "resourceGroup":  "[parameters('Region2RG')]",                
-            "dependsOn": [
-                "Install-IIS-on-Region3-VM"
-            ],            
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networkwatcher.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "NWExtensionsTypeHandlerVersion": {
-                        "value": "[variables('NWExtensionsTypeHandlerVersion')]"
-                    },                    
-                    "computerName": {
-                        "value": "[variables('vm2name')]"
-                    } 
-                }
-            }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Region3-VM-NW",
             "resourceGroup":  "[parameters('Region3RG')]",                
             "dependsOn": [
