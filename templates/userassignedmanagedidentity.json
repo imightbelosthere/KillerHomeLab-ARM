@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "UserAssignedMIAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "User Assigned Managed Identity API Version"
+            }
+        },  
+        "ManagedIDName": {
+            "type": "string",
+            "metadata": {
+                "description": "Managed ID Name"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "name": "[parameters('ManagedIDName')]",
+            "apiVersion": "[parameters('UserAssignedMIAPIVersion')]",
+            "location": "[resourceGroup().location]"
+        }
+      ],
+    "outputs": {
+        "manageduseridentity": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('ManagedIDName'))).principalId]"
+        }
+    }      
+}

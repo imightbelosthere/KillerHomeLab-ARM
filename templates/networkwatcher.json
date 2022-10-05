@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ExtensionsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "NWExtensionsTypeHandlerVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Watcher Extension Type Handler Version"
+            }
+        },         
+        "computerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer Name"
+            }
+        }              
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "[parameters('ExtensionsAPIVersion')]",
+            "name": "[concat(parameters('computerName'), '/AzureNetworkWatcherExtension')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.Azure.NetworkWatcher",
+                "type": "NetworkWatcherAgentWindows",
+                "typeHandlerVersion": "[parameters('NWExtensionsTypeHandlerVersion')]"
+            }
+        }        
+    ]
+}
