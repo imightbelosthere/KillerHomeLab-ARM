@@ -30,7 +30,7 @@ Configuration WAPINTUNE
         }
                 
         # Install Web Application Proxy
-        WindowsFeature Web-Application-Proxy
+        WindowsFeature Web-Applica2tion-Proxy
         {
             Name = 'Web-Application-Proxy'
             Ensure = 'Present'
@@ -50,6 +50,7 @@ Configuration WAPINTUNE
             SourcePath = "\\$NDESServerIP\c$\WAP-Certificates"
             DestinationPath = "C:\WAP-Certificates\"
             Credential = $Admincreds
+            DependsOn = '[Script]AllowRemoteCopy'
         }
 
         Script ConfigureWAPCertificates
