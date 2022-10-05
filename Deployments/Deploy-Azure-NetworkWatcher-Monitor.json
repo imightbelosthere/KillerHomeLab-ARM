@@ -874,6 +874,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                    
                     "SourceVNetName": {
                         "value": "[variables('vnet1Name')]"
                     },
@@ -914,6 +917,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet2Name')]"
                     },
@@ -954,6 +960,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet1Name')]"
                     },
@@ -994,6 +1003,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet3Name')]"
                     },
@@ -1034,6 +1046,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet1Name')]"
                     },
@@ -1074,6 +1089,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet4Name')]"
                     },
@@ -1114,6 +1132,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet1Name')]"
                     },
@@ -1154,6 +1175,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet5Name')]"
                     },
@@ -1194,6 +1218,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet2Name')]"
                     },
@@ -1234,6 +1261,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet3Name')]"
                     },
@@ -1274,6 +1304,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet2Name')]"
                     },
@@ -1314,6 +1347,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet4Name')]"
                     },
@@ -1354,6 +1390,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet2Name')]"
                     },
@@ -1394,6 +1433,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet5Name')]"
                     },
@@ -1434,6 +1476,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet3Name')]"
                     },
@@ -1474,6 +1519,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet4Name')]"
                     },
@@ -1514,6 +1562,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet3Name')]"
                     },
@@ -1554,6 +1605,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet5Name')]"
                     },
@@ -1594,6 +1648,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet4Name')]"
                     },
@@ -1634,6 +1691,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
                     "SourceVNetName": {
                         "value": "[variables('vnet5Name')]"
                     },
