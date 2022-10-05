@@ -38,6 +38,7 @@ Parameters that support changes
 - Region4RG.  Resource Group for Region 4 Resources.
 - Region5.  Location for Region 5 Resources.
 - Region5RG.  Resource Group for Region 5 Resources.
+- WorkspaceLocation.  Location of Log Analytics Workspace
 - TimeZone.  Select an appropriate Time Zone.
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
@@ -52,3 +53,11 @@ Parameters that support changes
 - Vnet3ID.  Enter first 2 octets of your desired Address Space for Region 1 VNet 1 (Example:  172.18)
 - Vnet4ID.  Enter first 2 octets of your desired Address Space for Region 1 VNet 1 (Example:  172.19)
 - Vnet5ID.  Enter first 2 octets of your desired Address Space for Region 1 VNet 1 (Example:  172.20)
+- UniqueID.  Unique Identification that is used for KeyVault Global Naming.
+- VMOSSku.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019), 2016-Datacenter (Windows 2016) or 2012-R2-Datacenter (Windows 2012 R2) Regional VM's OS Sku
+- VMOSVersion.  The default is Latest however a specific OS Version can be entired based on the above OS Sku.
+- VM1Size.  Enter a Valid VM Size for Region 1 VM.
+- VM2Size.  Enter a Valid VM Size for Region 2 VM.
+- VM3Size.  Enter a Valid VM Size for Region 3 VM.
+- VM4Size.  Enter a Valid VM Size for Region 4 VM.
+- VM5Size.  Enter a Valid VM Size for Region 5 VM.

@@ -64,7 +64,18 @@
             "metadata": {
                 "description": "Region 5 Resource Group"
             }
-        },                                                                                      
+        },
+        "WorkspaceLocation": {
+            "type": "string",
+            "defaultValue": "USGovVirginia",
+            "allowedValues": [
+                "USGovVirginia",
+                "USGovArizona"
+            ],      
+            "metadata": {
+                "description": "Choose a Log Analytics Workspace Location"
+            }
+        },                                                                                              
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -234,17 +245,6 @@
             "defaultValue": "",
             "metadata": {
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
-            }
-        },
-        "WorkspaceLocation": {
-            "type": "string",
-            "defaultValue": "USGovVirginia",
-            "allowedValues": [
-                "USGovVirginia",
-                "USGovArizona"
-            ],      
-            "metadata": {
-                "description": "Choose a Log Analytics Workspace Location"
             }
         },         
         "adminUsername": {
