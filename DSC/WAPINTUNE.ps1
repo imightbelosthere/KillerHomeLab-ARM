@@ -2,15 +2,12 @@ Configuration WAPINTUNE
 {
    param
    (
-        [String]$NetBiosDomain,
         [String]$NDESServerIP,
         [String]$ExternalDomainName,
         [String]$EnterpriseCAName,
         [System.Management.Automation.PSCredential]$Admincreds
  
     )
-
-    [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($AdminCreds.UserName)", $AdminCreds.Password)
  
     Node localhost
     {

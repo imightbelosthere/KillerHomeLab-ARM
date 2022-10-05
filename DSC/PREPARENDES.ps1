@@ -173,9 +173,17 @@
                 $thumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=ndes.$using:ExternalDomainName"}).Thumbprint
                 (Get-ChildItem -Path Cert:\LocalMachine\My\$thumbprint).FriendlyName = "NDES Certificate"
 
-                # Export Service Communication Certificate
+                # Export NDES Certificate
                 $CertFile = Get-ChildItem -Path "C:\WAP-Certificates\ndes.$using:ExternalDomainName.pfx" -ErrorAction 0
                 IF ($CertFile -eq $Null) {Get-ChildItem -Path cert:\LocalMachine\my\$thumbprint | Export-PfxCertificate -FilePath "C:\WAP-Certificates\ndes.$using:ExternalDomainName.pfx" -Password $Password}
+
+                                # Export Root CA
+                $EnterpriseCert = Get-ChildItem -Path "C:\WAP-Certificates\$using:EnterpriseCAName.cer" -ErrorAction 0
+                IF ($EnterpriseCert -eq $null)
+                {
+                    $EnterpriseExport = Get-ChildItem -Path cert:\Localmachine\Root\ | Where-Object {$_.Subject -like "CN=$using:EnterpriseCAName*"}
+                    Export-Certificate -Cert $EnterpriseExport -FilePath "C:\WAP-Certificates\$using:EnterpriseCAName.cer" -Type CER
+                }
 
                 # Enable Certificate Copy
                 $EnableSMB = Get-NetFirewallRule "FPS-SMB-In-TCP" -ErrorAction 0
