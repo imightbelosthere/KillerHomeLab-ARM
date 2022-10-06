@@ -91,6 +91,14 @@ Configuration WAPINTUNE
                     $Enabled = get-itemproperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Client" -Name "Enabled" -ErrorAction 0
                     IF ($Enabled -eq $null) {New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3\Client\" -Name "Enabled" -Value 0}
                 }
+
+                # Create NDES Publishing Rule
+                $ndesthumbprint = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like "CN=ndes.$using:ExternalDomainName"}).Thumbprint
+
+                $NDESWPR = Get-WebApplicationProxyApplication | Where-Object {$_.Name -like "NDES Server"} -ErrorAction 0
+                IF ($NDESWPR -eq $Null){
+                    Add-WebApplicationProxyApplication -BackendServerUrl "https://ndes.$ExternalDomainName/certsrv/mscep/" -ExternalCertificateThumbprint $ndesthumbprint -ExternalUrl "https://ndes.$ExternalDomainName/certsrv/mscep/" -Name "NDES Server" -ExternalPreAuthentication "PassThrough"
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
