@@ -534,7 +534,7 @@
         "SRV12R2OUPath": "[concat('OU=Servers2012R2,OU=Servers,',variables('BaseDN'))]",     
         "PWSEXPolGPOName":  "PowerShell-ExecutionPolicy",
         "PWSEXPolGPOGUID": "EC04DF04-A647-4A3E-9247-51B4CB137F5F",
-        "PWSEXPolGPOSASUrl": "https://elliottf.blob.core.windows.net/github/GPOs/PowerShell-ExecutionPolicy.zip",          
+        "PWSEXPolGPOSASUrl": "[uri(parameters('_artifactsLocation'), concat('Downloads/PowerShell-ExecutionPolicy.zip', parameters('_artifactsLocationSasToken')))]",
         "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]" ,
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
