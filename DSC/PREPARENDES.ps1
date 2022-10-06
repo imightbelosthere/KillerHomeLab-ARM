@@ -101,6 +101,12 @@
             Name = 'Web-WMI'
         }
 
+        WindowsFeature Web-Mgmt-Console
+        {
+            Ensure = 'Present'
+            Name = 'Web-Mgmt-Console'
+        }
+
         Script GrantIISIUSR
         {
             SetScript =

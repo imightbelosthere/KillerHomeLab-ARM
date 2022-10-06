@@ -30,7 +30,7 @@ Configuration WAPINTUNE
         }
                 
         # Install Web Application Proxy
-        WindowsFeature Web-Applica2tion-Proxy
+        WindowsFeature Web-Application-Proxy
         {
             Name = 'Web-Application-Proxy'
             Ensure = 'Present'
