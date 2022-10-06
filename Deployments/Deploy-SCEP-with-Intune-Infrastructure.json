@@ -1997,10 +1997,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-WAP-Server-01",
             "dependsOn": [
-                "DomainJoinNDES-22",
-                "DomainJoinNDES-19",
-				"DomainJoinNDES-16",
-                "DomainJoinNDES-12R2"
+                "Prepare-NDES-Server"
             ],            
             "properties": {
                 "mode": "Incremental",
@@ -2074,7 +2071,8 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Configure-WAP-Server",
             "dependsOn": [
-                "Deploy-WAP-Server-01"
+                "Deploy-WAP-Server-01",
+                "Prepare-NDES-Server"
             ],      
             "properties": {
                 "mode": "Incremental",
