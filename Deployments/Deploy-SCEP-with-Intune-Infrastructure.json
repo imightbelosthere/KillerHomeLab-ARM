@@ -173,6 +173,13 @@
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
             }
         },
+        "CertificateConnectorEXEURL": {
+            "type": "string",
+            "defaultValue": "https://go.microsoft.com/fwlink/?linkid=2168535",
+            "metadata": {
+                "description": "Download URL for Certificate Conenctor Install"
+            }
+        },        
         "NDESServiceAccount": {
             "type": "string",
             "defaultValue": "",
@@ -1964,6 +1971,9 @@
                     "EnterpriseCAServer": {
                         "value": "[variables('ecaname')]"
                     },
+                    "CertificateConnectorEXEURL": {
+                        "value": "[parameters('CertificateConnectorEXEURL')]"
+                    },                    
                     "Account": {
                         "value": "[parameters('NDESServiceAccount')]"
                     },                                                                                               
@@ -2116,7 +2126,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ocspnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/scepnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -2128,7 +2138,10 @@
                     },                                                                                                      
                     "OCSPPrivateIP": {
                         "value": "[variables('ocspIP')]"
-                    }
+                    },
+                    "WAPPrivateIP": {
+                        "value": "[variables('wap1IP')]"
+                    }                    
                 }
             }
         },                                   
@@ -2277,9 +2290,88 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-PublicIP-to-WAPServer",
+            "dependsOn": [
+                "Associate-NSG-with-Subnet1",
+                "Associate-NSG-with-Subnet2"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-pip.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },                    
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wap1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wap1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('WAPOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WAPOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WAP1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },                               
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-PublicDNSZone",
             "dependsOn": [
-                "Add-PublicIP-to-OCSPServer"
+                "Add-PublicIP-to-OCSPServer",
+                "Add-PublicIP-to-WAPServer"
             ],            
             "properties": {
                 "mode": "Incremental",
@@ -2325,6 +2417,35 @@
                     }                                                                                                                                                                                                                                                                                                       
                 }
             }
-        }        
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-PublicDNSZone-SCEP-Records",
+            "dependsOn": [
+                "Create-PublicDNSZone-PKI-Records"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/publicdnszonescep.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicDNSZoneAPIVersion": {
+                        "value": "[variables('PublicDNSZoneAPIVersion')]"
+                    },                            
+                    "ZoneName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },
+                    "WAPRecord": {
+                        "value": "ndes"
+                    },
+                    "WAPPublicIP": {
+                        "value": "[reference('Add-PublicIP-to-WAPServer').outputs.PublicIP.value]"             
+                    }                                                                                                                                                                                                                                                                                                       
+                }
+            }
+        }                
     ]
 }

@@ -9,14 +9,35 @@
         [String]$ExternaldomainName,
         [String]$EnterpriseCAName,
         [String]$EnterpriseCAServer,
+        [String]$CertificateConnectorEXEURL,
         [String]$Account,
         [System.Management.Automation.PSCredential]$Admincreds   
     )
+
+    Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($AdminCreds.UserName)", $AdminCreds.Password)
 
     Node localhost
     {
+        Registry SchUseStrongCrypto
+        {
+            Key                         = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319'
+            ValueName                   = 'SchUseStrongCrypto'
+            ValueType                   = 'Dword'
+            ValueData                   =  '1'
+            Ensure                      = 'Present'
+        }
+
+        Registry SchUseStrongCrypto64
+        {
+            Key                         = 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v4.0.30319'
+            ValueName                   = 'SchUseStrongCrypto'
+            ValueType                   = 'Dword'
+            ValueData                   =  '1'
+            Ensure                      = 'Present'
+        }
+
         File NDESSoftware
         {
             Type = 'Directory'
@@ -211,5 +232,30 @@
             Ensure                      = 'Present'
             DependsOn = '[Script]ConfigureNDES'
         }
+
+        xRemoteFile DownloadIntuneConnector
+        {
+            DestinationPath = "C:\NDES-Software\IntuneCertificateConnector.exe"
+            Uri             = "$CertificateConnectorEXEURL"
+            UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
+            DependsOn = '[File]NDESSoftware', '[Registry]SchUseStrongCrypto', '[Registry]SchUseStrongCrypto64', '[Registry]EncryptionTemplate', '[Registry]SignatureTemplate', '[Registry]GeneralPurposeTemplate'
+        }
+
+        Script InstallIntuneConnector
+        {
+            SetScript =
+            {
+                # Install Intune Connector
+                $IntuneConnector = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\MicrosoftIntune\PFXCertificateConnector" -Name "AccountId" -ErrorAction 0
+                
+                IF ($IntuneConnector -eq $null){
+                Start-Process "C:\NDES-Software\IntuneCertificateConnector.exe" -ArgumentList "/install /quiet" -Wait
+                }
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            DependsOn = '[xRemoteFile]DownloadIntuneConnector'
+        }
+
     }
 }

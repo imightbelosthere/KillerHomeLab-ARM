@@ -42,6 +42,7 @@ This Deployment creates an Azure Public DNS Zone that is capable of providing re
 
 Parameters that support changes
 - TimeZone.  Select an appropriate Time Zone.
+- CertificateConnectorEXEURL.  Download URL for Certificate Conenctor Install.
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)

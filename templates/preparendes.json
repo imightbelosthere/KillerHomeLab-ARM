@@ -55,7 +55,13 @@
             "metadata": {
                 "description": "Enterprise CA Server Name"
             }
-        },                        
+        },
+        "CertificateConnectorEXEURL": {
+            "type": "string",
+            "metadata": {
+                "description": "Download URL for Certificate Conenctor Install"
+            }
+        },                                
         "Account": {
             "type": "string",
             "metadata": {
@@ -113,7 +119,8 @@
                         "InternaldomainName": "[parameters('InternaldomainName')]",        
                         "ExternaldomainName": "[parameters('ExternaldomainName')]",                                
                         "EnterpriseCAName": "[parameters('EnterpriseCAName')]",        
-                        "EnterpriseCAServer": "[parameters('EnterpriseCAServer')]",                                                        
+                        "EnterpriseCAServer": "[parameters('EnterpriseCAServer')]",   
+                        "CertificateConnectorEXEURL": "[parameters('CertificateConnectorEXEURL')]",                                                                            
                         "Account": "[parameters('Account')]",                                                                                                                                                                                
                         "AdminCreds": {
                             "UserName": "[parameters('adminUsername')]",

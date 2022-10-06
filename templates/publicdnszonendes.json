@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PublicDNSZoneAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Public DNS Zone API Version"
+            }
+        },        
+        "ZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS Zone Name"
+              }
+        },
+        "NDESRecord": {
+            "type": "string",
+            "metadata": {
+                "description": "NDES EXternal DNS Record"
+              }
+        },
+        "NDESPublicIP": {
+            "type": "string",
+            "metadata": {
+                "description": "NDES EXternal Public IP"
+              }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/dnszones/a",
+            "name": "[concat(parameters('ZoneName'), '/', parameters('NDESRecord'))]",
+            "apiVersion": "[parameters('PublicDNSZoneAPIVersion')]",
+            "location": "global",
+            "properties": {
+                "TTL": 900,
+                "ARecords": [
+                    {
+                        "ipv4Address": "[parameters('NDESPublicIP')]"
+                    }
+                ]
+            }
+        }
+    ]
+}
