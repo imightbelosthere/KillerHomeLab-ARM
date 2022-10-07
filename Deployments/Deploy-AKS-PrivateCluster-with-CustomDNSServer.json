@@ -1286,10 +1286,7 @@
                     }, 
                     "adminKey": {
                     "value": "[parameters('adminKey')]"
-                    },                                      
-                    "location": {
-                        "value": "[resourceGroup().location]"
-                    }                                                                                                                   
+                    }                                                                                                                
                 }
             }
         }
