@@ -186,7 +186,7 @@
                 Add-Content -Path C:\CertEnroll\Create_CA_Templates.ps1 -Value '$NewSCEPTempl.put("msPKI-Minimal-Key-Size","2048")'
                 Add-Content -Path C:\CertEnroll\Create_CA_Templates.ps1 -Value '$NewSCEPTempl.put("msPKI-Template-Schema-Version","2")'
                 Add-Content -Path C:\CertEnroll\Create_CA_Templates.ps1 -Value '$NewSCEPTempl.put("msPKI-Template-Minor-Revision","2")'
-                Add-Content -Path C:\CertEnroll\Create_CA_Templates.ps1 -Value '$NewSCEPTempl.put("msPKI-Cert-Template-OID","1.3.6.1.4.1.311.21.8.7183632.6046387.16009101.13536898.4471759.164.5869043.12046343")'
+                Add-Content -Path C:\CertEnroll\Create_CA_Templates.ps1 -Value '$NewSCEPTempl.put("msPKI-Cert-Template-OID","1.3.6.1.4.1.311.21.8.1973513.3865696.13125792.7702499.9459796.17.693797.11680466")'
                 Add-Content -Path C:\CertEnroll\Create_CA_Templates.ps1 -Value '$NewSCEPTempl.put("msPKI-Certificate-Application-Policy","1.3.6.1.5.5.7.3.2")'
                 Add-Content -Path C:\CertEnroll\Create_CA_Templates.ps1 -Value '$NewSCEPTempl.SetInfo()'
 
