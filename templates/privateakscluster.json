@@ -77,7 +77,7 @@
         "ManagedID": "[resourceId(resourceGroup().name, 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('ManagedIDName'))]",        
         "DNSZoneID": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', parameters('DNSZoneName'))]",
         "publicIPAddressName": "[concat(parameters('AKSClusterName'),'-pip')]",
-        "AKSNoesResourceGroup": "[concat(resourceGroup().name,'-Nodes')]"
+        "AKSNodesResourceGroup": "[concat(resourceGroup().name,'-Nodes')]"
     },
     "resources": [
         {
@@ -163,7 +163,7 @@
                 "servicePrincipalProfile": {
                     "clientId": "msi"
                 },
-                "nodeResourceGroup": "[variables('AKSNoesResourceGroup')]",
+                "nodeResourceGroup": "[variables('AKSNodesResourceGroup')]",
                 "enableRBAC": true,
                 "networkProfile": {
                     "networkPlugin": "kubenet",
