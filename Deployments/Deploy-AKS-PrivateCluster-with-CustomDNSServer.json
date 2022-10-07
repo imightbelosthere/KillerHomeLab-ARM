@@ -1171,7 +1171,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-UserAssigned-ManagedID",
             "dependsOn": [
-                "Create-ResourceGroup-01"
+                "Deploy-Spoke-VirtualNetwork"
             ],                                 
             "properties": {
                 "mode": "Incremental",
