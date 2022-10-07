@@ -997,6 +997,12 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
                     "computerName": {
                         "value": "[variables('dnsname')]"
                     },
@@ -1236,6 +1242,18 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "ManagedClusterAPIVersion": {
+                        "value": "[variables('ManagedClusterAPIVersion')]"
+                    },                    
+                    "ManagedClusterPoolAPIVersion": {
+                        "value": "[variables('ManagedClusterPoolAPIVersion')]"
+                    },                    
+                    "KubernetesVersion": {
+                        "value": "[parameters('KubernetesVersion')]"
+                    },                    
+                    "OrchestratorVersion": {
+                        "value": "[parameters('OrchestratorVersion')]"
+                    },                                        
                     "AKSClusterName": {
                         "value": "[variables('AKSClusterName')]"
                     },
