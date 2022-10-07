@@ -1247,7 +1247,10 @@
                     },                    
                     "ManagedClusterPoolAPIVersion": {
                         "value": "[variables('ManagedClusterPoolAPIVersion')]"
-                    },                    
+                    },  
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },                                       
                     "KubernetesVersion": {
                         "value": "[parameters('KubernetesVersion')]"
                     },                    
