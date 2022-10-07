@@ -162,7 +162,7 @@
                 "servicePrincipalProfile": {
                     "clientId": "msi"
                 },
-                "nodeResourceGroup": "[concat('MC_Private-AKS-Lab01_', parameters('AKSClusterName'), resourceGroup().location)]",
+                "nodeResourceGroup": "[resourceGroup().name]",
                 "enableRBAC": true,
                 "networkProfile": {
                     "networkPlugin": "kubenet",
