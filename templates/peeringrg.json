@@ -19,7 +19,13 @@
             "metadata": {
                 "description": "Set the remote VNet name"
             }
-        },     
+        },
+        "TargetVNetRG": {
+            "type": "string",
+            "metadata": {
+                "description": "Set the remote VNet Resource Group"
+            }
+        },      
         "allowVirtualNetworkAccess": {
             "type": "string",
             "metadata": {
@@ -46,6 +52,7 @@
         }
     },
     "variables": {
+      "remoteVNet": "[resourceId(parameters('TargetVNetRG'), 'Microsoft.Network/virtualNetworks', parameters('TargetVNetName'))]",
       "peeringName": "[concat(parameters('SourceVNetName'), '/', parameters('SourceVNetName'), '-to-', parameters('TargetVNetName'))]"
     },
     "resources": [
@@ -60,7 +67,7 @@
           "allowGatewayTransit": "[parameters('allowGatewayTransit')]",
           "useRemoteGateways": "[parameters('useRemoteGateways')]",
           "remoteVirtualNetwork": {
-            "id": "[parameters('TargetVNetName')]"
+            "id": "[variables('remoteVNet')]"
           }
         }
       }

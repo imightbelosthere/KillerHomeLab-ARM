@@ -28,7 +28,18 @@ Configuration WAPINTUNE
             GetScript =  { @{} }
             TestScript = { $false}
         }
-                
+
+        File CopyServiceCommunicationCertFromNDES
+        {
+            Ensure = "Present"
+            Type = "Directory"
+            Recurse = $true
+            SourcePath = "\\$NDESServerIP\c$\WAP-Certificates"
+            DestinationPath = "C:\WAP-Certificates\"
+            Credential = $Admincreds
+            DependsOn = '[Script]AllowRemoteCopy'
+        }
+
         # Install Web Application Proxy
         WindowsFeature Web-Application-Proxy
         {
@@ -40,17 +51,6 @@ Configuration WAPINTUNE
         { 
             Ensure = 'Present'
             Name = 'RSAT-RemoteAccess'
-        }
-
-        File CopyServiceCommunicationCertFromNDES
-        {
-            Ensure = "Present"
-            Type = "Directory"
-            Recurse = $true
-            SourcePath = "\\$NDESServerIP\c$\WAP-Certificates"
-            DestinationPath = "C:\WAP-Certificates\"
-            Credential = $Admincreds
-            DependsOn = '[Script]AllowRemoteCopy'
         }
 
         Script ConfigureWAPCertificates

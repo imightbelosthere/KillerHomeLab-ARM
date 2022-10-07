@@ -5,7 +5,7 @@
         "ExtensionsAPIVersion": {
             "type": "string",
             "metadata": {
-                "description": "Virtual Network API Version"
+                "description": "Extensions API Version"
             }
         },
         "ExtensionsTypeHandlerVersion": {

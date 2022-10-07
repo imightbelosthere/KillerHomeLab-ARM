@@ -1,0 +1,1276 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "TimeZone": {
+            "type": "string",
+            "defaultValue": "Eastern Standard Time",
+            "allowedValues": [
+                "Afghanistan Standard Time",
+                "Alaskan Standard Time",
+                "Aleutian Standard Time",
+                "Altai Standard Time",
+                "Arab Standard Time",
+                "Arabian Standard Time",
+                "Arabic Standard Time",
+                "Argentina Standard Time",
+                "Astrakhan Standard Time",
+                "Atlantic Standard Time",
+                "AUS Central Standard Time",
+                "Aus Central W. Standard Time",
+                "AUS Eastern Standard Time",
+                "Azerbaijan Standard Time",
+                "Azores Standard Time",
+                "Bahia Standard Time",
+                "Bangladesh Standard Time",
+                "Belarus Standard Time",
+                "Bougainville Standard Time",
+                "Canada Central Standard Time",
+                "Cape Verde Standard Time",
+                "Caucasus Standard Time",
+                "Cen. Australia Standard Time",
+                "Central America Standard Time",
+                "Central Asia Standard Time",
+                "Central Brazilian Standard Time",
+                "Central Europe Standard Time",
+                "Central European Standard Time",
+                "Central Pacific Standard Time",
+                "Central Standard Time (Mexico)",
+                "Central Standard Time",
+                "Chatham Islands Standard Time",
+                "China Standard Time",
+                "Cuba Standard Time",
+                "Dateline Standard Time",
+                "E. Africa Standard Time",
+                "E. Australia Standard Time",
+                "E. Europe Standard Time",
+                "E. South America Standard Time",
+                "Easter Island Standard Time",
+                "Eastern Standard Time (Mexico)",
+                "Eastern Standard Time",
+                "Egypt Standard Time",
+                "Ekaterinburg Standard Time",
+                "Fiji Standard Time",
+                "FLE Standard Time",
+                "Georgian Standard Time",
+                "GMT Standard Time",
+                "Greenland Standard Time",
+                "Greenwich Standard Time",
+                "GTB Standard Time",
+                "Haiti Standard Time",
+                "Hawaiian Standard Time",
+                "India Standard Time",
+                "Iran Standard Time",
+                "Israel Standard Time",
+                "Jordan Standard Time",
+                "Kaliningrad Standard Time",
+                "Korea Standard Time",
+                "Libya Standard Time",
+                "Line Islands Standard Time",
+                "Lord Howe Standard Time",
+                "Magadan Standard Time",
+                "Magallanes Standard Time",
+                "Marquesas Standard Time",
+                "Mauritius Standard Time",
+                "Middle East Standard Time",
+                "Montevideo Standard Time",
+                "Morocco Standard Time",
+                "Mountain Standard Time (Mexico)",
+                "Mountain Standard Time",
+                "Myanmar Standard Time",
+                "N. Central Asia Standard Time",
+                "Namibia Standard Time",
+                "Nepal Standard Time",
+                "New Zealand Standard Time",
+                "Newfoundland Standard Time",
+                "Norfolk Standard Time",
+                "North Asia East Standard Time",
+                "North Asia Standard Time",
+                "North Korea Standard Time",
+                "Omsk Standard Time",
+                "Pacific SA Standard Time",
+                "Pacific Standard Time (Mexico)",
+                "Pacific Standard Time",
+                "Pakistan Standard Time",
+                "Paraguay Standard Time",
+                "Qyzylorda Standard Time",
+                "Romance Standard Time",
+                "Russia Time Zone 10",
+                "Russia Time Zone 11",
+                "Russia Time Zone 3",
+                "Russian Standard Time",
+                "SA Eastern Standard Time",
+                "SA Pacific Standard Time",
+                "SA Western Standard Time",
+                "Saint Pierre Standard Time",
+                "Sakhalin Standard Time",
+                "Samoa Standard Time",
+                "Sao Tome Standard Time",
+                "Saratov Standard Time",
+                "SE Asia Standard Time",
+                "Singapore Standard Time",
+                "South Africa Standard Time",
+                "Sri Lanka Standard Time",
+                "Sudan Standard Time",
+                "Syria Standard Time",
+                "Taipei Standard Time",
+                "Tasmania Standard Time",
+                "Tocantins Standard Time",
+                "Tokyo Standard Time",
+                "Tomsk Standard Time",
+                "Tonga Standard Time",
+                "Transbaikal Standard Time",
+                "Turkey Standard Time",
+                "Turks And Caicos Standard Time",
+                "Ulaanbaatar Standard Time",
+                "US Eastern Standard Time",
+                "US Mountain Standard Time",
+                "UTC",
+                "UTC+12",
+                "UTC+13",
+                "UTC-02",
+                "UTC-08",
+                "UTC-09",
+                "UTC-11",
+                "Venezuela Standard Time",
+                "Vladivostok Standard Time",
+                "Volgograd Standard Time",
+                "W. Australia Standard Time",
+                "W. Central Africa Standard Time",
+                "W. Europe Standard Time",
+                "W. Mongolia Standard Time",
+                "West Asia Standard Time",
+                "West Bank Standard Time",
+                "West Pacific Standard Time",
+                "Yakutsk Standard Time"
+            ],
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },
+        "AutoShutdownEnabled": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "Enabled Auto Shutdown.  !!!If Enabled, AutoShutdownEmail MUST be added!!!!"
+            }
+        },
+        "AutoShutdownTime": {
+            "type": "string",
+            "defaultValue": "2000",
+            "metadata": {
+                "description": "24-Hour Clock Time for Auto-Shutdown Example: 1900 = 7PM"
+            }
+        },
+        "AutoShutdownEmail": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Auto-Shutdown notification Email Example:  user@domain.com"
+            }
+        },
+        "KubernetesVersion": {
+            "type": "string",
+            "defaultValue": "1.25.0",
+            "metadata": {
+                "description": "Kubernetes Version"
+            }
+        },        
+        "OrchestratorVersion": {
+            "type": "string",
+            "defaultValue": "1.20.5",
+            "metadata": {
+                "description": "Kubernetes Version"
+            }
+        },                
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        },
+        "adminKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The SSH Public Key for the Administrator account on Linux VM"
+            }
+        },          
+        "AzureUserObjectID": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Deployment Account Object ID"
+            }
+        },
+        "WindowsServerLicenseType": {
+            "type": "string",
+            "defaultValue": "None",
+            "allowedValues": [
+                "None",
+                "Windows_Server"
+            ],
+            "metadata": {
+                "description": "Windows Server OS License Type"
+            }
+        },
+        "WindowsClientLicenseType": {
+            "type": "string",
+            "defaultValue": "None",
+            "allowedValues": [
+                "None",
+                "Windows_Client"
+            ],
+            "metadata": {
+                "description": "Windows Client OS License Type"
+            }
+        },
+        "NamingConvention": {
+            "type": "string",
+            "defaultValue": "khl",
+            "maxLength": 4,
+            "metadata": {
+                "description": "VNet1 Name"
+            }
+        },
+        "SubDNSDomain": {
+            "type": "string",
+            "defaultValue": "sub1.",
+            "metadata": {
+                "description": "Sub DNS Domain Name Example:  sub1. must include a DOT AT END"
+            }
+        },
+        "SubDNSBaseDN": {
+            "type": "string",
+            "defaultValue": "DC=sub1,",
+            "metadata": {
+                "description": "Sub DNS Domain Name Example:  DC=sub2,DC=sub1, must include COMMA AT END"
+            }
+        },
+        "NetBiosDomain": {
+            "type": "string",
+            "defaultValue": "sub1",
+            "maxLength": 15,
+            "metadata": {
+                "description": "NetBios Domain Name should the same name as the SubDNSDomain parameter minus the COMMA AT END if the SubDNSDomain and SubDNSBaseDN parameters are used to specify a Sub DNS Naming Structure, but it should be unique if these parameters aren't used."
+            }
+        },
+        "InternalDomain": {
+            "type": "string",
+            "defaultValue": "killerhomelab",
+            "metadata": {
+                "description": "NetBios Domain Name"
+            }
+        },
+        "InternalTLD": {
+            "type": "string",
+            "defaultValue": "com",
+            "allowedValues": [
+                "com",
+                "net",
+                "org",
+                "edu",
+                "gov",
+                "mil",
+                "us",
+                "tk",
+                "ml",
+                "local"
+            ],
+            "metadata": {
+                "description": "Top-Level Domain Name"
+            }
+        },
+        "vnet0ID": {
+            "type": "string",
+            "defaultValue": "10.1",
+            "metadata": {
+                "description": "OnPremise VNet Prefix"
+            }
+        },
+        "vnet1ID": {
+            "type": "string",
+            "defaultValue": "10.20",
+            "metadata": {
+                "description": "Spoke VNet Prefix"
+            }
+        },
+        "vnet2ID": {
+            "type": "string",
+            "defaultValue": "10.21",
+            "metadata": {
+                "description": "Spoke VNet Prefix"
+            }
+        },  
+        "PODID": {
+            "type": "string",
+            "defaultValue": "10.30",
+            "metadata": {
+                "description": "POD Network ID"
+            }
+        },              
+        "ServiceID": {
+            "type": "string",
+            "defaultValue": "10.31",
+            "metadata": {
+                "description": "Service Network ID"
+            }
+        },
+        "ReverseLookup0": {
+            "type": "string",
+            "defaultValue": "1.10",
+            "metadata": {
+                "description": "DC Reverse Lookup Zone1 Prefix"
+            }
+        },    
+        "ReverseLookup1": {
+            "type": "string",
+            "defaultValue": "21.10",
+            "metadata": {
+                "description": "DNS Reverse Lookup Zone1 Prefix"
+            }
+        },
+        "DNSOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+            "2022-Datacenter",
+            "2019-Datacenter",
+            "2016-Datacenter",
+            "2012-R2-Datacenter"
+            ],
+            "metadata": {
+                "description": "DNS Proxy OS Sku"
+            }
+        },
+        "DNSOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "DNS VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+            }
+        },                    
+        "DC1OSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+            "2022-Datacenter",
+            "2019-Datacenter",
+            "2016-Datacenter",
+            "2012-R2-Datacenter"
+            ],
+            "metadata": {
+                "description": "Domain Controller1 OS Sku"
+            }
+        },
+        "DC1OSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "DC1 VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+            }
+        },                        
+        "WKOSSku": {
+            "type": "string",
+            "defaultValue": "Windows-11",
+            "allowedValues": [
+                "Windows-11",
+                "Windows-10"
+            ],
+            "metadata": {
+                "description": "Workstation1 OS Sku"
+            }
+        },    
+        "WKOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "WK OS Version Number (Example:  Windows-11=22000.675.220507, Windows-10=19044.1706.220505)"
+            }
+        },                                        
+        "DNSVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "DNS PRoxy VMSize"
+            }
+        },
+        "DC1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Domain Controller1 VMSize"
+            }
+        },        
+        "WKVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Workstation VMSize"
+            }
+        },                                      
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            },
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/main/"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
+            },
+            "defaultValue": ""
+        }
+    },
+    "variables": {
+        "DeploymentName": "[deployment().name]",
+        "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
+        "KeyVaultName": "[concat('ADSS-', variables('Identifier'))]",
+        "SecretName": "[concat(resourceGroup().Name,'-Password')]",
+
+        "vnet0Name": "[concat(parameters('NamingConvention'),'-OnPrem-VNet1')]",
+        "vnet0Prefix": "[concat(parameters('vnet0ID'),'.0.0/16')]",
+        "vnet0subnet1Name": "[concat(parameters('NamingConvention'),'-OnPrem-VNet1-Subnet1')]",
+        "vnet0subnet1Prefix": "[concat(parameters('vnet0ID'),'.1.0/24')]",
+        "vnet0subnet2Name": "[concat(parameters('NamingConvention'),'-OnPrem-VNet1-Subnet2')]",
+        "vnet0subnet2Prefix": "[concat(parameters('vnet0ID'),'.2.0/24')]",
+        "vnet0GatewaysubnetPrefix": "[concat(parameters('vnet0ID'),'.0.0/24')]",
+        "vnet0BastionsubnetPrefix": "[concat(parameters('vnet0ID'),'.253.0/24')]",
+        "vnet0FirewallsubnetPrefix": "[concat(parameters('vnet0ID'),'.254.0/24')]",
+
+        "vnet1Name": "[concat(parameters('NamingConvention'),'-Spoke-VNet1')]",
+        "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
+        "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-Spoke-VNet1-Subnet1')]",
+        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
+        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-Spoke-VNet1-Subnet2')]",
+        "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",
+        "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
+        "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
+        "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
+
+        "vnet2Name": "[concat(parameters('NamingConvention'),'-Hub-VNet1')]",
+        "vnet2Prefix": "[concat(parameters('vnet2ID'),'.0.0/16')]",
+        "vnet2subnet1Name": "[concat(parameters('NamingConvention'),'-Hub-VNet1-Subnet1')]",
+        "vnet2subnet1Prefix": "[concat(parameters('vnet2ID'),'.1.0/24')]",
+        "vnet2subnet2Name": "[concat(parameters('NamingConvention'),'-Hub-VNet1-Subnet2')]",
+        "vnet2subnet2Prefix": "[concat(parameters('vnet2ID'),'.2.0/24')]",
+        "vnet2GatewaysubnetPrefix": "[concat(parameters('vnet2ID'),'.0.0/24')]",
+        "vnet2BastionsubnetPrefix": "[concat(parameters('vnet2ID'),'.253.0/24')]",
+        "vnet2FirewallsubnetPrefix": "[concat(parameters('vnet2ID'),'.254.0/24')]",        
+        "DockerBridgeCIDR": "17.17.0.1/16",              
+        "podCIDR": "[concat(parameters('podID'),'.0.0/16')]",                          
+        "serviceCIDR": "[concat(parameters('serviceID'),'.0.0/16')]",                                                
+        "AKSDnsserviceIP": "[concat(parameters('serviceID'),'.1.10')]",            
+        "dnslastoctet": "101",       
+        "dnsname": "[concat(parameters('NamingConvention'),'-dns-proxy')]",   
+        "dnsIP": "[concat(parameters('vnet2ID'),'.1.',variables('dnslastoctet'))]",
+        "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",           
+        "dc1IP": "[concat(parameters('vnet0ID'),'.1.',variables('dc1lastoctet'))]",        
+        "dc1lastoctet": "101",        
+        "wk0lastoctet": "201",            
+        "wk0name": "[concat(parameters('NamingConvention'),'-wk-op')]",           
+        "wk0IP": "[concat(parameters('vnet0ID'),'.2.',variables('wk0lastoctet'))]",        
+        "wk1lastoctet": "201",            
+        "wk1name": "[concat(parameters('NamingConvention'),'-wk-spk')]",           
+        "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",            
+        "DCDataDisk1Name": "NTDS",            
+        "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
+        "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
+        "WIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('BaseDN'))]",
+        "WIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('BaseDN'))]",
+        "ReverseLookup0": "[concat('1.',parameters('ReverseLookup0'))]", 
+        "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",         
+        "PrivateDNSZoneName": "[concat('privatelink.',resourceGroup().location,'.cx.aks.containerservice.azure.us')]",
+        "AKSClusterName": "[concat(parameters('NamingConvention'),'-AKS-Private-Cluster')]",
+        "ManagedIDName": "[concat(parameters('NamingConvention'),'-mi-', uniqueString(resourceGroup().id))]",
+        "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "BastionHostAPIVersion": "2021-08-01",
+        "DeploymentAPIVersion": "2021-04-01",
+        "ExtensionsAPIVersion": "2022-03-01",
+        "KeyVaultAPIVersion": "2021-11-01-preview",
+        "KeyVaultSecretAPIVersion": "2021-11-01-preview",
+        "ManagedClusterAPIVersion": "2022-07-02-preview",
+        "ManagedClusterPoolAPIVersion": "2020-11-01",
+        "NetworkInterfacesAPIVersion": "2021-08-01",
+        "PrivateDNSZoneAPIVersion": "2020-06-01",
+        "PublicIPAddressesAPIVersion": "2021-08-01",
+        "RoleAssignmentAPIVersion": "2022-04-01",
+        "SchedulesAPIVersion": "2018-09-15",
+        "UserAssignedMIAPIVersion": "2022-01-31-preview",        
+        "VirtualMachinesAPIVersion": "2022-03-01",
+        "VirtualNetworkAPIVersion": "2020-11-01",
+        "VirtualNetworkPeeringAPIVersion": "2022-01-01",        
+        "ExtensionsTypeHandlerVersion": "2.83",
+        "DJExtensionsTypeHandlerVersion": "1.3"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Password-KeyVault-with-Secret",
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultwithsecret.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },
+                    "KeyVaultName": {
+                        "value": "[variables('KeyVaultName')]"
+                    },
+                    "SecretName": {
+                        "value": "[variables('SecretName')]"
+                    },
+                    "SecretValue": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-OnPremise-VirtualNetwork",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet0Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet0Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet0subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet0subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet0subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet0subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet0GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet0BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet0FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Spoke-VirtualNetwork",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet1BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Hub-VirtualNetwork",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet2Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet2subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet2subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet2subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet2subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet2GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet2BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet2FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BastionHost-01",
+            "dependsOn": [
+                "Deploy-OnPremise-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/bastionhost.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "BastionHostAPIVersion": {
+                        "value": "[variables('BastionHostAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "publicIPAddressName": {
+                        "value": "[concat(variables('vnet1Name'),'-Bastion-pip')]"
+                    },
+                    "AllocationMethod": {
+                        "value": "Static"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "AzureBastionSubnet"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-OnPremVNet-for-HubVNet",
+            "dependsOn": [
+                "Deploy-OnPremise-VirtualNetwork",
+                "Deploy-Hub-VirtualNetwork"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                    
+                    "SourceVNetName": {
+                        "value": "[variables('vnet0Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },                                         
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                    
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-HubVNet-for-OnPremVNet",
+            "dependsOn": [
+                "Deploy-OnPremise-VirtualNetwork",
+                "Deploy-Hub-VirtualNetwork",
+                "Deploying-Peering-On-OnPremVNet-for-HubVNet"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                    
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet0Name')]"
+                    },                                         
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                            
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-HubVNet-for-SpokeVNet",
+            "dependsOn": [
+                "Deploy-Hub-VirtualNetwork",
+                "Deploy-Spoke-VirtualNetwork",
+                "Deploying-Peering-On-HubVNet-for-OnPremVNet"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                    
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },                                         
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },    
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-SpokeVNet-for-HubVNet",
+            "dependsOn": [
+                "Deploy-Hub-VirtualNetwork",
+                "Deploy-Spoke-VirtualNetwork",
+                "Deploying-Peering-On-HubVNet-for-SpokeVNet"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peering.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                    
+                    "SourceVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },                                         
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-PrivateDNSZone",
+            "dependsOn": [
+                "Deploy-OnPremise-VirtualNetwork",
+                "Deploy-Spoke-VirtualNetwork",
+                "Deploy-Hub-VirtualNetwork",
+                "Deploying-Peering-On-OnPremVNet-for-HubVNet",
+                "Deploying-Peering-On-HubVNet-for-OnPremVNet",                
+                "Deploying-Peering-On-HubVNet-for-SpokeVNet",   
+                "Deploying-Peering-On-SpokeVNet-for-HubVNet"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/PrivateDNSZone.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    },
+                    "vnet1Name": {
+                        "value": "[variables('VNet1Name')]"
+                    },    
+                    "vnet2Name": {
+                        "value": "[variables('VNet2Name')]"
+                    }                                                                                                                                                                              
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-DNSProxy-Server",
+            "dependsOn": [
+                "Deploy-Hub-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dnsname')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('dnsIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('DNSOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('DNSOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('DNSVMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet2subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-DNSProxy-Server",
+            "dependsOn": [
+                "Deploy-DNSProxy-Server"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configdnsproxy.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "computerName": {
+                        "value": "[variables('dnsname')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('dnsIP')]"
+                    },                                       
+                    "AKSDNSZone": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    },  
+                    "InternalDomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    }, 
+                    "DC1IP": {
+                        "value": "[variables('dc1ip')]"
+                    },                                            
+                    "DNSProxyLocalDomain": {
+                        "value": "dns.local"
+                    },              
+                    "ReverseLookup": {
+                        "value": "[variables('ReverseLookup1')]"
+                    },                                                                                                            
+                    "dnslastoctet": {
+                        "value": "[variables('dnslastoctet')]"
+                    },                                                                                                                                       
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-VNet1-DNS",
+            "dependsOn": [
+                "Configure-DNSProxy-Server"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetdns.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    },                    
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet1BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    },
+                    "DNSServerIP": {
+                        "value": [
+                            "[variables('dnsIP')]"
+                        ]
+                    }
+                }
+            }
+        },                                                         
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-VNet2-DNS",
+            "dependsOn": [
+                "Configure-DNSProxy-Server"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetdns.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet2Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet2subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet2subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet2subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet2subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet2GatewaysubnetPrefix')]"
+                    },                    
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet2BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet2FirewallsubnetPrefix')]"
+                    },
+                    "DNSServerIP": {
+                        "value": [
+                            "[variables('dnsIP')]"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-DNSProxy-Server",
+            "dependsOn": [
+                "Update-VNet2-DNS"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dnsname')]"
+                    },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-UserAssigned-ManagedID",
+            "dependsOn": [
+                "Create-ResourceGroup-01"
+            ],                                 
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/userassignedmanagedidentity.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "UserAssignedMIAPIVersion": {
+                        "value": "[variables('UserAssignedMIAPIVersion')]"
+                    },
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Assign-UserAssignedMI-for-RG",
+            "dependsOn": [
+                "Create-UserAssigned-ManagedID"
+            ],        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/roleassignment.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RoleAssignmentAPIVersion": {
+                        "value": "[variables('RoleAssignmentAPIVersion')]"
+                    },                    
+                    "PrincipalID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('Contributor')]"
+                    },
+                    "roleAssignmentHash": {
+                        "value": "AKSCluster1"
+                    }                                        
+                }
+            }
+        },                                   
+
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AKSCluster",     
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-RG"
+            ],  
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateakscluster.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AKSClusterName": {
+                        "value": "[variables('AKSClusterName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },            
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },  
+                    "podCidr": {
+                        "value": "[variables('podCIDR')]"
+                    },
+                    "serviceCidr": {
+                        "value": "[variables('serviceCIDR')]"
+                    },
+                    "dnsServiceIP": {
+                        "value": "[variables('AKSDNSserviceIP')]"
+                    },
+                    "dockerBridgeCidr": {
+                        "value": "[variables('DockerBridgeCIDR')]"
+                    },                                    
+                    "DNSZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    },     
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    },   
+                    "adminUsername": {
+                    "value": "[parameters('adminUsername')]"
+                    }, 
+                    "adminKey": {
+                    "value": "[parameters('adminKey')]"
+                    },                                      
+                    "location": {
+                        "value": "[resourceGroup().location]"
+                    }                                                                                                                   
+                }
+            }
+        }
+    ]
+}

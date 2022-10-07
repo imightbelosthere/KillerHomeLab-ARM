@@ -1,0 +1,256 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ManagedClusterAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Managed Cluster API Version"
+            }
+        },
+        "ManagedClusterPoolAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Managed Cluster Pool API Version"
+            }
+        },        
+        "PublicIPAddressesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "PublicIPAddresses API Version"
+            }
+        },    
+        "KubernetesVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Kubernetes Version"
+            }
+        },            
+        "OrchestratorVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Orchestrator Version"
+            }
+        },                    
+        "AKSClusterName": {
+            "type": "String"
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "podCidr": {
+            "type": "string"
+        },
+        "serviceCidr": {
+            "type": "string"
+        },
+        "dnsServiceIP": {
+            "type": "string"
+        },
+        "dockerBridgeCidr": {
+            "type": "string"
+        },                           
+        "DNSZoneName": {
+            "type": "String"
+        },
+        "ManagedIDName": {
+            "type": "string"
+        },  
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminKey": {
+            "type": "securestring",
+            "metadata": {
+            "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        }      
+    },
+    "variables": {
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]",
+        "ManagedID": "[resourceId(resourceGroup().name, 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('ManagedIDName'))]",        
+        "DNSZoneID": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', parameters('DNSZoneName'))]",
+        "publicIPAddressName": "[concat(parameters('AKSClusterName'),'-pip')]"
+    },
+    "resources": [
+        {
+            "name": "[variables('publicIPAddressName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('PublicIPAddressesAPIVersion')]",
+            "location":"[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters",
+            "apiVersion": "[parameters('ManagedClusterAPIVersion')]",
+            "name": "[parameters('AKSClusterName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+            ],              
+            "sku": {
+                "name": "Basic",
+                "tier": "Free"
+            },
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[variables('ManagedID')]": {}
+                }
+            },
+            "properties": {
+                "kubernetesVersion": "[parameters('KubernetesVersion')]",
+                "fqdnSubdomain": "aks",
+                "agentPoolProfiles": [
+                    {
+                        "name": "nodepool1",
+                        "count": 1,
+                        "vmSize": "Standard_DS2_v2",
+                        "osDiskSizeGB": 128,
+                        "osDiskType": "Managed",
+                        "kubeletDiskType": "OS",
+                        "vnetSubnetID": "[variables('subnetId')]",
+                        "maxPods": 30,
+                        "type": "VirtualMachineScaleSets",
+                        "orchestratorVersion": "[parameters('OrchestratorVersion')]",
+                        "enableNodePublicIP": false,
+                        "nodeLabels": {},
+                        "mode": "System",
+                        "enableEncryptionAtHost": false,
+                        "osType": "Linux",
+                        "osSKU": "Ubuntu",
+                        "enableFIPS": false
+                    },
+                    {
+                        "name": "nodepool2",
+                        "count": 1,
+                        "vmSize": "Standard_DS2_v2",
+                        "osDiskSizeGB": 128,
+                        "osDiskType": "Managed",
+                        "kubeletDiskType": "OS",
+                        "vnetSubnetID": "[variables('subnetId')]",
+                        "maxPods": 30,
+                        "type": "VirtualMachineScaleSets",
+                        "orchestratorVersion": "[parameters('OrchestratorVersion')]",
+                        "enableNodePublicIP": false,
+                        "nodeLabels": {},
+                        "mode": "User",
+                        "enableEncryptionAtHost": false,
+                        "osType": "Linux",
+                        "osSKU": "Ubuntu",
+                        "enableFIPS": false
+                    }                    
+                ],
+                "linuxProfile": {
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[parameters('adminKey')]"
+                            }
+                        ]
+                    }
+                },
+                "servicePrincipalProfile": {
+                    "clientId": "msi"
+                },
+                "nodeResourceGroup": "[concat('MC_Private-AKS-Lab01_', parameters('AKSClusterName'), resourceGroup().location)]",
+                "enableRBAC": true,
+                "networkProfile": {
+                    "networkPlugin": "kubenet",
+                    "loadBalancerSku": "Standard",
+                    "loadBalancerProfile": {
+                        "managedOutboundIPs": {
+                            "count": 1
+                        },
+                        "effectiveOutboundIPs": [
+                            {
+                                "id": "[variables('publicIPAddressName')]"
+                            }
+                        ]
+                    },
+                    "podCidr": "[parameters('podCidr')]",                    
+                    "serviceCidr": "[parameters('serviceCidr')]",
+                    "dnsServiceIP": "[parameters('dnsServiceIP')]",
+                    "dockerBridgeCidr": "[parameters('dockerBridgeCidr')]",
+                    "outboundType": "loadBalancer"
+                },
+                "privateLinkResources": [
+                    {
+                        "id": "[concat(resourceId('Microsoft.ContainerService/managedClusters', parameters('AKSClusterName')), '/privateLinkResources/management')]",
+                        "name": "management",
+                        "type": "Microsoft.ContainerService/managedClusters/privateLinkResources",
+                        "groupId": "management",
+                        "requiredMembers": [
+                            "management"
+                        ]
+                    }
+                ],                
+                "apiServerAccessProfile": {
+                    "enablePrivateCluster": true,
+                    "privateDNSZone": "[variables('DNSZoneID')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters/agentPools",
+            "apiVersion": "[parameters('ManagedClusterPoolAPIVersion')]",
+            "name": "[concat(parameters('AKSClusterName'), '/nodepool1')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('AKSClusterName'))]"
+            ],
+            "properties": {
+                "count": 3,
+                "vmSize": "Standard_DS2_v2",
+                "osDiskSizeGB": 128,
+                "osDiskType": "Managed",
+                "kubeletDiskType": "OS",
+                "vnetSubnetID": "[variables('subnetId')]",
+                "maxPods": 30,
+                "type": "VirtualMachineScaleSets",
+                "orchestratorVersion": "[parameters('OrchestratorVersion')]",
+                "enableNodePublicIP": false,
+                "nodeLabels": {},
+                "mode": "System",
+                "enableEncryptionAtHost": false,
+                "osType": "Linux",
+                "osSKU": "Ubuntu",
+                "enableFIPS": false
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters/agentPools",
+            "apiVersion": "[parameters('ManagedClusterPoolAPIVersion')]",
+            "name": "[concat(parameters('AKSClusterName'), '/nodepool2')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('AKSClusterName'))]"
+            ],
+            "properties": {
+                "count": 3,
+                "vmSize": "Standard_DS2_v2",
+                "osDiskSizeGB": 128,
+                "osDiskType": "Managed",
+                "kubeletDiskType": "OS",
+                "vnetSubnetID": "[variables('subnetId')]",
+                "maxPods": 30,
+                "type": "VirtualMachineScaleSets",
+                "orchestratorVersion": "[parameters('OrchestratorVersion')]",
+                "enableNodePublicIP": false,
+                "nodeLabels": {},
+                "mode": "User",
+                "enableEncryptionAtHost": false,
+                "osType": "Linux",
+                "osSKU": "Ubuntu",
+                "enableFIPS": false
+            }
+        }        
+    ]
+}

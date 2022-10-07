@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PrivateDNSZoneAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Private DNS Zone API Version"
+            }
+        },        
+        "ZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS Zone Name"
+              }
+        },        
+        "vnet1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing DMZ VNET1 Name"
+            }            
+        },     
+        "vnet2Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing DMZ VNET2 Name"
+            }            
+        }             
+    },
+    "resources": [
+        {
+            "name": "[parameters('ZoneName')]",
+            "type": "Microsoft.Network/privateDnsZones",
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global",
+            "tags": {},
+            "properties": {},
+            "resources": []
+        },
+        {
+            "name": "[concat(parameters('ZoneName'),'/',parameters('vnet1Name'))]",
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global",
+            "dependsOn": [
+                "[concat('Microsoft.Network/privateDnsZones/', parameters('ZoneName'))]"
+            ],            
+            "properties": {
+              "virtualNetwork": {
+                    "id":  "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNet1Name'))]"
+                },
+                "registrationEnabled": true
+                }
+        },
+        {
+            "name": "[concat(parameters('ZoneName'),'/',parameters('vnet2Name'))]",
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global",
+            "dependsOn": [
+                "[concat('Microsoft.Network/privateDnsZones/', parameters('ZoneName'))]"
+            ],                       
+            "properties": {
+                "virtualNetwork": {
+                    "id":  "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNet2Name'))]"
+                },
+                "registrationEnabled": true
+            }
+        }                                    
+    ]
+}
