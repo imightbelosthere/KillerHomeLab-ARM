@@ -46,6 +46,7 @@
         }
     },
     "variables": {
+      "remoteVNet": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('TargetVNetName'))]",        
       "peeringName": "[concat(parameters('SourceVNetName'), '/', parameters('SourceVNetName'), '-to-', parameters('TargetVNetName'))]"
     },
     "resources": [
@@ -60,7 +61,7 @@
           "allowGatewayTransit": "[parameters('allowGatewayTransit')]",
           "useRemoteGateways": "[parameters('useRemoteGateways')]",
           "remoteVirtualNetwork": {
-            "id": "[parameters('TargetVNetName')]"
+            "id": "[variables('remoteVNet')]"
           }
         }
       }
