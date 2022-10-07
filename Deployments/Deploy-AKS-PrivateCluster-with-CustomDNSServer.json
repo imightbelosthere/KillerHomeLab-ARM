@@ -380,7 +380,7 @@
                 "description": "DC1 VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
             }
         },                        
-        "WKOSSku": {
+        "WK1OSSku": {
             "type": "string",
             "defaultValue": "Windows-11",
             "allowedValues": [
@@ -391,7 +391,7 @@
                 "description": "Workstation1 OS Sku"
             }
         },    
-        "WKOSVersion": {
+        "WK1OSVersion": {
             "type": "string",
             "defaultValue": "latest",
             "metadata": {
@@ -412,7 +412,7 @@
                 "description": "Domain Controller1 VMSize"
             }
         },        
-        "WKVMSize": {
+        "WK1VMSize": {
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
             "metadata": {
@@ -439,7 +439,6 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('ADSS-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
-
         "vnet0Name": "[concat(parameters('NamingConvention'),'-OnPrem-VNet1')]",
         "vnet0Prefix": "[concat(parameters('vnet0ID'),'.0.0/16')]",
         "vnet0subnet1Name": "[concat(parameters('NamingConvention'),'-OnPrem-VNet1-Subnet1')]",
@@ -449,7 +448,6 @@
         "vnet0GatewaysubnetPrefix": "[concat(parameters('vnet0ID'),'.0.0/24')]",
         "vnet0BastionsubnetPrefix": "[concat(parameters('vnet0ID'),'.253.0/24')]",
         "vnet0FirewallsubnetPrefix": "[concat(parameters('vnet0ID'),'.254.0/24')]",
-
         "vnet1Name": "[concat(parameters('NamingConvention'),'-Spoke-VNet1')]",
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-Spoke-VNet1-Subnet1')]",
@@ -459,7 +457,6 @@
         "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
         "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
         "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
-
         "vnet2Name": "[concat(parameters('NamingConvention'),'-Hub-VNet1')]",
         "vnet2Prefix": "[concat(parameters('vnet2ID'),'.0.0/16')]",
         "vnet2subnet1Name": "[concat(parameters('NamingConvention'),'-Hub-VNet1-Subnet1')]",
@@ -1292,6 +1289,231 @@
                     }                                                                                                                
                 }
             }
-        }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-11",
+            "dependsOn": [
+                "Restart-DNSProxy-Server"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-11"
+                    },
+                    "OSSku": {
+                        "value": "win11-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-10')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-10",
+            "dependsOn": [
+                "Restart-DNSProxy-Server"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-10"
+                    },
+                    "OSSku": {
+                        "value": "win10-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-7')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-7",
+            "dependsOn": [
+                "Restart-DNSProxy-Server"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-7"
+                    },
+                    "OSSku": {
+                        "value": "win7-enterprise"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        }       
     ]
 }
