@@ -500,7 +500,6 @@
         "wap1name": "[concat(parameters('NamingConvention'),'-wap-01')]",           
         "wap1IP": "[concat(parameters('vnet1ID'),'.1.',variables('wap1lastoctet'))]",            
         "wap1lastoctet": "122",
-        "ndesname": "[concat(parameters('NamingConvention'),'-ndes-01')]",           
         "ndesIP": "[concat(parameters('vnet1ID'),'.1.',variables('ndeslastoctet'))]",                    
         "ndeslastoctet": "123",                
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
