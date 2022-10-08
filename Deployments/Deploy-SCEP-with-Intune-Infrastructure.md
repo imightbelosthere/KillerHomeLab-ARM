@@ -10,10 +10,7 @@ This Deployment deploys the following items:
 - 1 - Enterprise Certificate Authority Server
 - 1 - Online Certificate Status Protocol Server
 - 1 - Network Device Enrollment Service Server
-- 1 - Web Application Proxy Server
 - 1 - Domain Joined Windows Workstation (Windows 11/10/7)
-- 1 - Network Security Group
-- 1 - Azure Public DNS Zone
 - 1 - Azure KeyVault with Secret contianing Deployment Password
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
@@ -75,6 +72,3 @@ Parameters that support changes
 - NDESOSSku.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019), 2016-Datacenter (Windows 2016) or 2012-R2-Datacenter (Windows 2012 R2) NDES OS Sku
 - NDESOSVersion.  The default is Latest however a specific OS Version can be entired based on the above OS Sku.
 - NDESVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
-- WAPOSSku.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019), 2016-Datacenter (Windows 2016) or 2012-R2-Datacenter (Windows 2012 R2) WAP OS Sku
-- WAPOSVersion.  The default is Latest however a specific OS Version can be entired based on the above OS Sku.
-- WAP1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.

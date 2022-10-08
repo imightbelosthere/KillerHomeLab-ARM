@@ -20,10 +20,10 @@
                 "description": "NDES EXternal DNS Record"
               }
         },
-        "NDESPublicIP": {
+        "WAP1PublicIP": {
             "type": "string",
             "metadata": {
-                "description": "NDES EXternal Public IP"
+                "description": "WAP External Public IP"
               }
         }
     },
@@ -37,7 +37,7 @@
                 "TTL": 900,
                 "ARecords": [
                     {
-                        "ipv4Address": "[parameters('NDESPublicIP')]"
+                        "ipv4Address": "[parameters('WAP1PublicIP')]"
                     }
                 ]
             }

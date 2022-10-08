@@ -181,6 +181,17 @@
                 "description": "Version of Exchange if Exchange Esists in current Environment 20(19) or 20(16)"
             }
         },
+        "NDESExists": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "No",
+                "Yes"
+            ],      
+            "metadata": {
+                "description": "Does Intune exist in your current environment"
+            }
+        },   
         "SQLExists": {
             "type": "string",
             "defaultValue": "No",
@@ -488,7 +499,10 @@
         "adfs1lastoctet": "121",                                                              
         "wap1name": "[concat(parameters('NamingConvention'),'-wap-01')]",           
         "wap1IP": "[concat(parameters('vnet1ID'),'.1.',variables('wap1lastoctet'))]",            
-        "wap1lastoctet": "122",        
+        "wap1lastoctet": "122",
+        "ndesname": "[concat(parameters('NamingConvention'),'-ndes-01')]",           
+        "ndesIP": "[concat(parameters('vnet1ID'),'.1.',variables('ndeslastoctet'))]",                    
+        "ndeslastoctet": "123",                
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]",         
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
@@ -1556,6 +1570,36 @@
             }
         },
         {
+            "condition": "[equals(parameters('NDESExists'),'Yes')]",                                    
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-PublicDNSZone-NDES-Records",
+            "dependsOn": [
+                "Add-PublicIP-to-WAPServer-01"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/publicdnszonendes.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicDNSZoneAPIVersion": {
+                        "value": "[variables('PublicDNSZoneAPIVersion')]"
+                    },                            
+                    "ZoneName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },
+                    "NDESRecord": {
+                        "value": "ndes"
+                    },
+                    "WAP1PublicIP": {
+                        "value": "[reference('Add-PublicIP-to-WAPServer-01').outputs.PublicIP.value]"             
+                    }                                                                                                                                                                                                                                                                                                                         
+                }
+            }
+        },        
+        {
             "condition": "[equals(parameters('ExchangeExists'),'No')]",                                    
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
@@ -1584,7 +1628,7 @@
                     }                                                                                                                                                                                                                                                                                                                         
                 }
             }
-        },
+        },        
         {
             "condition": "[equals(parameters('ExchangeExists'),'Yes')]",                                    
             "type": "Microsoft.Resources/deployments",
@@ -1627,6 +1671,54 @@
                 }
             }
         },
+        {
+            "condition": "[equals(parameters('NDESExists'),'Yes')]",                                                
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-WAP-Server",
+            "dependsOn": [
+                "Create-PublicDNSZone-NDES-Records"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/wapintune.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('wap1name')]"
+                    },                            
+                    "NDESServerIP": {
+                        "value": "[variables('ndesIP')]"
+                    },                       
+                    "ExternalDomainName": {
+                        "value": "[variables('ExternalDomainName')]"
+                    },        
+                    "EnterpriseCAName": {
+                        "value": "[parameters('EnterpriseCAName')]"
+                    },                                                       
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },                
         {
             "condition": "[equals(parameters('ExchangeExists'),'Yes')]",            
             "type": "Microsoft.Resources/deployments",
