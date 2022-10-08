@@ -8,11 +8,10 @@
         [String]$InternalDomainName,
         [String]$DC1IP,                                       
         [String]$DNSProxyLocalDomain,                               
-        [String]$ReverseLookup,
-        [String]$dnslastoctet
+        [String]$ReverseLookup
     )
 
-    Import-DscResource -Module xDnsServer
+    Import-DscResource -ModuleName DnsServerDsc
 
     Node localhost
     {
@@ -43,46 +42,43 @@
             DependsOn = "[WindowsFeature]DNS"
         }
 
-        xDnsServerPrimaryZone DNSLOCAL
+        DnsServerPrimaryZone DNSLOCAL
         {
             Name             = $DNSProxyLocalDomain
             Ensure           = 'Present'
         }
 
-        xDnsRecord DNSPROXY
+        DnsRecordA DNSPROXY
         {
-            Name      = $computerName
-            Zone      = $DNSProxyLocalDomain
-            Target    = $computerIP
-            Type      = 'ARecord'
+            Name      = "$computerName"
+            ZoneName  = "$DNSProxyLocalDomain"
+            IPv4Address  = "$computerIP"
             Ensure    = 'Present'
-            DependsOn = '[xDnsServerPrimaryZone]DNSLOCAL'
         }
 
-        xDnsServerPrimaryZone ReverseLookupZone
+        DnsServerPrimaryZone ReverseLookupZone
         {
             Name             = "$ReverseLookup.in-addr.arpa"
             Ensure           = 'Present'
         }
 
-        xDnsRecord DNSPtrRecord
+        DnsRecordPtr DNSPtrRecord
         {
-            Name      = "$dnslastoctet"
-            Zone      = "$ReverseLookup.in-addr.arpa"
-            Target    = "$computerName.$LocalDNSDomain"
-            Type      = 'Ptr'
+            Name      = "$computerName.$LocalDNSDomain"
+            ZoneName = "$ReverseLookup.in-addr.arpa"
+            IpAddress = "$computerIP"
             Ensure    = 'Present'
-            DependsOn = '[xDnsServerPrimaryZone]ReverseLookupZone', '[xDnsRecord]DNSPROXY'
+            DependsOn = "[DnsServerADZone]ReverseADZone1"           
         }
 
-        xDnsServerConditionalForwarder AKSDnsZone
+        DnsServerConditionalForwarder AKSDnsZone
         {
             Name      = $AKSDNSZone
             MasterServers = "168.63.129.16"
             Ensure    = 'Present'
         }
 
-        xDnsServerConditionalForwarder InternalDomainName
+        DnsServerConditionalForwarder InternalDomainName
         {
             Name      = $InternalDomainName
             MasterServers = $DC1IP
