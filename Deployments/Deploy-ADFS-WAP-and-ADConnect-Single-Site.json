@@ -1675,7 +1675,7 @@
             "condition": "[equals(parameters('NDESExists'),'Yes')]",                                                
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-WAP-Server",
+            "name": "Configure-WAP1-Intune-Rules",
             "dependsOn": [
                 "Create-PublicDNSZone-NDES-Records"
             ],      

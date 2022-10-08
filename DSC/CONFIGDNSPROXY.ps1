@@ -68,7 +68,7 @@
             ZoneName = "$ReverseLookup.in-addr.arpa"
             IpAddress = "$computerIP"
             Ensure    = 'Present'
-            DependsOn = "[DnsServerADZone]ReverseADZone1"           
+            DependsOn = "[DnsServerPrimaryZone]ReverseLookupZone"
         }
 
         DnsServerConditionalForwarder AKSDnsZone
