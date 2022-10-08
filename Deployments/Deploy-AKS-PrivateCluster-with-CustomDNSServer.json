@@ -1227,6 +1227,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AKSCluster",     
             "dependsOn": [
+                "Deploy-PrivateDNSZone",
                 "Assign-UserAssignedMI-for-RG"
             ],  
             "properties": {
