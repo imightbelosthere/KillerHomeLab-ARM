@@ -32,12 +32,6 @@
                 "description": "NDES IP"
             }
         },                          
-        "EnterpriseCAName": {
-            "type": "string",
-            "metadata": {
-                "description": "Enterprise CA Name"
-            }
-        },
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -85,7 +79,6 @@
                     "Properties": {                                                      
                         "NDESServerIP": "[parameters('NDESServerIP')]",                            
                         "ExternalDomainName": "[parameters('ExternalDomainName')]",
-                        "EnterpriseCAName": "[parameters('EnterpriseCAName')]",
                         "AdminCreds": {
                             "UserName": "[parameters('adminUsername')]",
                             "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
