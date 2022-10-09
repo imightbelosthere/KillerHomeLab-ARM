@@ -11,6 +11,8 @@ This Deployment deploys the following items:
 - 1 - Online Certificate Status Protocol Server
 - 1 - Network Device Enrollment Service Server
 - 1 - Domain Joined Windows Workstation (Windows 11/10/7)
+- 1 - Network Security Group
+- 1 - Azure Public DNS Zone
 - 1 - Azure KeyVault with Secret contianing Deployment Password
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
