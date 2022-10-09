@@ -18,7 +18,6 @@ Configuration WAPINTUNE
             SourcePath = "\\$NDESServerIP\c$\WAP-Certificates"
             DestinationPath = "C:\WAP-Certificates\"
             Credential = $Admincreds
-            DependsOn = '[Script]AllowRemoteCopy'
         }
 
         Script ConfigureWAPCertificates
