@@ -1699,10 +1699,7 @@
                     },                       
                     "ExternalDomainName": {
                         "value": "[variables('ExternalDomainName')]"
-                    },        
-                    "EnterpriseCAName": {
-                        "value": "[parameters('EnterpriseCAName')]"
-                    },                                                       
+                    },                                      
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },                                                                                                            
