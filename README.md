@@ -40,19 +40,19 @@
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-DevOpsServer-2022-with-AzureSQL.json)
 [![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-DevOpsServer-2022-with-AzureSQL.json)
 
-### [Azure Network Watcher Connection Monitor - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-Azure-NetworkWatcher-Monitor.md)
+### [Azure Network Watcher Connection Monitor - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-Azure-NetworkWatcher-Monitor.md)
 
 #### Click the button below for the Azure cloud you would like to Deploy to
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-NetworkWatcher-Monitor.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-Azure-NetworkWatcher-Monitor.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-Azure-NetworkWatcher-Monitor.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-Azure-NetworkWatcher-Monitor.json)
 
-### [Azure AKS Private Cluster with Custom DNS Server - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/comingsoon/Deployments/Deploy-AKS-PrivateCluster-with-CustomDNSServer.md)
+### [Azure AKS Private Cluster with Custom DNS Server - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-AKS-PrivateCluster-with-CustomDNSServer.md)
 
 #### Click the button below for the Azure cloud you would like to Deploy to
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-AKS-PrivateCluster-with-CustomDNSServer.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-AKS-PrivateCluster-with-CustomDNSServer.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-AKS-PrivateCluster-with-CustomDNSServer.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-AKS-PrivateCluster-with-CustomDNSServer.json)
 
 ### [Azure Virtual Desktop for Active Directory Add-On - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-Azure-Virtual-Desktop-ActiveDirectory.md)
 
@@ -100,8 +100,8 @@
 
 #### Click the button below for the Azure cloud you would like to Deploy to
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-PKI-Enterprise-CA-With-OCSP.json)
-[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-PKI-Enterprise-CA-With-OCSP.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-PKI-Enterprise-CA-With-OCSP.json)
+[![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fmain%2FDeployments%2FDeploy-PKI-Enterprise-CA-With-OCSP.json)
 
 ### [SCEP Infrastructure for Intune- ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-SCEP-Infrastructure-for-Intune.md)
 

@@ -305,124 +305,14 @@
             "metadata": {
                 "description": "VNet1 Prefix"
             }
-        },
-        "ReverseLookup1": {
-            "type": "string",
-            "defaultValue": "16.172",
-            "metadata": {
-                "description": "DNS Reverse Lookup Zone1 Prefix"
-            }
-        },                   
+        },                  
         "EnterpriseCAName": {
             "type": "string",
             "defaultValue": "Enterprise CA",
             "metadata": {
                 "description": "Enterprise CA Name"
             }
-        },
-        "EnterpriseCAHashAlgorithm": {
-            "type": "string",
-            "defaultValue": "SHA256",
-                "allowedValues": [
-                "SHA256",
-                "SHA1"
-                ],
-            "metadata": {
-                "description": "Enterprise Root CA Algorithm"
-            }
-        },    
-        "EnterpriseCAKeyLength": {
-            "type": "string",
-            "defaultValue": "4096",
-                "allowedValues": [
-                "4096",
-                "2048"
-                ],
-            "metadata": {
-                "description": "Enterprise Root CA Key Length"
-            }
         },                                
-        "DC1OSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-                "2022-Datacenter",
-                "2019-Datacenter",
-                "2016-Datacenter",
-                "2012-R2-Datacenter"
-            ],
-            "metadata": {
-                "description": "Domain Controller1 OS Sku"
-            }
-        },
-        "DC1OSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "DC1 OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
-            }
-        },
-        "DC1VMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "Domain Controller1 VMSize"
-            }
-        },
-        "ECAOSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-                "2022-Datacenter",
-                "2019-Datacenter",
-                "2016-Datacenter",
-                "2012-R2-Datacenter"
-            ],
-            "metadata": {
-                "description": "Enterprise CA OS Sku"
-            }
-        },
-        "ECAOSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "Enterprise CA OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
-            }
-        },
-        "ECAVMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "Enterprise CA VMSize"
-            }
-        },                
-        "OCSPOSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-                "2022-Datacenter",
-                "2019-Datacenter",
-                "2016-Datacenter",
-                "2012-R2-Datacenter"
-            ],
-            "metadata": {
-                "description": "OCSP OS Sku"
-            }
-        },     
-        "OCSPOSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "OCSP OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
-            }
-        },
-        "OCSPVMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "OCSP VMSize"
-            }
-        },                                   
         "NDESOSSku": {
             "type": "string",
             "defaultValue": "2022-Datacenter",
@@ -471,21 +361,12 @@
         "KeyVaultName": "[concat('SCEPWAP-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
-        "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
         "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
         "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",
         "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",
-        "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
-        "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
-        "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
         "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",
-        "dc1IP": "[concat(parameters('vnet1ID'),'.1.',variables('dc1lastoctet'))]",
-        "dc1lastoctet": "101",
         "ecaname": "[concat(parameters('NamingConvention'),'-eca-01')]",           
-        "ecaIP": "[concat(parameters('vnet1ID'),'.1.',variables('ecalastoctet'))]",            
-        "ecalastoctet": "102",
-        "ocspname": "[concat(parameters('NamingConvention'),'-ocsp-01')]",           
         "ocspIP": "[concat(parameters('vnet1ID'),'.1.',variables('ocsplastoctet'))]",                    
         "ocsplastoctet": "103",
         "ndesname": "[concat(parameters('NamingConvention'),'-ndes-01')]",           
@@ -499,7 +380,6 @@
         "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]", 
         "SRV12R2OUPath": "[concat('OU=Servers2012R2,OU=Servers,',variables('BaseDN'))]",    
         "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]",                 
-        "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
