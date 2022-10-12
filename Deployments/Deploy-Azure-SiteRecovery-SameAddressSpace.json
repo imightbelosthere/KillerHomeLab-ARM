@@ -4,9 +4,9 @@
     "parameters": {
         "Region1RG": {
             "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-01",
+            "defaultValue": "ASR-Site-01",
             "metadata": {
-                "description": "Region 1 Resource Group"
+                "description": "ASR Region 1 Resource Group"
             }
         },        
         "Region2": {
@@ -67,7 +67,11 @@
         },
         "WorkspaceLocation": {
             "type": "string",
-            "defaultValue": "USGovVirginia",      
+            "defaultValue": "USGovVirginia",
+            "allowedValues": [
+                "USGovVirginia",
+                "USGovArizona"
+            ],      
             "metadata": {
                 "description": "Choose a Log Analytics Workspace Location"
             }
