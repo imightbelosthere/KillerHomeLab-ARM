@@ -1,6 +1,12 @@
 # Deploy SCEP with Intune Infrastructure
 <img src="./x_Images/SCEPwithIntuneInfra.svg" height="600" width="800"/>
 
+THE FOLLOWING DEPLOYMENT MUST ALREADY EXIST IN ORDER TO USE THIS DEPLOYMENT:
+
+- Deploy-PKI-Enterprise-CA-With-OCSP (PKIDeploymentType = Enterprise-PKI)
+
+**** THE PARAMETERS SPECIFIED FOR THIS ADD-ON LAB MUST MATCH THE PARAMETERS OF THE BASE LAB THAT IT WILL BE ADDED TO ****
+
 This Deployment deploys the following items:
 
 - 1 - Network Device Enrollment Service Server
