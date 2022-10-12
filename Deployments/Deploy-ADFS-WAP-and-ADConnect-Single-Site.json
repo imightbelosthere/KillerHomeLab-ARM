@@ -465,7 +465,7 @@
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/main/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -1579,7 +1579,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/publicdnszonendes.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/publicdnszonewapndes.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {

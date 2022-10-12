@@ -214,7 +214,7 @@
             Key                         = 'HKLM:\SOFTWARE\Microsoft\Cryptography\MSCEP'
             ValueName                   = 'EncryptionTemplate'
             ValueType                   = 'String'
-            ValueData                   =  'SCEPCertificate'
+            ValueData                   =  'SCEPCertificate1'
             Ensure                      = 'Present'
             DependsOn = '[Script]ConfigureNDES'
         }
@@ -224,7 +224,7 @@
             Key                         = 'HKLM:\SOFTWARE\Microsoft\Cryptography\MSCEP'
             ValueName                   = 'SignatureTemplate'
             ValueType                   = 'String'
-            ValueData                   =  'SCEPCertificate'
+            ValueData                   =  'SCEPCertificate1'
             Ensure                      = 'Present'
             DependsOn = '[Script]ConfigureNDES'
         }
@@ -234,7 +234,7 @@
             Key                         = 'HKLM:\SOFTWARE\Microsoft\Cryptography\MSCEP'
             ValueName                   = 'GeneralPurposeTemplate'
             ValueType                   = 'String'
-            ValueData                   =  'SCEPCertificate'
+            ValueData                   =  'SCEPCertificate1'
             Ensure                      = 'Present'
             DependsOn = '[Script]ConfigureNDES'
         }
