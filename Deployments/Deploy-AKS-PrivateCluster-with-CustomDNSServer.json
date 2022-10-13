@@ -488,7 +488,8 @@
         "WIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('BaseDN'))]",
         "WIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('BaseDN'))]",
         "ReverseLookup0": "[concat('1.',parameters('ReverseLookup0'))]", 
-        "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",         
+        "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",  
+        "ForwardLookup1": "[concat(parameters('vnet0ID'),'.1')]",               
         "PrivateDNSZoneName": "[concat('privatelink.',resourceGroup().location,'.cx.aks.containerservice.azure.us')]",
         "AKSClusterName": "[concat(parameters('NamingConvention'),'-AKS-Private-Cluster')]",
         "ManagedIDName": "[concat(parameters('NamingConvention'),'-mi-', uniqueString(resourceGroup().id))]",
@@ -1512,6 +1513,270 @@
                     }
                 }
             }
-        }       
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-DomainController-01",
+            "dependsOn": [
+                "Deploy-OnPremise-VirtualNetwork",
+                "Deploy-Spoke-VirtualNetwork",
+                "Deploy-Hub-VirtualNetwork",
+                "Deploying-Peering-On-OnPremVNet-for-HubVNet",
+                "Deploying-Peering-On-HubVNet-for-OnPremVNet",                
+                "Deploying-Peering-On-HubVNet-for-SpokeVNet",   
+                "Deploying-Peering-On-SpokeVNet-for-HubVNet"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-2disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('dc1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('DC1OSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('DC1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "DataDisk1Name": {
+                        "value": "[variables('DCDataDisk1Name')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('DC1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet0Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet0subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Promote-DomainController-01",
+            "dependsOn": [
+                "Deploy-DomainController-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/firstdc.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "DomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-VNet0-DNS",
+            "dependsOn": [
+                "Promote-DomainController-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetdns.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet0Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet0subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet0subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet0subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet0subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet0GatewaysubnetPrefix')]"
+                    },                    
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet0BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet0FirewallsubnetPrefix')]"
+                    },
+                    "DNSServerIP": {
+                        "value": [
+                            "[variables('dc1IP')]"
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-DomainController-01_01",
+            "dependsOn": [
+                "Update-VNet0-DNS"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-Core-DNS-Records",
+            "dependsOn": [
+                "Restart-DomainController-01_01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configdnsint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "InternalDomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "ExternalDomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },                    
+                    "ReverseLookup1": {
+                        "value": "[variables('ReverseLookup0')]"
+                    },
+                    "ForwardLookup1": {
+                        "value": "[variables('ForwardLookup1')]"
+                    },
+                    "dc1lastoctet": {
+                        "value": "[variables('dc1lastoctet')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },                      
     ]
 }

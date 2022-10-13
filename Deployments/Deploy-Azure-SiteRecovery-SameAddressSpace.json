@@ -1,0 +1,2984 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptiondeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Region1RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-01",
+            "metadata": {
+                "description": "Region 1 Resource Group"
+            }
+        },        
+        "Region2": {
+            "type": "string",
+            "defaultValue": "USGovTexas", 
+            "metadata": {
+                "description": "Choose Region (Example: USGovTexas)"
+            }
+        },
+        "Region2RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-02",
+            "metadata": {
+                "description": "Region 2 Resource Group"
+            }
+        },        
+        "Region3": {
+            "type": "string",
+            "defaultValue": "USGovArizona", 
+            "metadata": {
+                "description": "Choose Region (Example: USGovArizona)"
+            }
+        }, 
+        "Region3RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-03",
+            "metadata": {
+                "description": "Region 3 Resource Group"
+            }
+        },                               
+        "Region4": {
+            "type": "string",
+            "defaultValue": "USDoDEast", 
+            "metadata": {
+                "description": "Choose Region (Example: USDoDEast)"
+            }
+        },
+        "Region4RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-04",
+            "metadata": {
+                "description": "Region 4 Resource Group"
+            }
+        },                                        
+        "Region5": {
+            "type": "string",
+            "defaultValue": "USDoDCentral", 
+            "metadata": {
+                "description": "Choose Region (Example: USDoDCentral)"
+            }
+        },
+        "Region5RG": {
+            "type": "string",
+            "defaultValue": "NW-ConnectionMonitor-05",
+            "metadata": {
+                "description": "Region 5 Resource Group"
+            }
+        },
+        "WorkspaceLocation": {
+            "type": "string",
+            "defaultValue": "USGovVirginia",      
+            "metadata": {
+                "description": "Choose a Log Analytics Workspace Location"
+            }
+        },                                                                                              
+        "TimeZone": {
+            "type": "string",
+            "defaultValue": "Eastern Standard Time",
+            "allowedValues": [
+                "Afghanistan Standard Time",
+                "Alaskan Standard Time",
+                "Aleutian Standard Time",
+                "Altai Standard Time",
+                "Arab Standard Time",
+                "Arabian Standard Time",
+                "Arabic Standard Time",
+                "Argentina Standard Time",
+                "Astrakhan Standard Time",
+                "Atlantic Standard Time",
+                "AUS Central Standard Time",
+                "Aus Central W. Standard Time",
+                "AUS Eastern Standard Time",
+                "Azerbaijan Standard Time",
+                "Azores Standard Time",
+                "Bahia Standard Time",
+                "Bangladesh Standard Time",
+                "Belarus Standard Time",
+                "Bougainville Standard Time",
+                "Canada Central Standard Time",
+                "Cape Verde Standard Time",
+                "Caucasus Standard Time",
+                "Cen. Australia Standard Time",
+                "Central America Standard Time",
+                "Central Asia Standard Time",
+                "Central Brazilian Standard Time",
+                "Central Europe Standard Time",
+                "Central European Standard Time",
+                "Central Pacific Standard Time",
+                "Central Standard Time (Mexico)",
+                "Central Standard Time",
+                "Chatham Islands Standard Time",
+                "China Standard Time",
+                "Cuba Standard Time",
+                "Dateline Standard Time",
+                "E. Africa Standard Time",
+                "E. Australia Standard Time",
+                "E. Europe Standard Time",
+                "E. South America Standard Time",
+                "Easter Island Standard Time",
+                "Eastern Standard Time (Mexico)",
+                "Eastern Standard Time",
+                "Egypt Standard Time",
+                "Ekaterinburg Standard Time",
+                "Fiji Standard Time",
+                "FLE Standard Time",
+                "Georgian Standard Time",
+                "GMT Standard Time",
+                "Greenland Standard Time",
+                "Greenwich Standard Time",
+                "GTB Standard Time",
+                "Haiti Standard Time",
+                "Hawaiian Standard Time",
+                "India Standard Time",
+                "Iran Standard Time",
+                "Israel Standard Time",
+                "Jordan Standard Time",
+                "Kaliningrad Standard Time",
+                "Korea Standard Time",
+                "Libya Standard Time",
+                "Line Islands Standard Time",
+                "Lord Howe Standard Time",
+                "Magadan Standard Time",
+                "Magallanes Standard Time",
+                "Marquesas Standard Time",
+                "Mauritius Standard Time",
+                "Middle East Standard Time",
+                "Montevideo Standard Time",
+                "Morocco Standard Time",
+                "Mountain Standard Time (Mexico)",
+                "Mountain Standard Time",
+                "Myanmar Standard Time",
+                "N. Central Asia Standard Time",
+                "Namibia Standard Time",
+                "Nepal Standard Time",
+                "New Zealand Standard Time",
+                "Newfoundland Standard Time",
+                "Norfolk Standard Time",
+                "North Asia East Standard Time",
+                "North Asia Standard Time",
+                "North Korea Standard Time",
+                "Omsk Standard Time",
+                "Pacific SA Standard Time",
+                "Pacific Standard Time (Mexico)",
+                "Pacific Standard Time",
+                "Pakistan Standard Time",
+                "Paraguay Standard Time",
+                "Qyzylorda Standard Time",
+                "Romance Standard Time",
+                "Russia Time Zone 10",
+                "Russia Time Zone 11",
+                "Russia Time Zone 3",
+                "Russian Standard Time",
+                "SA Eastern Standard Time",
+                "SA Pacific Standard Time",
+                "SA Western Standard Time",
+                "Saint Pierre Standard Time",
+                "Sakhalin Standard Time",
+                "Samoa Standard Time",
+                "Sao Tome Standard Time",
+                "Saratov Standard Time",
+                "SE Asia Standard Time",
+                "Singapore Standard Time",
+                "South Africa Standard Time",
+                "Sri Lanka Standard Time",
+                "Sudan Standard Time",
+                "Syria Standard Time",
+                "Taipei Standard Time",
+                "Tasmania Standard Time",
+                "Tocantins Standard Time",
+                "Tokyo Standard Time",
+                "Tomsk Standard Time",
+                "Tonga Standard Time",
+                "Transbaikal Standard Time",
+                "Turkey Standard Time",
+                "Turks And Caicos Standard Time",
+                "Ulaanbaatar Standard Time",
+                "US Eastern Standard Time",
+                "US Mountain Standard Time",
+                "UTC",
+                "UTC+12",
+                "UTC+13",
+                "UTC-02",
+                "UTC-08",
+                "UTC-09",
+                "UTC-11",
+                "Venezuela Standard Time",
+                "Vladivostok Standard Time",
+                "Volgograd Standard Time",
+                "W. Australia Standard Time",
+                "W. Central Africa Standard Time",
+                "W. Europe Standard Time",
+                "W. Mongolia Standard Time",
+                "West Asia Standard Time",
+                "West Bank Standard Time",
+                "West Pacific Standard Time",
+                "Yakutsk Standard Time"
+            ],
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },
+        "AutoShutdownEnabled": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "Enabled Auto Shutdown.  !!!If Enabled, AutoShutdownEmail MUST be added!!!!"
+            }
+        },
+        "AutoShutdownTime": {
+            "type": "string",
+            "defaultValue": "2000",
+            "metadata": {
+                "description": "24-Hour Clock Time for Auto-Shutdown Example: 1900 = 7PM"
+            }
+        },
+        "AutoShutdownEmail": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Auto-Shutdown notification Email Example:  user@domain.com"
+            }
+        },         
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        },
+        "AzureUserObjectID": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Deployment Account Object ID"
+            }
+        },
+        "WindowsServerLicenseType": {
+            "type": "string",
+            "defaultValue": "None",
+            "allowedValues": [
+                "None",
+                "Windows_Server"
+            ],
+            "metadata": {
+                "description": "Windows Server OS License Type"
+            }
+        },
+        "NamingConvention": {
+            "type": "string",
+            "defaultValue": "khl",
+            "maxLength": 4,
+            "metadata": {
+                "description": "VNet1 Name"
+            }
+        },
+        "vnet1ID": {
+            "type": "string",
+            "defaultValue": "172.16",
+            "metadata": {
+                "description": "Region 1 VNet Prefix"
+            }
+        },
+        "vnet2ID": {
+            "type": "string",
+            "defaultValue": "172.17",
+            "metadata": {
+                "description": "Region 2 VNet Prefix"
+            }
+        },
+        "vnet3ID": {
+            "type": "string",
+            "defaultValue": "172.18",
+            "metadata": {
+                "description": "Region 3 VNet Prefix"
+            }
+        },
+        "vnet4ID": {
+            "type": "string",
+            "defaultValue": "172.19",
+            "metadata": {
+                "description": "Region 4 VNet Prefix"
+            }
+        },
+        "vnet5ID": {
+            "type": "string",
+            "defaultValue": "172.20",
+            "metadata": {
+                "description": "Region 5 VNet Prefix"
+            }
+        },
+        "UniqueID": {
+            "type": "string",
+            "defaultValue": "1234567890x1",
+            "metadata": {
+                "description": "Unique Identifier"
+            }
+        },
+        "VMOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+                "2022-Datacenter",
+                "2019-Datacenter",
+                "2016-Datacenter",
+                "2012-R2-Datacenter"
+            ],
+            "metadata": {
+                "description": "VM1 OS Sku"
+            }
+        },
+        "VMOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "VM1 OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
+            }
+        },
+        "VM1Size": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Region1 VMSize"
+            }
+        },                                                    
+        "VM2Size": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Region2 VMSize"
+            }
+        },                                                    
+        "VM3Size": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Region3 VMSize"
+            }
+        },                                                    
+        "VM4Size": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Region4 VMSize"
+            }
+        },                                                    
+        "VM5Size": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Region5 VMSize"
+            }
+        },                                                                                    
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            },
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
+            },
+            "defaultValue": ""
+        }
+    },
+    "variables": {
+        "DeploymentName": "[deployment().name]",
+        "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
+        "KeyVaultName": "[concat('ASRS-', variables('Identifier'))]",
+        "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
+        "WorkSpaceName": "[concat(parameters('NamingConvention'),'-LAW-',parameters('UniqueID'))]",
+        "CMName": "[concat(parameters('NamingConvention'),'-CM-',parameters('UniqueID'))]", 
+        "ManagedIDName": "[concat(parameters('NamingConvention'),'-ManagedID-',parameters('UniqueID'))]",
+        "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "BackupObjectID": "262044b1-e2ce-469f-a196-69ab7ada62d3",        
+        "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
+        "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
+        "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
+        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
+        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",
+        "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",
+        "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
+        "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
+        "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
+        "vnet2Name": "[concat(parameters('NamingConvention'),'-VNet2')]",
+        "vnet2Prefix": "[concat(parameters('vnet2ID'),'.0.0/16')]",
+        "vnet2subnet1Name": "[concat(parameters('NamingConvention'),'-VNet2-Subnet1')]",
+        "vnet2subnet1Prefix": "[concat(parameters('vnet2ID'),'.1.0/24')]",
+        "vnet2subnet2Name": "[concat(parameters('NamingConvention'),'-VNet2-Subnet2')]",
+        "vnet2subnet2Prefix": "[concat(parameters('vnet2ID'),'.2.0/24')]",
+        "vnet2GatewaysubnetPrefix": "[concat(parameters('vnet2ID'),'.0.0/24')]",
+        "vnet2BastionsubnetPrefix": "[concat(parameters('vnet2ID'),'.253.0/24')]",
+        "vnet2FirewallsubnetPrefix": "[concat(parameters('vnet2ID'),'.254.0/24')]",
+        "vnet3Name": "[concat(parameters('NamingConvention'),'-VNet3')]",
+        "vnet3Prefix": "[concat(parameters('vnet3ID'),'.0.0/16')]",
+        "vnet3subnet1Name": "[concat(parameters('NamingConvention'),'-VNet3-Subnet1')]",
+        "vnet3subnet1Prefix": "[concat(parameters('vnet3ID'),'.1.0/24')]",
+        "vnet3subnet2Name": "[concat(parameters('NamingConvention'),'-VNet3-Subnet2')]",
+        "vnet3subnet2Prefix": "[concat(parameters('vnet3ID'),'.2.0/24')]",
+        "vnet3GatewaysubnetPrefix": "[concat(parameters('vnet3ID'),'.0.0/24')]",
+        "vnet3BastionsubnetPrefix": "[concat(parameters('vnet3ID'),'.253.0/24')]",
+        "vnet3FirewallsubnetPrefix": "[concat(parameters('vnet3ID'),'.254.0/24')]",        
+        "vnet4Name": "[concat(parameters('NamingConvention'),'-VNet4')]",
+        "vnet4Prefix": "[concat(parameters('vnet4ID'),'.0.0/16')]",
+        "vnet4subnet1Name": "[concat(parameters('NamingConvention'),'-VNet4-Subnet1')]",
+        "vnet4subnet1Prefix": "[concat(parameters('vnet4ID'),'.1.0/24')]",
+        "vnet4subnet2Name": "[concat(parameters('NamingConvention'),'-VNet4-Subnet2')]",
+        "vnet4subnet2Prefix": "[concat(parameters('vnet4ID'),'.2.0/24')]",
+        "vnet4GatewaysubnetPrefix": "[concat(parameters('vnet4ID'),'.0.0/24')]",
+        "vnet4BastionsubnetPrefix": "[concat(parameters('vnet4ID'),'.253.0/24')]",
+        "vnet4FirewallsubnetPrefix": "[concat(parameters('vnet4ID'),'.254.0/24')]",        
+        "vnet5Name": "[concat(parameters('NamingConvention'),'-VNet5')]",
+        "vnet5Prefix": "[concat(parameters('vnet5ID'),'.0.0/16')]",
+        "vnet5subnet1Name": "[concat(parameters('NamingConvention'),'-VNet5-Subnet1')]",
+        "vnet5subnet1Prefix": "[concat(parameters('vnet5ID'),'.1.0/24')]",
+        "vnet5subnet2Name": "[concat(parameters('NamingConvention'),'-VNet5-Subnet2')]",
+        "vnet5subnet2Prefix": "[concat(parameters('vnet5ID'),'.2.0/24')]",
+        "vnet5GatewaysubnetPrefix": "[concat(parameters('vnet5ID'),'.0.0/24')]",
+        "vnet5BastionsubnetPrefix": "[concat(parameters('vnet5ID'),'.253.0/24')]",
+        "vnet5FirewallsubnetPrefix": "[concat(parameters('vnet5ID'),'.254.0/24')]",
+        "vm1name": "[concat(parameters('NamingConvention'),'-vm-01')]",           
+        "vm1IP": "[concat(parameters('vnet1ID'),'.1.',variables('vmlastoctet'))]",                    
+        "vm2name": "[concat(parameters('NamingConvention'),'-vm-02')]",           
+        "vm2IP": "[concat(parameters('vnet2ID'),'.1.',variables('vmlastoctet'))]",                            
+        "vm3name": "[concat(parameters('NamingConvention'),'-vm-03')]",           
+        "vm3IP": "[concat(parameters('vnet3ID'),'.1.',variables('vmlastoctet'))]",                                    
+        "vm4name": "[concat(parameters('NamingConvention'),'-vm-04')]",           
+        "vm4IP": "[concat(parameters('vnet4ID'),'.1.',variables('vmlastoctet'))]",                                    
+        "vm5name": "[concat(parameters('NamingConvention'),'-vm-05')]",           
+        "vm5IP": "[concat(parameters('vnet5ID'),'.1.',variables('vmlastoctet'))]",                                    
+        "VMlastoctet": "10",        
+        "BastionHostAPIVersion": "2021-08-01",
+        "ConnectionMonitorAPIVersion": "2022-01-01",
+        "DeploymentAPIVersion": "2021-04-01",
+        "DeploymentScriptAPIVersion": "2020-10-01",
+        "ExtensionsAPIVersion": "2022-03-01",
+        "KeyVaultAPIVersion": "2021-11-01-preview",
+        "KeyVaultSecretAPIVersion": "2021-11-01-preview",
+        "NetworkInterfacesAPIVersion": "2021-08-01",
+        "PublicIPAddressesAPIVersion": "2021-08-01",
+        "ResourceGroupAPIVersion": "2021-04-01",
+        "RoleAssignmentAPIVersion": "2022-04-01",
+        "SchedulesAPIVersion": "2018-09-15",
+        "UserAssignedMIAPIVersion": "2022-01-31-preview",
+        "VirtualMachinesAPIVersion": "2022-03-01",
+        "VirtualNetworkAPIVersion": "2020-11-01",
+        "VirtualNetworkPeeringAPIVersion": "2022-01-01",
+        "ExtensionsTypeHandlerVersion": "2.83",
+        "NWExtensionsTypeHandlerVersion": "1.4"        
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-ResourceGroup-01",
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/resourcegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ResourceGroupAPIVersion": {
+                        "value": "[variables('ResourceGroupAPIVersion')]"
+                    },
+                    "ResourceGroupName": {
+                        "value": "[parameters('Region1RG')]"
+                    }    
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-ResourceGroup-02",
+            "location": "[parameters('Region2')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/resourcegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ResourceGroupAPIVersion": {
+                        "value": "[variables('ResourceGroupAPIVersion')]"
+                    },
+                    "ResourceGroupName": {
+                        "value": "[parameters('Region2RG')]"
+                    }            
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-UserAssigned-ManagedID",
+            "resourceGroup":  "[parameters('Region1RG')]", 
+            "dependsOn": [
+                "Create-ResourceGroup-01",
+                "Create-ResourceGroup-02"
+            ],                                 
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/userassignedmanagedidentity.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "UserAssignedMIAPIVersion": {
+                        "value": "[variables('UserAssignedMIAPIVersion')]"
+                    },
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Assign-UserAssignedMI-for-Region1RG",
+            "resourceGroup":  "[parameters('Region1RG')]",                            
+            "dependsOn": [
+                "Create-UserAssigned-ManagedID"
+            ],        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/roleassignment.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RoleAssignmentAPIVersion": {
+                        "value": "[variables('RoleAssignmentAPIVersion')]"
+                    },                    
+                    "PrincipalID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('Contributor')]"
+                    },
+                    "roleAssignmentHash": {
+                        "value": "NetworkWatcher1"
+                    }                                        
+                }
+            }
+        },                                 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Assign-UserAssignedMI-for-Region2RG",
+            "resourceGroup":  "[parameters('Region2RG')]",                            
+            "dependsOn": [
+                "Create-UserAssigned-ManagedID"
+            ],        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/roleassignment.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RoleAssignmentAPIVersion": {
+                        "value": "[variables('RoleAssignmentAPIVersion')]"
+                    },                    
+                    "PrincipalID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('Contributor')]"
+                    },
+                    "roleAssignmentHash": {
+                        "value": "NetworkWatcher2"
+                    }                                        
+                }
+            }
+        },                                                                         
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Password-KeyVault-with-Secret",
+            "resourceGroup":  "[parameters('Region1RG')]",
+            "dependsOn": [
+                "Create-ResourceGroup-01"
+            ],             
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultwithsecret.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },
+                    "KeyVaultName": {
+                        "value": "[variables('KeyVaultName')]"
+                    },
+                    "SecretName": {
+                        "value": "[variables('SecretName')]"
+                    },
+                    "SecretValue": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site1-KeyVault",
+            "resourceGroup":  "[parameters('Region1RG')]",
+            "dependsOn": [
+                "Create-ResourceGroup-01",
+                "Create-UserAssigned-ManagedID"
+            ],             
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultforasr.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    },
+                    "BackupObjectID": {
+                        "value": "[variables('BackupObjectID')]"
+                    },
+                    "UserManagedObjectID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },                                        
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault1"
+                    }                      
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site2-KeyVault",
+            "resourceGroup":  "[parameters('Region2RG')]",
+            "dependsOn": [
+                "Create-ResourceGroup-02",
+                "Create-UserAssigned-ManagedID"
+            ],             
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultforasr.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    },
+                    "BackupObjectID": {
+                        "value": "[variables('BackupObjectID')]"
+                    },
+                    "UserManagedObjectID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },                                        
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault2"
+                    }                      
+                }
+            }
+        },        
+
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-VirtualNetwork-01",
+            "resourceGroup":  "[parameters('Region1RG')]",
+            "dependsOn": [
+                "Create-ResourceGroup-01"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet1BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-VirtualNetwork-02",
+            "resourceGroup":  "[parameters('Region2RG')]",
+            "dependsOn": [
+                "Create-ResourceGroup-02"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet2Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet2subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet2subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet2subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet2subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet2GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet2BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet2FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-VirtualNetwork-03",
+            "resourceGroup":  "[parameters('Region3RG')]",
+            "dependsOn": [
+                "Create-ResourceGroup-03"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet3Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet3subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet3subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet3subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet3subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet3GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet3BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet3FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-VirtualNetwork-04",
+            "resourceGroup":  "[parameters('Region4RG')]",
+            "dependsOn": [
+                "Create-ResourceGroup-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet4Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet4subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet4subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet4subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet4subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet4GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet4BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet4FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-VirtualNetwork-05",
+            "resourceGroup":  "[parameters('Region5RG')]",
+            "dependsOn": [
+                "Create-ResourceGroup-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet5Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet5subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet5subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet5subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet5subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet5GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet5BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet5FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BastionHost-01",
+            "resourceGroup":  "[parameters('Region1RG')]",            
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/bastionhost.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "BastionHostAPIVersion": {
+                        "value": "[variables('BastionHostAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "publicIPAddressName": {
+                        "value": "[concat(variables('vnet1Name'),'-Bastion-pip')]"
+                    },
+                    "AllocationMethod": {
+                        "value": "Static"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "AzureBastionSubnet"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet1-for-VNet2",
+            "resourceGroup":  "[parameters('Region1RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-02"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                    
+                    "SourceVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },            
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet2-for-VNet1",
+            "resourceGroup":  "[parameters('Region2RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-02"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                    
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet1-for-VNet3",
+            "resourceGroup":  "[parameters('Region1RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-03"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                            
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet3-for-VNet1",
+            "resourceGroup":  "[parameters('Region3RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-03"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet1-for-VNet4",
+            "resourceGroup":  "[parameters('Region1RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                                                                     
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet4-for-VNet1",
+            "resourceGroup":  "[parameters('Region4RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet1-for-VNet5",
+            "resourceGroup":  "[parameters('Region1RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                                            
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet5-for-VNet1",
+            "resourceGroup":  "[parameters('Region5RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet2-for-VNet3",
+            "resourceGroup":  "[parameters('Region2RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-03"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet3-for-VNet2",
+            "resourceGroup":  "[parameters('Region3RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-03"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                                                                                                                                                                                                                                                                                                  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet2-for-VNet4",
+            "resourceGroup":  "[parameters('Region2RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet4-for-VNet2",
+            "resourceGroup":  "[parameters('Region4RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet2-for-VNet5",
+            "resourceGroup":  "[parameters('Region2RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet5-for-VNet2",
+            "resourceGroup":  "[parameters('Region5RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet3-for-VNet4",
+            "resourceGroup":  "[parameters('Region3RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-03",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet4-for-VNet3",
+            "resourceGroup":  "[parameters('Region4RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-03",
+                "Deploy-VirtualNetwork-04"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet3-for-VNet5",
+            "resourceGroup":  "[parameters('Region3RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-03",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet5-for-VNet3",
+            "resourceGroup":  "[parameters('Region5RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-03",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },                        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet4-for-VNet5",
+            "resourceGroup":  "[parameters('Region4RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-04",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploying-Peering-On-VNet5-for-VNet4",
+            "resourceGroup":  "[parameters('Region5RG')]",                      
+            "dependsOn": [
+                "Deploy-VirtualNetwork-04",
+                "Deploy-VirtualNetwork-05"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/peeringrg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkPeeringAPIVersion": {
+                        "value": "[variables('VirtualNetworkPeeringAPIVersion')]"
+                    },                                        
+                    "SourceVNetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "TargetVNetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },              
+                    "TargetVNetRG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                            
+                    "allowVirtualNetworkAccess": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowForwardedTraffic": {
+                        "value": "true"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "allowGatewayTransit": {
+                        "value": "false"
+                    },
+                    "useRemoteGateways": {
+                        "value": "false"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region1-VM",
+            "resourceGroup":  "[parameters('Region1RG')]",                                              
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('vm1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('vm1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('VM1Size')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region2-VM",
+            "resourceGroup":  "[parameters('Region2RG')]",                                              
+            "dependsOn": [
+                "Deploy-VirtualNetwork-02"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('vm2name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('vm2IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('VM2Size')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet2subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region3-VM",
+            "resourceGroup":  "[parameters('Region3RG')]",                                              
+            "dependsOn": [
+                "Deploy-VirtualNetwork-03"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('vm3name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('vm3IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('VM3Size')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet3Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet3subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region4-VM",
+            "resourceGroup":  "[parameters('Region4RG')]",                                              
+            "dependsOn": [
+                "Deploy-VirtualNetwork-04"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('vm4name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('vm4IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('VM4Size')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet4Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet4subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },                                   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region5-VM",
+            "resourceGroup":  "[parameters('Region5RG')]",                                  
+            "dependsOn": [
+                "Deploy-VirtualNetwork-05"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('vm5name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('vm5IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('VM5Size')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet5Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet5subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-IIS-on-Region1-VM",
+            "resourceGroup":  "[parameters('Region1RG')]",                      
+            "dependsOn": [
+                "Deploy-Region1-VM"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/iis.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm1name')]"
+                    },                                                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },         
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-IIS-on-Region2-VM",
+            "resourceGroup":  "[parameters('Region2RG')]",                      
+            "dependsOn": [
+                "Deploy-Region2-VM"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/iis.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm2name')]"
+                    },                                                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },                 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-IIS-on-Region3-VM",
+            "resourceGroup":  "[parameters('Region3RG')]",                      
+            "dependsOn": [
+                "Deploy-Region3-VM"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/iis.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm3name')]"
+                    },                                                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },                 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-IIS-on-Region4-VM",
+            "resourceGroup":  "[parameters('Region4RG')]",                      
+            "dependsOn": [
+                "Deploy-Region4-VM"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/iis.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm4name')]"
+                    },                                                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },                 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-IIS-on-Region5-VM",
+            "resourceGroup":  "[parameters('Region5RG')]",                      
+            "dependsOn": [
+                "Deploy-Region5-VM"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/iis.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm5name')]"
+                    },                                                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },                 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region1-VM-NW",
+            "resourceGroup":  "[parameters('Region1RG')]",                
+            "dependsOn": [
+                "Install-IIS-on-Region1-VM"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networkwatcher.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "NWExtensionsTypeHandlerVersion": {
+                        "value": "[variables('NWExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm1name')]"
+                    } 
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region2-VM-NW",
+            "resourceGroup":  "[parameters('Region2RG')]",                
+            "dependsOn": [
+                "Install-IIS-on-Region2-VM"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networkwatcher.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "NWExtensionsTypeHandlerVersion": {
+                        "value": "[variables('NWExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm2name')]"
+                    } 
+                }
+            }
+        },                         
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region3-VM-NW",
+            "resourceGroup":  "[parameters('Region3RG')]",                
+            "dependsOn": [
+                "Install-IIS-on-Region3-VM"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networkwatcher.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "NWExtensionsTypeHandlerVersion": {
+                        "value": "[variables('NWExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm3name')]"
+                    } 
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region4-VM-NW",
+            "resourceGroup":  "[parameters('Region4RG')]",                
+            "dependsOn": [
+                "Install-IIS-on-Region4-VM"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networkwatcher.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "NWExtensionsTypeHandlerVersion": {
+                        "value": "[variables('NWExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm4name')]"
+                    } 
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Region5-VM-NW",
+            "resourceGroup":  "[parameters('Region5RG')]",                
+            "dependsOn": [
+                "Install-IIS-on-Region5-VM"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networkwatcher.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "NWExtensionsTypeHandlerVersion": {
+                        "value": "[variables('NWExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm5name')]"
+                    } 
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-UserAssigned-ManagedID",
+            "resourceGroup":  "[parameters('Region1RG')]", 
+            "dependsOn": [
+                "Create-ResourceGroup-01"
+            ],                                 
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/userassignedmanagedidentity.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "UserAssignedMIAPIVersion": {
+                        "value": "[variables('UserAssignedMIAPIVersion')]"
+                    },
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Assign-UserAssignedMI-for-Region1RG",
+            "resourceGroup":  "[parameters('Region1RG')]",                            
+            "dependsOn": [
+                "Create-UserAssigned-ManagedID"
+            ],        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/roleassignment.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RoleAssignmentAPIVersion": {
+                        "value": "[variables('RoleAssignmentAPIVersion')]"
+                    },                    
+                    "PrincipalID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('Contributor')]"
+                    },
+                    "roleAssignmentHash": {
+                        "value": "NetworkWatcher1"
+                    }                                        
+                }
+            }
+        },                                 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Assign-UserAssignedMI-for-Region2RG",
+            "resourceGroup":  "[parameters('Region2RG')]",                            
+            "dependsOn": [
+                "Create-UserAssigned-ManagedID"
+            ],        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/roleassignment.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RoleAssignmentAPIVersion": {
+                        "value": "[variables('RoleAssignmentAPIVersion')]"
+                    },                    
+                    "PrincipalID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('Contributor')]"
+                    },
+                    "roleAssignmentHash": {
+                        "value": "NetworkWatcher2"
+                    }                                        
+                }
+            }
+        },                                         
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Assign-UserAssignedMI-for-Region3RG",
+            "resourceGroup":  "[parameters('Region3RG')]",                            
+            "dependsOn": [
+                "Create-UserAssigned-ManagedID"
+            ],        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/roleassignment.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RoleAssignmentAPIVersion": {
+                        "value": "[variables('RoleAssignmentAPIVersion')]"
+                    },                    
+                    "PrincipalID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('Contributor')]"
+                    },
+                    "roleAssignmentHash": {
+                        "value": "NetworkWatcher3"
+                    }                                        
+                }
+            }
+        },                                         
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Assign-UserAssignedMI-for-Region4RG",
+            "resourceGroup":  "[parameters('Region4RG')]",                            
+            "dependsOn": [
+                "Create-UserAssigned-ManagedID"
+            ],        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/roleassignment.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RoleAssignmentAPIVersion": {
+                        "value": "[variables('RoleAssignmentAPIVersion')]"
+                    },                    
+                    "PrincipalID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('Contributor')]"
+                    },
+                    "roleAssignmentHash": {
+                        "value": "NetworkWatcher4"
+                    }                                        
+                }
+            }
+        },                                         
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Assign-UserAssignedMI-for-Region5RG",
+            "resourceGroup":  "[parameters('Region5RG')]",                            
+            "dependsOn": [
+                "Create-UserAssigned-ManagedID"
+            ],        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/roleassignment.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RoleAssignmentAPIVersion": {
+                        "value": "[variables('RoleAssignmentAPIVersion')]"
+                    },                    
+                    "PrincipalID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('Contributor')]"
+                    },
+                    "roleAssignmentHash": {
+                        "value": "NetworkWatcher5"
+                    }                                        
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region1-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region1RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region1RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm1name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "[parameters('WorkspaceLocation')]"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region2-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region2RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region2RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm2name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "[parameters('WorkspaceLocation')]"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region3-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region3RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region3RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm3name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "[parameters('WorkspaceLocation')]"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region4-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region4RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region4RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm4name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "[parameters('WorkspaceLocation')]"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Connect-Region5-VM-to-Workspace",
+            "resourceGroup":  "[parameters('Region5RG')]",                                  
+            "dependsOn": [
+                "Assign-UserAssignedMI-for-Region5RG"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectlaw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('vm5name')]"
+                    },
+                    "workspaceName": {
+                        "value": "[variables('WorkSpaceName')]"
+                    },
+                    "WorkspaceResourceGroup": {
+                        "value": "[parameters('Region1RG')]"
+                    },              
+                    "ManagedIDName": {
+                        "value": "[variables('ManagedIDName')]"
+                    }, 
+                    "ScriptLocation": {
+                        "value": "[parameters('WorkspaceLocation')]"
+                    },                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-ConnectionMonitor",
+            "resourceGroup":  "NetworkWatcherRG",            
+            "dependsOn": [
+                "Connect-Region1-VM-to-Workspace",
+                "Connect-Region2-VM-to-Workspace",
+                "Connect-Region3-VM-to-Workspace",
+                "Connect-Region4-VM-to-Workspace",
+                "Connect-Region5-VM-to-Workspace" 
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connectionmonitor.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ConnectionMonitorAPIVersion": {
+                        "value": "[variables('ConnectionMonitorAPIVersion')]"
+                    },                                        
+                    "CMName": {
+                        "value": "[variables('CMName')]"
+                    }, 
+                    "Region1RG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                          
+                    "Region1": {
+                        "value": "[deployment().location]"
+                    },                                
+                    "Region1VM": {
+                        "value": "[variables('vm1name')]"
+                    },                                                            
+                    "Region2RG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                          
+                    "Region2": {
+                        "value": "[parameters('Region2')]"
+                    },                                
+                    "Region2VM": {
+                        "value": "[variables('vm2name')]"
+                    },                                                            
+                    "Region3RG": {
+                        "value": "[parameters('Region3RG')]"
+                    },                          
+                    "Region3": {
+                        "value": "[parameters('Region3')]"
+                    },                                
+                    "Region3VM": {
+                        "value": "[variables('vm3name')]"
+                    },                                
+                    "Region4RG": {
+                        "value": "[parameters('Region4RG')]"
+                    },                          
+                    "Region4": {
+                        "value": "[parameters('Region4')]"
+                    },                                
+                    "Region4VM": {
+                        "value": "[variables('vm4name')]"
+                    },                    
+                    "Region5RG": {
+                        "value": "[parameters('Region5RG')]"
+                    },                          
+                    "Region5": {
+                        "value": "[parameters('Region5')]"
+                    },                                
+                    "Region5VM": {
+                        "value": "[variables('vm5name')]"
+                    }                                                                                                                                
+                }
+            }
+        }                                                                         
+    ]
+}
