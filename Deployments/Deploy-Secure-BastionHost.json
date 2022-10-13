@@ -2,14 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "NamingConvention": {
-            "type": "string",
-            "defaultValue": "khl",
-            "maxLength": 4,
-            "metadata": {
-                "description": "VNet1 Name"
-            }
-        },
         "VNetName": {
             "type": "string",
             "defaultValue": "",
@@ -47,8 +39,6 @@
         }
     },
     "variables": {
-
-        "NSG1Name": "[concat(parameters('NamingConvention'),'-nsg01')]",             
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "NetworkSecurityGroupAPIVersion": "2022-01-01",         
@@ -71,7 +61,7 @@
                         "value": "[variables('NetworkSecurityGroupAPIVersion')]"
                     },                    
                     "NetworkSecurityGroupname": {
-                        "value": "[variables('NSG1Name')]"
+                        "value": "[concat(parameters('VNetName'),'-Bastion-NSG')]"
                     },                                                                                                      
                     "SourceIPAddressRange": {
                         "value": "[parameters('SourceIPRange')]"
@@ -106,7 +96,7 @@
                         "value": "[parameters('AzureBastionSubnetPrefix')]"
                     }, 
                     "NetworkSecurityGroupname": {
-                        "value": "[variables('NSG1Name')]"
+                        "value": "[concat(parameters('VNetName'),'-Bastion-NSG')]"
                     }                                                                                                                                                                                                                             
                 }
             }
