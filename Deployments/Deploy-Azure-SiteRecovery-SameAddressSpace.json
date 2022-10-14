@@ -600,6 +600,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "KeyVaultKeyAPIVersion": {
+                        "value": "[variables('KeyVaultKeyAPIVersion')]"
+                    },                    
                     "KeyVaultNameHash": {
                         "value": "KeyVault1"
                     }
@@ -621,6 +624,9 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
+                    "KeyVaultKeyAPIVersion": {
+                        "value": "[variables('KeyVaultKeyAPIVersion')]"
+                    },                                        
                     "KeyVaultNameHash": {
                         "value": "KeyVault2"
                     }
