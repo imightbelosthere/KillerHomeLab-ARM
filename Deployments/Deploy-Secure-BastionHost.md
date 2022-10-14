@@ -1,5 +1,5 @@
 # Deploy-Secure-BastionHost
-<img src="./x_Images/xxx.svg" height="600" width="800"/>
+<img src="./x_Images/SecureBastionHost.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
