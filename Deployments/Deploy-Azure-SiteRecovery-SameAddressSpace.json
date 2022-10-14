@@ -4,7 +4,7 @@
     "parameters": {
         "Region1RG": {
             "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-01",
+            "defaultValue": "ASR-Site-01",
             "metadata": {
                 "description": "Region 1 Resource Group"
             }
@@ -18,7 +18,7 @@
         },
         "Region2RG": {
             "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-02",
+            "defaultValue": "ASR-Site-02",
             "metadata": {
                 "description": "Region 2 Resource Group"
             }
