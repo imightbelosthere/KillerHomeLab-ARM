@@ -4,7 +4,6 @@
     "parameters": {
         "KeyVaultAPIVersion": {
             "type": "string",
-            "defaultValue": "2021-11-01-preview",
             "metadata": {
                 "description": "KeyVault API Version"
             }

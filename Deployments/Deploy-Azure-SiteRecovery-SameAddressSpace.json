@@ -446,7 +446,7 @@
                         "value": "[variables('Contributor')]"
                     },
                     "roleAssignmentHash": {
-                        "value": "NetworkWatcher1"
+                        "value": "SiteRecovery1"
                     }                                        
                 }
             }
@@ -476,7 +476,7 @@
                         "value": "[variables('Contributor')]"
                     },
                     "roleAssignmentHash": {
-                        "value": "NetworkWatcher2"
+                        "value": "SiteRecovery2"
                     }                                        
                 }
             }

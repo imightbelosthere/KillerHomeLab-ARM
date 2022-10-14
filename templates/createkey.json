@@ -15,11 +15,14 @@
             }
         }
     },
+    "variables": {
+        "KeyVaultNameHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]"
+    },    
     "resources":[  
         {
         "type": "Microsoft.KeyVault/vaults/keys",
         "apiVersion": "[parameters('KeyVaultKeyAPIVersion')]",
-        "name": "[concat(parameters('KeyVaultNameHash'), '/Key')]",
+        "name": "[concat(variables('KeyVaultNameHash'), '/Key')]",
         "location": "[resourceGroup().location]",
         "properties": {
             "kty": "RSA",
@@ -30,7 +33,7 @@
     "outputs": {
         "KeyVaultKeyUrl": {
             "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults/keys', parameters('KeyVaultNameHash'), 'Key')).KeyUriWithVersion]"
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults/keys', variables('KeyVaultNameHash'), 'Key')).KeyUriWithVersion]"
         }
     }       
  }
