@@ -22,56 +22,7 @@
             "metadata": {
                 "description": "Region 2 Resource Group"
             }
-        },        
-        "Region3": {
-            "type": "string",
-            "defaultValue": "USGovArizona", 
-            "metadata": {
-                "description": "Choose Region (Example: USGovArizona)"
-            }
-        }, 
-        "Region3RG": {
-            "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-03",
-            "metadata": {
-                "description": "Region 3 Resource Group"
-            }
-        },                               
-        "Region4": {
-            "type": "string",
-            "defaultValue": "USDoDEast", 
-            "metadata": {
-                "description": "Choose Region (Example: USDoDEast)"
-            }
-        },
-        "Region4RG": {
-            "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-04",
-            "metadata": {
-                "description": "Region 4 Resource Group"
-            }
-        },                                        
-        "Region5": {
-            "type": "string",
-            "defaultValue": "USDoDCentral", 
-            "metadata": {
-                "description": "Choose Region (Example: USDoDCentral)"
-            }
-        },
-        "Region5RG": {
-            "type": "string",
-            "defaultValue": "NW-ConnectionMonitor-05",
-            "metadata": {
-                "description": "Region 5 Resource Group"
-            }
-        },
-        "WorkspaceLocation": {
-            "type": "string",
-            "defaultValue": "USGovVirginia",      
-            "metadata": {
-                "description": "Choose a Log Analytics Workspace Location"
-            }
-        },                                                                                              
+        },                                                                                                      
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -296,27 +247,6 @@
                 "description": "Region 2 VNet Prefix"
             }
         },
-        "vnet3ID": {
-            "type": "string",
-            "defaultValue": "172.18",
-            "metadata": {
-                "description": "Region 3 VNet Prefix"
-            }
-        },
-        "vnet4ID": {
-            "type": "string",
-            "defaultValue": "172.19",
-            "metadata": {
-                "description": "Region 4 VNet Prefix"
-            }
-        },
-        "vnet5ID": {
-            "type": "string",
-            "defaultValue": "172.20",
-            "metadata": {
-                "description": "Region 5 VNet Prefix"
-            }
-        },
         "UniqueID": {
             "type": "string",
             "defaultValue": "1234567890x1",
@@ -357,28 +287,7 @@
             "metadata": {
                 "description": "Region2 VMSize"
             }
-        },                                                    
-        "VM3Size": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "Region3 VMSize"
-            }
-        },                                                    
-        "VM4Size": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "Region4 VMSize"
-            }
-        },                                                    
-        "VM5Size": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "Region5 VMSize"
-            }
-        },                                                                                    
+        },                                                               
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -420,43 +329,10 @@
         "vnet2GatewaysubnetPrefix": "[concat(parameters('vnet2ID'),'.0.0/24')]",
         "vnet2BastionsubnetPrefix": "[concat(parameters('vnet2ID'),'.253.0/24')]",
         "vnet2FirewallsubnetPrefix": "[concat(parameters('vnet2ID'),'.254.0/24')]",
-        "vnet3Name": "[concat(parameters('NamingConvention'),'-VNet3')]",
-        "vnet3Prefix": "[concat(parameters('vnet3ID'),'.0.0/16')]",
-        "vnet3subnet1Name": "[concat(parameters('NamingConvention'),'-VNet3-Subnet1')]",
-        "vnet3subnet1Prefix": "[concat(parameters('vnet3ID'),'.1.0/24')]",
-        "vnet3subnet2Name": "[concat(parameters('NamingConvention'),'-VNet3-Subnet2')]",
-        "vnet3subnet2Prefix": "[concat(parameters('vnet3ID'),'.2.0/24')]",
-        "vnet3GatewaysubnetPrefix": "[concat(parameters('vnet3ID'),'.0.0/24')]",
-        "vnet3BastionsubnetPrefix": "[concat(parameters('vnet3ID'),'.253.0/24')]",
-        "vnet3FirewallsubnetPrefix": "[concat(parameters('vnet3ID'),'.254.0/24')]",        
-        "vnet4Name": "[concat(parameters('NamingConvention'),'-VNet4')]",
-        "vnet4Prefix": "[concat(parameters('vnet4ID'),'.0.0/16')]",
-        "vnet4subnet1Name": "[concat(parameters('NamingConvention'),'-VNet4-Subnet1')]",
-        "vnet4subnet1Prefix": "[concat(parameters('vnet4ID'),'.1.0/24')]",
-        "vnet4subnet2Name": "[concat(parameters('NamingConvention'),'-VNet4-Subnet2')]",
-        "vnet4subnet2Prefix": "[concat(parameters('vnet4ID'),'.2.0/24')]",
-        "vnet4GatewaysubnetPrefix": "[concat(parameters('vnet4ID'),'.0.0/24')]",
-        "vnet4BastionsubnetPrefix": "[concat(parameters('vnet4ID'),'.253.0/24')]",
-        "vnet4FirewallsubnetPrefix": "[concat(parameters('vnet4ID'),'.254.0/24')]",        
-        "vnet5Name": "[concat(parameters('NamingConvention'),'-VNet5')]",
-        "vnet5Prefix": "[concat(parameters('vnet5ID'),'.0.0/16')]",
-        "vnet5subnet1Name": "[concat(parameters('NamingConvention'),'-VNet5-Subnet1')]",
-        "vnet5subnet1Prefix": "[concat(parameters('vnet5ID'),'.1.0/24')]",
-        "vnet5subnet2Name": "[concat(parameters('NamingConvention'),'-VNet5-Subnet2')]",
-        "vnet5subnet2Prefix": "[concat(parameters('vnet5ID'),'.2.0/24')]",
-        "vnet5GatewaysubnetPrefix": "[concat(parameters('vnet5ID'),'.0.0/24')]",
-        "vnet5BastionsubnetPrefix": "[concat(parameters('vnet5ID'),'.253.0/24')]",
-        "vnet5FirewallsubnetPrefix": "[concat(parameters('vnet5ID'),'.254.0/24')]",
         "vm1name": "[concat(parameters('NamingConvention'),'-vm-01')]",           
         "vm1IP": "[concat(parameters('vnet1ID'),'.1.',variables('vmlastoctet'))]",                    
         "vm2name": "[concat(parameters('NamingConvention'),'-vm-02')]",           
         "vm2IP": "[concat(parameters('vnet2ID'),'.1.',variables('vmlastoctet'))]",                            
-        "vm3name": "[concat(parameters('NamingConvention'),'-vm-03')]",           
-        "vm3IP": "[concat(parameters('vnet3ID'),'.1.',variables('vmlastoctet'))]",                                    
-        "vm4name": "[concat(parameters('NamingConvention'),'-vm-04')]",           
-        "vm4IP": "[concat(parameters('vnet4ID'),'.1.',variables('vmlastoctet'))]",                                    
-        "vm5name": "[concat(parameters('NamingConvention'),'-vm-05')]",           
-        "vm5IP": "[concat(parameters('vnet5ID'),'.1.',variables('vmlastoctet'))]",                                    
         "VMlastoctet": "10",        
         "BastionHostAPIVersion": "2021-08-01",
         "ConnectionMonitorAPIVersion": "2022-01-01",
