@@ -20,24 +20,18 @@
                 "description": "Computer Name"
             }
         },
-        "ExternaldomainName": {
-            "type": "string",
-          "metadata": {
-            "description": "The External FQDN of the AD Domain created "
-          }
-        }, 
-        "crlIP": {
+        "AKSDNSZone": {
             "type": "string",
             "metadata": {
-                "description": "IP used for CRL"
+                "description": "AKS Private DNS Zone"
             }
-        },                        
-        "ocspIP": {
+        },
+        "DNSIP": {
             "type": "string",
             "metadata": {
-                "description": "OCSP IP"
+                "description": "DNS Proxy Server IP"
             }
-        },                 
+        },                                                
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -52,8 +46,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CONFIGDNSPKI.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "CONFIGDNSPKI.ps1\\CONFIGDNSPKI"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CONFIGDNSAKS.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "CONFIGDNSAKS.ps1\\CONFIGDNSAKS"
     },
     "resources": [
         {
@@ -70,9 +64,8 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
-                        "ExternaldomainName": "[parameters('ExternaldomainName')]",                                                                                      
-                        "crlIP": "[parameters('crlIP')]",                                                        
-                        "ocspIP": "[parameters('ocspIP')]"                                                                                                                                                                                                                                                                                                                                                                                                 
+                        "AKSDNSZone": "[parameters('AKSDNSZone')]",      
+                        "DNSIP": "[parameters('DNSIP')]"                                                                                                                                                                                                                                                                                                                                                                                                                        
                     }
                 },
                 "protectedSettings": {                                              
