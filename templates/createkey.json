@@ -1,0 +1,36 @@
+{
+    "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion":"1.0.0.0",
+    "parameters":{  
+        "KeyVaultKeyAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "KeyVault Key API Version"
+            }
+        },        
+        "KeyVaultNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Key Vault Name Hash"
+            }
+        }
+    },
+    "resources":[  
+        {
+        "type": "Microsoft.KeyVault/vaults/keys",
+        "apiVersion": "[parameters('KeyVaultKeyAPIVersion')]",
+        "name": "[concat(parameters('KeyVaultNameHash'), '/Key')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+            "kty": "RSA",
+            "keySize": 2048
+            }
+        }
+    ],
+    "outputs": {
+        "KeyVaultKeyUrl": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults/keys', parameters('KeyVaultNameHash'), 'Key')).KeyUriWithVersion]"
+        }
+    }       
+ }
