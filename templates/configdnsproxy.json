@@ -56,6 +56,12 @@
                 "description": "The name of Reverse Lookup Zone Network ID"
             }
         },      
+        "dnslastoctet": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS Proxy Server Last Octet"
+            }
+        },              
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -95,7 +101,8 @@
                             "InternalDomainName": "[parameters('InternalDomainName')]",                                                        
                             "DC1IP": "[parameters('DC1IP')]",                                                                                                                                            
                             "DNSProxyLocalDomain": "[parameters('DNSProxyLocalDomain')]",                                                        
-                            "ReverseLookup": "[parameters('ReverseLookup')]"
+                            "ReverseLookup": "[parameters('ReverseLookup')]",
+                            "dnslastoctet": "[parameters('dnslastoctet')]"
                         }
                 },
                 "protectedSettings": {

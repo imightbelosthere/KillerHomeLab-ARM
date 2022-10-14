@@ -1025,7 +1025,10 @@
                     },              
                     "ReverseLookup": {
                         "value": "[variables('ReverseLookup1')]"
-                    },                                                                                                                                                                                                                                                 
+                    },
+                    "dnslastoctet": {
+                        "value": "[variables('dnslastoctet')]"
+                    },                                                                                                                                                                                                                                                                     
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            

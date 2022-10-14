@@ -8,7 +8,8 @@
         [String]$InternalDomainName,
         [String]$DC1IP,                                       
         [String]$DNSProxyLocalDomain,                               
-        [String]$ReverseLookup
+        [String]$ReverseLookup,
+        [String]$dnslastoctet
     )
 
     Import-DscResource -ModuleName DnsServerDsc
@@ -62,13 +63,20 @@
             Ensure           = 'Present'
         }
 
-        DnsRecordPtr DNSPtrRecord
+        $ZoneName = "$ReverseLookup.in-addr.arpa"
+        $PtrExists = Get-DnsServerResourceRecord -ZoneName $ZoneName -RRType "PTR" -Name $dnslastoctet -ErrorAction 0
+    
+        if ($PtrExists -eq $null)
         {
-            Name      = "$computerName.$LocalDNSDomain"
-            ZoneName = "$ReverseLookup.in-addr.arpa"
-            IpAddress = "$computerIP"
-            Ensure    = 'Present'
-            DependsOn = "[DnsServerPrimaryZone]ReverseLookupZone"
+
+            DnsRecordPtr DNSPtrRecord
+            {
+                Name      = "$computerName.$LocalDNSDomain"
+                ZoneName = "$ReverseLookup.in-addr.arpa"
+                IpAddress = "$computerIP"
+                Ensure    = 'Present'
+                DependsOn = "[DnsServerPrimaryZone]ReverseLookupZone"
+            }
         }
 
         DnsServerConditionalForwarder AKSDnsZone
