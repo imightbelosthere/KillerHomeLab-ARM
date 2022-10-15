@@ -2134,9 +2134,9 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoin-Workstation-00-11",
             "dependsOn": [
-                "Deploy-Workstation-01-11",
-                "Deploy-Workstation-01-10",
-                "Deploy-Workstation-01-7"
+                "Deploy-Workstation-00-11",
+                "Deploy-Workstation-00-10",
+                "Deploy-Workstation-00-7"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2178,9 +2178,9 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoin-Workstation-00-10",
             "dependsOn": [
-                "Deploy-Workstation-01-11",
-                "Deploy-Workstation-01-10",
-                "Deploy-Workstation-01-7"
+                "Deploy-Workstation-00-11",
+                "Deploy-Workstation-00-10",
+                "Deploy-Workstation-00-7"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2222,9 +2222,9 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "DomainJoin-Workstation-00-7",
             "dependsOn": [
-                "Deploy-Workstation-01-11",
-                "Deploy-Workstation-01-10",
-                "Deploy-Workstation-01-7"
+                "Deploy-Workstation-00-11",
+                "Deploy-Workstation-00-10",
+                "Deploy-Workstation-00-7"
             ],
             "properties": {
                 "mode": "Incremental",
