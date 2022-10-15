@@ -1859,41 +1859,6 @@
             }
         },
         {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Create-ActiveDirectory-OUs",
-            "dependsOn": [
-                "Configure-PKI-DNS-Records"
-            ],
-            "properties": {
-                "mode": "Incremental",
-            "templateLink": {
-                "uri": "[uri(parameters('_artifactsLocation'), concat('templates/createous.json', parameters('_artifactsLocationSasToken')))]",
-                "contentVersion": "1.0.0.0"
-            },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "ExtensionsTypeHandlerVersion": {
-                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('dc1name')]"
-                    },
-                    "BaseDN": {
-                        "value": "[variables('BaseDN')]"
-                    },
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
-                    }
-                }
-            }
-        },
-        {
             "condition": "[equals(parameters('DC1OSSku'),'2012-R2-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
