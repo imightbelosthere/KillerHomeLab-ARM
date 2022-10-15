@@ -47,6 +47,7 @@
         {
             Name             = $DNSProxyLocalDomain
             Ensure           = 'Present'
+            DependsOn = '[WindowsFeature]DNS', '[WindowsFeature]DnsTools'
         }
 
         DnsRecordA DNSPROXY
@@ -55,28 +56,31 @@
             ZoneName  = "$DNSProxyLocalDomain"
             IPv4Address  = "$computerIP"
             Ensure    = 'Present'
+            DependsOn = '[DnsServerPrimaryZone]DNSLOCAL'
         }
 
         DnsServerPrimaryZone ReverseLookupZone
         {
             Name             = "$ReverseLookup.in-addr.arpa"
             Ensure           = 'Present'
+            DependsOn = '[WindowsFeature]DNS', '[WindowsFeature]DnsTools'
         }
 
-        $ZoneName = "$ReverseLookup.in-addr.arpa"
-        $PtrExists = Get-DnsServerResourceRecord -ZoneName $ZoneName -RRType "PTR" -Name $dnslastoctet -ErrorAction 0
-    
-        if ($PtrExists -eq $null)
+        Script CreatePointerRecord
         {
-
-            DnsRecordPtr DNSPtrRecord
+            SetScript =
             {
-                Name      = "$computerName.$LocalDNSDomain"
-                ZoneName = "$ReverseLookup.in-addr.arpa"
-                IpAddress = "$computerIP"
-                Ensure    = 'Present'
-                DependsOn = "[DnsServerPrimaryZone]ReverseLookupZone"
+                $ZoneName = "$using:ReverseLookup.in-addr.arpa"
+                $PtrExists = Get-DnsServerResourceRecord -ZoneName $ZoneName -RRType "PTR" -Name "$using:dnslastoctet" -ErrorAction 0
+    
+                if ($PtrExists -eq $null)
+                {
+                    Add-DnsServerResourceRecord -Name "$using:dnslastoctet" -Ptr -ZoneName $ZoneName -AllowUpdateAny -PtrDomainName "$using:computerName.$using:LocalDNSDomain"
+                }
             }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            DependsOn = '[DnsServerPrimaryZone]ReverseLookupZone'
         }
 
         DnsServerConditionalForwarder AKSDnsZone
@@ -84,6 +88,7 @@
             Name      = $AKSDNSZone
             MasterServers = "168.63.129.16"
             Ensure    = 'Present'
+            DependsOn = '[WindowsFeature]DNS', '[WindowsFeature]DnsTools'
         }
 
         DnsServerConditionalForwarder InternalDomainName
@@ -91,6 +96,7 @@
             Name      = $InternalDomainName
             MasterServers = $DC1IP
             Ensure    = 'Present'
+            DependsOn = '[WindowsFeature]DNS', '[WindowsFeature]DnsTools'
         }
     }
 }
