@@ -1828,7 +1828,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-ActiveDirectory-OUs",
             "dependsOn": [
-                "Configure-PKI-DNS-Records"
+                "Configure-AKS-DNS-Records"
             ],
             "properties": {
                 "mode": "Incremental",
