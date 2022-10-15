@@ -1666,7 +1666,7 @@
                         "value": "[variables('VirtualNetworkAPIVersion')]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[variables('vnet0Name')]"
                     },
                     "vnetprefix": {
                         "value": "[variables('vnet0Prefix')]"
