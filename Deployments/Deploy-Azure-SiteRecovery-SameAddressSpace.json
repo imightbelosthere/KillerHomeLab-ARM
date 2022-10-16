@@ -732,7 +732,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Get-DoubleEncrypted-DiskEncryptionSet2-PrincipalID",
-            "resourceGroup": "[parameters('Region2RG')]",     
+            "resourceGroup": "[parameters('Region1RG')]",     
             "dependsOn": [
                 "Deploy-Site1-DiskEncryptionSet"
             ],      
