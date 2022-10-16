@@ -613,7 +613,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Site2-KeyVault-Key1",
-            "resourceGroup": "[parameters('Region1RG')]",    
+            "resourceGroup": "[parameters('Region2RG')]",    
             "dependsOn": [
                 "Deploy-Site2-KeyVault"        
             ],      
