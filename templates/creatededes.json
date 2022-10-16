@@ -1,0 +1,51 @@
+{
+    "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion":"1.0.0.0",
+    "parameters":{  
+        "DiskEncryptionSetAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Disk Encryption Set API Version"
+            }
+        }, 
+        "KeyVaultKeyUrl": {
+            "type": "string"
+        },               
+        "DEDESName": {
+            "type": "string"
+        },
+        "KeyVaultNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Key Vault Name Hash"
+            }
+        }        
+    },
+    "variables": {
+        "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
+        "Identifier": "[substring(variables('KeyVaultHash'), 19, 14)]",
+        "KeyVaultName": "[concat('KV-', variables('Identifier'))]",        
+        "KeyVaultId": "[resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults', variables('KeyVaultName'))]"
+    },    
+    "resources":[  
+       {  
+        "type":"Microsoft.Compute/diskEncryptionSets",
+        "name":"[parameters('DEDESName')]",
+        "apiVersion":"[parameters('DiskEncryptionSetAPIVersion')]",          
+        "location": "[resourceGroup().location]",
+        "identity": { 
+            "type": "SystemAssigned"
+            },
+        "properties":{  
+            "activeKey":{
+            "sourceVault": {
+                "id": "[variables('keyVaultId')]"
+            },
+            "keyUrl": "[parameters('KeyVaultKeyUrl')]"
+            },
+            "encryptionType": "EncryptionAtRestWithPlatformAndCustomerKeys"
+
+            }
+        }
+    ]           
+}

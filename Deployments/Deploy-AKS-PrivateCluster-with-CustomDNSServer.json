@@ -437,7 +437,7 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('ADSS-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('AKS-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet0Name": "[concat(parameters('NamingConvention'),'-OnPrem-VNet1')]",
         "vnet0Prefix": "[concat(parameters('vnet0ID'),'.0.0/16')]",

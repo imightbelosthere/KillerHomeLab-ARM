@@ -301,6 +301,8 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('ASRS-', variables('Identifier'))]",
         "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
+        "DEDES1Name": "[concat(parameters('NamingConvention'),'-DEDES1')]",
+        "DEDES2Name": "[concat(parameters('NamingConvention'),'-DEDES2')]",        
         "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
         "BackupObjectID": "262044b1-e2ce-469f-a196-69ab7ada62d3",        
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
@@ -330,6 +332,7 @@
         "ConnectionMonitorAPIVersion": "2022-01-01",
         "DeploymentAPIVersion": "2021-04-01",
         "DeploymentScriptAPIVersion": "2020-10-01",
+        "DiskEncryptionSetAPIVersion": "2022-07-02",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultKeyAPIVersion": "2021-11-01-preview",        
@@ -624,6 +627,66 @@
                     }
                 }
             }
-        }        
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site1-DiskEncryptionSet",
+            "resourceGroup": "[parameters('Region1RG')]",     
+            "dependsOn": [
+            "Deploy-Site1-KeyVault-Key"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/creatededes.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DiskEncryptionSetAPIVersion": {
+                        "value": "[variables('DiskEncryptionSetAPIVersion')]"
+                    },                                  
+                    "KeyVaultKeyUrl": {
+                        "value": "[reference('Deploy-Site1-KeyVault-Key1').outputs.KeyVaultKeyUrl.value]"                           
+                    },              
+                    "DEDESName": {
+                        "value": "[variables('DEDES1Name')]"
+                    },
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault1"
+                    }                    
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site2-DiskEncryptionSet",
+            "resourceGroup": "[parameters('Region2RG')]",     
+            "dependsOn": [
+            "Deploy-Site2-KeyVault-Key"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/creatededes.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DiskEncryptionSetAPIVersion": {
+                        "value": "[variables('DiskEncryptionSetAPIVersion')]"
+                    },                                  
+                    "KeyVaultKeyUrl": {
+                        "value": "[reference('Deploy-Site2-KeyVault-Key').outputs.KeyVaultKeyUrl.value]"                           
+                    },              
+                    "DEDESName": {
+                        "value": "[variables('DEDES2Name')]"
+                    },
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault2"
+                    }                    
+                }
+            }
+        }                    
     ]
 }
