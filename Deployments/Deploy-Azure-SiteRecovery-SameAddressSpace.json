@@ -583,7 +583,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Site1-KeyVault-Key1",
+            "name": "Deploy-Site1-KeyVault-Key",
             "resourceGroup": "[parameters('Region1RG')]",    
             "dependsOn": [
                 "Deploy-Site1-KeyVault"        
@@ -607,7 +607,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Site2-KeyVault-Key1",
+            "name": "Deploy-Site2-KeyVault-Key",
             "resourceGroup": "[parameters('Region2RG')]",    
             "dependsOn": [
                 "Deploy-Site2-KeyVault"        
@@ -647,7 +647,7 @@
                         "value": "[variables('DiskEncryptionSetAPIVersion')]"
                     },                                  
                     "KeyVaultKeyUrl": {
-                        "value": "[reference('Deploy-Site1-KeyVault-Key1').outputs.KeyVaultKeyUrl.value]"                           
+                        "value": "[reference('Deploy-Site1-KeyVault-Key').outputs.KeyVaultKeyUrl.value]"                           
                     },              
                     "DEDESName": {
                         "value": "[variables('DEDES1Name')]"
