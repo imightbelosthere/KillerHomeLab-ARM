@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DeploymentScriptAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Deployment Script API Version"
+            }
+        },        
+        "ManagedIDNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Managed ID Name Hash"
+            }
+        },
+        "ManagedIDRG": {
+            "type": "string",
+            "metadata": {
+                "description": "Managed ID Resource Group"
+            }
+        },        
+        "DEDESName": {
+          "type": "string",
+          "metadata": {
+            "description": "Double Encrypted Disk Encryption Set Name"
+          }
+        },
+        "ScriptLocation": {
+            "type": "string",
+          "metadata": {
+            "description": "Script Location"
+          }
+        }
+    },
+    "variables": {
+        "ManagedIDHash": "[guid(parameters('ManagedIDRG'), parameters('ManagedIDNameHash'))]",
+        "Identifier": "[substring(variables('ManagedIDHash'), 19, 14)]",
+        "ManagedIDName": "[concat('MI-', variables('Identifier'))]",      
+        "DeploymentScriptName": "[concat('Get',parameters('DEDESName'),'Principal')]"
+    },
+    "resources": [
+        {
+          "type": "Microsoft.Resources/deploymentScripts",
+          "apiVersion": "[parameters('DeploymentScriptAPIVersion')]",
+          "name": "[variables('DeploymentScriptName')]",
+          "location": "[parameters('ScriptLocation')]",
+          "kind": "AzurePowerShell",      
+          "identity": {
+            "type": "UserAssigned",
+            "userAssignedIdentities": {
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))]": {
+                }
+            }
+          },
+          "properties": {
+            "azPowerShellVersion": "5.0",
+            "timeout": "PT1H",
+            "arguments": "[format(' -DESName {0} -ResourceGroupName {1}', parameters('DEDESName'), parameters('ManagedIDRG'))]", // can pass an argument string, double quotes must be escaped
+            "scriptContent": "
+                param(
+                [string] [Parameter(Mandatory=$true)] $DESName,
+                [string] [Parameter(Mandatory=$true)] $ResourceGroupName
+                )
+        
+                $des = Get-AzDiskEncryptionSet -Name $DESName -ResourceGroupName $ResourceGroupName
+                $output = $des.Identity.PrincipalId
+                Write-Output $output
+                $DeploymentScriptOutputs = @{}
+                $DeploymentScriptOutputs['text'] = $output
+            ",
+            "cleanupPreference": "OnSuccess",
+            "retentionInterval": "P1D"
+          }
+        }
+      ],
+    "outputs": {
+        "DiskEncryptionSet": {
+            "type": "string",
+            "value": "[reference(variables('DeploymentScriptName')).outputs.text]"
+        }
+      }      
+    }

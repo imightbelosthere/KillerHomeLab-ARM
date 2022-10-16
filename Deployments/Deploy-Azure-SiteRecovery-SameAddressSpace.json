@@ -22,7 +22,14 @@
             "metadata": {
                 "description": "Region 2 Resource Group"
             }
-        },                                                                                                      
+        },
+        "DeploymentScriptRegion": {
+            "type": "string",
+            "defaultValue": "USGovVirginia", 
+            "metadata": {
+                "description": "Choose Region (Example: USGovVirginia)"
+            }
+        },                                                                                                            
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -687,6 +694,72 @@
                     }                    
                 }
             }
-        }                    
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Get-DoubleEncrypted-DiskEncryptionSet1-PrincipalID",
+            "resourceGroup": "[parameters('Region1RG')]",     
+            "dependsOn": [
+                "Deploy-Site1-DiskEncryptionSet"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/getdedespid.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },     
+                    "ManagedIDNameHash": {
+                        "value": "ManagedID"
+                    },
+                    "ManagedIDRG": {
+                        "value": "[parameters('Region1RG')]"
+                    },                                                        
+                    "DEDESName": {
+                        "value": "[variables('DEDES1Name')]"
+                    },
+                    "ScriptLocation": {
+                        "value": "[parameters('DeploymentScriptRegion')]"
+                    }              
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Get-DoubleEncrypted-DiskEncryptionSet2-PrincipalID",
+            "resourceGroup": "[parameters('Region2RG')]",     
+            "dependsOn": [
+                "Deploy-Site1-DiskEncryptionSet"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/getdedespid.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },     
+                    "ManagedIDNameHash": {
+                        "value": "ManagedID"
+                    },
+                    "ManagedIDRG": {
+                        "value": "[parameters('Region2RG')]"
+                    },                                                        
+                    "DEDESName": {
+                        "value": "[variables('DEDES2Name')]"
+                    },
+                    "ScriptLocation": {
+                        "value": "[parameters('DeploymentScriptRegion')]"
+                    }              
+                }
+            }
+        }                                   
     ]
 }
