@@ -760,6 +760,78 @@
                     }              
                 }
             }
-        }                                   
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-Site1-KeyVault",
+            "resourceGroup":  "[parameters('Region1RG')]",
+            "dependsOn": [
+                "Get-DoubleEncrypted-DiskEncryptionSet1-PrincipalID"
+            ],             
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatekeyvaultforasr.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    },
+                    "BackupObjectID": {
+                        "value": "[variables('BackupObjectID')]"
+                    },
+                    "UserManagedObjectID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },                                        
+                    "DESObjectID": {
+                        "value": "[reference('Get-DoubleEncrypted-DiskEncryptionSet1-PrincipalID').outputs.manageduseridentity.value]"
+                    },                                                            
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault1"
+                    }                      
+                }
+            }
+        },                                           
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-Site2-KeyVault",
+            "resourceGroup":  "[parameters('Region2RG')]",
+            "dependsOn": [
+                "Get-DoubleEncrypted-DiskEncryptionSet2-PrincipalID"
+            ],             
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatekeyvaultforasr.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    },
+                    "BackupObjectID": {
+                        "value": "[variables('BackupObjectID')]"
+                    },
+                    "UserManagedObjectID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },                                        
+                    "DESObjectID": {
+                        "value": "[reference('Get-DoubleEncrypted-DiskEncryptionSet2-PrincipalID').outputs.manageduseridentity.value]"
+                    },                                                            
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault2"
+                    }                      
+                }
+            }
+        }        
     ]
 }
