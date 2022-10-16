@@ -34,7 +34,7 @@
         }
     },
     "variables": {
-        "ManagedIDHash": "[guid(parameters('ManagedIDRG'), parameters('ManagedIDNameHash'))]",
+        "ManagedIDHash": "[guid(resourceGroup().id, parameters('ManagedIDNameHash'))]",
         "Identifier": "[substring(variables('ManagedIDHash'), 19, 14)]",
         "ManagedIDName": "[concat('MI-', variables('Identifier'))]",      
         "DeploymentScriptName": "[concat('Get',parameters('DEDESName'),'Principal')]"

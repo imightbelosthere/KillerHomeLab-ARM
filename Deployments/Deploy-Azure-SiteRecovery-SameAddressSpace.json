@@ -750,7 +750,7 @@
                         "value": "ManagedID"
                     },
                     "ManagedIDRG": {
-                        "value": "[parameters('Region2RG')]"
+                        "value": "[parameters('Region1RG')]"
                     },                                                        
                     "DEDESName": {
                         "value": "[variables('DEDES2Name')]"
