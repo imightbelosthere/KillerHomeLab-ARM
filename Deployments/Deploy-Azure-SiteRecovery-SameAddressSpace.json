@@ -247,13 +247,6 @@
                 "description": "Region 2 VNet Prefix"
             }
         },
-        "UniqueID": {
-            "type": "string",
-            "defaultValue": "1234567890x1",
-            "metadata": {
-                "description": "Unique Identifier"
-            }
-        },
         "VMOSSku": {
             "type": "string",
             "defaultValue": "2022-Datacenter",
@@ -308,7 +301,6 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('ASRS-', variables('Identifier'))]",
         "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
-        "ManagedIDName": "[concat(parameters('NamingConvention'),'-ManagedID-',parameters('UniqueID'))]",
         "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
         "BackupObjectID": "262044b1-e2ce-469f-a196-69ab7ada62d3",        
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
@@ -415,8 +407,8 @@
                     "UserAssignedMIAPIVersion": {
                         "value": "[variables('UserAssignedMIAPIVersion')]"
                     },
-                    "ManagedIDName": {
-                        "value": "[variables('ManagedIDName')]"
+                    "ManagedIDNameHash": {
+                        "value": "ManagedID"
                     }
                 }
             }
