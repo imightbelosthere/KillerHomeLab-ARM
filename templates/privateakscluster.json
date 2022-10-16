@@ -56,7 +56,7 @@
         "DNSZoneName": {
             "type": "String"
         },
-        "ManagedIDName": {
+        "ManagedIDNameHash": {
             "type": "string"
         },  
         "adminUsername": {
@@ -74,7 +74,10 @@
     },
     "variables": {
         "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]",
-        "ManagedID": "[resourceId(resourceGroup().name, 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('ManagedIDName'))]",        
+        "ManagedIDHash": "[guid(resourceGroup().id, parameters('ManagedIDNameHash'))]",
+        "Identifier": "[substring(variables('ManagedIDHash'), 19, 14)]",
+        "ManagedIDName": "[concat('KV-', variables('Identifier'))]",        
+        "ManagedID": "[resourceId(resourceGroup().name, 'Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))]",        
         "DNSZoneID": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', parameters('DNSZoneName'))]",
         "publicIPAddressName": "[concat(parameters('AKSClusterName'),'-pip')]",
         "AKSNodesResourceGroup": "[concat(resourceGroup().name,'-Nodes')]"

@@ -496,7 +496,6 @@
         "ForwardLookup1": "[concat(parameters('vnet0ID'),'.1')]",               
         "PrivateDNSZoneName": "[concat('privatelink.',resourceGroup().location,'.cx.aks.containerservice.azure.us')]",
         "AKSClusterName": "[concat(parameters('NamingConvention'),'-AKS-Private-Cluster')]",
-        "ManagedIDName": "[concat(parameters('NamingConvention'),'-mi-', uniqueString(resourceGroup().id))]",
         "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
         "BastionHostAPIVersion": "2022-07-01",
         "DeploymentAPIVersion": "2021-04-01",
@@ -1194,8 +1193,8 @@
                     "UserAssignedMIAPIVersion": {
                         "value": "[variables('UserAssignedMIAPIVersion')]"
                     },
-                    "ManagedIDName": {
-                        "value": "[variables('ManagedIDName')]"
+                    "ManagedIDNameHash": {
+                        "value": "ManagedID"
                     }
                 }
             }
@@ -1284,9 +1283,9 @@
                     "DNSZoneName": {
                         "value": "[variables('PrivateDNSZoneName')]"
                     },     
-                    "ManagedIDName": {
-                        "value": "[variables('ManagedIDName')]"
-                    },   
+                    "ManagedIDNameHash": {
+                        "value": "ManagedID"
+                    },  
                     "adminUsername": {
                     "value": "[parameters('adminUsername')]"
                     }, 

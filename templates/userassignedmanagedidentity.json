@@ -19,7 +19,6 @@
         "ManagedIDHash": "[guid(resourceGroup().id, parameters('ManagedIDNameHash'))]",
         "Identifier": "[substring(variables('ManagedIDHash'), 19, 14)]",
         "ManagedIDName": "[concat('KV-', variables('Identifier'))]"
-
     },    
     "resources": [
         {
