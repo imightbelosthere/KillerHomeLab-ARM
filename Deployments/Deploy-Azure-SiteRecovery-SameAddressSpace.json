@@ -789,7 +789,7 @@
                         "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
                     },                                        
                     "DESObjectID": {
-                        "value": "[reference('Get-DoubleEncrypted-DiskEncryptionSet1-PrincipalID').outputs.manageduseridentity.value]"
+                        "value": "[reference('Get-DoubleEncrypted-DiskEncryptionSet1-PrincipalID').outputs.DiskEncryptionSet.value]"
                     },                                                            
                     "KeyVaultNameHash": {
                         "value": "KeyVault1"
@@ -825,7 +825,7 @@
                         "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
                     },                                        
                     "DESObjectID": {
-                        "value": "[reference('Get-DoubleEncrypted-DiskEncryptionSet2-PrincipalID').outputs.manageduseridentity.value]"
+                        "value": "[reference('Get-DoubleEncrypted-DiskEncryptionSet2-PrincipalID').outputs.DiskEncryptionSet.value]"
                     },                                                            
                     "KeyVaultNameHash": {
                         "value": "KeyVault2"
