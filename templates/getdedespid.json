@@ -14,10 +14,10 @@
                 "description": "Managed ID Name Hash"
             }
         },
-        "ManagedIDRG": {
+        "DEDESRG": {
             "type": "string",
             "metadata": {
-                "description": "Managed ID Resource Group"
+                "description": "Disk Encryption Set Resource Group"
             }
         },        
         "DEDESName": {
@@ -56,7 +56,7 @@
           "properties": {
             "azPowerShellVersion": "5.0",
             "timeout": "PT1H",
-            "arguments": "[format(' -DESName {0} -ResourceGroupName {1}', parameters('DEDESName'), parameters('ManagedIDRG'))]", // can pass an argument string, double quotes must be escaped
+            "arguments": "[format(' -DESName {0} -ResourceGroupName {1}', parameters('DEDESName'), parameters('DEDESRG'))]", // can pass an argument string, double quotes must be escaped
             "scriptContent": "
                 param(
                 [string] [Parameter(Mandatory=$true)] $DESName,

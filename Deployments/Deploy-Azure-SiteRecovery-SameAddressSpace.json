@@ -716,7 +716,7 @@
                     "ManagedIDNameHash": {
                         "value": "ManagedID"
                     },
-                    "ManagedIDRG": {
+                    "DEDESRG": {
                         "value": "[parameters('Region1RG')]"
                     },                                                        
                     "DEDESName": {
@@ -734,7 +734,7 @@
             "name": "Get-DoubleEncrypted-DiskEncryptionSet2-PrincipalID",
             "resourceGroup": "[parameters('Region1RG')]",     
             "dependsOn": [
-                "Deploy-Site1-DiskEncryptionSet"
+                "Deploy-Site2-DiskEncryptionSet"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -749,8 +749,8 @@
                     "ManagedIDNameHash": {
                         "value": "ManagedID"
                     },
-                    "ManagedIDRG": {
-                        "value": "[parameters('Region1RG')]"
+                    "DEDESRG": {
+                        "value": "[parameters('Region2RG')]"
                     },                                                        
                     "DEDESName": {
                         "value": "[variables('DEDES2Name')]"
