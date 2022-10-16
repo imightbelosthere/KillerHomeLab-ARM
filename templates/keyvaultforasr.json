@@ -42,8 +42,8 @@
             "All"
         ],
         "tenantID": "[subscription().tenantId]",
-        "KeyVaultNameHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
-        "Identifier": "[substring(variables('KeyVaultNameHash'), 19, 14)]",
+        "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
+        "Identifier": "[substring(variables('KeyVaultHash'), 19, 14)]",
         "KeyVaultName": "[concat('KV-', variables('Identifier'))]"
 
     },
