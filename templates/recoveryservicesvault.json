@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "RecoveryServicesVaultAPIVersionAPIVersion": {
+        "RecoveryServicesVaultAPIVersion": {
             "type": "string",
             "metadata": {
                 "description": "Recovery Services Vault API Version"
@@ -24,7 +24,7 @@
     "resources": [
         {
             "type": "Microsoft.RecoveryServices/vaults",
-            "apiVersion": "[parameters('RecoveryServicesVaultAPIVersionAPIVersion')]",
+            "apiVersion": "[parameters('RecoveryServicesVaultAPIVersion')]",
             "name": "[variables('RSVaultName')]",
             "location": "[resourceGroup().location]",
             "tags": {
