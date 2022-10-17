@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "RecoveryServicesVaultAPIVersionAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Recovery Services Vault API Version"
+            }
+        },
+        "RecoveryServicesVaultNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Recovery Services Vault Name Hash"
+            }
+        }
+    },
+  "variables": {
+    "skuName":  "Standard",
+        "RecoveryServicesVaultHash": "[guid(resourceGroup().id, parameters('RecoveryServicesVaultNameHash'))]",
+        "Identifier": "[substring(variables('RecoveryServicesVaultHash'), 19, 14)]",
+        "RSVaultName": "[concat('RSV-', variables('Identifier'))]"    
+  },    
+    "resources": [
+        {
+            "type": "Microsoft.RecoveryServices/vaults",
+            "apiVersion": "[parameters('RecoveryServicesVaultAPIVersionAPIVersion')]",
+            "name": "[variables('RSVaultName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {
+            },
+            "properties": {},
+            "sku": {
+                "name": "RS0",
+                "tier": "[variables('skuName')]"          
+            }
+        }
+    ],
+    "outputs": {
+        "RSVaultName": {
+            "type": "string",
+            "value": "[variables('RSVaultName')]"
+        }
+    }    
+  }

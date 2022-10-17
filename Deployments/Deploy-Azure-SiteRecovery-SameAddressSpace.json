@@ -346,6 +346,7 @@
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
+        "RecoveryServicesVaultAPIVersion": "2022-08-01",
         "ResourceGroupAPIVersion": "2021-04-01",
         "RoleAssignmentAPIVersion": "2022-04-01",
         "SchedulesAPIVersion": "2018-09-15",
@@ -830,6 +831,54 @@
                     "KeyVaultNameHash": {
                         "value": "KeyVault2"
                     }                      
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",      
+            "name": "Deploy-Site1-RecoveryServicesVault",
+            "resourceGroup":   "[parameters('Region1RG')]",      
+            "dependsOn": [
+                "Update-Site1-KeyVault"        
+            ],       
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/recoveryservicesvault.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RSVaultName": {
+                        "value": "[variables('RecoveryServicesVaultAPIVersion')]"
+                    },
+                    "RecoveryServicesVaultNameHash": {
+                        "value": "RecoveryServices1"
+                    }                                          
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",      
+            "name": "Deploy-Site2-RecoveryServicesVault",
+            "resourceGroup":   "[parameters('Region2RG')]",      
+            "dependsOn": [
+                "Update-Site2-KeyVault"        
+            ],       
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/recoveryservicesvault.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RSVaultName": {
+                        "value": "[variables('RecoveryServicesVaultAPIVersion')]"
+                    },
+                    "RecoveryServicesVaultNameHash": {
+                        "value": "RecoveryServices2"
+                    }                                          
                 }
             }
         }        
