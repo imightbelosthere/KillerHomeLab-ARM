@@ -21,16 +21,16 @@
             }
         },        
         "DEDESName": {
-          "type": "string",
-          "metadata": {
-            "description": "Double Encrypted Disk Encryption Set Name"
-          }
+            "type": "string",
+            "metadata": {
+                "description": "Double Encrypted Disk Encryption Set Name"
+            }
         },
         "ScriptLocation": {
             "type": "string",
-          "metadata": {
-            "description": "Script Location"
-          }
+            "metadata": {
+                "description": "Script Location"
+            }
         }
     },
     "variables": {
@@ -41,37 +41,37 @@
     },
     "resources": [
         {
-          "type": "Microsoft.Resources/deploymentScripts",
-          "apiVersion": "[parameters('DeploymentScriptAPIVersion')]",
-          "name": "[variables('DeploymentScriptName')]",
-          "location": "[parameters('ScriptLocation')]",
-          "kind": "AzurePowerShell",      
-          "identity": {
-            "type": "UserAssigned",
-            "userAssignedIdentities": {
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))]": {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "[parameters('DeploymentScriptAPIVersion')]",
+            "name": "[variables('DeploymentScriptName')]",
+            "location": "[parameters('ScriptLocation')]",
+            "kind": "AzurePowerShell",      
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))]": {
+                    }
                 }
+            },
+            "properties": {
+                "azPowerShellVersion": "5.0",
+                "timeout": "PT1H",
+                "arguments": "[format(' -DESName {0} -ResourceGroupName {1}', parameters('DEDESName'), parameters('DEDESRG'))]", // can pass an argument string, double quotes must be escaped
+                "scriptContent": "
+                    param(
+                    [string] [Parameter(Mandatory=$true)] $DESName,
+                    [string] [Parameter(Mandatory=$true)] $ResourceGroupName
+                    )
+            
+                    $des = Get-AzDiskEncryptionSet -Name $DESName -ResourceGroupName $ResourceGroupName
+                    $output = $des.Identity.PrincipalId
+                    Write-Output $output
+                    $DeploymentScriptOutputs = @{}
+                    $DeploymentScriptOutputs['text'] = $output
+                ",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
             }
-          },
-          "properties": {
-            "azPowerShellVersion": "5.0",
-            "timeout": "PT1H",
-            "arguments": "[format(' -DESName {0} -ResourceGroupName {1}', parameters('DEDESName'), parameters('DEDESRG'))]", // can pass an argument string, double quotes must be escaped
-            "scriptContent": "
-                param(
-                [string] [Parameter(Mandatory=$true)] $DESName,
-                [string] [Parameter(Mandatory=$true)] $ResourceGroupName
-                )
-        
-                $des = Get-AzDiskEncryptionSet -Name $DESName -ResourceGroupName $ResourceGroupName
-                $output = $des.Identity.PrincipalId
-                Write-Output $output
-                $DeploymentScriptOutputs = @{}
-                $DeploymentScriptOutputs['text'] = $output
-            ",
-            "cleanupPreference": "OnSuccess",
-            "retentionInterval": "P1D"
-          }
         }
       ],
     "outputs": {
@@ -79,5 +79,5 @@
             "type": "string",
             "value": "[reference(variables('DeploymentScriptName')).outputs.text]"
         }
-      }      
-    }
+    }      
+}

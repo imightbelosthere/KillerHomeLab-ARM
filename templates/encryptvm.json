@@ -1,0 +1,90 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DeploymentScriptAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Deployment Script API Version"
+            }
+        },        
+        "ManagedIDNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Managed ID Name Hash"
+            }
+        },        
+        "DEDESName": {
+            "type": "string",
+            "metadata": {
+                "description": "Double Encrypted Disk Encryption Set Name"
+            }
+        },
+        "ScriptLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "Script Location"
+            }
+        },      
+        "VMName": {
+            "type": "string",
+            "metadata": {
+                "description": "VM Name"
+            }
+        }     
+    },
+    "variables": {
+        "ManagedIDHash": "[guid(resourceGroup().id, parameters('ManagedIDNameHash'))]",
+        "Identifier": "[substring(variables('ManagedIDHash'), 19, 14)]",
+        "ManagedIDName": "[concat('MI-', variables('Identifier'))]",      
+        "DeploymentScriptName": "[concat('Encrypt',parameters('VMName'))]"
+    },    
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "[parameters('DeploymentScriptAPIVersion')]",
+            "name": "[variables('DeploymentScriptName')]",
+            "location": "[parameters('ScriptLocation')]",
+            "kind": "AzurePowerShell",      
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))]": {
+                    }
+                }
+            },
+            "properties": {
+                "azPowerShellVersion": "5.0",
+                "timeout": "PT1H",
+                "arguments": "[format(' -DEDESName {0} -VMName {1} -ResourceGroupName {2}', parameters('DEDESName'), parameters('VMName'), resourceGroup().name)]", // can pass an argument string, double quotes must be escaped
+                "scriptContent": "
+                param(
+                [string] [Parameter(Mandatory=$true)] $DEDESName,
+                [string] [Parameter(Mandatory=$true)] $VMName,          
+                [string] [Parameter(Mandatory=$true)] $ResourceGroupName
+                )
+
+                $vm = Get-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName
+
+                $OSDisk = Get-AzDisk -Name $vm.StorageProfile.OsDisk.Name
+                IF ($OSDisk.Encryption.Type -ne 'EncryptionAtRestWithPlatformAndCustomerKeys'){
+                Stop-AzVm -Name $VMName -ResourceGroupName $ResourceGroupName -Force
+                $des = Get-AzDiskEncryptionSet -Name $DEDESName -ResourceGroupName $ResourceGroupName
+                New-AzDiskUpdateConfig -EncryptionType 'EncryptionAtRestWithPlatformAndCustomerKeys' -DiskEncryptionSetId $des.Id | Update-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $OSDisk.Name
+                }
+
+                $DataDiskCheck = $vm.StorageProfile.DataDisks
+                IF ($DataDiskCheck -ne $Null){
+                $DataDisk = Get-AzDisk -Name $vm.StorageProfile.DataDisks[0].Name
+                New-AzDiskUpdateConfig -EncryptionType 'EncryptionAtRestWithPlatformAndCustomerKeys' -DiskEncryptionSetId $des.Id | Update-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $DataDisk.Name
+                }
+                
+                $vmstatus = Get-AzVM -Name $VMName -ResourceGroupName $ResourceGroupName -status          
+                IF ($vmstatus.Statuses.DisplayStatus -eq 'VM deallocated') {Start-AzVm -Name $VMName -ResourceGroupName $ResourceGroupName}
+                ",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+            }
+        }
+    ]
+}

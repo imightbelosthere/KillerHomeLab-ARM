@@ -1044,6 +1044,75 @@
                     }
                 }
             }
-        }                               
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-Site1-KeyVault",
+            "resourceGroup":  "[parameters('Region1RG')]",
+            "dependsOn": [
+                "Get-DoubleEncrypted-DiskEncryptionSet1-PrincipalID"
+            ],             
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatekeyvaultforasr.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    },
+                    "BackupObjectID": {
+                        "value": "[variables('BackupObjectID')]"
+                    },
+                    "UserManagedObjectID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },                                        
+                    "DESObjectID": {
+                        "value": "[reference('Get-DoubleEncrypted-DiskEncryptionSet1-PrincipalID').outputs.DiskEncryptionSet.value]"
+                    },                                                            
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault1"
+                    }                      
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Encrypt-VirtualMachine",
+            "resourceGroup": "[parameters('Region1RG')]",     
+            "dependsOn": [
+                "Deploy-Site1-DiskEncryptionSet"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/encryptvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },     
+                    "ManagedIDNameHash": {
+                        "value": "ManagedID"
+                    },                                                       
+                    "DEDESName": {
+                        "value": "[variables('DEDES1Name')]"
+                    },
+                    "ScriptLocation": {
+                        "value": "[parameters('DeploymentScriptRegion')]"
+                    },
+                    "VMName": {
+                        "value": "[variables('vm1name')]"
+                    }                                 
+                }
+            }
+        }                                                                                        
     ]
 }
