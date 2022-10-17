@@ -974,6 +974,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Site1-VirtualMachine",
+            "resourceGroup":   "[parameters('Region1RG')]",                              
             "dependsOn": [
                 "/Deploy-Recovery-VirtualNetwork-01"
             ],
