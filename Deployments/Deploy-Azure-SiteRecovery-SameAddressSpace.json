@@ -313,27 +313,19 @@
         "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
         "BackupObjectID": "262044b1-e2ce-469f-a196-69ab7ada62d3",        
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
+        "vnet1NameR": "[concat(parameters('NamingConvention'),'-Recovery-VNet1')]",        
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
+        "vnet1subnet1NameR": "[concat(parameters('NamingConvention'),'-Recovery-VNet1-Subnet1')]",        
         "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
         "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",
+        "vnet1subnet2NameR": "[concat(parameters('NamingConvention'),'-Recovery--VNet1-Subnet2')]",        
         "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",
         "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
         "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
         "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
-        "vnet2Name": "[concat(parameters('NamingConvention'),'-VNet2')]",
-        "vnet2Prefix": "[concat(parameters('vnet2ID'),'.0.0/16')]",
-        "vnet2subnet1Name": "[concat(parameters('NamingConvention'),'-VNet2-Subnet1')]",
-        "vnet2subnet1Prefix": "[concat(parameters('vnet2ID'),'.1.0/24')]",
-        "vnet2subnet2Name": "[concat(parameters('NamingConvention'),'-VNet2-Subnet2')]",
-        "vnet2subnet2Prefix": "[concat(parameters('vnet2ID'),'.2.0/24')]",
-        "vnet2GatewaysubnetPrefix": "[concat(parameters('vnet2ID'),'.0.0/24')]",
-        "vnet2BastionsubnetPrefix": "[concat(parameters('vnet2ID'),'.253.0/24')]",
-        "vnet2FirewallsubnetPrefix": "[concat(parameters('vnet2ID'),'.254.0/24')]",
         "vm1name": "[concat(parameters('NamingConvention'),'-vm-01')]",           
         "vm1IP": "[concat(parameters('vnet1ID'),'.1.',variables('vmlastoctet'))]",                    
-        "vm2name": "[concat(parameters('NamingConvention'),'-vm-02')]",           
-        "vm2IP": "[concat(parameters('vnet2ID'),'.1.',variables('vmlastoctet'))]",                            
         "VMlastoctet": "10",        
         "BastionHostAPIVersion": "2021-08-01",
         "ConnectionMonitorAPIVersion": "2022-01-01",
@@ -849,7 +841,7 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "RSVaultName": {
+                    "RecoveryServicesVaultAPIVersion": {
                         "value": "[variables('RecoveryServicesVaultAPIVersion')]"
                     },
                     "RecoveryServicesVaultNameHash": {
@@ -873,7 +865,7 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "RSVaultName": {
+                    "RecoveryServicesVaultAPIVersion": {
                         "value": "[variables('RecoveryServicesVaultAPIVersion')]"
                     },
                     "RecoveryServicesVaultNameHash": {
@@ -881,6 +873,176 @@
                     }                                          
                 }
             }
-        }        
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-VirtualNetwork-01",
+            "resourceGroup":   "[parameters('Region1RG')]",                  
+            "dependsOn": [
+                "Deploy-Site1-RecoveryServicesVault"        
+            ],                   
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet1BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Recovery-VirtualNetwork-01",
+            "resourceGroup":   "[parameters('Region2RG')]",                  
+            "dependsOn": [
+                "Deploy-Site1-RecoveryServicesVault"        
+            ],                   
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1NameR')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1NameR')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet1subnet2NameR')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet1subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet1BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site1-VirtualMachine",
+            "dependsOn": [
+                "/Deploy-Recovery-VirtualNetwork-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('vm1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('vm1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('VM1Size')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        }                               
     ]
 }
