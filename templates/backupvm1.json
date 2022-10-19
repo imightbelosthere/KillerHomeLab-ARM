@@ -1,0 +1,89 @@
+{
+"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+"contentVersion": "1.0.0.0",
+"parameters": {
+    "DeploymentScriptAPIVersion": {
+        "type": "string",
+        "metadata": {
+            "description": "Deployment Script API Version"
+        }
+    },        
+    "ManagedIDNameHash": {
+        "type": "string",
+        "metadata": {
+            "description": "Managed ID Name Hash"
+        }
+    },
+    "RecoveryServicesVaultNameHash": {
+        "type": "string",
+        "metadata": {
+            "description": "Recovery Services Vault Name Hash"
+        }
+    },            
+    "BackupPolicyName": {
+      "type": "string",
+      "metadata": {
+        "description": "Backup Policy Name"
+      }
+    },
+    "ScriptLocation": {
+        "type": "string",
+      "metadata": {
+        "description": "Script Location"
+      }
+    },
+    "VMName": {
+        "type": "string",
+        "metadata": {
+            "description": "VM Name"
+        }
+    },     
+    "_artifactsLocation": {
+        "type": "string",
+        "metadata": {
+            "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+        }
+    },
+    "_artifactsLocationSasToken": {
+        "type": "securestring",
+        "metadata": {
+            "description": "Auto-generated token to access _artifactsLocation"
+        }
+    }    
+},
+"variables": {
+    "ManagedIDHash": "[guid(resourceGroup().id, parameters('ManagedIDNameHash'))]",
+    "MIIdentifier": "[substring(variables('ManagedIDHash'), 19, 14)]",
+    "ManagedIDName": "[concat('MI-', variables('MIIdentifier'))]",      
+    "RecoveryServicesVaultHash": "[guid(resourceGroup().id, parameters('RecoveryServicesVaultNameHash'))]",
+    "RSVIdentifier": "[substring(variables('RecoveryServicesVaultHash'), 19, 14)]",
+    "RSVaultName": "[concat('RSV-', variables('RSVIdentifier'))]" ,       
+    "DeploymentScriptName": "[concat('Backup',parameters('VMName'))]",
+    "ScriptURL": "[uri(parameters('_artifactsLocation'), concat('Scripts/BackupVM.ps1', parameters('_artifactsLocationSasToken')))]"
+},
+"resources": [
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "[parameters('DeploymentScriptAPIVersion')]",
+      "name": "[variables('DeploymentScriptName')]",
+      "location": "[parameters('ScriptLocation')]",
+      "kind": "AzurePowerShell",      
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))]": {
+          }
+        }
+      },
+      "properties": {
+        "azPowerShellVersion": "5.0",
+        "timeout": "PT1H",
+        "arguments": "[format(' -BackupPolicyName {0} -RSVaultName {1} -ResourceGroupName {2} -vmName {3}', parameters('BackupPolicyName'), variables('RSVaultName'), resourceGroup().name, parameters('VMName'))]", // can pass an argument string, double quotes must be escaped
+        "primaryScriptUri": "[variables('ScriptURL')]",
+        "cleanupPreference": "OnSuccess",
+        "retentionInterval": "P1D"
+      }
+    }
+  ]    
+}
+

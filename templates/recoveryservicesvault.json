@@ -17,9 +17,9 @@
     },
   "variables": {
     "skuName":  "Standard",
-        "RecoveryServicesVaultHash": "[guid(resourceGroup().id, parameters('RecoveryServicesVaultNameHash'))]",
-        "Identifier": "[substring(variables('RecoveryServicesVaultHash'), 19, 14)]",
-        "RSVaultName": "[concat('RSV-', variables('Identifier'))]"    
+    "RecoveryServicesVaultHash": "[guid(resourceGroup().id, parameters('RecoveryServicesVaultNameHash'))]",
+    "Identifier": "[substring(variables('RecoveryServicesVaultHash'), 19, 14)]",
+    "RSVaultName": "[concat('RSV-', variables('Identifier'))]"    
   },    
     "resources": [
         {

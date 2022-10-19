@@ -1077,6 +1077,48 @@
                     }                                 
                 }
             }
-        }                                                                                        
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Backup-VirtualMachine",
+            "resourceGroup": "[parameters('Region1RG')]",     
+            "dependsOn": [
+                "Encrypt-VirtualMachine"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/backupvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },     
+                    "ManagedIDNameHash": {
+                        "value": "ManagedID"
+                    },
+                    "RecoveryServicesVaultNameHash": {
+                        "value": "RecoveryServices1"
+                    },                                                              
+                    "BackupPolicyName": {
+                        "value": "[concat(parameters('NamingConvention'),'-Site1-BackupPolicy')]"
+                    },                                               
+                    "ScriptLocation": {
+                        "value": "[parameters('DeploymentScriptRegion')]"
+                    },
+                    "VMName": {
+                        "value": "[variables('vm1name')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                    
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                              
+                }
+            }
+        }                                                                                                                                                                                        
     ]
 }
