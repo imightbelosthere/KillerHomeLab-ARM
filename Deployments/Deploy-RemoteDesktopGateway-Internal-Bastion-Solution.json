@@ -147,7 +147,7 @@
             "metadata": {
                 "description": "Time Zone"
             }
-        },
+        },        
         "AutoShutdownEnabled": {
             "type": "string",
             "defaultValue": "No",
@@ -193,6 +193,36 @@
                 "description": "Deployment Account Object ID"
             }
         },
+        "PFXSASUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "PFX SAS Url"
+            }
+        },                                 
+        "PFXCommonName": {
+            "type": "string",
+            "metadata": {
+                "description": "PFX Common Name"
+            }
+        },                                    
+        "PFXHostName": {
+            "type": "string",
+            "metadata": {
+                "description": "PFX Host Name"
+            }
+        },                                         
+        "PFXDomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "PFX Domain Name"
+            }
+        },                                     
+        "PFXPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the PFX File"
+            }
+        },         
         "WindowsServerLicenseType": {
             "type": "string",
             "defaultValue": "None",
@@ -318,7 +348,8 @@
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
         "rdgwname": "[concat(parameters('NamingConvention'),'-rdgw-01')]",           
         "rdgwIP": "[concat(parameters('vnet1ID'),'.1.',variables('rdgwlastoctet'))]",                    
-        "rdgwlastoctet": "130",        
+        "rdgwlastoctet": "130",
+        "rdgwserverfqdn": "[concat(variables('rdgwname'),'.', variables('InternaldomainName'))]",           
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
         "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
@@ -603,6 +634,94 @@
                     },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Download-Import-Configure-Certificate-and-Install-IIS",
+            "dependsOn": [
+                "DomainJoinIssuingRDGW-22",
+                "DomainJoinIssuingRDGW-19",
+                "DomainJoinIssuingRDGW-16",
+                "DomainJoinIssuingRDGW-12R2"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/iisssl.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },             
+                    "computerName": {
+                        "value": "[variables('rdgwname')]"
+                    },
+                    "PFXSASUrl": {
+                        "value": "[parameters('PFXSASUrl')]"
+                    },              
+                    "PFXCommonName": {
+                        "value": "[parameters('PFXCommonName')]"
+                    },              
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }, 
+                    "PFXPassword": {
+                        "value": "[parameters('PFXPassword')]"
+                    },               
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-Remote-Desktop-Gateway",
+            "dependsOn": [
+                "Download-Import-Configure-Certificate-and-Install-IIS"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/rdgateway.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },             
+                    "computerName": {
+                        "value": "[variables('rdgwname')]"
+                    },
+                    "RDGatewayServerFQDN": {
+                        "value": "[variables('rdgwserverfqdn')]"
+                    },              
+                    "RDGatewayExternalFQDN": {
+                        "value": "[parameters('PFXCommonName')]"
+                    },              
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
                     }
                 }
             }

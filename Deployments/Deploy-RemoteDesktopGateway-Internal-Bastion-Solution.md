@@ -26,6 +26,11 @@ Parameters that support changes
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment
+- PFXSASUrl.  PFX SAS Url
+- PFXCommonName.  PFX Common Name (Example:  www.lb.killerhomelab.com)
+- PFXHostName.  PFX Host Name (Example:  www)
+- PFXDomainName.  PFX Domain Name (Example:  lb.killerhomelab.com)
+- PFXPassword.  PFX File Password
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - Naming Convention. Enter a name that will be used as a naming prefix for (Servers, VNets, etc) you are using.
