@@ -569,9 +569,9 @@
             "condition": "[equals(parameters('RDGWOSSku'),'2012-R2-Datacenter')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "DomainJoinIssuingCA-12R2",
+            "name": "DomainJoinIssuingRDGW-12R2",
             "dependsOn": [
-                "Deploy-IssuingCertificateAuthority"
+                "Deploy-RemoteDesktopGateway-Server-01"
             ],
             "properties": {
                 "mode": "Incremental",
