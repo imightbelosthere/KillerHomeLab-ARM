@@ -247,13 +247,6 @@
                 "description": "Region 1 VNet Prefix"
             }
         },
-        "vnet2ID": {
-            "type": "string",
-            "defaultValue": "172.17",
-            "metadata": {
-                "description": "Region 2 VNet Prefix"
-            }
-        },
         "VMOSSku": {
             "type": "string",
             "defaultValue": "2022-Datacenter",
@@ -280,14 +273,7 @@
             "metadata": {
                 "description": "Region1 VMSize"
             }
-        },                                                    
-        "VM2Size": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "Region2 VMSize"
-            }
-        },                                                               
+        },                                                                         
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -327,26 +313,20 @@
         "vm1name": "[concat(parameters('NamingConvention'),'-vm-01')]",           
         "vm1IP": "[concat(parameters('vnet1ID'),'.1.',variables('vmlastoctet'))]",                    
         "VMlastoctet": "10",        
-        "BastionHostAPIVersion": "2021-08-01",
-        "ConnectionMonitorAPIVersion": "2022-01-01",
         "DeploymentAPIVersion": "2021-04-01",
         "DeploymentScriptAPIVersion": "2020-10-01",
         "DiskEncryptionSetAPIVersion": "2022-07-02",
-        "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultKeyAPIVersion": "2021-11-01-preview",        
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
-        "PublicIPAddressesAPIVersion": "2021-08-01",
         "RecoveryServicesVaultAPIVersion": "2022-08-01",
         "ResourceGroupAPIVersion": "2021-04-01",
         "RoleAssignmentAPIVersion": "2022-04-01",
         "SchedulesAPIVersion": "2018-09-15",
         "UserAssignedMIAPIVersion": "2022-01-31-preview",
         "VirtualMachinesAPIVersion": "2022-03-01",
-        "VirtualNetworkAPIVersion": "2020-11-01",
-        "VirtualNetworkPeeringAPIVersion": "2022-01-01",
-        "ExtensionsTypeHandlerVersion": "2.83"    
+        "VirtualNetworkAPIVersion": "2020-11-01"
     },
     "resources": [
         {
@@ -1119,6 +1099,63 @@
                     }                              
                 }
             }
-        }                                                                                                                                                                                        
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Enable-ASR-for-VirtualMachine",
+            "resourceGroup": "[parameters('Region1RG')]",
+            "dependsOn": [
+                "BackupSRV1"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('linkedtemplates/enableasr.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },     
+                    "ManagedIDNameHash": {
+                        "value": "ManagedID"
+                    },
+                    "RecoveryServicesVaultNameHash": {
+                        "value": "RecoveryServices2"
+                    },                       
+                    "DEDESName": {
+                        "value": "[variables('DEDES2Name')]"
+                    },                                       
+                    "Site1Name": {
+                        "value": "site1"
+                    },              
+                    "Site2Name": {
+                        "value": "site2"
+                    },              
+                    "TargetVNetName": {
+                        "value": "[variables('vnet1NameR')]"             
+                    },
+                    "TargetRG": {
+                        "value":  "[parameters('Region2RG')]"
+                    },                  
+                    "TargetLocation": {
+                        "value": "[parameters('Region2')]"
+                    },                                                    
+                    "VMName": {
+                        "value": "[variables('vm1name')]"
+                    },              
+                    "ScriptLocation": {
+                        "value": "[parameters('DeploymentScriptRegion')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                  
+                }
+            }
+        }                                                                                                                                                                                                
     ]
 }

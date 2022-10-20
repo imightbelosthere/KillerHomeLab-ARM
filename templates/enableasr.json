@@ -1,0 +1,118 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DeploymentScriptAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Deployment Script API Version"
+            }
+        },
+        "ManagedIDNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Managed ID Name Hash"
+            }
+        },
+        "RecoveryServicesVaultNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Recovery Services Vault Name Hash"
+            }
+        },        
+        "DEDESName": {
+            "type": "string",
+            "metadata": {
+                "description": "Double-Encrypted Disk Encryption Set Name"
+            }
+        }, 
+        "Site1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Site1 Naming Convention"
+            }
+        },   
+        "Site2Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Site2 Naming Convention"
+            }
+        },
+        "TargetVNetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Recovery VNet Name"
+            }
+        },                   
+        "TargetRG": {
+            "type": "string",
+            "metadata": {
+                "description": "Target Resource Group"
+            }
+        },                           
+        "TargetLocation": {
+            "type": "string",
+            "metadata": {
+              "description": "Site2 Resources Location"
+            }
+        },             
+        "VMName": {
+            "type": "string",
+            "metadata": {
+                "description": "VM Name"
+            }
+        },                   
+        "ScriptLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "Script Location"
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            }
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation"
+            }
+        }    
+    },
+    "variables": {
+        "ManagedIDHash": "[guid(resourceGroup().id, parameters('ManagedIDNameHash'))]",
+        "MIIdentifier": "[substring(variables('ManagedIDHash'), 19, 14)]",
+        "ManagedIDName": "[concat('MI-', variables('MIIdentifier'))]",      
+        "RecoveryServicesVaultHash": "[guid(resourceGroup().id, parameters('RecoveryServicesVaultNameHash'))]",
+        "RSVIdentifier": "[substring(variables('RecoveryServicesVaultHash'), 19, 14)]",
+        "RSVaultName": "[concat('RSV-', variables('RSVIdentifier'))]" ,       
+        "DeploymentScriptName": "[concat('EnableASRfor',parameters('VMName'))]",  
+        "ScriptURL": "[uri(parameters('_artifactsLocation'), concat('Scripts/EnableASR.ps1', parameters('_artifactsLocationSasToken')))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "[parameters('DeploymentScriptAPIVersion')]",
+            "name": "[variables('DeploymentScriptName')]",
+            "location": "[parameters('ScriptLocation')]",
+            "kind": "AzurePowerShell",      
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))]": {
+                    }
+                }
+            },
+            "properties": {
+                "azPowerShellVersion": "5.0",
+                "timeout": "PT1H",
+                "arguments": "[format(' -RSVaultName {0} -RecoveryVNetName {1} -DEDESName {2} -Site1Name {3} -Site2Name {4} -SourceRG {5} -TargetRG {6} -location1 {7} -location2 {8} -vmName {9}', variables('RSVaultName'), parameters('TargetVNetName'), parameters('DEDESName'), parameters('Site1Name'), parameters('Site2Name'), resourceGroup().name, parameters('TargetRG'), resourceGroup().location, parameters('TargetLocation'), parameters('VMName'))]", // can pass an argument string, double quotes must be escaped
+                "primaryScriptUri": "[variables('ScriptURL')]",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+            }
+        }
+    ]    
+}
