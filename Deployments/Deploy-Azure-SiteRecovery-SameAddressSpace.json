@@ -1106,7 +1106,7 @@
             "name": "Enable-ASR-for-VirtualMachine",
             "resourceGroup": "[parameters('Region1RG')]",
             "dependsOn": [
-                "BackupSRV1"
+                "Encrypt-VirtualMachine"
             ],      
             "properties": {
                 "mode": "Incremental",
