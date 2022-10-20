@@ -43,11 +43,5 @@
             "encryptionType": "EncryptionAtRestWithPlatformAndCustomerKeys"
             }
         }
-    ],
-    "outputs": {
-        "DiskEncryptionSetPrincipalId": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Compute/diskEncryptionSets', parameters('DEDESName'))).Identity.PrincipalId]"
-        }
-    }               
+    ]              
 }
