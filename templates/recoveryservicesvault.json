@@ -37,7 +37,7 @@
         }
     ],
     "outputs": {
-        "RSVaultName": {
+        "RecoveryServicesVaultName": {
             "type": "string",
             "value": "[variables('RSVaultName')]"
         }

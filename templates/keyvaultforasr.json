@@ -97,5 +97,11 @@
                 }
             }
         }
-    ]
+    ],
+    "outputs": {
+        "KeyVaultName": {
+            "type": "string",
+            "value": "[variables('KeyVaultName')]"
+        }         
+    }     
 }

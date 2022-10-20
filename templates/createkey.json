@@ -8,23 +8,18 @@
                 "description": "KeyVault Key API Version"
             }
         },        
-        "KeyVaultNameHash": {
+        "KeyVaultName": {
             "type": "string",
             "metadata": {
-                "description": "Key Vault Name Hash"
+                "description": "Key Vault Name"
             }
         }
-    },
-    "variables": {
-        "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
-        "Identifier": "[substring(variables('KeyVaultHash'), 19, 14)]",
-        "KeyVaultName": "[concat('KV-', variables('Identifier'))]"        
-    },    
+    },   
     "resources":[  
         {
         "type": "Microsoft.KeyVault/vaults/keys",
         "apiVersion": "[parameters('KeyVaultKeyAPIVersion')]",
-        "name": "[concat(variables('KeyVaultName'), '/Key')]",
+        "name": "[concat(parameters('KeyVaultName'), '/Key')]",
         "location": "[resourceGroup().location]",
         "properties": {
             "kty": "RSA",
@@ -35,7 +30,7 @@
     "outputs": {
         "KeyVaultKeyUrl": {
             "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults/keys', variables('KeyVaultName'), 'Key')).KeyUriWithVersion]"
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults/keys', parameters('KeyVaultName'), 'Key')).KeyUriWithVersion]"
         }
     }       
  }

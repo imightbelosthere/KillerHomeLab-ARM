@@ -8,16 +8,16 @@
                 "description": "Deployment Script API Version"
             }
         },        
-        "ManagedIDNameHash": {
+        "ManagedIDName": {
             "type": "string",
             "metadata": {
-                "description": "Managed ID Name Hash"
+                "description": "Managed ID Name"
             }
         },
-        "RecoveryServicesVaultNameHash": {
+        "RecoveryServicesVaultName": {
             "type": "string",
             "metadata": {
-                "description": "Recovery Services Vault Name Hash"
+                "description": "Recovery Services Vault Name"
             }
         },            
         "BackupPolicyName": {
@@ -52,12 +52,6 @@
         }    
     },
     "variables": {
-        "ManagedIDHash": "[guid(resourceGroup().id, parameters('ManagedIDNameHash'))]",
-        "MIIdentifier": "[substring(variables('ManagedIDHash'), 19, 14)]",
-        "ManagedIDName": "[concat('MI-', variables('MIIdentifier'))]",      
-        "RecoveryServicesVaultHash": "[guid(resourceGroup().id, parameters('RecoveryServicesVaultNameHash'))]",
-        "RSVIdentifier": "[substring(variables('RecoveryServicesVaultHash'), 19, 14)]",
-        "RSVaultName": "[concat('RSV-', variables('RSVIdentifier'))]" ,       
         "DeploymentScriptName": "[concat('Backup',parameters('VMName'))]",
         "ScriptURL": "[uri(parameters('_artifactsLocation'), concat('Scripts/BackupVM.ps1', parameters('_artifactsLocationSasToken')))]"
     },
@@ -71,14 +65,14 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))]": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('ManagedIDName'))]": {
                     }
                 }
             },
             "properties": {
                 "azPowerShellVersion": "5.0",
                 "timeout": "PT1H",
-                "arguments": "[format(' -BackupPolicyName {0} -RSVaultName {1} -ResourceGroupName {2} -vmName {3}', parameters('BackupPolicyName'), variables('RSVaultName'), resourceGroup().name, parameters('VMName'))]", // can pass an argument string, double quotes must be escaped
+                "arguments": "[format(' -BackupPolicyName {0} -RSVaultName {1} -ResourceGroupName {2} -vmName {3}', parameters('BackupPolicyName'), parameters('RecoveryServicesVaultName'), resourceGroup().name, parameters('VMName'))]", // can pass an argument string, double quotes must be escaped
                 "primaryScriptUri": "[variables('ScriptURL')]",
                 "cleanupPreference": "OnSuccess",
                 "retentionInterval": "P1D"

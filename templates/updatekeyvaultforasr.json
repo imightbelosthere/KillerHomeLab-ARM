@@ -32,10 +32,10 @@
                 "description": "Disk Encryption Set Object ID"
             }
         },
-        "KeyVaultNameHash": {
+        "KeyVaultName": {
             "type": "string",
             "metadata": {
-                "description": "Key Vault Name Hash"
+                "description": "Key Vault Name"
             }
         }        
     },
@@ -47,15 +47,12 @@
         "All"
         ],
         "skuName":  "Premium",
-        "tenantID": "[subscription().tenantId]",
-        "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
-        "Identifier": "[substring(variables('KeyVaultHash'), 19, 14)]",
-        "KeyVaultName": "[concat('KV-', variables('Identifier'))]"        
+        "tenantID": "[subscription().tenantId]"
     },
     "resources": [
         {
             "type": "Microsoft.KeyVault/vaults",
-            "name": "[variables('keyVaultName')]",
+            "name": "[parameters('keyVaultName')]",
             "apiVersion": "[parameters('KeyVaultAPIVersion')]",
             "location": "[resourceGroup().location]",
             "properties": {

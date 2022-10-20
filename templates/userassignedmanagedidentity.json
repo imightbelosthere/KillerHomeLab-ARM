@@ -32,6 +32,10 @@
         "manageduseridentity": {
             "type": "string",
             "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))).principalId]"
-        }   
+        },
+        "manageduseridentityname": {
+            "type": "string",
+            "value": "[variables('ManagedIDName')]"
+        }           
     }      
 }

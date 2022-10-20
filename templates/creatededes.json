@@ -14,18 +14,15 @@
         "DEDESName": {
             "type": "string"
         },
-        "KeyVaultNameHash": {
+        "KeyVaultName": {
             "type": "string",
             "metadata": {
-                "description": "Key Vault Name Hash"
+                "description": "Key Vault Name"
             }
         }        
     },
     "variables": {
-        "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
-        "Identifier": "[substring(variables('KeyVaultHash'), 19, 14)]",
-        "KeyVaultName": "[concat('KV-', variables('Identifier'))]",        
-        "KeyVaultId": "[resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults', variables('KeyVaultName'))]"
+        "KeyVaultId": "[resourceId(resourceGroup().name, 'Microsoft.KeyVault/vaults', parameters('KeyVaultName'))]"
     },    
     "resources":[  
        {  
@@ -44,8 +41,13 @@
             "keyUrl": "[parameters('KeyVaultKeyUrl')]"
             },
             "encryptionType": "EncryptionAtRestWithPlatformAndCustomerKeys"
-
             }
         }
-    ]           
+    ],
+    "outputs": {
+        "DiskEncryptionSetPrincipalId": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Compute/diskEncryptionSets', parameters('DEDESName'))).Identity.PrincipalId]"
+        }
+    }               
 }

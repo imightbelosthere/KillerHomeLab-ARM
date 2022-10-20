@@ -578,8 +578,8 @@
                     "KeyVaultKeyAPIVersion": {
                         "value": "[variables('KeyVaultKeyAPIVersion')]"
                     },                    
-                    "KeyVaultNameHash": {
-                        "value": "KeyVault1"
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-Site1-KeyVault').outputs.KeyVaultName.value]"
                     }
                 }
             }
@@ -602,8 +602,8 @@
                     "KeyVaultKeyAPIVersion": {
                         "value": "[variables('KeyVaultKeyAPIVersion')]"
                     },                                        
-                    "KeyVaultNameHash": {
-                        "value": "KeyVault2"
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-Site2-KeyVault').outputs.KeyVaultName.value]"
                     }
                 }
             }
@@ -632,9 +632,9 @@
                     "DEDESName": {
                         "value": "[variables('DEDES1Name')]"
                     },
-                    "KeyVaultNameHash": {
-                        "value": "KeyVault1"
-                    }                    
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-Site1-KeyVault').outputs.KeyVaultName.value]"
+                    }                  
                 }
             }
         },
@@ -662,9 +662,9 @@
                     "DEDESName": {
                         "value": "[variables('DEDES2Name')]"
                     },
-                    "KeyVaultNameHash": {
-                        "value": "KeyVault2"
-                    }                    
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-Site2-KeyVault').outputs.KeyVaultName.value]"
+                    }                   
                 }
             }
         },
@@ -686,8 +686,8 @@
                     "DeploymentScriptAPIVersion": {
                         "value": "[variables('DeploymentScriptAPIVersion')]"
                     },     
-                    "ManagedIDNameHash": {
-                        "value": "ManagedID"
+                    "ManagedIDName": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
                     },
                     "DEDESRG": {
                         "value": "[parameters('Region1RG')]"
@@ -719,8 +719,8 @@
                     "DeploymentScriptAPIVersion": {
                         "value": "[variables('DeploymentScriptAPIVersion')]"
                     },     
-                    "ManagedIDNameHash": {
-                        "value": "ManagedID"
+                    "ManagedIDName": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
                     },
                     "DEDESRG": {
                         "value": "[parameters('Region2RG')]"
@@ -764,9 +764,9 @@
                     "DESObjectID": {
                         "value": "[reference('Get-DoubleEncrypted-DiskEncryptionSet1-PrincipalID').outputs.DiskEncryptionSet.value]"
                     },                                                            
-                    "KeyVaultNameHash": {
-                        "value": "KeyVault1"
-                    }                      
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-Site1-KeyVault').outputs.KeyVaultName.value]"
+                    }                     
                 }
             }
         },                                                                                            
@@ -800,9 +800,9 @@
                     "DESObjectID": {
                         "value": "[reference('Get-DoubleEncrypted-DiskEncryptionSet2-PrincipalID').outputs.DiskEncryptionSet.value]"
                     },                                                            
-                    "KeyVaultNameHash": {
-                        "value": "KeyVault2"
-                    }                      
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-Site2-KeyVault').outputs.KeyVaultName.value]"
+                    }                   
                 }
             }
         },
@@ -1043,8 +1043,8 @@
                     "DeploymentScriptAPIVersion": {
                         "value": "[variables('DeploymentScriptAPIVersion')]"
                     },     
-                    "ManagedIDNameHash": {
-                        "value": "ManagedID"
+                    "ManagedIDName": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
                     },                                                       
                     "DEDESName": {
                         "value": "[variables('DEDES1Name')]"
@@ -1076,12 +1076,12 @@
                     "DeploymentScriptAPIVersion": {
                         "value": "[variables('DeploymentScriptAPIVersion')]"
                     },     
-                    "ManagedIDNameHash": {
-                        "value": "ManagedID"
-                    },
-                    "RecoveryServicesVaultNameHash": {
-                        "value": "RecoveryServices1"
-                    },                                                              
+                    "ManagedIDName": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
+                    }, 
+                    "RecoveryServicesVaultName": {
+                        "value": "[reference('Deploy-Site1-RecoveryServicesVault').outputs.RecoveryServicesVaultName.value]"
+                    },                                                             
                     "BackupPolicyName": {
                         "value": "[concat(parameters('NamingConvention'),'-Site1-BackupPolicy')]"
                     },                                               
@@ -1118,12 +1118,12 @@
                     "DeploymentScriptAPIVersion": {
                         "value": "[variables('DeploymentScriptAPIVersion')]"
                     },     
-                    "ManagedIDNameHash": {
-                        "value": "ManagedID"
-                    },
-                    "RecoveryServicesVaultNameHash": {
-                        "value": "RecoveryServices2"
-                    },                       
+                    "ManagedIDName": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
+                    }, 
+                    "RecoveryServicesVaultName": {
+                        "value": "[reference('Deploy-Site2-RecoveryServicesVault').outputs.RecoveryServicesVaultName.value]"
+                    },                        
                     "DEDESName": {
                         "value": "[variables('DEDES2Name')]"
                     },                                       

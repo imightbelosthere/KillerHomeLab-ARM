@@ -8,10 +8,10 @@
                 "description": "Deployment Script API Version"
             }
         },        
-        "ManagedIDNameHash": {
+        "ManagedIDName": {
             "type": "string",
             "metadata": {
-                "description": "Managed ID Name Hash"
+                "description": "Managed ID Name"
             }
         },        
         "DEDESName": {
@@ -34,9 +34,6 @@
         }     
     },
     "variables": {
-        "ManagedIDHash": "[guid(resourceGroup().id, parameters('ManagedIDNameHash'))]",
-        "Identifier": "[substring(variables('ManagedIDHash'), 19, 14)]",
-        "ManagedIDName": "[concat('MI-', variables('Identifier'))]",      
         "DeploymentScriptName": "[concat('Encrypt',parameters('VMName'))]"
     },    
     "resources": [
@@ -49,7 +46,7 @@
             "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
-                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('ManagedIDName'))]": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('ManagedIDName'))]": {
                     }
                 }
             },
