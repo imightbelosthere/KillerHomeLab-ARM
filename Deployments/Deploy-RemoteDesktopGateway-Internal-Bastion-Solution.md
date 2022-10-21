@@ -39,4 +39,6 @@ Parameters that support changes
 - Net Bios Domain.  Enter a valid Net Bios Domain Name (Example:  killerhomelab).
 - Internal Domain.  Enter a valid Internal Domain (Exmaple:  killerhomelab)
 - InternalTLD.  Select a valid Top-Level Domain using the Pull-Down Menu.
+- External Domain. Enter a valid External Domain (Example: sub1.killerhomelab.  Remove sub1. if you do not want a subdomain for the External domain
+- ExternalTLD. Select a valid Top-Level Domain for your External Domain using the Pull-Down Menu.
 - Vnet1ID.  Enter first 2 octets of your desired Address Space for Virtual Network 1 (Example:  10.1)

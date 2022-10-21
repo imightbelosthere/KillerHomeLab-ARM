@@ -290,6 +290,31 @@
                 "description": "Top-Level Domain Name"
             }
         },
+        "ExternalDomain": {
+            "type": "string",
+            "defaultValue": "sub1.killerhomelab",
+            "metadata": {
+                "description": "External DNS Domain"
+            }
+        },    
+        "ExternalTLD": {
+            "type": "string",
+            "defaultValue": "com",
+            "allowedValues": [
+                "com",
+                "net",
+                "org",
+                "edu",
+                "gov",
+                "mil",
+                "us",
+                "tk",
+                "ml"
+            ],      
+            "metadata": {
+                "description": "External Top-Level Domain Name"
+            }
+        },                
         "vnet1ID": {
             "type": "string",
             "defaultValue": "172.16",
@@ -346,11 +371,13 @@
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
-        "rdgwname": "[concat(parameters('NamingConvention'),'-rdgw-01')]",           
-        "rdgwIP": "[concat(parameters('vnet1ID'),'.1.',variables('rdgwlastoctet'))]",                    
-        "rdgwlastoctet": "130",
-        "rdgwserverfqdn": "[concat(variables('rdgwname'),'.', variables('InternaldomainName'))]",           
-        "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
+        "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",        
+        "rdgw1name": "[concat(parameters('NamingConvention'),'-rdgw-01')]",           
+        "rdgw1IP": "[concat(parameters('vnet1ID'),'.1.',variables('rdgw1lastoctet'))]",                    
+        "rdgw1lastoctet": "130",
+        "rdgwserverfqdn": "[concat(variables('rdgw1name'),'.', variables('InternaldomainName'))]",           
+        "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]", 
+        "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]",                
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
         "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
         "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
@@ -402,6 +429,41 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-RDGW-DNS-Records",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configdnsrdgw.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "ExternalDomainName": {
+                        "value": "[variables('ExternaldomainName')]"
+                    },                      
+                    "rdgwIP": {
+                        "value": "[variables('rdgw1IP')]"
+                    },                                                                                                                          
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-RemoteDesktopGateway-Server-01",
             "properties": {
                 "mode": "Incremental",
@@ -420,10 +482,10 @@
                         "value": "[variables('SchedulesAPIVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('rdgwname')]"
+                        "value": "[variables('rdgw1name')]"
                     },
                     "computerIP": {
-                        "value": "[variables('rdgwIP')]"
+                        "value": "[variables('rdgw1IP')]"
                     },
                     "Publisher": {
                         "value": "MicrosoftWindowsServer"
@@ -492,7 +554,7 @@
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },                     
 					"computerName": {
-						"value": "[variables('rdgwname')]"
+						"value": "[variables('rdgw1name')]"
 					},
 					"domainName": {
 						"value": "[variables('InternaldomainName')]"
@@ -534,7 +596,7 @@
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('rdgwname')]"
+                        "value": "[variables('rdgw1name')]"
                     },
                     "domainName": {
                         "value": "[variables('InternaldomainName')]"
@@ -576,7 +638,7 @@
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('rdgwname')]"
+                        "value": "[variables('rdgw1name')]"
                     },
                     "domainName": {
                         "value": "[variables('InternaldomainName')]"
@@ -618,7 +680,7 @@
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('rdgwname')]"
+                        "value": "[variables('rdgw1name')]"
                     },
                     "domainName": {
                         "value": "[variables('InternaldomainName')]"
@@ -662,7 +724,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },             
                     "computerName": {
-                        "value": "[variables('rdgwname')]"
+                        "value": "[variables('rdgw1name')]"
                     },
                     "PFXSASUrl": {
                         "value": "[parameters('PFXSASUrl')]"
@@ -709,7 +771,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },             
                     "computerName": {
-                        "value": "[variables('rdgwname')]"
+                        "value": "[variables('rdgw1name')]"
                     },
                     "RDGatewayServerFQDN": {
                         "value": "[variables('rdgwserverfqdn')]"

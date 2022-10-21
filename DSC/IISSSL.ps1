@@ -87,10 +87,10 @@
                 $PFXCN = "$using:PFXCommonName"
                 $BindingCheck = Get-WebBinding -Name "Default Web Site" -Protocol https -ErrorAction 0
                 IF ($BindingCheck -eq $Null){
-                    $lbwwwcert = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like 'CN='+$PFXCN+'*'})
+                    $cert = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like 'CN='+$PFXCN+'*'})
                     New-WebBinding -Name "Default Web Site" -IP "*" -Port 443 -Protocol https
                     $Binding = Get-WebBinding -Name "Default Web Site" -Protocol https
-                    $Binding.AddSslCertificate($lbwwwcert.GetCertHashString(), "my")
+                    $Binding.AddSslCertificate($cert.GetCertHashString(), "my")
                     $VMName = "$using:ComputerName"
                     (Get-Content -path c:\inetpub\wwwroot\iisstart.htm -Raw) -replace "<body>","<body>$VMName" | Set-Content -Path C:\inetpub\wwwroot\iisstart.htm
                 }
@@ -98,7 +98,7 @@
             GetScript =  { @{} }
             TestScript = { $false}
             PsDscRunAsCredential = $Admincreds
-            DependsOn = '[xRemoteFile]DownloadPFX'
+            DependsOn = '[xRemoteFile]DownloadPFX','[Script]ImportPFX'
         }
     }
 }
