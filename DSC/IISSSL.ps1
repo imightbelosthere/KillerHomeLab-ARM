@@ -35,7 +35,6 @@
         {
             Ensure = 'Present'
             Name = 'Web-Server'
-            IncludeAllSubFeature = $true
         }
 
         WindowsFeature Web-Mgmt-Console
