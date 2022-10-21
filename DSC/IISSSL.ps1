@@ -12,20 +12,7 @@
     Import-DscResource -Module xPSDesiredStateConfiguration
 
     Node localhost
-    {
-        WindowsFeature Web-Mgmt-Console
-        {
-            Ensure = 'Present'
-            Name = 'Web-Mgmt-Console'
-        }
-        
-        WindowsFeature Web-Server
-        {
-            Ensure = 'Present'
-            Name = 'Web-Server'
-            IncludeAllSubFeature = $true
-        }
-
+    {   
         Registry SchUseStrongCrypto
         {
             Key                         = 'HKLM:\SOFTWARE\Microsoft\.NETFramework\v4.0.30319'
@@ -44,9 +31,17 @@
             Ensure                      = 'Present'
         }
 
-        LocalConfigurationManager
+        WindowsFeature Web-Server
         {
-            RebootNodeIfNeeded = $true
+            Ensure = 'Present'
+            Name = 'Web-Server'
+            IncludeAllSubFeature = $true
+        }
+
+        WindowsFeature Web-Mgmt-Console
+        {
+            Ensure = 'Present'
+            Name = 'Web-Mgmt-Console'
         }
 
         File Certificates
