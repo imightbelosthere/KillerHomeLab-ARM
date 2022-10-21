@@ -26,10 +26,10 @@ Parameters that support changes
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment
+- UsersGroup. Group that contains Users requiring Access to Remote Desktop Gateway.
+- ComputersGroup. Group that contains Computers requiring Access to Remote Desktop Gateway.
 - PFXSASUrl.  PFX SAS Url
-- PFXCommonName.  PFX Common Name (Example:  www.lb.killerhomelab.com)
-- PFXHostName.  PFX Host Name (Example:  www)
-- PFXDomainName.  PFX Domain Name (Example:  lb.killerhomelab.com)
+- PFXCommonName.  PFX Common Name (Example:  rdgw.killerhomelab.com or *.killerhomelab.com)
 - PFXPassword.  PFX File Password
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)

@@ -67,8 +67,8 @@
                 $Password = $PFXCreds.Password
                 $PFXCN = "$using:PFXCommonName"
                 #Check if LB WWW Certificate already exists if NOT Import
-                $lbwwwcert = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like 'CN='+$PFXCN+'*'})
-                IF ($lbwwwcert -eq $null) {
+                $cert = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like 'CN='+$PFXCN+'*'})
+                IF ($cert -eq $null) {
                     Import-PfxCertificate -FilePath "C:\Certificates\iisssl.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password $Password
                     $Issuer = (Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Subject -like 'CN='+$PFXCN+'*'}).Issuer
                     (Get-ChildItem -Path Cert:\LocalMachine\CA | Where-Object {$_.Subject -like $Issuer}) | Move-Item -Destination Cert:\LocalMachine\Root\
@@ -82,8 +82,7 @@
         Script ConfigureIIS
         {
             SetScript =
-            {
-                
+            { 
                 $PFXCN = "$using:PFXCommonName"
                 $BindingCheck = Get-WebBinding -Name "Default Web Site" -Protocol https -ErrorAction 0
                 IF ($BindingCheck -eq $Null){

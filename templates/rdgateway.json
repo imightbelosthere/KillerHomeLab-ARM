@@ -20,18 +20,42 @@
                 "description": "Computer Name"
             }
         },
-        "RDGatewayServerFQDN": {
+        "PFXCommonName": {
             "type": "string",
             "metadata": {
-                "description": "Remote Desktop Server FQDN"
-            }
-        },        
-        "RDGatewayExternalFQDN": {
-            "type": "string",
-            "metadata": {
-                "description": "Remote Desktop Server External FQDN"
+                "description": "PFX Common Name"
             }
         },
+        "InternalDomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "Internal Domain Name"
+            }
+        },          
+        "UsersGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Group that contains Users requiring Access to Remote Desktop Gateway"
+            }
+        },          
+        "ComputersGroup": {
+            "type": "string",
+            "metadata": {
+                "description": "Group that contains Computers requiring Access to Remote Desktop Gateway"
+            }
+        },                  
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+          "metadata": {
+            "description": "The password for the Administrator account of the new VM and Domain"
+          }
+        },                  
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -65,11 +89,20 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "RDGatewayServerFQDN": "[parameters('RDGatewayServerFQDN')]",
-                            "RDGatewayExternalFQDN": "[parameters('RDGatewayExternalFQDN')]"
+                            "PFXCommonName": "[parameters('PFXCommonName')]",
+                            "InternalDomainName": "[parameters('InternalDomainName')]",                            
+                            "UsersGroup": "[parameters('UsersGroup')]",                                                        
+                            "ComputersGroup": "[parameters('ComputersGroup')]",                                                                                    
+                            "AdminCreds": {
+                                "UserName": "[parameters('adminUsername')]",
+                                "Password": "PrivateSettingsRef:AdminPassword1"
+                            }                            
                         }
                 },
                 "protectedSettings": {
+                    "Items": {
+                        "AdminPassword1": "[parameters('adminPassword')]"
+                    }                    
                 }                
             }
         }

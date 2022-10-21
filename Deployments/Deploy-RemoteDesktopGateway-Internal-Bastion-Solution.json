@@ -193,6 +193,20 @@
                 "description": "Deployment Account Object ID"
             }
         },
+        "UsersGroup": {
+            "type": "string",
+            "defaultValue": "Domain Users",
+            "metadata": {
+                "description": "Group that contains Users requiring Access to Remote Desktop Gateway"
+            }
+        },   
+        "ComputersGroup": {
+            "type": "string",
+            "defaultValue": "Domain Computers",
+            "metadata": {
+                "description": "Group that contains Computers requiring Access to Remote Desktop Gateway"
+            }
+        },                
         "PFXSASUrl": {
             "type": "string",
             "metadata": {
@@ -204,19 +218,7 @@
             "metadata": {
                 "description": "PFX Common Name"
             }
-        },                                    
-        "PFXHostName": {
-            "type": "string",
-            "metadata": {
-                "description": "PFX Host Name"
-            }
-        },                                         
-        "PFXDomainName": {
-            "type": "string",
-            "metadata": {
-                "description": "PFX Domain Name"
-            }
-        },                                     
+        },                                                                        
         "PFXPassword": {
             "type": "securestring",
             "metadata": {
@@ -254,14 +256,6 @@
             "defaultValue": "DC=sub1,",
             "metadata": {
                 "description": "Sub DNS Domain Name Example:  DC=sub2,DC=sub1, must include COMMA AT END"
-            }
-        },
-        "NetBiosDomain": {
-            "type": "string",
-            "defaultValue": "sub1",
-            "maxLength": 15,
-            "metadata": {
-                "description": "NetBios Domain Name should the same name as the SubDNSDomain parameter minus the COMMA AT END if the SubDNSDomain and SubDNSBaseDN parameters are used to specify a Sub DNS Naming Structure, but it should be unique if these parameters aren't used."
             }
         },
         "InternalDomain": {
@@ -375,7 +369,6 @@
         "rdgw1name": "[concat(parameters('NamingConvention'),'-rdgw-01')]",           
         "rdgw1IP": "[concat(parameters('vnet1ID'),'.1.',variables('rdgw1lastoctet'))]",                    
         "rdgw1lastoctet": "130",
-        "rdgwserverfqdn": "[concat(variables('rdgw1name'),'.', variables('InternaldomainName'))]",           
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]", 
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]",                
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
@@ -773,12 +766,24 @@
                     "computerName": {
                         "value": "[variables('rdgw1name')]"
                     },
-                    "RDGatewayServerFQDN": {
-                        "value": "[variables('rdgwserverfqdn')]"
-                    },              
-                    "RDGatewayExternalFQDN": {
+                    "PFXCommonName": {
                         "value": "[parameters('PFXCommonName')]"
-                    },              
+                    }, 
+                    "InternaldomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },                 
+                    "UsersGroup": {
+                        "value": "[parameters('UsersGroup')]"
+                    },         
+                    "ComputersGroup": {
+                        "value": "[parameters('ComputersGroup')]"
+                    },                                                                                   
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                  
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
