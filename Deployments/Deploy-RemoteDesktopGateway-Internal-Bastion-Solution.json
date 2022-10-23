@@ -236,6 +236,17 @@
                 "description": "Windows Server OS License Type"
             }
         },
+        "WindowsClientLicenseType": {
+            "type": "string",
+            "defaultValue": "None",
+            "allowedValues": [
+                "None",
+                "Windows_Client"
+            ],
+            "metadata": {
+                "description": "Windows Client OS License Type"
+            }
+        },        
         "NamingConvention": {
             "type": "string",
             "defaultValue": "khl",
@@ -343,6 +354,20 @@
                 "description": "Remote Desktop Gateway VMSize"
             }
         },          
+        "WK1OSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "WK1 OS Version Number (Example:  Windows-11=22000.675.220507, Windows-10=19044.1706.220505, Windows-7=7601.25954.220506)"
+            }
+        },
+        "WK1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Workstation1 VMSize"
+            }
+        },        
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -365,10 +390,14 @@
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
+        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",        
         "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",        
         "rdgw1name": "[concat(parameters('NamingConvention'),'-rdgw-01')]",           
         "rdgw1IP": "[concat(parameters('vnet1ID'),'.1.',variables('rdgw1lastoctet'))]",                    
         "rdgw1lastoctet": "130",
+        "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
+        "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",
+        "wk1lastoctet": "201",        
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]", 
         "ExternaldomainName": "[concat(parameters('ExternalDomain'),'.',parameters('ExternalTLD'))]",                
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
@@ -789,6 +818,77 @@
                     },                                                                                                            
                     "_artifactsLocationSasToken": {
                         "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-11",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-11"
+                    },
+                    "OSSku": {
+                        "value": "win11-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
                     }
                 }
             }
