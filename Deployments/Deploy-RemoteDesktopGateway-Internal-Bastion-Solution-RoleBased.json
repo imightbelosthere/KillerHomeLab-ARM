@@ -721,6 +721,177 @@
                     }
                 }
             }
-        } 
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Download-Import-Configure-Certificate-and-Install-IIS",
+            "dependsOn": [
+                "DomainJoinIssuingRDGW-22",
+                "DomainJoinIssuingRDGW-19",
+                "DomainJoinIssuingRDGW-16",
+                "DomainJoinIssuingRDGW-12R2"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/iisssl.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },             
+                    "computerName": {
+                        "value": "[variables('rdgw1name')]"
+                    },
+                    "PFXSASUrl": {
+                        "value": "[parameters('PFXSASUrl')]"
+                    },              
+                    "PFXCommonName": {
+                        "value": "[parameters('PFXCommonName')]"
+                    },              
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }, 
+                    "PFXPassword": {
+                        "value": "[parameters('PFXPassword')]"
+                    },               
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-Remote-Desktop-Gateway",
+            "dependsOn": [
+                "Download-Import-Configure-Certificate-and-Install-IIS"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/rdgateway.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },             
+                    "computerName": {
+                        "value": "[variables('rdgw1name')]"
+                    },
+                    "PFXCommonName": {
+                        "value": "[parameters('PFXCommonName')]"
+                    }, 
+                    "InternaldomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },                 
+                    "UsersGroup": {
+                        "value": "[parameters('UsersGroup')]"
+                    },         
+                    "ComputersGroup": {
+                        "value": "[parameters('ComputersGroup')]"
+                    },                                                                                   
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                  
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-11",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-trusted-launch.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-11"
+                    },
+                    "OSSku": {
+                        "value": "win11-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        }        
     ]
 }
