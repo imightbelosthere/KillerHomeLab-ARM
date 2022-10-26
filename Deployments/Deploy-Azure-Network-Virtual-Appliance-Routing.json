@@ -32,7 +32,7 @@
         }, 
         "SITE1RG": {
             "type": "string",
-            "defaultValue": "SPK-SUB1-RG",
+            "defaultValue": "SITE1-RG",
             "metadata": {
                 "description": "Site1 Resource Group"
             }
@@ -46,7 +46,7 @@
         },
         "SITE2RG": {
             "type": "string",
-            "defaultValue": "SPK-SUB2-RG",
+            "defaultValue": "SITE2-RG",
             "metadata": {
                 "description": "Site2 Resource Group"
             }
