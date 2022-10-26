@@ -485,7 +485,7 @@
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('NVA-', variables('Identifier'))]",
-        "SecretName": "[concat(resourceGroup().Name,'-Password')]",
+        "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
         "HUBVNetName": "[concat(parameters('HUBNamingConvention'),'-VNet')]",
         "HUBVNetPrefix": "[concat(parameters('HUBVNetID'),'.0.0/16')]",    
         "HUBVNetSubnet1Name": "[concat(parameters('HUBNamingConvention'),'-VNet-OutsideSubnet')]", 
