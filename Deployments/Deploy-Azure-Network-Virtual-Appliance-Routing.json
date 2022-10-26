@@ -2256,7 +2256,7 @@
                 "Deploy-Site2-VirtualNetwork",
                 "Deploying-Peering-On-Hub-for-Site1",
                 "Deploying-Peering-On-Site1-for-Hub",                
-                "Deploying-Peering-On-HubV-for-Site2",   
+                "Deploying-Peering-On-Hub-for-Site2",   
                 "Deploying-Peering-On-Site2-for-Hub"
             ],            
             "properties": {
