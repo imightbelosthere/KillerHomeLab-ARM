@@ -1,0 +1,73 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "RouteTableAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Table API Version"
+            }
+        },              
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "VPN Gateway Name"
+              }
+        },
+        "SiteName": {
+            "type": "string",
+            "metadata": {
+                "description": "Site Name"
+            }
+        },        
+        "SitePrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Site Prefix"
+            }
+        },
+        "SpokePrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Spoke Prefix"
+            }
+        },        
+        "RemoteGatewayIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Remote Gateway IP"
+            }
+        }       
+    },   
+    "resources": [
+        {
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "[parameters('RouteTableAPIVersion')]",
+            "name": "[parameters('name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[parameters('SiteName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('SitePrefix')]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('RemoteGatewayIP')]",
+                            "hasBgpOverride": false
+                        }
+                    },
+                    {
+                        "name": "Spoke",
+                        "properties": {
+                            "addressPrefix": "[parameters('SpokePrefix')]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('RemoteGatewayIP')]",
+                            "hasBgpOverride": false
+                        }
+                    }                    
+                ]
+            }
+        }
+    ]
+}

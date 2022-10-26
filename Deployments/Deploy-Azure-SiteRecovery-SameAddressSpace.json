@@ -956,7 +956,7 @@
             "name": "Deploy-Site1-VirtualMachine",
             "resourceGroup":   "[parameters('Region1RG')]",                              
             "dependsOn": [
-                "/Deploy-Recovery-VirtualNetwork-01"
+                "Deploy-Recovery-VirtualNetwork-01"
             ],
             "properties": {
                 "mode": "Incremental",

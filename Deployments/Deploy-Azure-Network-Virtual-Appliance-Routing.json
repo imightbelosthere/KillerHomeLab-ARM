@@ -260,17 +260,6 @@
                 "description": "Windows Server OS License Type"
             }
         },
-        "WindowsClientLicenseType": {
-            "type": "string",
-            "defaultValue": "None",
-            "allowedValues": [
-                "None",
-                "Windows_Client"
-            ],
-            "metadata": {
-                "description": "Windows Client OS License Type"
-            }
-        },
         "HUBNamingConvention": {
             "type": "string",
             "defaultValue": "HUB",
@@ -555,13 +544,13 @@
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
-        "ResourceGroupAPIVersion": "2021-04-01",        
+        "ResourceGroupAPIVersion": "2021-04-01",  
+        "RouteTableAPIVersion": "2022-05-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",
         "VirtualNetworkPeeringAPIVersion": "2022-01-01",        
-        "ExtensionsTypeHandlerVersion": "2.83",
-        "DJExtensionsTypeHandlerVersion": "1.3"
+        "ExtensionsTypeHandlerVersion": "2.83"
     },
     "resources": [
         {
@@ -731,7 +720,43 @@
                     }
                 }
             }
-        },                                             
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BastionHost-01",
+            "resourceGroup":  "[parameters('HUBRG')]",            
+            "dependsOn": [
+                "Deploy-Hub-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/bastionhost.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "BastionHostAPIVersion": {
+                        "value": "[variables('BastionHostAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "publicIPAddressName": {
+                        "value": "[concat(variables('HUBVNetName'),'-Bastion-pip')]"
+                    },
+                    "AllocationMethod": {
+                        "value": "Static"
+                    },
+                    "vnetName": {
+                        "value": "[variables('HUBVNetName')]"
+                    },
+                    "subnetName": {
+                        "value": "AzureBastionSubnet"
+                    }
+                }
+            }
+        },                                                    
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
@@ -1133,6 +1158,974 @@
                     }
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Windows-RRAS-Network-Virtual-Appliance",
+            "resourceGroup":  "[parameters('HUBRG')]",         
+            "dependsOn": [
+                "Deploy-Hub-VirtualNetwork"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/2nics-1disk-nva.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "OutsideIP": {
+                        "value": "[variables('NVA-Outside-IP')]"
+                    },
+                    "InsideIP": {
+                        "value": "[variables('NVA-Inside-IP')]"
+                    },              
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('NVAVMOSSku')]"
+                    },                
+                    "OSVersion": {
+                        "value": "[parameters('NVAVMOSVersion')]"
+                    },              
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },            
+                    "VMSize": {
+                        "value": "[parameters('NVAVMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('HUBVNetName')]"
+                    },            
+                    "subnet1Name": {
+                        "value": "[variables('HUBVNetSubnet1Name')]"
+                    },      
+                    "subnet2Name": {
+                        "value": "[variables('HUBVNetSubnet2Name')]"
+                    },                                                                                                                                 
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },  
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },                                                       
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },              
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }                                                                                                                                                                                                                                                                                                                          
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-and-Configure-RRAS",
+            "resourceGroup":  "[parameters('HUBRG')]",
+            "dependsOn": [
+                "Deploy-Windows-RRAS-Network-Virtual-Appliance"             
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/rras.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "Region1NextHop": {
+                        "value": "[variables('Site1NextHop')]"
+                    },              
+                    "Region2NextHop": {
+                        "value": "[variables('Site2NextHop')]"
+                    },                            
+                    "SpokeNextHop": {
+                        "value": "[variables('SpokeNextHop')]"
+                    },                             
+                    "OutsideSubnetPrefix": {
+                        "value": "[variables('OutsideSubnetPrefix')]"
+                    },                                             
+                    "InsideSubnetPrefix": {
+                        "value": "[variables('InsideSubnetPrefix')]"
+                    },                              
+                    "Region1VNet": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },          
+                    "Region2VNet": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },  
+                    "SpokeVNet": {
+                        "value": "[variables('SPKVNetPrefix')]"
+                    },                                                                                                                              
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-Windows-RRAS-Server_01",
+            "dependsOn": [
+                "Install-and-Configure-RRAS"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-Routing-Only",
+            "resourceGroup":  "[parameters('HUBRG')]",            
+            "dependsOn": [
+                "Restart-Windows-RRAS-Server_01"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/routingonly.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }, 
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                           
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-Hub-RouteTable",
+            "resourceGroup":  "[parameters('HUBRG')]",
+            "dependsOn": [
+                "Deploy-Hub-VirtualNetwork"          
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/hubspokeroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RouteTableAPIVersion": {
+                        "value": "[variables('RouteTableAPIVersion')]"
+                    },                    
+                    "Name": {
+                        "value": "[variables('HUBRouteTableName')]"
+                    },
+                    "Site1Prefix": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },           
+                    "Site2Prefix": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },                         
+                    "RemoteGatewayIP": {
+                        "value": "[variables('NVA-Inside-IP')]"
+                    }
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-Spoke-RouteTable",
+            "resourceGroup":  "[parameters('SPKRG')]",
+            "dependsOn": [
+                "Deploy-Spoke-VirtualNetwork"          
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/hubspokeroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RouteTableAPIVersion": {
+                        "value": "[variables('RouteTableAPIVersion')]"
+                    },                                       
+                    "Name": {
+                        "value": "[variables('SPKRouteTableName')]"
+                    },
+                    "Site1Prefix": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },           
+                    "Site2Prefix": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },                         
+                    "RemoteGatewayIP": {
+                        "value": "[variables('NVA-Inside-IP')]"
+                    }
+                }
+            }
+        },   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-Site1-RouteTable",
+            "resourceGroup":  "[parameters('SITE1RG')]",
+            "dependsOn": [
+                "Deploy-Site1-VirtualNetwork"          
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/regionroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RouteTableAPIVersion": {
+                        "value": "[variables('RouteTableAPIVersion')]"
+                    },                                       
+                    "Name": {
+                        "value": "[variables('SITE1RouteTableName')]"
+                    },
+                    "SiteName": {
+                        "value": "Site2"
+                    },                         
+                    "SitePrefix": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },           
+                    "SpokePrefix": {
+                        "value": "[variables('SPKVNetPrefix')]"
+                    },                         
+                    "RemoteGatewayIP": {
+                        "value": "[variables('NVA-Outside-IP')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-Site2-RouteTable",
+            "resourceGroup":  "[parameters('SITE2RG')]",
+            "dependsOn": [
+                "Deploy-Site2-VirtualNetwork"          
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/regionroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RouteTableAPIVersion": {
+                        "value": "[variables('RouteTableAPIVersion')]"
+                    },                                       
+                    "Name": {
+                        "value": "[variables('SITE2RouteTableName')]"
+                    },
+                    "SiteName": {
+                        "value": "Site2"
+                    },                         
+                    "SitePrefix": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },           
+                    "SpokePrefix": {
+                        "value": "[variables('SPKVNetPrefix')]"
+                    },                         
+                    "RemoteGatewayIP": {
+                        "value": "[variables('NVA-Outside-IP')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-Hub-VirtualNetwork-RouteTable",
+            "resourceGroup":  "[parameters('HUBRG')]",               
+            "dependsOn": [
+                "Create-Hub-RouteTable"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatehubvnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('HUBVNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('HUBVNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('HUBVNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('HUBVNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('HUBVNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('HUBVNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('HUBVNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('HUBVNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('HUBVNetFirewallsubnetPrefix')]"
+                    },                         
+                    "RouteTableName": {
+                        "value": "[variables('HUBRouteTableName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-Spoke-VirtualNetwork-RouteTable",
+            "resourceGroup":  "[parameters('SPKRG')]",               
+            "dependsOn": [
+            "Create-Spoke-RouteTable"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatenonhubvnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SPKVNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('SPKVNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SPKVNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('SPKVNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('SPKVNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('SPKVNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('SPKVNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('SPKVNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('SPKVNetFirewallsubnetPrefix')]"
+                    },
+                    "RouteTableName": {
+                        "value": "[variables('SPKRouteTableName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-Site1-VirtualNetwork-RouteTable",
+            "resourceGroup":  "[parameters('SITE1RG')]",               
+            "dependsOn": [
+            "Create-Site1-RouteTable"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatenonhubvnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE1VNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE1VNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('SITE1VNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('SITE1VNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('SITE1VNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('SITE1VNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('SITE1VNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('SITE1VNetFirewallsubnetPrefix')]"
+                    },
+                    "RouteTableName": {
+                        "value": "[variables('SITE1RouteTableName')]"
+                    }                                                                                                                                                                                                                              
+                }
+            }
+        },   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-Site2-VirtualNetwork-RouteTable",
+            "resourceGroup":  "[parameters('SITE2RG')]",               
+            "dependsOn": [
+                "Create-Site2-RouteTable"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatenonhubvnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE2VNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE2VNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('SITE2VNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('SITE2VNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('SITE2VNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('SITE2VNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('SITE2VNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('SITE2VNetFirewallsubnetPrefix')]"
+                    },
+                    "RouteTableName": {
+                        "value": "[variables('SITE2RouteTableName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Hub-VirtualMachine",
+            "resourceGroup":   "[parameters('HUBRG')]",                              
+            "dependsOn": [
+                "Deploy-Hub-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('hubvmname')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('hubvmIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('HUBVMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('HUBVMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('HUBVMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('HUBVNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('HUBVNetSubnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-SQLServer-01",
+            "resourceGroup":   "[parameters('SPKRG')]",                                          
+            "dependsOn": [
+                "Deploy-Spoke-VirtualNetwork"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-3disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('SQLVMName')]"
+                    },
+                    "computerIP": {
+                        "value":  "[variables('SQLVMIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value":  "[parameters('SQLVMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('SQLVMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "DataDisk1Name": {
+                        "value": "SQLDatabases"
+                    },            
+                    "DataDisk2Name": {
+                        "value": "SQLLogs"
+                    },                     
+                    "VMSize": {
+                        "value": "[parameters('SQLVMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SPKVNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SPKVNetSubnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site1-VirtualMachine",
+            "resourceGroup":   "[parameters('SITE1RG')]",                              
+            "dependsOn": [
+                "Deploy-Site1-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('site1vmname')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('site1vmIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('SITE1VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('SITE1VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('SITE1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE1VNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE1VNetSubnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-SQL-Management-Studio-on-Site1VM",
+            "resourceGroup":   "[parameters('SITE1RG')]",            
+            "dependsOn": [
+               "Deploy-Site1-VirtualMachine"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ssms.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('SITE1VMName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site2-VirtualMachine",
+            "resourceGroup":   "[parameters('SITE2RG')]",                              
+            "dependsOn": [
+                "Deploy-Site2-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('site2vmname')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('site2vmIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('SITE2VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('SITE2VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('SITE2VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE2VNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE2VNetSubnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-SQL-Management-Studio-on-Site2VM",
+            "resourceGroup":   "[parameters('SITE2RG')]",            
+            "dependsOn": [
+               "Deploy-Site2-VirtualMachine"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ssms.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('SITE2VMName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "resourceGroup":   "[parameters('SPKRG')]",            
+            "name": "Install-SQLServer",
+            "dependsOn": [
+                "Deploy-SQLServer-01"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/sql.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('SQLVMName')]"
+                    },
+                    "SQLSASUrl": {
+                        "value": "[parameters('SQLSASUrl')]"
+                    },                                                                     
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        }                                                                                                                                                                                                                                                                                                                                      
     ]
 }
