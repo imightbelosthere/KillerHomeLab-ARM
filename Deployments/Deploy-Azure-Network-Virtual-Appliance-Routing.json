@@ -571,6 +571,7 @@
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
+        "PrivateDNSZoneAPIVersion": "2020-06-01",        
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "ResourceGroupAPIVersion": "2021-04-01",  
         "RouteTableAPIVersion": "2022-05-01",
@@ -2244,6 +2245,41 @@
                     }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
                 }
             }
-        }                                                                                                                                                                                                                                                                                                                                      
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "resourceGroup":   "[parameters('HUBRG')]",             
+            "name": "Deploy-PrivateDNSZone",
+            "dependsOn": [
+                "Deploy-Site1-VirtualNetwork",
+                "Deploy-Site2-VirtualNetwork",
+                "Deploying-Peering-On-Hub-for-Site1",
+                "Deploying-Peering-On-Site1-for-Hub",                
+                "Deploying-Peering-On-HubV-for-Site2",   
+                "Deploying-Peering-On-Site2-for-Hub"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszone.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },                      
+                    "ZoneName": {
+                        "value": "domain.local"
+                    },
+                    "vnet1Name": {
+                        "value": "[variables('SITE1VNetName')]"
+                    },    
+                    "vnet2Name": {
+                        "value": "[variables('SITE2VNetName')]"
+                    }                                                                                                                                                                              
+                }
+            }
+        }                                                                                                                                                                                                                                                                                                                                            
     ]
 }
