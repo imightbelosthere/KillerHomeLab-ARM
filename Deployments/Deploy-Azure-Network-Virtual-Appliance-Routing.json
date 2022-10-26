@@ -1264,10 +1264,10 @@
                     "computerName": {
                         "value": "[variables('NVAVMName')]"
                     },
-                    "Region1NextHop": {
+                    "Site1NextHop": {
                         "value": "[variables('Site1NextHop')]"
                     },              
-                    "Region2NextHop": {
+                    "Site2NextHop": {
                         "value": "[variables('Site2NextHop')]"
                     },                            
                     "SpokeNextHop": {
@@ -1279,10 +1279,10 @@
                     "InsideSubnetPrefix": {
                         "value": "[variables('InsideSubnetPrefix')]"
                     },                              
-                    "Region1VNet": {
+                    "Site1VNet": {
                         "value": "[variables('SITE1VNetPrefix')]"
                     },          
-                    "Region2VNet": {
+                    "Site2VNet": {
                         "value": "[variables('SITE2VNetPrefix')]"
                     },  
                     "SpokeVNet": {
@@ -1449,7 +1449,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/regionroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/siteroutetable.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1485,7 +1485,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/regionroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/siteroutetable.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
