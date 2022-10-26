@@ -6,6 +6,8 @@
         [System.Management.Automation.PSCredential]$Admincreds                                  
     )
 
+    Import-DscResource -Module ComputerManagementDsc # Used for Certificate Authority
+
     [System.Management.Automation.PSCredential ]$LocalCreds = New-Object System.Management.Automation.PSCredential ("${ComputerName}\$($AdminCreds.UserName)", $AdminCreds.Password)
 
     Node localhost
