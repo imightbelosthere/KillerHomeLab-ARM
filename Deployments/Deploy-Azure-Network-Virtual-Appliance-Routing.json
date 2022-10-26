@@ -2280,6 +2280,36 @@
                     }                                                                                                                                                                              
                 }
             }
-        }                                                                                                                                                                                                                                                                                                                                            
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "resourceGroup":   "[parameters('HUBRG')]",                         
+            "name": "Create-PrivateDNSZone-SQL-ARecord",
+            "dependsOn": [
+                "Deploy-PrivateDNSZone"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonea.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },                            
+                    "ZoneName": {
+                        "value": "domain.local"
+                    },
+                    "HostName": {
+                        "value": "[variables('SQLVMName')]"
+                    },
+                    "IP": {
+                        "value": "[variables('SQLVMIP')]"
+                    }                                                                                                                                                                                                                                                                                                                         
+                }
+            }
+        }                                                                                                                                                                                                                                                                                                                                                   
     ]
 }

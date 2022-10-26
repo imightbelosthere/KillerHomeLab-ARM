@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PrivateDNSZoneAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Private DNS Zone API Version"
+            }
+        },        
+        "ZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "DNS Zone Name"
+              }
+        },
+        "HostName": {
+            "type": "string",
+            "metadata": {
+                "description": "A Record HostName"
+              }
+        },
+        "IP": {
+            "type": "string",
+            "metadata": {
+                "description": "A Record IP"
+              }
+        }        
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/dnszones/a",
+            "name": "[concat(parameters('ZoneName'), '/', parameters('HostName'))]",
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global",
+            "properties": {
+                "TTL": 900,
+                "ARecords": [
+                    {
+                        "ipv4Address": "[parameters('IP')]"
+                    }
+                ]
+            }
+        }        
+    ]
+}
