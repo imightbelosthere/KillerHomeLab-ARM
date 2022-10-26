@@ -275,7 +275,7 @@
             "type": "string",
             "defaultValue": "HUB",
             "minLength": 1,
-            "maxLength": 4,
+            "maxLength": 5,
             "metadata": {
                 "description": "Hub Environment Naming Convention"
             }
@@ -284,7 +284,7 @@
             "type": "string",
             "defaultValue": "SPK",
             "minLength": 1,
-            "maxLength": 4,
+            "maxLength": 5,
             "metadata": {
                 "description": "Spoke Environment Naming Convention"
             }
@@ -293,7 +293,7 @@
             "type": "string",
             "defaultValue": "SITE1",
             "minLength": 1,
-            "maxLength": 4,
+            "maxLength": 5,
             "metadata": {
                 "description": "Site1 Environment Naming Convention"
             }
@@ -302,7 +302,7 @@
             "type": "string",
             "defaultValue": "SITE2",
             "minLength": 1,
-            "maxLength": 4,
+            "maxLength": 5,
             "metadata": {
                 "description": "Site2 Environment Naming Convention"
             }
