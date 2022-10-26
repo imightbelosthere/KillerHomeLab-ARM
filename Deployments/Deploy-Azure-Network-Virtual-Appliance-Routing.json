@@ -1301,6 +1301,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Restart-Windows-RRAS-Server_01",
+            "resourceGroup":  "[parameters('HUBRG')]",            
             "dependsOn": [
                 "Install-and-Configure-RRAS"
             ],
