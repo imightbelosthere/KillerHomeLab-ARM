@@ -2,6 +2,17 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptiondeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "NVAScaleSet": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "No",
+                "Yes"
+            ],      
+            "metadata": {
+                "description": "Choose if NVA will use a Virtual Machine Scale Set"
+            }
+        },        
         "HUBRG": {
             "type": "string",
             "defaultValue": "HUB-RG",
@@ -426,7 +437,14 @@
             "metadata": {
                 "description": "Network Virtual Appliance VMSize"
             }
-        },    
+        },
+        "NVAVMSSSize": {
+            "type": "string",
+            "defaultValue": "Standard_B2ms",
+            "metadata": {
+                "description": "Network Virtual Appliance VMSize"
+            }
+        },                   
         "HUBVMSize": {
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
@@ -454,7 +472,14 @@
             "metadata": {
                 "description": "SQL VMSize"
             }
-        },                
+        },
+        "VMSSInstanceCount": {
+            "type": "string",
+            "defaultValue": "2",
+            "metadata": {
+                "description": "Virtual Machine Scale Set Instance Count"
+            }
+        },
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -483,7 +508,9 @@
         "HUBVNetSubnet2Prefix": "[concat(parameters('HUBVNetID'),'.2.0/24')]",    
         "HUBVNetGatewaySubnetPrefix": "[concat(parameters('HUBVNetID'),'.0.0/24')]",
         "HUBVNetBastionSubnetPrefix": "[concat(parameters('HUBVNetID'),'.253.0/24')]",
-        "HUBVNetFirewallSubnetPrefix": "[concat(parameters('HUBVNetID'),'.254.0/24')]",                      
+        "HUBVNetFirewallSubnetPrefix": "[concat(parameters('HUBVNetID'),'.254.0/24')]",
+        "HUBOutsideSubnetId": "[resourceId(parameters('HUBRG'), 'Microsoft.Network/virtualNetworks/subnets', variables('HUBVNetName'), variables('HUBVNetSubnet1Name'))]",
+        "HUBInsideSubnetId": "[resourceId(parameters('HUBRG'), 'Microsoft.Network/virtualNetworks/subnets', variables('HUBVNetName'), variables('HUBVNetSubnet2Name'))]",                             
         "SPKVNetName": "[concat(parameters('SPKNamingConvention'),'-VNet')]",
         "SPKVNetPrefix": "[concat(parameters('SPKVNetID'),'.0.0/16')]",    
         "SPKVNetSubnet1Name": "[concat(parameters('SPKNamingConvention'),'-VNet-Subnet1')]", 
@@ -515,6 +542,7 @@
         "SPKRouteTableName": "[concat(parameters('SPKNamingConvention'),'-RT')]",                                                                
         "SITE1RouteTableName": "[concat(parameters('SITE1NamingConvention'),'-RT')]",                                                                
         "SITE2RouteTableName": "[concat(parameters('SITE2NamingConvention'),'-RT')]",                                                                            
+        "NVAVMSSName": "[concat(parameters('HUBNamingConvention'),'-nva')]", 
         "NVAVMName": "[concat(parameters('HUBNamingConvention'),'-nva-01')]", 
         "NVA-Outside-IP": "[concat(parameters('HUBVNetID'),'.1.',variables('NVAOutLastOctet'))]",
         "NVA-Inside-IP": "[concat(parameters('HUBVNetID'),'.2.',variables('NVAInLastOctet'))]",            
@@ -548,6 +576,7 @@
         "RouteTableAPIVersion": "2022-05-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
+        "VirtualMachinesScaleSetAPIVersion": "2022-03-01",        
         "VirtualNetworkAPIVersion": "2020-11-01",
         "VirtualNetworkPeeringAPIVersion": "2022-01-01",        
         "ExtensionsTypeHandlerVersion": "2.83"
@@ -1160,6 +1189,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('NVAScaleSet'),'No')]",                                    
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Windows-RRAS-Network-Virtual-Appliance",
@@ -1241,6 +1271,91 @@
             }
         },
         {
+            "condition": "[equals(parameters('NVAScaleSet'),'Yes')]",                                    
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Windows-RRAS-Network-Virtual-Appliance-ScaleSet",
+            "resourceGroup":  "[parameters('HUBRG')]",         
+            "dependsOn": [
+                "Deploy-Hub-VirtualNetwork"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/2nics-1disk-nva-vmss.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualMachinesScaleSetAPIVersion": {
+                        "value": "[variables('VirtualMachinesScaleSetAPIVersion')]"
+                    },                  
+                    "virtualMachineScaleSetName": {
+                        "value": "[variables('NVAVMSSName')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },                    
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('NVAVMOSSku')]"
+                    },                
+                    "OSVersion": {
+                        "value": "[parameters('NVAVMOSVersion')]"
+                    },              
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },            
+                    "InstanceSize": {
+                        "value": "[parameters('NVAVMSSSize')]"
+                    },
+                    "VMSSInstanceCount": {
+                        "value": "[parameters('VMSSInstanceCount')]"
+                    },
+                    "networkInterfaceConfigurations": {
+                        "value": [
+                            {
+                                "name": "[variables('HUBVNetSubnet1Name')]",
+                                "primary": true,
+                                "subnetId": "[variables('HUBOutsideSubnetId')]",
+                                "enableAcceleratedNetworking": false
+                            },
+                            {
+                                "name": "[variables('HUBVNetSubnet2Name')]",
+                                "primary": false,
+                                "subnetId": "[variables('HUBInsideSubnetId')]",
+                                "enableAcceleratedNetworking": false
+                            }
+                        ]
+                    },
+                    "scaleInPolicy": {
+                        "value": {
+                            "rules": [
+                                "Default"
+                            ]
+                        }
+                    },
+                    "upgradePolicy": {
+                        "value": "Manual"
+                    },
+                    "platformFaultDomainCount": {
+                        "value": "1"
+                    },                                                                       
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }                                                                                                                                                                                                                                                                                                                         
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('NVAScaleSet'),'No')]",                                                
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Install-and-Configure-RRAS",
@@ -1298,6 +1413,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('NVAScaleSet'),'No')]",                                                
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Restart-Windows-RRAS-Server_01",
@@ -1334,6 +1450,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('NVAScaleSet'),'No')]",                                                
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Configure-Routing-Only",

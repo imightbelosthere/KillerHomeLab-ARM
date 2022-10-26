@@ -1,0 +1,187 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualMachinesScaleSetAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "VirtualMachines API Version"
+            }
+        },
+        "virtualMachineScaleSetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Machine Scale Set Name"
+            }
+        },
+        "TimeZone": {
+            "type": "string",
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },        
+        "Publisher": {
+            "type": "string",
+            "metadata": {
+                "description": "Image Publisher"
+            }
+        },
+        "Offer": {
+            "type": "string",
+            "metadata": {
+                "description": "Image Publisher Offer"
+            }
+        },
+        "OSSku": {
+            "type": "string",
+            "metadata": {
+                "description": "OS Sku"
+            }
+        },
+        "OSVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "OS Version"
+            }
+        },
+        "licenseType": {
+            "type": "string",
+            "metadata": {
+                "description": "License Type (Windows_Server or None)"
+            }
+        },
+        "InstanceSize": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Machine Scale Set Size"
+            }
+        },
+        "VMSSInstanceCount": {
+            "type": "string",
+            "metadata": {
+                "description": "Number of VMSS Instances"
+            }
+        },                
+        "networkInterfaceConfigurations": {
+            "type": "Array",
+            "metadata": {
+                "description": "Virtual Machine Scale Set Size"
+            }
+        },
+        "ScaleSetPolicy": {
+            "type": "object",
+            "metadata": {
+                "description": "Scale Set Policy"
+            }
+        },
+        "upgradePolicy": {
+            "type": "string",
+            "metadata": {
+                "description": "Upgrade Policy"
+            }
+        },
+        "platformFaultDomainCount": {
+            "type": "string",
+            "metadata": {
+                "description": "Fault Domain Count"
+            }
+        },                       
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        }                
+    },
+    "variables": {
+        "storageAccountType": "Premium_LRS",
+        "namingInfix": "[toLower(substring(concat(parameters('virtualMachineScaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]"
+
+    },
+    "resources": [
+        {
+            "name": "[parameters('virtualMachineScaleSetName')]",
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "apiVersion": "[parameters('VirtualMachinesScaleSetAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "singlePlacementGroup": false,
+                "virtualMachineProfile": {
+                    "storageProfile": {
+                        "osDisk": {
+                            "createOption": "fromImage",
+                            "caching": "ReadWrite",
+                            "managedDisk": {
+                                "storageAccountType": "[variables('storageAccountType')]"
+                            }
+                        },
+                        "imageReference": {
+                            "publisher": "[parameters('Publisher')]",
+                            "offer": "[parameters('Offer')]",
+                            "sku": "[parameters('OSSku')]",
+                            "version": "[parameters('OSVersion')]"
+                        }
+                    },
+                    "networkProfile": {
+                        "copy": [
+                            {
+                                "name": "networkInterface1Configurations",
+                                "count": "[length(parameters('networkInterfaceConfigurations'))]",
+                                "input": {
+                                    "name": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].name]",
+                                    "properties": {
+                                        "primary": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].primary]",
+                                        "enableAcceleratedNetworking": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].enableAcceleratedNetworking]",
+                                        "ipConfigurations": [
+                                            {
+                                                "name": "[concat(take(parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].name, sub(80, length('-defaultIpConfiguration'))), '-defaultIpConfiguration')]",
+                                                "properties": {
+                                                    "subnet": {
+                                                        "id": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].subnetId]"
+                                                    },
+                                                    "primary": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].primary]"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "diagnosticsProfile": {
+                        "bootDiagnostics": {
+                            "enabled": true
+                        }
+                    },
+                    "osProfile": {
+                        "computerNamePrefix": "[variables('namingInfix')]",
+                        "adminUsername": "[parameters('adminUsername')]",
+                        "adminPassword": "[parameters('adminPassword')]",
+                        "windowsConfiguration": {
+                            "provisionVmAgent": true,
+                            "timeZone": "[parameters('TimeZone')]"
+                        }
+                    },
+                    "licenseType": "[parameters('licenseType')]"
+                },
+
+                "scaleInPolicy": "[parameters('ScaleSetPolicy')]",
+                "overprovision": false,
+                "upgradePolicy": {
+                    "mode": "[parameters('upgradePolicy')]"
+                },
+                "platformFaultDomainCount": "[parameters('platformFaultDomainCount')]"
+            },
+            "sku": {
+                "name": "[parameters('instanceSize')]",
+                "capacity": "[int(parameters('VMSSInstanceCount'))]"
+            }
+        }        
+    ]
+}
