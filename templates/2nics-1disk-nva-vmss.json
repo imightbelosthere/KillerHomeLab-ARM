@@ -68,10 +68,10 @@
                 "description": "Virtual Machine Scale Set Size"
             }
         },
-        "ScaleSetPolicy": {
+        "ScaleInPolicy": {
             "type": "object",
             "metadata": {
-                "description": "Scale Set Policy"
+                "description": "Scale In Policy"
             }
         },
         "upgradePolicy": {
@@ -171,7 +171,7 @@
                     "licenseType": "[parameters('licenseType')]"
                 },
 
-                "scaleInPolicy": "[parameters('ScaleSetPolicy')]",
+                "scaleInPolicy": "[parameters('ScaleInPolicy')]",
                 "overprovision": false,
                 "upgradePolicy": {
                     "mode": "[parameters('upgradePolicy')]"
