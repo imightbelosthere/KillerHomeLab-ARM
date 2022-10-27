@@ -2296,7 +2296,7 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "PublicDNSZoneAPIVersion": {
+                    "PrivateDNSZoneAPIVersion": {
                         "value": "[variables('PrivateDNSZoneAPIVersion')]"
                     },                            
                     "ZoneName": {
