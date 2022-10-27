@@ -131,7 +131,7 @@
                     "networkProfile": {
                         "copy": [
                             {
-                                "name": "networkInterface1Configurations",
+                                "name": "networkInterfaceConfigurations",
                                 "count": "[length(parameters('networkInterfaceConfigurations'))]",
                                 "input": {
                                     "name": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].name]",
