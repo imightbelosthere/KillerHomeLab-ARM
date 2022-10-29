@@ -1285,7 +1285,8 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-AKS-ServicePrincipal",
             "dependsOn": [
-                "Deploy-Site1-VirtualMachine"
+                "Create-UserAssigned-ManagedID",
+                "Assign-UserAssignedMI-Owner-for-RG"
             ],      
             "properties": {
                 "mode": "Incremental",
