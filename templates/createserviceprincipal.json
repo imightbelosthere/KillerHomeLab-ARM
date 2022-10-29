@@ -55,7 +55,7 @@
 
                     $CheckforExistingServicePrincipal = Get-AzADServicePrincipal -DisplayName $AKSClusterName -ErrorAction 0
                     IF ($CheckforExistingServicePrincipal -eq $null){
-                        $SP = New-AzADServicePrincipal -DisplayName $AKSClusterName
+                        New-AzADServicePrincipal -DisplayName $AKSClusterName
                     }
 
                     $SP = Get-AzADServicePrincipal -DisplayName $AKSClusterName
