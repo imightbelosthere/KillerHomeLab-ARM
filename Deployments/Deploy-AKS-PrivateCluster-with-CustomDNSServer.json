@@ -148,6 +148,24 @@
                 "description": "Time Zone"
             }
         },
+        "ClusterCredentialType": {
+            "type": "string",
+            "defaultValue": "Managed-Identity",
+            "allowedValues": [
+                "Managed-Identity",
+                "Service-Principal"
+            ],      
+            "metadata": {
+                "description": "AKS Cluster Credential Type"
+            }
+        },
+        "DeploymentScriptRegion": {
+            "type": "string",
+            "defaultValue": "USGovVirginia", 
+            "metadata": {
+                "description": "Choose Region (Example: USGovVirginia)"
+            }
+        },                
         "AutoShutdownEnabled": {
             "type": "string",
             "defaultValue": "No",
@@ -497,8 +515,10 @@
         "PrivateDNSZoneName": "[concat('privatelink.',resourceGroup().location,'.cx.aks.containerservice.azure.us')]",
         "AKSClusterName": "[concat(parameters('NamingConvention'),'-AKS-Private-Cluster')]",
         "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+        "Owner": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",        
         "BastionHostAPIVersion": "2022-07-01",
         "DeploymentAPIVersion": "2021-04-01",
+        "DeploymentScriptAPIVersion": "2020-10-01",        
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2022-07-01",
         "KeyVaultSecretAPIVersion": "2022-07-01",
@@ -1200,9 +1220,10 @@
             }
         },
         {
+			"condition": "[equals(parameters('ClusterCredentialType'),'Managed-Identity')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Assign-UserAssignedMI-for-RG",
+            "name": "Assign-UserAssignedMI-Contributor-for-RG",
             "dependsOn": [
                 "Create-UserAssigned-ManagedID"
             ],        
@@ -1227,20 +1248,77 @@
                     }                                        
                 }
             }
-        },                                   
-
+        },        
         {
+			"condition": "[equals(parameters('ClusterCredentialType'),'Service-Principal')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AKSCluster",     
+            "name": "Assign-UserAssignedMI-Owner-for-RG",
+            "dependsOn": [
+                "Create-UserAssigned-ManagedID"
+            ],        
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/roleassignment.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RoleAssignmentAPIVersion": {
+                        "value": "[variables('RoleAssignmentAPIVersion')]"
+                    },                    
+                    "PrincipalID": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentity.value]"
+                    },
+                    "RoleDefinitionID": {
+                        "value": "[variables('Owner')]"
+                    },
+                    "roleAssignmentHash": {
+                        "value": "AKSCluster1"
+                    }                                        
+                }
+            }
+        },
+        {
+			"condition": "[equals(parameters('ClusterCredentialType'),'Service-Principal')]",                                    
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-AKS-ServicePrincipal",
+            "dependsOn": [
+                "Deploy-Site1-VirtualMachine"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/createserviceprincipal.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DeploymentScriptAPIVersion": {
+                        "value": "[variables('DeploymentScriptAPIVersion')]"
+                    },     
+                    "ManagedIDName": {
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
+                    },                                                       
+                    "ScriptLocation": {
+                        "value": "[parameters('DeploymentScriptRegion')]"
+                    }                                
+                }
+            }
+        },                                                                                     
+        {
+			"condition": "[equals(parameters('ClusterCredentialType'),'Managed-Identity')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AKSCluster-with-MI",     
             "dependsOn": [
                 "Deploy-PrivateDNSZone",
-                "Assign-UserAssignedMI-for-RG"
+                "Assign-UserAssignedMI-Contributor-for-RG"
             ],  
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateakscluster.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateakscluster-mi.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1295,6 +1373,70 @@
                 }
             }
         },
+        {
+			"condition": "[equals(parameters('ClusterCredentialType'),'Service-Principal')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AKSCluster-with-SP",     
+            "dependsOn": [
+                "Deploy-PrivateDNSZone",
+                "Assign-UserAssignedMI-Owner-for-RG"
+            ],  
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateakscluster-sp.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ManagedClusterAPIVersion": {
+                        "value": "[variables('ManagedClusterAPIVersion')]"
+                    },                    
+                    "ManagedClusterPoolAPIVersion": {
+                        "value": "[variables('ManagedClusterPoolAPIVersion')]"
+                    },  
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },                                       
+                    "KubernetesVersion": {
+                        "value": "[parameters('KubernetesVersion')]"
+                    },                    
+                    "OrchestratorVersion": {
+                        "value": "[parameters('OrchestratorVersion')]"
+                    },                                        
+                    "AKSClusterName": {
+                        "value": "[variables('AKSClusterName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },            
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },  
+                    "podCidr": {
+                        "value": "[variables('podCIDR')]"
+                    },
+                    "serviceCidr": {
+                        "value": "[variables('serviceCIDR')]"
+                    },
+                    "dnsServiceIP": {
+                        "value": "[variables('AKSDNSserviceIP')]"
+                    },
+                    "dockerBridgeCidr": {
+                        "value": "[variables('DockerBridgeCIDR')]"
+                    },                                    
+                    "DNSZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    },     
+                    "adminUsername": {
+                    "value": "[parameters('adminUsername')]"
+                    }, 
+                    "adminKey": {
+                    "value": "[parameters('adminKey')]"
+                    }                                                                                                                
+                }
+            }
+        },        
         {
             "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
             "type": "Microsoft.Resources/deployments",

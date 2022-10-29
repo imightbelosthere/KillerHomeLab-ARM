@@ -1,0 +1,79 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DeploymentScriptAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Deployment Script API Version"
+            }
+        },        
+        "ManagedIDName": {
+            "type": "string",
+            "metadata": {
+                "description": "Managed ID Name"
+            }
+        },
+        "AKSClusterName": {
+            "type": "string",
+            "metadata": {
+                "description": "AKS Cluster Name"
+            }
+        },        
+        "ScriptLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "Script Location"
+            }
+        }
+    },
+    "variables": {
+        "DeploymentScriptName": "[concat('Get',parameters('AKSClusterName'),'Principal')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "[parameters('DeploymentScriptAPIVersion')]",
+            "name": "[variables('DeploymentScriptName')]",
+            "location": "[parameters('ScriptLocation')]",
+            "kind": "AzurePowerShell",      
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('ManagedIDName'))]": {
+                    }
+                }
+            },
+            "properties": {
+                "azPowerShellVersion": "5.0",
+                "timeout": "PT1H",
+                "arguments": "[format(' -AKSClusterName {0}', parameters('AKSClusterName'))]", // can pass an argument string, double quotes must be escaped
+                "scriptContent": "
+                    param(
+                    [string] [Parameter(Mandatory=$true)] $AKSClusterName
+                    )
+
+                    $CheckforExistingServicePrincipal = Get-AzADAppCredential -DisplayName $AKSClusterName -ErrorAction 0
+                    IF ($CheckforExistingServicePrincipal -eq $null){
+                        $StartDate = Get-Date
+                        $EndDate = $startDate.AddYears(1)
+                        $SP = New-AzADServicePrincipal -DisplayName $AKSClusterName
+                    }
+
+                    $output = $SP.Id
+                    Write-Output $output
+                    $DeploymentScriptOutputs = @{}
+                    $DeploymentScriptOutputs['text'] = $output
+                ",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+            }
+        }
+      ],
+    "outputs": {
+        "ServicePrincipalId": {
+            "type": "string",
+            "value": "[reference(variables('DeploymentScriptName')).outputs.text]"
+        }
+    }      
+}
