@@ -53,12 +53,12 @@
                     [string] [Parameter(Mandatory=$true)] $AKSClusterName
                     )
 
-                    $CheckforExistingServicePrincipal = Get-AzADAppCredential -DisplayName $AKSClusterName -ErrorAction 0
+                    $CheckforExistingServicePrincipal = Get-AzADServicePrincipal -DisplayName $AKSClusterName -ErrorAction 0
                     IF ($CheckforExistingServicePrincipal -eq $null){
-                        $StartDate = Get-Date
-                        $EndDate = $startDate.AddYears(1)
                         $SP = New-AzADServicePrincipal -DisplayName $AKSClusterName
                     }
+
+                    $SP = Get-AzADServicePrincipal -DisplayName $AKSClusterName
 
                     $output = $SP.Id
                     Write-Output $output
