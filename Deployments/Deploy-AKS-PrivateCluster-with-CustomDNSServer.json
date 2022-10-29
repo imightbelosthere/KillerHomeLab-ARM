@@ -1299,7 +1299,10 @@
                     },     
                     "ManagedIDName": {
                         "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
-                    },                                                       
+                    },
+                    "AKSClusterName": {
+                        "value": "[variables('AKSClusterName')]"
+                    },                                                                           
                     "ScriptLocation": {
                         "value": "[parameters('DeploymentScriptRegion')]"
                     }                                
@@ -1397,7 +1400,10 @@
                     },  
                     "PublicIPAddressesAPIVersion": {
                         "value": "[variables('PublicIPAddressesAPIVersion')]"
-                    },                                       
+                    },
+                    "ServicePrincipalClientId": {
+                        "value": "[reference('Create-AKS-ServicePrincipal').outputs.ServicePrincipalId.value]"
+                    },                                                         
                     "KubernetesVersion": {
                         "value": "[parameters('KubernetesVersion')]"
                     },                    
