@@ -2,13 +2,20 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "VMCount": {
+        "NumberOfVMInstances": {
             "type": "int",
             "defaultValue": 5,
             "metadata": {
                 "description": "Number of VM's to be Deployed"
             }
-        },        
+        },
+        "VMInitialNumber": {
+            "type": "int",
+            "defaultValue": 5,
+            "metadata": {
+                "description": "Starting number of Virtual Machine numbering Sequence"
+            }
+        },            
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -306,22 +313,19 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-trusted-launch-copyindex.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-loop.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "VMCount": {
-                        "value": "[parameters('VMCount')]"
-                    },
                     "NetworkInterfacesAPIVersion": {
                         "value": "[variables('NetworkInterfacesAPIVersion')]"
                     },
                     "VirtualMachinesAPIVersion": {
                         "value": "[variables('VirtualMachinesAPIVersion')]"
                     },
-                    "computerNamePrefix": {
-                        "value": "[parameters('NamingConvention')]"
-                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },                    
                     "Publisher": {
                         "value": "MicrosoftWindowsServer"
                     },
@@ -343,7 +347,7 @@
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
                     },
-                    "subnet1Name": {
+                    "subnetName": {
                         "value": "[variables('vnet1subnet1Name')]"
                     },
                     "adminUsername": {
@@ -352,8 +356,14 @@
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
                     },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
+                    "VMPrefix": {
+                        "value": "[parameters('NamingConvention')]"
+                    },                    
+                    "NumberOfVMInstances": {
+                        "value": "[parameters('NumberOfVMInstances')]"
+                    },                                        
+                    "VMInitialNumber": {
+                        "value": "[parameters('VMInitialNumber')]"
                     }
                 }
             }

@@ -2,9 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "VMCount": {
-            "type": "int"
-        },
         "NetworkInterfacesAPIVersion": {
             "type": "string",
             "metadata": {
@@ -16,15 +13,9 @@
             "metadata": {
                 "description": "VirtualMachines API Version"
             }
-        },
-        "computerNamePrefix": {
-            "type": "string",
-            "metadata": {
-                "description": ""
-            }
-        },
+        },                     
         "TimeZone": {
-            "type": "string",
+            "type": "string",      
             "metadata": {
                 "description": "Time Zone"
             }
@@ -40,13 +31,13 @@
             "metadata": {
                 "description": "Image Publisher Offer"
             }
-        },
+        },   
         "OSSku": {
             "type": "string",
             "metadata": {
                 "description": "OS Sku"
             }
-        },
+        },                   
         "OSVersion": {
             "type": "string",
             "metadata": {
@@ -58,24 +49,24 @@
             "metadata": {
                 "description": "License Type (Windows_Server or None)"
             }
-        },
+        },                 
         "VMSize": {
             "type": "string",
             "metadata": {
-                "description": "VMSize"
+                "description": "Virtual Machine Size"
             }
-        },
+        },        
         "vnetName": {
             "type": "string",
             "metadata": {
-                "description": "Existing VNET Name that contains the domain controller"
+                "description": "Virtual Machine Virtual Network Name"
             }
         },
-        "subnet1Name": {
+        "SubnetName": {
             "type": "string",
             "metadata": {
-                "description": "Existing subnet name that contains the domain controller"
-            }
+                "description": "Virtual Machine Subnet Name"
+          }
         },
         "adminUsername": {
             "type": "string",
@@ -88,61 +79,79 @@
             "metadata": {
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
+        },
+        "VMPrefix": {
+            "type": "string",
+            "metadata": {
+            "description": "This prefix will be used in combination with the VM number to create the VM name"
+            }
+        },
+        "NumberOfVMInstances": {
+            "type": "int",
+            "metadata": {
+            "description": "Number of Virtual Machines that will be created."
+            }
+        },  
+        "VMInitialNumber": {
+            "type": "int",
+            "metadata": {
+            "description": "VM name prefix initial number."
+            }
         }
     },
     "variables": {
         "storageAccountType": "Premium_LRS",
-        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
-        "Nic1Name": "[concat(parameters('computerNamePrefix'),'-nic1')]"
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
     },
     "resources": [
         {
-            "name": "[concat(copyIndex(),variables('Nic1Name'), uniqueString(resourceGroup().id))]",
+            "name": "[concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')), '-nic1')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
             "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "nic-loop",
+                "count": "[parameters('NumberOfVMInstances')]"
+            },            
             "properties": {
-                "copy": {
-                    "name": "niccopy",
-                    "count": "[parameters('VMCount')]"
-                },                
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
-                                "id": "[variables('subnet1Id')]"
+                                "id": "[variables('subnetId')]"
                             }
                         }
                     }
-                ]
+                ],
+                "enableAcceleratedNetworking": false
             }
-        },
+        },      
         {
-            "name": "[concat(copyIndex(),parameters('computerNamePrefix'), uniqueString(resourceGroup().id))]",
+            "name": "[concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')))]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "[parameters('VirtualMachinesAPIVersion')]",
-            "location": "[resourceGroup().location]",
+            "location": "[resourceGroup().location]",          
+            "copy": {
+                "name": "vm-loop",
+                "count": "[parameters('NumberOfVMInstances')]"
+            },            
             "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces',variables('Nic1Name'), uniqueString(resourceGroup().id))]"
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')), '-nic1')]"
             ],
             "properties": {
-                "copy": {
-                    "name": "vmcopy",
-                    "count": "[parameters('VMCount')]"
-                },                 
                 "licenseType": "[parameters('licenseType')]",
                 "hardwareProfile": {
                     "vmSize": "[parameters('VMSize')]"
                 },
                 "osProfile": {
-                    "computerName": "[concat(copyIndex(),parameters('computerNamePrefix'), uniqueString(resourceGroup().id))]",
+                    "computerName": "[concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')))]",
                     "adminUsername": "[parameters('adminUsername')]",
                     "adminPassword": "[parameters('adminPassword')]",
                     "WindowsConfiguration": {
                         "timeZone": "[parameters('TimeZone')]"
-                    }
+                    }                      
                 },
                 "storageProfile": {
                     "imageReference": {
@@ -152,7 +161,7 @@
                         "version": "[parameters('OSVersion')]"
                     },
                     "osDisk": {
-                        "name": "[concat(parameters('computerNamePrefix'),'_OSDisk')]",
+                        "name": "[concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')), '_OSDisk')]",
                         "caching": "ReadWrite",
                         "createOption": "FromImage",
                         "managedDisk": {
@@ -163,17 +172,10 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('Nic1Name'), uniqueString(resourceGroup().id))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')), '-nic1'))]"
                         }
                     ]
-                },
-                "securityProfile": {
-                    "uefiSettings": {
-                        "secureBootEnabled": true,
-                        "vTpmEnabled": true
-                    },
-                "securityType": "TrustedLaunch"
-                }                
+                }
             }
         }
     ]
