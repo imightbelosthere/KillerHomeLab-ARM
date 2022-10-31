@@ -189,10 +189,7 @@
                             "management"
                         ]
                     }
-                ],                
-                "apiServerAccessProfile": {
-                    "enablePrivateCluster": true
-                }
+                ]
             }
         },
         {
