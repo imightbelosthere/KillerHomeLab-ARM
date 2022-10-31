@@ -894,6 +894,7 @@
             }
         },
         {
+			"condition": "[equals(parameters('ClusterCredentialType'),'Service-Principal')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-PrivateDNSZone",
@@ -1305,10 +1306,10 @@
                         "value": "ManagedID"
                     },  
                     "adminUsername": {
-                    "value": "[parameters('adminUsername')]"
+                        "value": "[parameters('adminUsername')]"
                     }, 
                     "adminKey": {
-                    "value": "[parameters('adminKey')]"
+                        "value": "[parameters('adminKey')]"
                     }                                                                                                                
                 }
             }
@@ -1319,7 +1320,6 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AKSCluster-with-SP",     
             "dependsOn": [
-                "Deploy-PrivateDNSZone",
                 "Assign-UserAssignedMI-for-RG"
             ],  
             "properties": {
@@ -1367,15 +1367,12 @@
                     },
                     "dockerBridgeCidr": {
                         "value": "[variables('DockerBridgeCIDR')]"
-                    },                                    
-                    "DNSZoneName": {
-                        "value": "[variables('PrivateDNSZoneName')]"
-                    },     
+                    },                                        
                     "adminUsername": {
-                    "value": "[parameters('adminUsername')]"
+                        "value": "[parameters('adminUsername')]"
                     }, 
                     "adminKey": {
-                    "value": "[parameters('adminKey')]"
+                        "value": "[parameters('adminKey')]"
                     }                                                                                                                
                 }
             }
