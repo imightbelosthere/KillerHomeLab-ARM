@@ -4,6 +4,7 @@
 This Deployment deploys the following items:
 
 - 1 - Virtual Network
+- 1 - Network Security Group
 - Specified Number of Virtual Machines
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
@@ -25,6 +26,6 @@ Parameters that support changes
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - Naming Convention. Enter a name that will be used as a naming prefix for (Servers, VNets, etc) you are using.
-- Vnet1ID.  Enter first 2 octets of your desired Address Space for Virtual Network 1 (Example:  172.16)
+- VnetID.  Enter first 2 octets of your desired Address Space for Virtual Network 1 (Example:  172.16)
 - VMOSKU. Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016)
 - VMSize. Enter a Valid VM Size based on which Region the VM is deployed.

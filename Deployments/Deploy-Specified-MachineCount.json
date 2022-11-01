@@ -194,7 +194,7 @@
                 "description": "VNet1 Name"
             }
         },
-        "vnet1ID": {
+        "vnetID": {
             "type": "string",
             "defaultValue": "172.16",
             "metadata": {
@@ -244,17 +244,13 @@
         }
     },
     "variables": {
-        "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
-        "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
-        "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
-        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
-        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",
-        "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",
-        "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
-        "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
-        "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
+        "vnetName": "[concat(parameters('NamingConvention'),'-VNet')]",
+        "vnetPrefix": "[concat(parameters('vnetID'),'.0.0/16')]",
+        "subnetName": "[concat(parameters('NamingConvention'),'-VNet-Subnet')]",
+        "subnetPrefix": "[concat(parameters('vnetID'),'.1.0/24')]",
         "DeploymentAPIVersion": "2021-04-01",
         "NetworkInterfacesAPIVersion": "2021-08-01",
+        "NetworkSecurityGroupAPIVersion": "2022-01-01",                 
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01"
     },
@@ -262,11 +258,11 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-VirtualNetwork-01",
+            "name": "Deploy-VirtualNetwork",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/isolatedvnet.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -274,31 +270,16 @@
                         "value": "[variables('VirtualNetworkAPIVersion')]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[variables('vnetName')]"
                     },
                     "vnetprefix": {
-                        "value": "[variables('vnet1Prefix')]"
+                        "value": "[variables('vnetPrefix')]"
                     },
-                    "subnet1Name": {
-                        "value": "[variables('vnet1subnet1Name')]"
+                    "subnetName": {
+                        "value": "[variables('subnetName')]"
                     },
-                    "subnet1Prefix": {
-                        "value": "[variables('vnet1subnet1Prefix')]"
-                    },
-                    "subnet2Name": {
-                        "value": "[variables('vnet1subnet2Name')]"
-                    },
-                    "subnet2Prefix": {
-                        "value": "[variables('vnet1subnet2Prefix')]"
-                    },
-                    "GatewaysubnetPrefix": {
-                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
-                    },
-                    "BastionsubnetPrefix": {
-                        "value": "[variables('vnet1BastionsubnetPrefix')]"
-                    },
-                    "FirewallsubnetPrefix": {
-                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    "subnetPrefix": {
+                        "value": "[variables('subnetPrefix')]"
                     }
                 }
             }
@@ -306,9 +287,61 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-NetworksecurityGroup",     
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/blockallnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },                    
+                    "NetworkSecurityGroupname": {
+                        "value": "[concat(variables('VNetName'),'-Bastion-NSG')]"
+                    }                                                                                                                
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-Subnet",
+            "dependsOn": [
+                "Deploy-NetworksecurityGroup"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('subnetName')]"
+                    },                                                                                                            
+                    "subnetPrefix": {
+                        "value": "[variables('subnetPrefix')]"
+                    }, 
+                    "NetworkSecurityGroupname": {
+                        "value": "[concat(variables('VNetName'),'-Bastion-NSG')]"
+                    }                                                                                                                                                                                                                             
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Specified-Machine-Count",
             "dependsOn": [
-                "Deploy-VirtualNetwork-01"
+                "Deploy-VirtualNetwork"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -345,10 +378,10 @@
                         "value": "[parameters('VMVMSize')]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[variables('vnetName')]"
                     },
                     "subnetName": {
-                        "value": "[variables('vnet1subnet1Name')]"
+                        "value": "[variables('subnetName')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
