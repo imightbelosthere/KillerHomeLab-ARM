@@ -14,26 +14,33 @@
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
+    $InstallAccountExists = Get-ADUser -Filter * | Where-Object {$_.Name -like $InstallAccount}
+    $ServiceAccountExists = Get-ADUser -Filter * | Where-Object {$_.Name -like $ServiceAccount}
+
     Node localhost
     {
-        ADUser Install
-        {
-            Ensure     = 'Present'
-            UserName   = $InstallAccount
-            DomainName = $DomainName
-            Path       = "OU=Service,OU=Accounts,$BaseDN"
-            Password = $DomainCreds
-            Enabled = $True
+        if ($InstallAccount -eq $null){        
+            ADUser Install
+            {
+                Ensure     = 'Present'
+                UserName   = $InstallAccount
+                DomainName = $DomainName
+                Path       = "OU=Service,OU=Accounts,$BaseDN"
+                Password = $DomainCreds
+                Enabled = $True
+            }
         }
 
-        ADUser SQLSvc1
-        {
-            Ensure     = 'Present'            
-            UserName   = $ServiceAccount
-            DomainName = $DomainName
-            Path       = "OU=Service,OU=Accounts,$BaseDN"
-            Password = $DomainCreds
-            Enabled = $True
+        if ($ServiceAccount -eq $null){        
+            ADUser SQLSvc1
+            {
+                Ensure     = 'Present'            
+                UserName   = $ServiceAccount
+                DomainName = $DomainName
+                Path       = "OU=Service,OU=Accounts,$BaseDN"
+                Password = $DomainCreds
+                Enabled = $True
+            }
         }
 
         Script GrantCreateComputerAccounts
