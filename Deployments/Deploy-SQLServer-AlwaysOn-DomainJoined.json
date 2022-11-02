@@ -373,12 +373,11 @@
         "KeyVaultName": "[concat('SQLAO-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
-        "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
-        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",
         "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",        
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
+        "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",        
         "AvailabilitySetName": "[concat(parameters('NamingConvention'),'-SQL-AVSet')]",   
         "sqldbname": "[concat(parameters('NamingConvention'),'-db01')]",         
         "sqlname1": "[concat(parameters('NamingConvention'),'-sql-01')]",                      
@@ -393,11 +392,9 @@
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
-        "PublicIPAddressesAPIVersion": "2021-08-01",
         "VirtualMachinesAPIVersion": "2022-03-01",        
         "SchedulesAPIVersion": "2018-09-15",
         "SQLVirtualMachinesAPIVersion": "2022-02-01",
-        "VirtualNetworkAPIVersion": "2020-11-01",
         "ExtensionsTypeHandlerVersion": "2.83",
         "DJExtensionsTypeHandlerVersion": "1.3"
     },
@@ -583,6 +580,162 @@
                     }
                 }
             }
-        }             
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoin-SQL2019-AzureVM-01",
+            "dependsOn": [
+				"Deploy-SQL2019-AzureVM-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('SRV19OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-SQL2019-AzureVM-02",
+            "dependsOn": [
+                "Deploy-SQL-Availability-Set"
+            ],           
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-3disk-vm-sql.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SQLVirtualMachinesAPIVersion": {
+                        "value": "[variables('SQLVirtualMachinesAPIVersion')]"
+                    },                    
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('sqlname2')]"
+                    },
+                    "computerIP": {
+                        "value":  "[variables('sql2IP')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "SQLLicenseType": {
+                        "value": "[parameters('SQLLicenseType')]"
+                    },                    
+                    "DataDisk0Name": {
+                        "value": "SQLDatabases"
+                    },            
+                    "DataDisk1Name": {
+                        "value": "SQLLogs"
+                    },                     
+                    "VMSize": {
+                        "value": "[parameters('SQLVMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoin-SQL2019-AzureVM-02",
+            "dependsOn": [
+				"Deploy-SQL2019-AzureVM-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('sqlname2')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('SRV19OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        }                                 
     ]
 }
