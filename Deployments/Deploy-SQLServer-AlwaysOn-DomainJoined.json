@@ -482,6 +482,59 @@
             }
         },
         {
+        "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Grant-SQL-Install-Account-ComputerObjectCreation",
+            "dependsOn": [
+                "Create-ActiveDirectory-SQL-Service-Accounts"
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/grantsqlinstall.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "BaseDN": {
+                        "value": "[variables('BaseDN')]"
+                    },            
+                    "DomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },   
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },    
+                    "ServiceAccount": {
+                        "value": "[parameters('ServiceAccount')]"
+                    },                  
+                    "InstallAccount": {
+                        "value": "[parameters('InstallAccount')]"
+                    },                                
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },   
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
+        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-SQL-Availability-Set",   
