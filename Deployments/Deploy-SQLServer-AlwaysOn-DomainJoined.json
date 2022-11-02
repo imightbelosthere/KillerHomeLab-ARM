@@ -385,7 +385,7 @@
         "sql1IP": "[concat(parameters('vnet1ID'),'.1.',variables('sql1lastoctet'))]", 
         "sql1lastoctet": "141",  
         "sql2IP": "[concat(parameters('vnet1ID'),'.1.',variables('sql2lastoctet'))]",                                      
-        "sql2lastoctet": "141",          
+        "sql2lastoctet": "142",          
         "AvailabilitySetsAPIVersion": "2022-03-01",        
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
