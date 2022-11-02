@@ -6,6 +6,8 @@
         [String]$InstallAccount
     )
 
+    Import-DscResource -Module ActiveDirectoryDsc
+
     Node localhost
     {
         Script GrantCreateComputerAccounts
