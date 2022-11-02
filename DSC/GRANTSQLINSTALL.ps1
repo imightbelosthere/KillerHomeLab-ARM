@@ -2,11 +2,15 @@
 {
    param
    (
+        [String]$NetBiosDomain,
         [String]$BaseDN,
-        [String]$InstallAccount
+        [String]$InstallAccount,
+        [System.Management.Automation.PSCredential]$Admincreds
     )
 
     Import-DscResource -Module ActiveDirectoryDsc
+
+    [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
     Node localhost
     {
@@ -30,6 +34,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
+            PsDscRunAsCredential = $DomainCreds
         }
 
     }
