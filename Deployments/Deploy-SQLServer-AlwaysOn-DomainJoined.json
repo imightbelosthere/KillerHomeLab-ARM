@@ -507,24 +507,9 @@
                     "BaseDN": {
                         "value": "[variables('BaseDN')]"
                     },            
-                    "DomainName": {
-                        "value": "[variables('InternalDomainName')]"
-                    },   
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
-                    },    
-                    "ServiceAccount": {
-                        "value": "[parameters('ServiceAccount')]"
-                    },                  
                     "InstallAccount": {
                         "value": "[parameters('InstallAccount')]"
                     },                                
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },                                                                                                            
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },   
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
