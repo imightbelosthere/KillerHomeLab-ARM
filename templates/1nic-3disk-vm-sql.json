@@ -1,0 +1,308 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkInterfacesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "NetworkInterfaces API Version"
+            }
+        },
+        "VirtualMachinesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "VirtualMachines API Version"
+            }
+        },
+        "SQLVirtualMachinesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL VirtualMachines API Version"
+            }
+        },        
+        "SchedulesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Schedules API Version"
+            }
+        },
+        "computerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer Name"
+            }
+        },
+        "computerIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer IP Address"
+            }
+        },
+        "TimeZone": {
+            "type": "string",
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },
+        "AutoShutdownEnabled": {
+            "type": "string",
+            "metadata": {
+                "description": "Enable or Disable Auto-Shutdown"
+            }
+        },
+        "AutoShutdownTime": {
+            "type": "string",
+            "metadata": {
+                "description": "Time to Shutdown VM"
+            }
+        },
+        "AutoShutdownEmail": {
+            "type": "string",
+            "metadata": {
+                "description": "Notification Email for Auto-Shutdown"
+            }
+        },
+        "licenseType": {
+            "type": "string",
+            "metadata": {
+                "description": "License Type (Windows_Server or None)"
+            }
+        },
+        "SQLlicenseType": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL License Type (AHUB, DR or PAYG)"
+            }            
+        },        
+        "DataDisk0Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Data Disk Name 0"
+            }
+        },
+        "DataDisk1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Data Disk Name 1"
+            }
+        },        
+        "VMSize": {
+            "type": "string",
+            "metadata": {
+                "description": "VMSize"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET Name that contains the domain controller"
+            }
+        },
+        "subnet1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing subnet name that contains the domain controller"
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        }
+    },
+    "variables": {
+        "storageAccountType": "Premium_LRS",
+        "DataDiskSize": 1024,
+        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
+        "VMId": "[resourceId(resourceGroup().name, 'Microsoft.Compute/virtualMachines', parameters('computerName'))]",
+        "Nic1Name": "[concat(parameters('computerName'),'-nic1')]",
+        "Nic1IPAddress": "[parameters('computerIP')]",
+        "DatabasePath": "S:\\Databases",
+        "LogsPath": "L:\\Logs",
+        "TempDatabasePath": "D:\\TempDatabases"        
+    },
+    "resources": [
+        {
+            "name": "[variables('Nic1Name')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[variables('Nic1IPAddress')]",
+                            "subnet": {
+                                "id": "[variables('subnet1Id')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('computerName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "[parameters('VirtualMachinesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces',variables('Nic1Name'))]"
+            ],
+            "properties": {
+                "licenseType": "[parameters('licenseType')]",
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                },
+                "hardwareProfile": {
+                    "vmSize": "[parameters('VMSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('computerName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]",
+                    "WindowsConfiguration": {
+                        "timeZone": "[parameters('TimeZone')]"
+                    }                    
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "microsoftsqlserver",
+                        "offer": "sql2019-ws2019",
+                        "sku": "enterprise",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "[concat(parameters('computerName'),'_OSDisk')]",
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[variables('storageAccountType')]"
+                        }
+                    },
+                    "dataDisks": [
+                        {
+                            "name": "[concat(parameters('computerName'),'_',parameters('DataDisk0Name'))]",
+                            "caching": "None",
+                            "writeAcceleratorEnabled": false,                            
+                            "diskSizeGB": "[variables('DataDiskSize')]",
+                            "lun": 0,
+                            "createOption": "Empty",
+                            "managedDisk": {
+                                "storageAccountType": "[variables('storageAccountType')]"
+                            }
+                        },
+                        {
+                            "name": "[concat(parameters('computerName'),'_',parameters('DataDisk1Name'))]",
+                            "caching": "None",
+                            "writeAcceleratorEnabled": false,                            
+                            "diskSizeGB": "[variables('DataDiskSize')]",
+                            "lun": 1,
+                            "createOption": "Empty",
+                            "managedDisk": {
+                                "storageAccountType": "[variables('storageAccountType')]"
+                            }
+                        }                        
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('Nic1Name'))]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "[parameters('computerName')]",
+            "type": "Microsoft.SqlVirtualMachine/SqlVirtualMachines",
+            "apiVersion": "[parameters('SQLVirtualMachinesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('computerName'))]"
+            ],            
+            "properties": {
+                "virtualMachineResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('computerName'))]",
+                "sqlManagement": "Full",
+                "SqlServerLicenseType": "[parameters('SQLLicenseType')]",
+                "AutoPatchingSettings": {
+                    "Enable": true,
+                    "DayOfWeek": "Sunday",
+                    "MaintenanceWindowStartingHour": 2,
+                    "MaintenanceWindowDuration": 60
+                },
+                "KeyVaultCredentialSettings": {
+                    "Enable": false,
+                    "CredentialName": ""
+                },
+                "StorageConfigurationSettings": {
+                    "DiskConfigurationType": "NEW",
+                    "StorageWorkloadType": "OLTP",
+                    "SQLDataSettings": {
+                        "LUNs": [
+                            0   
+                        ],
+                        "DefaultFilePath": "[variables('DatabasePath')]"
+                    },
+                    "SQLLogSettings": {
+                        "LUNs": [
+                            1   
+                        ],
+                        "DefaultFilePath": "[variables('LogsPath')]"
+                    },
+                    "SQLTempDbSettings": {
+                        "DefaultFilePath": "[variables('TempDatabasePath')]"
+                    }
+                },
+                "ServerConfigurationsManagementSettings": {
+                    "SQLConnectivityUpdateSettings": {
+                        "ConnectivityType": "Private",
+                        "Port": 1433,
+                        "SQLAuthUpdateUserName": "",
+                        "SQLAuthUpdatePassword": ""
+                    },
+                    "AdditionalFeaturesServerConfigurations": {
+                        "IsRServicesEnabled": false
+                    }
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('AutoShutdownEnabled'),'Yes')]",
+            "type": "microsoft.devtestlab/schedules",
+            "apiVersion": "[parameters('SchedulesAPIVersion')]",
+            "name": "[concat('shutdown-computevm-',parameters('computerName'))]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines',parameters('computerName'))]",
+                "[resourceId('Microsoft.SqlVirtualMachine/SqlVirtualMachines',parameters('computerName'))]"
+            ],
+            "properties": {
+                "status": "Enabled",
+                "taskType": "ComputeVmShutdownTask",
+                "dailyRecurrence": {
+                    "time": "[parameters('AutoShutdownTime')]"
+                },
+                "timeZoneId": "[parameters('TimeZone')]",
+                "notificationSettings": {
+                    "status": "Enabled",
+                    "timeInMinutes": 30,
+                    "emailRecipient": "[parameters('AutoShutdownEmail')]",
+                    "notificationLocale": "en"
+                },
+                "targetResourceId": "[variables('VMId')]"
+            }
+        }
+    ]
+}

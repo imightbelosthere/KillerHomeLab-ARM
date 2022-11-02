@@ -4,12 +4,10 @@
    (
         [String]$PFXCommonName,
         [String]$InternalDomainName,
-        [String]$UsersGroup,
+        [String]$DomainUsersGroup,
         [String]$ComputersGroup,
         [System.Management.Automation.PSCredential]$Admincreds
     )
-
-    Import-DscResource -ModuleName xRemoteDesktopSessionHost
 
     Node localhost
     {   
@@ -38,14 +36,30 @@
                 Set-Item RDS:\GatewayServer\SSLCertificate\Thumbprint -Value $cert.Thumbprint
                 Start-Service TSGateway
 
-                $CAP = Get-ChildItem -Path RDS:\GatewayServer\CAP -ErrorAction 0
-                IF ($CAP -eq $Null){
-                    New-Item -Path RDS:\GatewayServer\CAP -Name NewCAP -UserGroups "$using:UsersGroup@$using:InternalDomainName" -AuthMethod 3
+                $DomainMemberShip = (Get-WmiObject -Class Win32_ComputerSystem).PartOfDomain
+                IF ($DomainMemberShip -eq 'True'){
+                    $DomainCAP = Get-ChildItem -Path RDS:\GatewayServer\CAP -ErrorAction 0
+                    IF ($DomainCAP -eq $Null){
+                        New-Item -Path RDS:\GatewayServer\CAP -Name NewCAP -UserGroups "$using:UsersGroup@$using:InternalDomainName" -AuthMethod 3
+                    }
+
+                    $DomainRAP = Get-ChildItem -Path RDS:\GatewayServer\RAP -ErrorAction 0
+                    IF ($DomainRAP.Name -eq $Null){
+                        New-Item -Path RDS:\GatewayServer\RAP -Name NewRAP -UserGroups "$using:UsersGroup@$using:InternalDomainName" -ComputerGroupType 1 -ComputerGroup "$using:ComputersGroup@$using:InternalDomainName"
+                    }
                 }
 
-                $RAP = Get-ChildItem -Path RDS:\GatewayServer\RAP -ErrorAction 0
-                IF ($RAP.Name -eq $Null){
-                    New-Item -Path RDS:\GatewayServer\RAP -Name NewRAP -UserGroups "$using:UsersGroup@$using:InternalDomainName" -ComputerGroupType 1 -ComputerGroup "$using:ComputersGroup@$using:InternalDomainName"
+                $WorkGroupMemberShip = (Get-WmiObject -Class Win32_ComputerSystem).Workgroup
+                IF ($WorkGroupMemberShip -eq 'True'){
+                    $WorkGrouopCAP = Get-ChildItem -Path RDS:\GatewayServer\CAP -ErrorAction 0
+                    IF ($WorkGroupCAP -eq $Null){
+                        New-Item -Path RDS:\GatewayServer\CAP -Name NewCAP -UserGroups "Administrators@BUILTIN" -AuthMethod 1
+                    }
+
+                    $WorkGroupRAP = Get-ChildItem -Path RDS:\GatewayServer\RAP -ErrorAction 0
+                    IF ($WorkGroupRAP.Name -eq $Null){
+                        New-Item -Path RDS:\GatewayServer\RAP -Name NewRAP -UserGroups "Administrators@BUILTIN" -ComputerGroupType 2
+                    }
                 }
 
             }
