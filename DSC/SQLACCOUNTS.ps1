@@ -19,7 +19,7 @@
 
     Node localhost
     {
-        if ($InstallAccount -eq $null){        
+        if ($InstallAccountExists -eq $null){        
             ADUser Install
             {
                 Ensure     = 'Present'
@@ -55,7 +55,7 @@
 
         }
 
-        if ($ServiceAccount -eq $null){        
+        if ($ServiceAccountExists -eq $null){        
             ADUser SQLSvc1
             {
                 Ensure     = 'Present'            
