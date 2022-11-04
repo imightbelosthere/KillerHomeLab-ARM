@@ -1,0 +1,47 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "StorageAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account API Version"
+            }
+        },        
+        "StorageAccountNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account Name Hash"
+            }
+        }        
+    },  
+    "variables": {
+    "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
+    "Identifier": "[substring(variables('StorageAccountHash'), 19, 14)]",
+    "StorageAccountName": "[concat('sa', variables('Identifier'))]" ,
+    "StorageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]"
+    },         
+    "resources": [
+        {
+            "apiVersion": "[parameters('StorageAPIVersion')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "sku": { 
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2"
+        }             
+    ],
+    "outputs": {
+        "Key": {
+            "type": "string",
+            "value": "[listKeys(variables('StorageAccountId'), parameters('StorageAPIVersion')).keys[0].value]"
+        },
+        "StorageAccountName": {
+            "type": "string",
+            "value": "[variables('storageAccountName')]"
+        }
+    }    
+}
+  

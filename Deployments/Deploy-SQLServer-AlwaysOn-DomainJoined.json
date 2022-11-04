@@ -378,7 +378,7 @@
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
         "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",        
-        "AvailabilitySetName": "[concat(parameters('NamingConvention'),'-SQL-AVSet')]",   
+        "AvailabilitySetName": "[concat(parameters('NamingConvention'),'-SQL-AVSet')]",
         "sqldbname": "[concat(parameters('NamingConvention'),'-db01')]",         
         "sqlname1": "[concat(parameters('NamingConvention'),'-sql-01')]",                      
         "sqlname2": "[concat(parameters('NamingConvention'),'-sql-02')]",     
@@ -392,6 +392,7 @@
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
+        "StorageAPIVersion": "2022-05-01",
         "VirtualMachinesAPIVersion": "2022-03-01",        
         "SchedulesAPIVersion": "2018-09-15",
         "SQLVirtualMachinesAPIVersion": "2022-02-01",
@@ -736,6 +737,336 @@
                     }
                 }
             }
-        }                                 
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM1",
+            "dependsOn": [
+                "DomainJoin-SQL2019-AzureVM-01"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/grantlocaladmin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                     
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },              
+                    "Account": {
+                        "value": "[parameters('InstallAccount')]"
+                    },            
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM2",
+            "dependsOn": [
+                "DomainJoin-SQL2019-AzureVM-02"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/grantlocaladmin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                     
+                    "computerName": {
+                        "value": "[variables('sqlname2')]"
+                    },              
+                    "Account": {
+                        "value": "[parameters('InstallAccount')]"
+                    },            
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Grant-SQL-Logins-for-Account-on-SQLVM1",
+            "dependsOn": [
+                "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM1"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/createsqllogin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },
+                    "InstallAccount": {
+                        "value": "[parameters('InstallAccount')]"
+                    },      
+                    "SvcAccount": {
+                        "value": "[parameters('ServiceAccount')]"
+                    },                   
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },    
+                    "DomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },  
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },                                                      
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Grant-SQL-Logins-for-Account-on-SQLVM2",
+            "dependsOn": [
+                "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM2"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/createsqllogin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname2')]"
+                    },
+                    "InstallAccount": {
+                        "value": "[parameters('InstallAccount')]"
+                    },      
+                    "SvcAccount": {
+                        "value": "[parameters('ServiceAccount')]"
+                    },                   
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },    
+                    "DomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-WindowsFailoverClustering-on-SQLVM1",
+            "dependsOn": [
+                "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM1"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/installwfc.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },             
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-WindowsFailoverClustering-on-SQLVM2",
+            "dependsOn": [
+                "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM2"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/installwfc.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname2')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-SQLVM01",
+            "dependsOn": [
+                "Install-WindowsFailoverClustering-on-SQLVM1"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-SQLVM02",
+            "dependsOn": [
+                "Install-WindowsFailoverClustering-on-SQLVM2"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('sqlname2')]"
+                    },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-FileShareWitenes-StorageAccount",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/storage.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "StorageAPIVersion": {
+                        "value": "[variables('StorageAPIVersion')]"
+                    },
+                    "StorageAccountNameHash": {
+                        "value": "StorageAccount"
+                    }
+                }
+            }
+        }                                    
     ]
 }
