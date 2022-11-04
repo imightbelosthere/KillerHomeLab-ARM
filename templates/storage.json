@@ -17,7 +17,7 @@
     },  
     "variables": {
     "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
-    "Identifier": "[substring(variables('StorageAccountHash'), 19, 14)]",
+    "Identifier": "[substring(variables('StorageAccountHash'), 24, 9)]",
     "StorageAccountName": "[concat('sa', variables('Identifier'))]" ,
     "StorageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]"
     },         
