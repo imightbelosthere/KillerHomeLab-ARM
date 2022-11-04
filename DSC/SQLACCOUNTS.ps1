@@ -7,7 +7,9 @@
         [String]$BaseDN,
         [String]$ServiceAccount,        
         [String]$InstallAccount,        
-        [System.Management.Automation.PSCredential]$Admincreds
+        [System.Management.Automation.PSCredential]$AdminCreds,
+        [System.Management.Automation.PSCredential]$InstallAccountCreds,
+        [System.Management.Automation.PSCredential]$ServiceAccountCreds
     )
 
     Import-DscResource -Module ActiveDirectoryDsc
@@ -26,7 +28,7 @@
                 UserName   = $InstallAccount
                 DomainName = $DomainName
                 Path       = "OU=Service,OU=Accounts,$BaseDN"
-                Password = $DomainCreds
+                Password = $InstallAccountcreds
                 Enabled = $True
             }
 
@@ -62,7 +64,7 @@
                 UserName   = $ServiceAccount
                 DomainName = $DomainName
                 Path       = "OU=Service,OU=Accounts,$BaseDN"
-                Password = $DomainCreds
+                Password = $ServiceAccountcreds
                 Enabled = $True
             }
         }

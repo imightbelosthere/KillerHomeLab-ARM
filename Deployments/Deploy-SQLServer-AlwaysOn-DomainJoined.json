@@ -192,14 +192,26 @@
             "metadata": {
                 "description": "SQL Service Account Name"
             }
-        },    
+        },
+        "ServiceAccountPassword": {
+            "type": "securestring",
+            "metadata": {
+            "description": "SQL Service Account Password"
+            }
+        },        
         "InstallAccount": {
             "type": "string",
             "defaultValue": "Install",                
             "metadata": {
                 "description": "SQL Install Account Name"
             }
-        },         
+        },
+        "InstallAccountPassword": {
+            "type": "securestring",
+            "metadata": {
+            "description": "SQL Install Account Password"
+            }
+        },               
         "AzureUserObjectID": {
             "type": "string",
             "defaultValue": "",
@@ -369,6 +381,8 @@
     },
     "variables": {
         "DeploymentName": "[deployment().name]",
+        "Environment": "[environment().name]",
+        "StorageEndpoint": "[if(equals(variables('Environment'),concat('AzureUSGovernment')), 'core.usgovcloudapi.net', 'core.windows.net')]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('SQLAO-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
@@ -381,7 +395,11 @@
         "AvailabilitySetName": "[concat(parameters('NamingConvention'),'-SQL-AVSet')]",
         "sqldbname": "[concat(parameters('NamingConvention'),'-db01')]",         
         "sqlname1": "[concat(parameters('NamingConvention'),'-sql-01')]",                      
-        "sqlname2": "[concat(parameters('NamingConvention'),'-sql-02')]",     
+        "sqlname2": "[concat(parameters('NamingConvention'),'-sql-02')]",
+        "SQLClusterName": "[concat(parameters('NamingConvention'),'-clust')]",
+        "SQLAPName": "[concat(parameters('NamingConvention'),'-ap')]",        
+        "SQLAGName": "[concat(parameters('NamingConvention'),'-ag')]",                
+        "sqlapip": "140",  
         "sql1IP": "[concat(parameters('vnet1ID'),'.1.',variables('sql1lastoctet'))]", 
         "sql1lastoctet": "141",  
         "sql2IP": "[concat(parameters('vnet1ID'),'.1.',variables('sql2lastoctet'))]",                                      
@@ -464,9 +482,15 @@
                     "ServiceAccount": {
                         "value": "[parameters('ServiceAccount')]"
                     },                  
+                    "ServiceAccountPassword": {
+                        "value": "[parameters('ServiceAccountPassword')]"
+                    },                                           
                     "InstallAccount": {
                         "value": "[parameters('InstallAccount')]"
                     },                                
+                    "InstallAccountPassword": {
+                        "value": "[parameters('InstallAccountPassword')]"
+                    },                       
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },                                                                                                            
@@ -1051,7 +1075,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Create-FileShareWitenes-StorageAccount",
+            "name": "Create-FileShareWitness-StorageAccount",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -1067,6 +1091,307 @@
                     }
                 }
             }
-        }                                    
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-WindowsFailoverCluster-on-SQLVM1",
+            "dependsOn": [
+                "Create-FileShareWitness-StorageAccount"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/createwfc.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },                        
+                    "SQLClusterName": {
+                        "value": "[variables('SQLClusterName')]"
+                    },      
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-WindowsFailoverCluster-on-SQLVM2",
+            "dependsOn": [
+                "Create-WindowsFailoverCluster-on-SQLVM1"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/createwfc.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname2')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },                        
+                    "SQLClusterName": {
+                        "value": "[variables('SQLClusterName')]"
+                    },      
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Grant-WindowsFailoverCluster-Create-ComputerObject",
+            "dependsOn": [
+                "Create-WindowsFailoverCluster-on-SQLVM2"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/grantcluster.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },                        
+                    "SQLClusterName": {
+                        "value": "[variables('SQLClusterName')]"
+                    },   
+                    "BaseDN": {
+                        "value": "[variables('BaseDN')]"
+                    },                                      
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Enable-SQLAlwaysOn-on-SQLVM1",
+            "dependsOn": [
+                "Grant-WindowsFailoverCluster-Create-ComputerObject"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/enablesqlalwayson.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },                        
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },                        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Enable-SQLAlwaysOn-on-SQLVM2",
+            "dependsOn": [
+                "Enable-SQLAlwaysOn-on-SQLVM1"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/enablesqlalwayson.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname2')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },                        
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                                                                                                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-SQLAlwaysOn-on-SQLVM1",
+            "dependsOn": [
+                "Enable-SQLAlwaysOn-on-SQLVM1",
+                "Enable-SQLAlwaysOn-on-SQLVM2"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configuresqlalwayson.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },
+                    "Environment": {
+                        "value": "[variables('Environment')]"
+                    },                    
+                    "SQLAGName": {
+                        "value": "[variables('sqlagname')]"
+                    }, 
+                    "SQLAPName": {
+                        "value": "[variables('sqlapname')]"
+                    },                
+                    "SQLAPIP": {
+                        "value": "[variables('sqlapIP')]"
+                    },               
+                    "SQLNode1": {
+                        "value": "[variables('sqlname1')]"
+                    },                     
+                    "SQLNode2": {
+                        "value": "[variables('sqlname2')]"
+                    },   
+                    "SQLDBName": {
+                        "value": "[variables('sqldbname')]"
+                    },                        
+                    "SQLServiceAccount": {
+                        "value": "[parameters('ServiceAccount')]"
+                    },                
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },          
+                    "DomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },                        
+                    "StorageAccountName": {
+                        "value": "[reference('Create-FileShareWitness-StorageAccount').outputs.StorageAccountName.value]"
+                    },                                            
+                    "StorageAccountKey": {
+                        "value": "[reference('Create-FileShareWitness-StorageAccount').outputs.Key.value]"             
+                    },                    
+                    "StorageEndpoint": {
+                        "value": "[variables('StorageEndpoint')]"
+                    },                                                                                                                                      
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "InstallAccount": {
+                        "value": "[parameters('InstallAccount')]"
+                    },             
+                    "InstallAccountPassword": {
+                        "value": "[parameters('InstallAccountPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                                   
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        }                              
     ]
 }
