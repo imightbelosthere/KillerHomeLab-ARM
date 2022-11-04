@@ -11,6 +11,7 @@
     )
 
     [System.Management.Automation.PSCredential ]$Sqlsvc = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($ServiceAccountCreds.UserName)", $ServiceAccountCreds.Password)
+    $ServiceAccount = $ServiceAccountCreds.UserName
 
     Import-DscResource -Module SqlServerDsc # Used for SQL Configurations
 
@@ -29,7 +30,7 @@
         SqlLogin CreateSQLSvcSQLLogin
         {
             Ensure               = 'Present'
-            Name                 = "$NetBiosDomain\$SvcAccount"
+            Name                 = "$NetBiosDomain\$ServiceAccount"
             LoginType            = 'WindowsUser'
             ServerName           = "$ComputerName.$DomainName"
             InstanceName         = 'MSSQLSERVER'
