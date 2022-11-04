@@ -96,7 +96,6 @@
                         "Properties": {
                             "computerName": "[parameters('computerName')]",                        
                             "InstallAccount": "[parameters('InstallAccount')]",
-                            "ServiceAccount": "[parameters('ServiceAccount')]",                                                                                            
                             "NetBiosDomain": "[parameters('NetBiosDomain')]",                            
                             "DomainName": "[parameters('DomainName')]",                            
                             "AdminCreds": {

@@ -4,14 +4,13 @@
    (
         [String]$computerName,
         [String]$InstallAccount,
-        [String]$SvcAccount,        
         [String]$NetBiosDomain,
         [String]$DomainName,
         [System.Management.Automation.PSCredential]$Admincreds,
         [System.Management.Automation.PSCredential]$ServiceAccountCreds
     )
 
-    [System.Management.Automation.PSCredential ]$Sqlsvc = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$SvcAccount", $ServiceAccountCreds.Password)
+    [System.Management.Automation.PSCredential ]$Sqlsvc = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($ServiceAccountCreds.UserName)", $ServiceAccountCreds.Password)
 
     Import-DscResource -Module SqlServerDsc # Used for SQL Configurations
 
