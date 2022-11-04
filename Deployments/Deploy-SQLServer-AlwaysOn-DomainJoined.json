@@ -1097,6 +1097,8 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-WindowsFailoverCluster-on-SQLVM1",
             "dependsOn": [
+                "Restart-SQLVM01",
+                "Restart-SQLVM02",
                 "Create-FileShareWitness-StorageAccount"
             ],      
             "properties": {
