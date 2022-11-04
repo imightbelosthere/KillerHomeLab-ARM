@@ -6,8 +6,6 @@
         [String]$NetBiosDomain
     )
 
-    Import-DscResource -ModuleName ComputerManagementDsc
-
     Node localhost
     {
         Script GrantLocalAdmin
