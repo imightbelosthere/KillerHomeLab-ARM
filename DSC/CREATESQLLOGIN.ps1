@@ -7,10 +7,11 @@
         [String]$SvcAccount,        
         [String]$NetBiosDomain,
         [String]$DomainName,
-        [System.Management.Automation.PSCredential]$Admincreds
+        [System.Management.Automation.PSCredential]$Admincreds,
+        [System.Management.Automation.PSCredential]$ServiceAccountCreds
     )
 
-    [System.Management.Automation.PSCredential ]$Sqlsvc = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$SvcAccount", $Admincreds.Password)
+    [System.Management.Automation.PSCredential ]$Sqlsvc = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$SvcAccount", $ServiceAccountCreds.Password)
 
     Import-DscResource -Module SqlServerDsc # Used for SQL Configurations
 

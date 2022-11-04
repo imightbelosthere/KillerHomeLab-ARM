@@ -863,10 +863,7 @@
                     },
                     "InstallAccount": {
                         "value": "[parameters('InstallAccount')]"
-                    },      
-                    "SvcAccount": {
-                        "value": "[parameters('ServiceAccount')]"
-                    },                   
+                    },                         
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },    
@@ -878,7 +875,13 @@
                     },                                                                                                            
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
-                    },                                                                                                                                                                                                                                                                                                           
+                    },      
+                    "ServiceAccount": {
+                        "value": "[parameters('ServiceAccount')]"
+                    },
+                    "ServiceAccountPassword": {
+                        "value": "[parameters('ServiceAccountPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                             
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
@@ -913,10 +916,7 @@
                     },
                     "InstallAccount": {
                         "value": "[parameters('InstallAccount')]"
-                    },      
-                    "SvcAccount": {
-                        "value": "[parameters('ServiceAccount')]"
-                    },                   
+                    },                        
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },    
@@ -928,7 +928,13 @@
                     },                                                                                                            
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
-                    },                                                                                                                                                                                                                                                                                                           
+                    },
+                    "ServiceAccount": {
+                        "value": "[parameters('ServiceAccount')]"
+                    },
+                    "ServiceAccountPassword": {
+                        "value": "[parameters('ServiceAccountPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
