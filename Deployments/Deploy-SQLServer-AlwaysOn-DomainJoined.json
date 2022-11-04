@@ -919,7 +919,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Install-WindowsFailoverClustering-on-SQLVM1",
             "dependsOn": [
-                "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM1"
+                "Grant-SQL-Logins-for-Account-on-SQLVM2"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -951,7 +951,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Install-WindowsFailoverClustering-on-SQLVM2",
             "dependsOn": [
-                "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM2"
+                "Grant-SQL-Logins-for-Account-on-SQLVM2"
             ],      
             "properties": {
                 "mode": "Incremental",
