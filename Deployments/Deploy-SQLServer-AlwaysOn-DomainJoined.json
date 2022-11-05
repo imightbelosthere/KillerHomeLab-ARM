@@ -949,7 +949,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Install-WindowsFailoverClustering-on-SQLVM1",
             "dependsOn": [
-                "Grant-SQL-Logins-for-Account-on-SQLVM2"
+                "Grant-SQL-Logins-for-Account-on-SQLVM1"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -1149,6 +1149,9 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-WindowsFailoverCluster-on-SQLVM2",
             "dependsOn": [
+                "Restart-SQLVM01",
+                "Restart-SQLVM02",
+                "Create-FileShareWitness-StorageAccount",
                 "Create-WindowsFailoverCluster-on-SQLVM1"
             ],      
             "properties": {
@@ -1193,6 +1196,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Grant-WindowsFailoverCluster-Create-ComputerObject",
             "dependsOn": [
+                "Create-WindowsFailoverCluster-on-SQLVM1",
                 "Create-WindowsFailoverCluster-on-SQLVM2"
             ],      
             "properties": {
@@ -1281,6 +1285,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Enable-SQLAlwaysOn-on-SQLVM2",
             "dependsOn": [
+                "Grant-WindowsFailoverCluster-Create-ComputerObject",
                 "Enable-SQLAlwaysOn-on-SQLVM1"
             ],      
             "properties": {
