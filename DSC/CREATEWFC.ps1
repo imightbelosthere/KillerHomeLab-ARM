@@ -13,6 +13,11 @@
 
     Node localhost
     {
+        LocalConfigurationManager
+        {
+            RebootNodeIfNeeded = $true
+        }
+
         Cluster CreateCluster
         {
             Name = $SQLClusterName
