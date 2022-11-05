@@ -26,6 +26,12 @@
             Name = 'RSAT-Clustering-PowerShell'
         }
 
+        WindowsFeature RSAT-Clustering-CmdInterface
+        {
+            Ensure = 'Present'
+            Name = 'RSAT-Clustering-CmdInterface'
+        }
+
         WindowsFeature Failover-Clustering
         {
             Ensure = 'Present'
