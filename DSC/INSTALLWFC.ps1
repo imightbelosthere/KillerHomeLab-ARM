@@ -8,11 +8,16 @@
             Name = 'Failover-Clustering'
         }
         
-        WindowsFeature RSAT-Clustering
+        WindowsFeature RSAT-Clustering-Mgmt
         {
             Ensure = 'Present'
-            Name = 'RSAT-Clustering'
-            IncludeAllSubFeature = $true
+            Name = 'RSAT-Clustering-Mgmt'
+        }
+
+        WindowsFeature RSAT-Clustering-PowerShell
+        {
+            Ensure = 'Present'
+            Name = 'RSAT-Clustering-PowerShell'
         }
 
        Script AllowLBProbe
