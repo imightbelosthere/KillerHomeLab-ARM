@@ -116,11 +116,11 @@
                                 "Password": "PrivateSettingsRef:AdminPassword1"
                             },
                             "InstallAccountCreds": {
-                                "UserName": "[parameters('InstallAccountPassword')]",
+                                "UserName": "[parameters('InstallAccount')]",
                                 "Password": "PrivateSettingsRef:InstallAccountPassword"
                             },
                             "ServiceAccountCreds": {
-                                "UserName": "[parameters('ServiceAccountPassword')]",
+                                "UserName": "[parameters('ServiceAccount')]",
                                 "Password": "PrivateSettingsRef:ServiceAccountPassword"
                             }                                                                                                                                                                       
                         }

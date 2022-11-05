@@ -1265,12 +1265,12 @@
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },                        
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },                                                                                                            
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },                                                                                                                                                                                                                                                                                                           
+                    "InstallAccount": {
+                        "value": "[parameters('InstallAccount')]"
+                    },                                
+                    "InstallAccountPassword": {
+                        "value": "[parameters('InstallAccountPassword')]"
+                    },                       
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
@@ -1307,12 +1307,12 @@
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },                        
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },                                                                                                            
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },                                                                                                                                                                                                                                                                                                           
+                    "InstallAccount": {
+                        "value": "[parameters('InstallAccount')]"
+                    },                                
+                    "InstallAccountPassword": {
+                        "value": "[parameters('InstallAccountPassword')]"
+                    },                       
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },                                                                                                            
