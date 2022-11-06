@@ -1333,7 +1333,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configuresqlalwayson.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configsqlalwayson.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
