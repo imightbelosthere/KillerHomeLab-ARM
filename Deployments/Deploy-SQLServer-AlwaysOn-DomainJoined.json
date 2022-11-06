@@ -397,19 +397,22 @@
         "sqlname1": "[concat(parameters('NamingConvention'),'-sql-01')]",                      
         "sqlname2": "[concat(parameters('NamingConvention'),'-sql-02')]",
         "SQLClusterName": "[concat(parameters('NamingConvention'),'-clust')]",
-        "SQLAPName": "[concat(parameters('NamingConvention'),'-ap')]",        
-        "SQLAGName": "[concat(parameters('NamingConvention'),'-ag')]",                
+        "SQLAccessPointName": "[concat(parameters('NamingConvention'),'-ap')]",        
+        "SQLAvailabilityGroupName": "[concat(parameters('NamingConvention'),'-ag')]",                
+        "SQLLoadBalancerName": "[concat(parameters('NamingConvention'),'-ap-lb')]",                        
+        "SQLLoadBalancerSku": "Standard",
         "sqlapip": "[concat(parameters('vnet1ID'),'.1.',variables('sqlaplastoctet'))]", 
         "sqlaplastoctet": "140",  
         "sql1IP": "[concat(parameters('vnet1ID'),'.1.',variables('sql1lastoctet'))]", 
         "sql1lastoctet": "141",  
         "sql2IP": "[concat(parameters('vnet1ID'),'.1.',variables('sql2lastoctet'))]",                                      
-        "sql2lastoctet": "142",          
+        "sql2lastoctet": "142",   
         "AvailabilitySetsAPIVersion": "2022-03-01",        
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
+        "LoadBalancerAPIVersion": "2022-05;-01",                
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "StorageAPIVersion": "2022-05-01",
         "VirtualMachinesAPIVersion": "2022-03-01",        
@@ -1326,6 +1329,115 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-SQL-Azure-Internal-LoadBalancer",
+            "dependsOn": [
+                "Enable-SQLAlwaysOn-on-SQLVM1",
+                "Enable-SQLAlwaysOn-on-SQLVM1"        
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/internalloadbalancersql.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "LoadBalancerAPIVersion": {
+                        "value": "[variables('LoadBalancerAPIVersion')]"
+                    },                    
+                    "LoadBalancerName": {
+                        "value": "[variables('SQLLoadBalancerName')]"
+                    },
+                    "SQLAPName": {
+                        "value": "[variables('SQLAccessPointName')]"
+                    },    
+                    "SQLAPIP": {
+                        "value": "[variables('sqlapIP')]"
+                    },                        
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },               
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },                         
+                    "Sku": {
+                        "value": "[variables('SQLLoadBalancerSku')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-LoadBalancer-with-SQLVM1",
+            "dependsOn": [
+                "Deploy-SQL-Azure-Internal-LoadBalancer"
+            ],           
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associateinternalloadbalancer.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },
+                    "ComputerIP": {
+                        "value": "[variables('sql1IP')]"
+                    },                                          
+                    "LoadBalancerName": {
+                        "value": "[variables('SQLLoadBalancerName')]"
+                    },                                                                   
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },           
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    }
+                }
+            }
+        },               
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-LoadBalancer-with-SQLVM2",
+            "dependsOn": [
+                "Associate-LoadBalancer-with-SQLVM1"
+            ],           
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associateinternalloadbalancer.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('sqlname2')]"
+                    },
+                    "ComputerIP": {
+                        "value": "[variables('sql2IP')]"
+                    },                                          
+                    "LoadBalancerName": {
+                        "value": "[variables('SQLLoadBalancerName')]"
+                    },                                                                   
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },           
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    }
+                }
+            }
+        },                       
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Configure-SQLAlwaysOn-on-SQLVM1",
             "dependsOn": [
                 "Enable-SQLAlwaysOn-on-SQLVM1",
@@ -1351,10 +1463,10 @@
                         "value": "[variables('Environment')]"
                     },                    
                     "SQLAGName": {
-                        "value": "[variables('sqlagname')]"
+                        "value": "[variables('SQLAvailabilityGroupName')]"
                     }, 
                     "SQLAPName": {
-                        "value": "[variables('sqlapname')]"
+                        "value": "[variables('SQLAccessPointName')]"
                     },                
                     "SQLAPIP": {
                         "value": "[variables('sqlapIP')]"

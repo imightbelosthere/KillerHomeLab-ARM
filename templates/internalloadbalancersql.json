@@ -1,0 +1,122 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LoadBalancerAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Load Balancer API Version"
+            }
+        },    
+        "LoadBalancerName": {
+            "type": "string",
+            "metadata": {
+            "description": "Name of Load Balancer"
+            }
+        },
+        "SQLAPName": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Access Point Name"
+            }
+        }, 
+        "SQLAPIP": {
+            "type": "string",
+            "metadata": {
+                "description": "SQL Access Point IP"
+            }
+        },        
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET Name that contains the domain controller"
+            }
+        },
+        "subnetName": {
+            "type": "string"
+        },               
+        "Sku": {
+            "type": "string",
+            "metadata": {
+                "description": "Set SKU Type to either Basic or Standard"
+            }
+        } 
+    },
+    "variables": {
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/loadBalancers",
+            "apiVersion": "[parameters('LoadBalancerAPIVersion')]",
+            "name": "[parameters('LoadBalancerName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('Sku')]"
+            },
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "[parameters('SQLAPName')]",
+                        "properties": {
+                            "privateIPAddress": "[parameters('SQLAPIP')]",
+                            "privateIPAllocationMethod": "Static",
+                            "subnet": {
+                                "id": "[variables('subnetId')]"
+                            },
+                            "privateIPAddressVersion": "IPv4"
+                        }
+                    }
+                ],
+                "backendAddressPools": [
+                    {
+                        "name": "BackEndServers",
+                        "properties": {}
+                    }
+                ],
+                "loadBalancingRules": [
+                    {
+                        "name": "SQLAlwaysOnEndPointListener",
+                        "properties": {
+                            "frontendIPConfiguration": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('LoadBalancerName')), '/frontendIPConfigurations/', parameters('SQLAPName'))]"
+                            },
+                            "frontendPort": 1433,
+                            "backendPort": 1433,
+                            "enableFloatingIP": true,
+                            "idleTimeoutInMinutes": 4,
+                            "protocol": "Tcp",
+                            "enableTcpReset": false,
+                            "loadDistribution": "Default",
+                            "backendAddressPool": {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('LoadBalancerName'), 'BackEndServers')]"
+                            },
+                            "probe": {
+                                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', parameters('LoadBalancerName')), '/probes/SQLAlwaysOnEndPointProbe')]"
+                            }
+                        }
+                    }
+                ],
+                "probes": [
+                    {
+                        "name": "SQLAlwaysOnEndPointProbe",
+                        "properties": {
+                            "protocol": "Tcp",
+                            "port": 59999,
+                            "intervalInSeconds": 5,
+                            "numberOfProbes": 2
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/loadBalancers/backendAddressPools",
+            "apiVersion": "[parameters('LoadBalancerAPIVersion')]",
+            "name": "[concat(parameters('LoadBalancerName'), '/BackEndServers')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/loadBalancers', parameters('LoadBalancerName'))]"
+            ]
+        }
+    ]
+}

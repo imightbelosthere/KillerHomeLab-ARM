@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkInterfacesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "NetworkInterfaces API Version"
+            }
+        },            
+        "computerName": {
+            "type": "string",
+            "metadata": {
+              "description": "Computer Name"
+            }            
+        },
+        "ComputerIP": {
+            "type": "string",
+            "metadata": {
+              "description": "Computer IP"
+            }            
+        },                                
+        "LoadBalancerName": {
+            "type": "string",
+            "metadata": {
+              "description": "Load Balancer Name"
+            }            
+        },                
+        "enableAcceleratedNetworking": {
+            "type": "bool",
+            "metadata": {
+              "description": "Enable or Disable Accelerated Networking"
+            }            
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+              "description": "Virtual Network Name"
+            }
+        },        
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+              "description": "Subnet Name"
+            }            
+        }       
+    },
+    "variables": {
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]",
+        "NicName": "[concat(parameters('computerName'),'-nic')]"
+    },
+    "resources": [
+        {
+            "name": "[variables('NicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[parameters('ComputerIP')]",
+                            "subnet": {
+                                "id": "[variables('subnetId')]"
+                            },
+                            "loadBalancerBackendAddressPools": [
+                                {
+                                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', parameters('LoadBalancerName'), 'BackEndServers')]"
+                                }
+                            ]                                                        
+                        }
+                    }
+                ],
+                "enableAcceleratedNetworking": "[parameters('enableAcceleratedNetworking')]"
+            }
+        }
+    ]
+}
