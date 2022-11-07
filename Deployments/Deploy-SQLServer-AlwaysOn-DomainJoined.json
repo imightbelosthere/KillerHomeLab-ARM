@@ -412,7 +412,7 @@
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
-        "LoadBalancerAPIVersion": "2022-05;-01",                
+        "LoadBalancerAPIVersion": "2022-05-01",                
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "StorageAPIVersion": "2022-05-01",
         "VirtualMachinesAPIVersion": "2022-03-01",        
@@ -1446,8 +1446,9 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Configure-SQLAlwaysOn-on-SQLVM1",
             "dependsOn": [
-                "Enable-SQLAlwaysOn-on-SQLVM1",
-                "Enable-SQLAlwaysOn-on-SQLVM2"
+                "Deploy-SQL-Azure-Internal-LoadBalancer",
+                "Associate-LoadBalancer-with-SQLVM1",
+                "Associate-LoadBalancer-with-SQLVM2"
             ],      
             "properties": {
                 "mode": "Incremental",
