@@ -1390,7 +1390,10 @@
                     },                                          
                     "LoadBalancerName": {
                         "value": "[variables('SQLLoadBalancerName')]"
-                    },                                                                   
+                    },                       
+                    "enableAcceleratedNetworking": {
+                        "value": true
+                    },                           
                     "subnetName": {
                         "value": "[variables('vnet1subnet1Name')]"
                     },           
@@ -1425,7 +1428,10 @@
                     },                                          
                     "LoadBalancerName": {
                         "value": "[variables('SQLLoadBalancerName')]"
-                    },                                                                   
+                    },
+                    "enableAcceleratedNetworking": {
+                        "value": true
+                    },                                                                                       
                     "subnetName": {
                         "value": "[variables('vnet1subnet1Name')]"
                     },           
