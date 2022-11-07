@@ -1329,10 +1329,93 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-SQL-Azure-Internal-LoadBalancer",
+            "name": "Configure-SQLAlwaysOn-on-SQLVM1",
             "dependsOn": [
                 "Enable-SQLAlwaysOn-on-SQLVM1",
-                "Enable-SQLAlwaysOn-on-SQLVM1"        
+                "Enable-SQLAlwaysOn-on-SQLVM1"    
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configsqlalwayson.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                                         
+                    "computerName": {
+                        "value": "[variables('sqlname1')]"
+                    },
+                    "Environment": {
+                        "value": "[variables('Environment')]"
+                    },                    
+                    "SQLAGName": {
+                        "value": "[variables('SQLAvailabilityGroupName')]"
+                    }, 
+                    "SQLAPName": {
+                        "value": "[variables('SQLAccessPointName')]"
+                    },                
+                    "SQLAPIP": {
+                        "value": "[variables('sqlapIP')]"
+                    },               
+                    "SQLNode1": {
+                        "value": "[variables('sqlname1')]"
+                    },                     
+                    "SQLNode2": {
+                        "value": "[variables('sqlname2')]"
+                    },   
+                    "SQLDBName": {
+                        "value": "[variables('sqldbname')]"
+                    },                        
+                    "SQLServiceAccount": {
+                        "value": "[parameters('ServiceAccount')]"
+                    },                
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },          
+                    "DomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },                        
+                    "StorageAccountName": {
+                        "value": "[reference('Create-FileShareWitness-StorageAccount').outputs.StorageAccountName.value]"
+                    },                                            
+                    "StorageAccountKey": {
+                        "value": "[reference('Create-FileShareWitness-StorageAccount').outputs.Key.value]"             
+                    },                    
+                    "StorageEndpoint": {
+                        "value": "[variables('StorageEndpoint')]"
+                    },                                                                                                                                      
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "InstallAccount": {
+                        "value": "[parameters('InstallAccount')]"
+                    },             
+                    "InstallAccountPassword": {
+                        "value": "[parameters('InstallAccountPassword')]"
+                    },                                                                                                                                                                                                                                                                                                                                                   
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-SQL-Azure-Internal-LoadBalancer",
+            "dependsOn": [
+                "Configure-SQLAlwaysOn-on-SQLVM1"     
             ],            
             "properties": {
                 "mode": "Incremental",
@@ -1440,91 +1523,6 @@
                     }
                 }
             }
-        },                       
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Configure-SQLAlwaysOn-on-SQLVM1",
-            "dependsOn": [
-                "Deploy-SQL-Azure-Internal-LoadBalancer",
-                "Associate-LoadBalancer-with-SQLVM1",
-                "Associate-LoadBalancer-with-SQLVM2"
-            ],      
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configsqlalwayson.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "ExtensionsAPIVersion": {
-                        "value": "[variables('ExtensionsAPIVersion')]"
-                    },
-                    "ExtensionsTypeHandlerVersion": {
-                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },                                         
-                    "computerName": {
-                        "value": "[variables('sqlname1')]"
-                    },
-                    "Environment": {
-                        "value": "[variables('Environment')]"
-                    },                    
-                    "SQLAGName": {
-                        "value": "[variables('SQLAvailabilityGroupName')]"
-                    }, 
-                    "SQLAPName": {
-                        "value": "[variables('SQLAccessPointName')]"
-                    },                
-                    "SQLAPIP": {
-                        "value": "[variables('sqlapIP')]"
-                    },               
-                    "SQLNode1": {
-                        "value": "[variables('sqlname1')]"
-                    },                     
-                    "SQLNode2": {
-                        "value": "[variables('sqlname2')]"
-                    },   
-                    "SQLDBName": {
-                        "value": "[variables('sqldbname')]"
-                    },                        
-                    "SQLServiceAccount": {
-                        "value": "[parameters('ServiceAccount')]"
-                    },                
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
-                    },          
-                    "DomainName": {
-                        "value": "[variables('InternalDomainName')]"
-                    },                        
-                    "StorageAccountName": {
-                        "value": "[reference('Create-FileShareWitness-StorageAccount').outputs.StorageAccountName.value]"
-                    },                                            
-                    "StorageAccountKey": {
-                        "value": "[reference('Create-FileShareWitness-StorageAccount').outputs.Key.value]"             
-                    },                    
-                    "StorageEndpoint": {
-                        "value": "[variables('StorageEndpoint')]"
-                    },                                                                                                                                      
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },                                                                                                            
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "InstallAccount": {
-                        "value": "[parameters('InstallAccount')]"
-                    },             
-                    "InstallAccountPassword": {
-                        "value": "[parameters('InstallAccountPassword')]"
-                    },                                                                                                                                                                                                                                                                                                                                                   
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },                                                                                                            
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
-                    }              
-                }
-            }
-        }                              
+        }
     ]
 }
