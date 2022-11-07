@@ -1329,8 +1329,44 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-SQL-Azure-Internal-LoadBalancer",           
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/internalloadbalancersql.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "LoadBalancerAPIVersion": {
+                        "value": "[variables('LoadBalancerAPIVersion')]"
+                    },                    
+                    "LoadBalancerName": {
+                        "value": "[variables('SQLLoadBalancerName')]"
+                    },
+                    "SQLAPName": {
+                        "value": "[variables('SQLAccessPointName')]"
+                    },    
+                    "SQLAPIP": {
+                        "value": "[variables('sqlapIP')]"
+                    },                        
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },               
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },                         
+                    "Sku": {
+                        "value": "[variables('SQLLoadBalancerSku')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Configure-SQLAlwaysOn-on-SQLVM1",
             "dependsOn": [
+                "Deploy-SQL-Azure-Internal-LoadBalancer",
                 "Enable-SQLAlwaysOn-on-SQLVM1",
                 "Enable-SQLAlwaysOn-on-SQLVM1"    
             ],      
@@ -1410,44 +1446,6 @@
                 }
             }
         },        
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-SQL-Azure-Internal-LoadBalancer",
-            "dependsOn": [
-                "Configure-SQLAlwaysOn-on-SQLVM1"     
-            ],            
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/internalloadbalancersql.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "LoadBalancerAPIVersion": {
-                        "value": "[variables('LoadBalancerAPIVersion')]"
-                    },                    
-                    "LoadBalancerName": {
-                        "value": "[variables('SQLLoadBalancerName')]"
-                    },
-                    "SQLAPName": {
-                        "value": "[variables('SQLAccessPointName')]"
-                    },    
-                    "SQLAPIP": {
-                        "value": "[variables('sqlapIP')]"
-                    },                        
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },               
-                    "subnetName": {
-                        "value": "[variables('vnet1subnet1Name')]"
-                    },                         
-                    "Sku": {
-                        "value": "[variables('SQLLoadBalancerSku')]"
-                    }
-                }
-            }
-        },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
