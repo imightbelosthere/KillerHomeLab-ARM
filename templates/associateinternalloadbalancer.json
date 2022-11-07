@@ -47,11 +47,11 @@
     },
     "variables": {
         "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]",
-        "NicName": "[concat(parameters('computerName'),'-nic')]"
+        "Nic1Name": "[concat(parameters('computerName'),'-nic1')]"
     },
     "resources": [
         {
-            "name": "[variables('NicName')]",
+            "name": "[variables('Nic1Name')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
             "location": "[resourceGroup().location]",
