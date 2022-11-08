@@ -1451,7 +1451,8 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Associate-LoadBalancer-with-SQLVM1",
             "dependsOn": [
-                "Deploy-SQL-Azure-Internal-LoadBalancer"
+                "Deploy-SQL-Azure-Internal-LoadBalancer",
+                "Configure-SQLAlwaysOn-on-SQLVM1"
             ],           
             "properties": {
                 "mode": "Incremental",
