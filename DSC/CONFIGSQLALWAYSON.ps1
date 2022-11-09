@@ -217,7 +217,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            PsDscRunAsCredential = $DomainCreds
+            PsDscRunAsCredential = $DomainDBCreds
             DependsOn = '[SqlAGDatabase]AddSQLAGDatabase'
         }
     }
