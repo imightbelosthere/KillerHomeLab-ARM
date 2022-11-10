@@ -364,32 +364,33 @@
                 "description": "SQL VMSize"
             }
         },   
-        "WK1OSSku": {
+        "SQLTOOLSOSSku": {
             "type": "string",
-            "defaultValue": "Windows-11",
+            "defaultValue": "2022-Datacenter",
             "allowedValues": [
-                "Windows-11",
-                "Windows-10",
-                "Windows-7"
+                "2022-Datacenter",
+                "2019-Datacenter",
+                "2016-Datacenter",
+                "2012-R2-Datacenter"
             ],
             "metadata": {
-                "description": "Workstation1 OS Sku"
+                "description": "SQL Tools VM OS Sku"
             }
         },
-        "WK1OSVersion": {
+        "SQLTOOLSOSVersion": {
             "type": "string",
             "defaultValue": "latest",
             "metadata": {
-                "description": "WK1 OS Version Number (Example:  Windows-11=22000.675.220507, Windows-10=19044.1706.220505, Windows-7=7601.25954.220506)"
+                "description": "SQL Tools VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
             }
         },
-        "WK1VMSize": {
+        "SQLTOOLSVMSize": {
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
             "metadata": {
-                "description": "Workstation1 VMSize"
+                "description": "SQL Tools VMSize"
             }
-        },                                           
+        },                                      
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -419,10 +420,9 @@
         "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",        
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
-        "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]", 
-        "WIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('BaseDN'))]",
-        "WIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('BaseDN'))]",
-        "WIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('BaseDN'))]",               
+        "SRV22OUPath": "[concat('OU=Servers2022,OU=Servers,',variables('BaseDN'))]",
+        "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",
+        "SRV16OUPath": "[concat('OU=Servers2016,OU=Servers,',variables('BaseDN'))]", 
         "AvailabilitySetName": "[concat(parameters('NamingConvention'),'-SQL-AVSet')]",
         "sqldbname": "[concat(parameters('NamingConvention'),'-db01')]",         
         "sqlname1": "[concat(parameters('NamingConvention'),'-sql-01')]",                      
@@ -438,9 +438,9 @@
         "sql1lastoctet": "141",  
         "sql2IP": "[concat(parameters('vnet1ID'),'.1.',variables('sql2lastoctet'))]",                                      
         "sql2lastoctet": "142",   
-        "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
-        "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",
-        "wk1lastoctet": "201",        
+        "sqltoolsname": "[concat(parameters('NamingConvention'),'-sqlt-01')]",
+        "sqltoolsIP": "[concat(parameters('vnet1ID'),'.2.',variables('sqltoolslastoctet'))]",
+        "sqltoolslastoctet": "140",        
         "AvailabilitySetsAPIVersion": "2022-03-01",        
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
@@ -1597,10 +1597,9 @@
             }
         },
         {
-            "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Workstation-01-11",
+            "name": "Deploy-SQL-ManagementStudio-Tools-VM",
             "dependsOn": [
                 "Add-Storage-Service-Endpoint"
             ],
@@ -1621,34 +1620,34 @@
                         "value": "[variables('SchedulesAPIVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('wk1name')]"
+                        "value": "[variables('sqltoolsname')]"
                     },
                     "computerIP": {
-                        "value": "[variables('wk1IP')]"
+                        "value": "[variables('sqltoolsIP')]"
                     },
                     "Publisher": {
-                        "value": "MicrosoftWindowsDesktop"
+                        "value": "MicrosoftWindowsServer"
                     },
                     "Offer": {
-                        "value": "Windows-11"
+                        "value": "WindowsServer"
                     },
                     "OSSku": {
-                        "value": "win11-21h2-ent"
+                        "value": "[parameters('SQLTOOLSOSSku')]"
                     },
                     "OSVersion": {
-                        "value": "[parameters('WK1OSVersion')]"
+                        "value": "[parameters('SQLTOOLSOSVersion')]"
                     },
                     "LicenseType": {
-                        "value": "[parameters('WindowsClientLicenseType')]"
+                        "value": "[parameters('WindowsServerLicenseType')]"
                     },
                     "VMSize": {
-                        "value": "[parameters('WK1VMSize')]"
+                        "value": "[parameters('SQLTOOLSVMSize')]"
                     },
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('vnet1subnet2Name')]"
+                        "value": "[variables('vnet1subnet1Name')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -1670,297 +1669,141 @@
                     }
                 }
             }
-        },
-        {
-            "condition": "[equals(parameters('WK1OSSku'),'Windows-10')]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Workstation-01-10",
-            "dependsOn": [
-                "Add-Storage-Service-Endpoint"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "NetworkInterfacesAPIVersion": {
-                        "value": "[variables('NetworkInterfacesAPIVersion')]"
-                    },
-                    "VirtualMachinesAPIVersion": {
-                        "value": "[variables('VirtualMachinesAPIVersion')]"
-                    },
-                    "SchedulesAPIVersion": {
-                        "value": "[variables('SchedulesAPIVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('wk1name')]"
-                    },
-                    "computerIP": {
-                        "value": "[variables('wk1IP')]"
-                    },
-                    "Publisher": {
-                        "value": "MicrosoftWindowsDesktop"
-                    },
-                    "Offer": {
-                        "value": "Windows-10"
-                    },
-                    "OSSku": {
-                        "value": "win10-21h2-ent"
-                    },
-                    "OSVersion": {
-                        "value": "[parameters('WK1OSVersion')]"
-                    },
-                    "LicenseType": {
-                        "value": "[parameters('WindowsClientLicenseType')]"
-                    },
-                    "VMSize": {
-                        "value": "[parameters('WK1VMSize')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnet1Name": {
-                        "value": "[variables('vnet1subnet2Name')]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
-                    "AutoShutdownEnabled": {
-                        "value": "[parameters('AutoShutdownEnabled')]"
-                    },
-                    "AutoShutdownTime": {
-                        "value": "[parameters('AutoShutdownTime')]"
-                    },
-                    "AutoShutdownEmail": {
-                        "value": "[parameters('AutoShutdownEmail')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[equals(parameters('WK1OSSku'),'Windows-7')]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Workstation-01-7",
-            "dependsOn": [
-                "Add-Storage-Service-Endpoint"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "NetworkInterfacesAPIVersion": {
-                        "value": "[variables('NetworkInterfacesAPIVersion')]"
-                    },
-                    "VirtualMachinesAPIVersion": {
-                        "value": "[variables('VirtualMachinesAPIVersion')]"
-                    },
-                    "SchedulesAPIVersion": {
-                        "value": "[variables('SchedulesAPIVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('wk1name')]"
-                    },
-                    "computerIP": {
-                        "value": "[variables('wk1IP')]"
-                    },
-                    "Publisher": {
-                        "value": "MicrosoftWindowsDesktop"
-                    },
-                    "Offer": {
-                        "value": "Windows-7"
-                    },
-                    "OSSku": {
-                        "value": "win7-enterprise"
-                    },
-                    "OSVersion": {
-                        "value": "[parameters('WK1OSVersion')]"
-                    },
-                    "LicenseType": {
-                        "value": "[parameters('WindowsClientLicenseType')]"
-                    },
-                    "VMSize": {
-                        "value": "[parameters('WK1VMSize')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnet1Name": {
-                        "value": "[variables('vnet1subnet2Name')]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "TimeZone": {
-                        "value": "[parameters('TimeZone')]"
-                    },
-                    "AutoShutdownEnabled": {
-                        "value": "[parameters('AutoShutdownEnabled')]"
-                    },
-                    "AutoShutdownTime": {
-                        "value": "[parameters('AutoShutdownTime')]"
-                    },
-                    "AutoShutdownEmail": {
-                        "value": "[parameters('AutoShutdownEmail')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "DomainJoin-Workstation-01-11",
-            "dependsOn": [
-                "Deploy-Workstation-01-11",
-                "Deploy-Workstation-01-10",
-                "Deploy-Workstation-01-7"
-            ],
-            "properties": {
-                "mode": "Incremental",
+        },     
+		{
+			"condition": "[equals(parameters('SQLTOOLSOSSku'),'2022-Datacenter')]",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinSQL-ManagementStudio-Tools-VM-22",
+			"dependsOn": [
+				"Deploy-SQL-ManagementStudio-Tools-VM"
+			],      
+			"properties": {
+				"mode": "Incremental",
                 "templateLink": {
                     "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
-                "parameters": {
+				"parameters": {
                     "ExtensionsAPIVersion": {
                         "value": "[variables('ExtensionsAPIVersion')]"
                     },
                     "DJExtensionsTypeHandlerVersion": {
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('wk1name')]"
-                    },
-                    "domainName": {
-                        "value": "[variables('InternalDomainName')]"
-                    },
-                    "OUPath": {
-                        "value": "[variables('WIN11OUPath')]"
-                    },
-                    "domainJoinOptions": {
-                        "value": 3
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[equals(parameters('WK1OSSku'),'Windows-10')]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "DomainJoin-Workstation-01-10",
-            "dependsOn": [
-                "Deploy-Workstation-01-11",
-                "Deploy-Workstation-01-10",
-                "Deploy-Workstation-01-7"
-            ],
-            "properties": {
-                "mode": "Incremental",
+                    },                    
+					"computerName": {
+						"value": "[variables('sqltoolsname')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV22OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		}, 
+		{
+			"condition": "[equals(parameters('SQLTOOLSOSSku'),'2019-Datacenter')]",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinSQL-ManagementStudio-Tools-VM-19",
+			"dependsOn": [
+				"Deploy-OCSPServer"
+			],      
+			"properties": {
+				"mode": "Incremental",
                 "templateLink": {
                     "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
-                "parameters": {
+				"parameters": {
                     "ExtensionsAPIVersion": {
                         "value": "[variables('ExtensionsAPIVersion')]"
                     },
                     "DJExtensionsTypeHandlerVersion": {
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('wk1name')]"
-                    },
-                    "domainName": {
-                        "value": "[variables('InternalDomainName')]"
-                    },
-                    "OUPath": {
-                        "value": "[variables('WIN10OUPath')]"
-                    },
-                    "domainJoinOptions": {
-                        "value": 3
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[equals(parameters('WK1OSSku'),'Windows-7')]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "DomainJoin-Workstation-01-7",
-            "dependsOn": [
-                "Deploy-Workstation-01-11",
-                "Deploy-Workstation-01-10",
-                "Deploy-Workstation-01-7"
-            ],
-            "properties": {
-                "mode": "Incremental",
+                    },                    
+					"computerName": {
+						"value": "[variables('sqltoolsname')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV19OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		},   
+		{
+			"condition": "[equals(parameters('SQLTOOLSOSSku'),'2016-Datacenter')]",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "[variables('DeploymentAPIVersion')]",
+			"name": "DomainJoinSQL-ManagementStudio-Tools-VM-16",
+			"dependsOn": [
+				"Deploy-OCSPServer"
+			],      
+			"properties": {
+				"mode": "Incremental",
                 "templateLink": {
                     "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
-                "parameters": {
+				"parameters": {
                     "ExtensionsAPIVersion": {
                         "value": "[variables('ExtensionsAPIVersion')]"
                     },
                     "DJExtensionsTypeHandlerVersion": {
                         "value": "[variables('DJExtensionsTypeHandlerVersion')]"
-                    },
-                    "computerName": {
-                        "value": "[variables('wk1name')]"
-                    },
-                    "domainName": {
-                        "value": "[variables('InternalDomainName')]"
-                    },
-                    "OUPath": {
-                        "value": "[variables('WIN7OUPath')]"
-                    },
-                    "domainJoinOptions": {
-                        "value": 3
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    }
-                }
-            }
-        },
+                    },                    
+					"computerName": {
+						"value": "[variables('sqltoolsname')]"
+					},
+					"domainName": {
+						"value": "[variables('InternaldomainName')]"
+					},
+					"OUPath": {
+						"value": "[variables('SRV16OUPath')]"
+					},
+					"domainJoinOptions": {
+						"value": 3
+					},
+					"adminUsername": {
+						"value": "[parameters('adminUsername')]"
+					},                                                                                                            
+					"adminPassword": {
+						"value": "[parameters('adminPassword')]"
+					}
+				}
+			}
+		},             
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Install-SQL-Management-Studio",
             "dependsOn": [
-               "DomainJoin-Workstation-01-11",
-               "DomainJoin-Workstation-01-10",
-               "DomainJoin-Workstation-01-7"
+               "DomainJoinSQL-ManagementStudio-Tools-VM-22",
+               "DomainJoinSQL-ManagementStudio-Tools-VM-19",
+               "DomainJoinSQL-ManagementStudio-Tools-VM-19"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1976,7 +1819,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('wk1name')]"
+                        "value": "[variables('sqltoolsname')]"
                     },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"

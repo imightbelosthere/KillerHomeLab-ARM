@@ -47,6 +47,7 @@ Parameters that support changes
 - Vnet1ID.  Enter first 2 octets of your desired Address Space for Virtual Network 1 (Example:  10.1)
 - availabilitySetUpdateDomainCount.  Azure Update Domain Count.
 - availabilitySetFaultDomainCount.  Azure Update Domain Count.
-- WK1OSSku.  Select Windows-11, Windows-10 or Windows-7 Worksation 1 OS Sku
-- WK1OSVersion.  The default is Latest however a specific OS Version can be entired based on the above OS Sku.
-- WK1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
+- SQLTOOLSOSSku.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016)
+- SQL Tools VM OS Sku
+- SQLTOOLSOSVersion.  The default is Latest however a specific OS Version can be entired based on the above OS Sku.
+- SQLTOOLSVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
