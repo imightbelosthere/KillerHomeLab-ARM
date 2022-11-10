@@ -3,7 +3,7 @@
    param
    (
         [String]$SQLClusterName,
-        [String]$BaseDN,
+        [String]$ClusterOUPath,
         [String]$NetBiosDomain,
         [System.Management.Automation.PSCredential]$Admincreds
     )
@@ -20,7 +20,7 @@
                 # Variables
                 $SQLCLUST = "$using:SQLClusterName"
                 $ComputerName = "$SQLCLUST"+'$'
-                $acl = get-acl "ad:$using:BaseDN"
+                $acl = get-acl "ad:$using:ClusterOUPath"
                 $Computer = Get-ADComputer $ComputerName
 
                 # The following object specific ACE is to grant Account permission to Create a Computer Objects
@@ -32,14 +32,14 @@
                 $inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance] "All"
                 $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType,$inheritedobjectguid
                 $acl.AddAccessRule($ace)
-                Set-acl -aclobject $acl "ad:$using:BaseDN"
+                Set-acl -aclobject $acl "ad:$using:ClusterOUPath"
 
                 # Variables
-                $ServersDN = "OU=Servers,$using:BaseDN"
-                $acl = get-acl "ad:$using:ServersDN"
-                $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType,$inheritedobjectguid
-                $acl.AddAccessRule($ace)
-                Set-acl -aclobject $acl "ad:$using:ServersDN"
+                # $ServersDN = "OU=Servers,$using:BaseDN"
+                # $acl = get-acl "ad:$using:ServersDN"
+                # $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType,$inheritedobjectguid
+                # $acl.AddAccessRule($ace)
+                # Set-acl -aclobject $acl "ad:$using:ServersDN"
             }
             GetScript =  { @{} }
             TestScript = { $false}

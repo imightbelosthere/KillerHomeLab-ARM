@@ -1225,8 +1225,8 @@
                     "SQLClusterName": {
                         "value": "[variables('SQLClusterName')]"
                     },   
-                    "BaseDN": {
-                        "value": "[variables('BaseDN')]"
+                    "ClusterOUPath": {
+                        "value": "[variables('SRV19OUPath')]"
                     },                                      
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"

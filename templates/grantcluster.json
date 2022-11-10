@@ -26,10 +26,10 @@
                 "description": "Windows Failover Cluster Name"
             }
         },           
-        "BaseDN": {
+        "ClusterOUPath": {
             "type": "string",
             "metadata": {
-                "description": "Base Domain Distiguished Name"
+                "description": "Organizational Unit where Cluster Computer Object will be created"
             }
         }, 
         "NetBiosDomain": {
@@ -84,7 +84,7 @@
                         "Properties": {
                             "NetBiosDomain": "[parameters('NetBiosDomain')]",                            
                             "SQLClusterName": "[parameters('SQLClusterName')]",   
-                            "BaseDN": "[parameters('BaseDN')]",
+                            "ClusterOUPath": "[parameters('ClusterOUPath')]",
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword1"
