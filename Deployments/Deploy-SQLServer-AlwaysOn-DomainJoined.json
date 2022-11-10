@@ -230,17 +230,6 @@
                 "description": "Windows Server OS License Type"
             }
         },
-        "WindowsClientLicenseType": {
-            "type": "string",
-            "defaultValue": "None",
-            "allowedValues": [
-                "None",
-                "Windows_Client"
-            ],
-            "metadata": {
-                "description": "Windows Client OS License Type"
-            }
-        },
         "SQLLicenseType": {
             "type": "string",
             "defaultValue": "AHUB",
@@ -1405,7 +1394,10 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-SQL-Azure-Internal-LoadBalancer",           
+            "name": "Deploy-SQL-Azure-Internal-LoadBalancer",  
+            "dependsOn": [
+                "Add-Storage-Service-Endpoint"
+            ],                           
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -1647,7 +1639,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('vnet1subnet1Name')]"
+                        "value": "[variables('vnet1subnet2Name')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
