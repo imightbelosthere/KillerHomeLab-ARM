@@ -1368,7 +1368,7 @@
             "dependsOn": [
                 "Deploy-SQL-Azure-Internal-LoadBalancer",
                 "Enable-SQLAlwaysOn-on-SQLVM1",
-                "Enable-SQLAlwaysOn-on-SQLVM1"    
+                "Enable-SQLAlwaysOn-on-SQLVM2"    
             ],      
             "properties": {
                 "mode": "Incremental",
