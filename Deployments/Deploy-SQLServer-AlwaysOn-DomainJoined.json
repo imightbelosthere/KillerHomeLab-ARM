@@ -931,7 +931,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Grant-SQL-Logins-for-Account-on-SQLVM2",
             "dependsOn": [
-                "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM2"
+                "Grant-SQL-AdminAccount-LocalAdmin-on-SQLVM2"
             ],      
             "properties": {
                 "mode": "Incremental",
