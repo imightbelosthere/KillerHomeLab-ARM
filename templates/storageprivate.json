@@ -13,9 +13,22 @@
             "metadata": {
                 "description": "Storage Account Name Hash"
             }
-        }        
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET Name that contains the domain controller"
+            }
+        },
+        "subnet1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing subnet name that contains the domain controller"
+            }
+        }               
     },  
     "variables": {
+    "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",        
     "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
     "Identifier": "[substring(variables('StorageAccountHash'), 24, 9)]",
     "StorageAccountName": "[concat('sa', variables('Identifier'))]" ,
@@ -32,7 +45,19 @@
             },
             "kind": "StorageV2",
             "properties": {
-                "allowBlobPublicAccess": false
+                "allowBlobPublicAccess": false,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [
+                        {
+                            "id": "[variables('subnet1Id')]",
+                            "action": "Allow",
+                            "state": "Succeeded"
+                        }
+                    ],
+                    "ipRules": [],
+                    "defaultAction": "Deny"
+                }                
             }
         }             
     ],

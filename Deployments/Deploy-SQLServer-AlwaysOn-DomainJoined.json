@@ -363,7 +363,33 @@
             "metadata": {
                 "description": "SQL VMSize"
             }
-        },                                      
+        },   
+        "WK1OSSku": {
+            "type": "string",
+            "defaultValue": "Windows-11",
+            "allowedValues": [
+                "Windows-11",
+                "Windows-10",
+                "Windows-7"
+            ],
+            "metadata": {
+                "description": "Workstation1 OS Sku"
+            }
+        },
+        "WK1OSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "WK1 OS Version Number (Example:  Windows-11=22000.675.220507, Windows-10=19044.1706.220505, Windows-7=7601.25954.220506)"
+            }
+        },
+        "WK1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Workstation1 VMSize"
+            }
+        },                                           
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -388,11 +414,15 @@
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
-        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",        
+        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]", 
+        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",               
         "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",        
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
-        "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]",        
+        "SRV19OUPath": "[concat('OU=Servers2019,OU=Servers,',variables('BaseDN'))]", 
+        "WIN11OUPath": "[concat('OU=Windows 11,OU=Workstations,',variables('BaseDN'))]",
+        "WIN10OUPath": "[concat('OU=Windows 10,OU=Workstations,',variables('BaseDN'))]",
+        "WIN7OUPath": "[concat('OU=Windows 7,OU=Workstations,',variables('BaseDN'))]",               
         "AvailabilitySetName": "[concat(parameters('NamingConvention'),'-SQL-AVSet')]",
         "sqldbname": "[concat(parameters('NamingConvention'),'-db01')]",         
         "sqlname1": "[concat(parameters('NamingConvention'),'-sql-01')]",                      
@@ -408,6 +438,9 @@
         "sql1lastoctet": "141",  
         "sql2IP": "[concat(parameters('vnet1ID'),'.1.',variables('sql2lastoctet'))]",                                      
         "sql2lastoctet": "142",   
+        "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
+        "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",
+        "wk1lastoctet": "201",        
         "AvailabilitySetsAPIVersion": "2022-03-01",        
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
@@ -572,6 +605,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-SQL2019-AzureVM-01",
             "dependsOn": [
+                "Add-Storage-Service-Endpoint", 
                 "Deploy-SQL-Availability-Set"
             ],           
             "properties": {
@@ -687,6 +721,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-SQL2019-AzureVM-02",
             "dependsOn": [
+                "Add-Storage-Service-Endpoint", 
                 "Deploy-SQL-Availability-Set"
             ],           
             "properties": {
@@ -1132,7 +1167,13 @@
                     },
                     "StorageAccountNameHash": {
                         "value": "StorageAccount"
-                    }
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    }                    
                 }
             }
         },
@@ -1554,6 +1595,397 @@
                     }
                 }
             }
-        }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-11",
+            "dependsOn": [
+                "Add-Storage-Service-Endpoint"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-11"
+                    },
+                    "OSSku": {
+                        "value": "win11-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-10')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-10",
+            "dependsOn": [
+                "Add-Storage-Service-Endpoint"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-10"
+                    },
+                    "OSSku": {
+                        "value": "win10-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-7')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-7",
+            "dependsOn": [
+                "Add-Storage-Service-Endpoint"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-7"
+                    },
+                    "OSSku": {
+                        "value": "win7-enterprise"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet1subnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoin-Workstation-01-11",
+            "dependsOn": [
+                "Deploy-Workstation-01-11",
+                "Deploy-Workstation-01-10",
+                "Deploy-Workstation-01-7"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('WIN11OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-10')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoin-Workstation-01-10",
+            "dependsOn": [
+                "Deploy-Workstation-01-11",
+                "Deploy-Workstation-01-10",
+                "Deploy-Workstation-01-7"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('WIN10OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WK1OSSku'),'Windows-7')]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "DomainJoin-Workstation-01-7",
+            "dependsOn": [
+                "Deploy-Workstation-01-11",
+                "Deploy-Workstation-01-10",
+                "Deploy-Workstation-01-7"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domainjoin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "DJExtensionsTypeHandlerVersion": {
+                        "value": "[variables('DJExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "domainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "OUPath": {
+                        "value": "[variables('WIN7OUPath')]"
+                    },
+                    "domainJoinOptions": {
+                        "value": 3
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-SQL-Management-Studio",
+            "dependsOn": [
+               "DomainJoin-Workstation-01-11",
+               "DomainJoin-Workstation-01-10",
+               "DomainJoin-Workstation-01-7"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ssms.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        }                        
     ]
 }
