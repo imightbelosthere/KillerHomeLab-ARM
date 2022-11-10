@@ -1,5 +1,5 @@
 # SQL Server Always-On Domain-Joined using an Existing Subnet
-<img src="./x_Images/xxx.svg" height="600" width="800"/>
+<img src="./x_Images/SQLServerAlwaysOnDomainJoined.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
