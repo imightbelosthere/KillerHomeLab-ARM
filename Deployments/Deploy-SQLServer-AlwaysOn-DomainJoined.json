@@ -388,6 +388,7 @@
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
+        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",        
         "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",        
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
@@ -415,13 +416,43 @@
         "LoadBalancerAPIVersion": "2022-05-01",                
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "StorageAPIVersion": "2022-05-01",
-        "VirtualMachinesAPIVersion": "2022-03-01",        
+        "VirtualMachinesAPIVersion": "2022-03-01",   
+        "VirtualNetworkAPIVersion": "2020-11-01",             
         "SchedulesAPIVersion": "2018-09-15",
         "SQLVirtualMachinesAPIVersion": "2022-02-01",
         "ExtensionsTypeHandlerVersion": "2.83",
         "DJExtensionsTypeHandlerVersion": "1.3"
     },
     "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-Storage-Service-Endpoint",            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/enablesubnetserviceendpoint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "ServiceEndpointName": {
+                        "value": "Microsoft.Storage"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('vnet1subnet1Name')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('vnet1subnet1Prefix')]"
+                    }
+                }
+            }
+        },        
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
@@ -1086,10 +1117,13 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-FileShareWitness-StorageAccount",
+            "dependsOn": [
+                "Add-Storage-Service-Endpoint"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/storage.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/storageprivate.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1107,6 +1141,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-WindowsFailoverCluster-on-SQLVM1",
             "dependsOn": [
+                "Add-Storage-Service-Endpoint",
                 "Restart-SQLVM01",
                 "Restart-SQLVM02",
                 "Create-FileShareWitness-StorageAccount"
