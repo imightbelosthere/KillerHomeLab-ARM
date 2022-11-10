@@ -199,17 +199,17 @@
             "description": "SQL Service Account Password"
             }
         },        
-        "InstallAccount": {
+        "SQLAdminAccount": {
             "type": "string",
-            "defaultValue": "Install",                
+            "defaultValue": "SQLAdmin",                
             "metadata": {
                 "description": "SQL Install Account Name"
             }
         },
-        "InstallAccountPassword": {
+        "SQLAdminAccountPassword": {
             "type": "securestring",
             "metadata": {
-            "description": "SQL Install Account Password"
+            "description": "SQL Admin Account Password"
             }
         },               
         "AzureUserObjectID": {
@@ -489,11 +489,11 @@
                     "ServiceAccountPassword": {
                         "value": "[parameters('ServiceAccountPassword')]"
                     },                                           
-                    "InstallAccount": {
-                        "value": "[parameters('InstallAccount')]"
+                    "SQLAdminAccount": {
+                        "value": "[parameters('SQLAdminAccount')]"
                     },                                
-                    "InstallAccountPassword": {
-                        "value": "[parameters('InstallAccountPassword')]"
+                    "SQLAdminAccountPassword": {
+                        "value": "[parameters('SQLAdminAccountPassword')]"
                     },                       
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -769,7 +769,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM1",
+            "name": "Grant-SQL-AdminAccount-LocalAdmin-on-SQLVM1",
             "dependsOn": [
                 "DomainJoin-SQL2019-AzureVM-01"
             ],      
@@ -790,7 +790,7 @@
                         "value": "[variables('sqlname1')]"
                     },              
                     "Account": {
-                        "value": "[parameters('InstallAccount')]"
+                        "value": "[parameters('SQLAdminAccount')]"
                     },            
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
@@ -807,7 +807,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM2",
+            "name": "Grant-SQL-AdminAccount-LocalAdmin-on-SQLVM2",
             "dependsOn": [
                 "DomainJoin-SQL2019-AzureVM-02"
             ],      
@@ -828,7 +828,7 @@
                         "value": "[variables('sqlname2')]"
                     },              
                     "Account": {
-                        "value": "[parameters('InstallAccount')]"
+                        "value": "[parameters('SQLAdminAccount')]"
                     },            
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
@@ -847,7 +847,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Grant-SQL-Logins-for-Account-on-SQLVM1",
             "dependsOn": [
-                "Grant-SQL-InstallAccount-LocalAdmin-on-SQLVM1"
+                "Grant-SQL-AdminAccount-LocalAdmin-on-SQLVM1"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -865,8 +865,8 @@
                     "computerName": {
                         "value": "[variables('sqlname1')]"
                     },
-                    "InstallAccount": {
-                        "value": "[parameters('InstallAccount')]"
+                    "SQLAdminAccount": {
+                        "value": "[parameters('SQLAdminAccount')]"
                     },                         
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
@@ -918,8 +918,8 @@
                     "computerName": {
                         "value": "[variables('sqlname2')]"
                     },
-                    "InstallAccount": {
-                        "value": "[parameters('InstallAccount')]"
+                    "SQLAdminAccount": {
+                        "value": "[parameters('SQLAdminAccount')]"
                     },                        
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
@@ -1269,11 +1269,11 @@
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },                        
-                    "InstallAccount": {
-                        "value": "[parameters('InstallAccount')]"
+                    "SQLAdminAccount": {
+                        "value": "[parameters('SQLAdminAccount')]"
                     },                                
-                    "InstallAccountPassword": {
-                        "value": "[parameters('InstallAccountPassword')]"
+                    "SQLAdminAccountPassword": {
+                        "value": "[parameters('SQLAdminAccountPassword')]"
                     },                       
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
@@ -1311,11 +1311,11 @@
                     "NetBiosDomain": {
                         "value": "[parameters('NetBiosDomain')]"
                     },                        
-                    "InstallAccount": {
-                        "value": "[parameters('InstallAccount')]"
+                    "SQLAdminAccount": {
+                        "value": "[parameters('SQLAdminAccount')]"
                     },                                
-                    "InstallAccountPassword": {
-                        "value": "[parameters('InstallAccountPassword')]"
+                    "SQLAdminAccountPassword": {
+                        "value": "[parameters('SQLAdminAccountPassword')]"
                     },                       
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
@@ -1385,10 +1385,7 @@
                     },                                         
                     "computerName": {
                         "value": "[variables('sqlname1')]"
-                    },
-                    "Environment": {
-                        "value": "[variables('Environment')]"
-                    },                    
+                    },                   
                     "SQLAGName": {
                         "value": "[variables('SQLAvailabilityGroupName')]"
                     }, 
@@ -1431,11 +1428,11 @@
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
                     },
-                    "InstallAccount": {
-                        "value": "[parameters('InstallAccount')]"
+                    "SQLAdminAccount": {
+                        "value": "[parameters('SQLAdminAccount')]"
                     },             
-                    "InstallAccountPassword": {
-                        "value": "[parameters('InstallAccountPassword')]"
+                    "SQLAdminAccountPassword": {
+                        "value": "[parameters('SQLAdminAccountPassword')]"
                     },                                                                                                                                                                                                                                                                                                                                                   
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"

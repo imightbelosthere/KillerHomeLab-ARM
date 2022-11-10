@@ -15,13 +15,13 @@
         [String]$StorageAccountKey,
         [String]$StorageEndpoint,        
         [System.Management.Automation.PSCredential]$Admincreds,
-        [System.Management.Automation.PSCredential]$InstallAccountCreds
+        [System.Management.Automation.PSCredential]$SQLAdminAccountCreds
     )
 
     Import-DscResource -Module SqlServerDsc # Used for SQL Object Creation
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
-    [System.Management.Automation.PSCredential ]$DomainDBCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($InstallAccountCreds.UserName)", $InstallAccountCreds.Password)
+    [System.Management.Automation.PSCredential ]$SQLAdminDomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($SQLAdminAccountCreds.UserName)", $SQLAdminAccountCreds.Password)
 
     Node localhost
     {
@@ -42,7 +42,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            PsDscRunAsCredential = $DomainDBCreds
+            PsDscRunAsCredential = $SQLAdminDomainCreds
         }
 
         SqlDatabase CreateSQLDatabase
@@ -51,7 +51,7 @@
             InstanceName = "MSSQLSERVER"
             Ensure = "Present"
             RecoveryModel = "Full"
-            PsDscRunAsCredential = $DomainDBCreds
+            PsDscRunAsCredential = $SQLAdminDomainCreds
         }
 
         Script BackupRestoreDB
@@ -164,7 +164,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            PsDscRunAsCredential = $DomainDBCreds
+            PsDscRunAsCredential = $SQLAdminDomainCreds
             DependsOn = '[SqlAGReplica]AddNodetoSQLAG'
         }
 
@@ -177,7 +177,7 @@
             BackupPath = "\\$SQLNode1\SQLBackup\"
             Ensure = "Present"
             DependsOn = '[SqlAGReplica]AddNodetoSQLAG'
-            PsDscRunAsCredential = $DomainDBCreds
+            PsDscRunAsCredential = $SQLAdminDomainCreds
         }
 
         Script CreateSQLAGListener
@@ -217,7 +217,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            PsDscRunAsCredential = $DomainDBCreds
+            PsDscRunAsCredential = $SQLAdminDomainCreds
             DependsOn = '[SqlAGDatabase]AddSQLAGDatabase'
         }
     }

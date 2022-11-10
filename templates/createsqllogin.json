@@ -20,10 +20,10 @@
                 "description": "Computer Name"
             }
         },
-        "InstallAccount": {
+        "SQLAdminAccount": {
             "type": "string",
             "metadata": {
-                "description": "Install Account that needs SQL Login"
+                "description": "SQL Admin Account that needs SQL Login"
             }
         },        
         "NetBiosDomain": {
@@ -95,7 +95,7 @@
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
                             "computerName": "[parameters('computerName')]",                        
-                            "InstallAccount": "[parameters('InstallAccount')]",
+                            "SQLAdminAccount": "[parameters('SQLAdminAccount')]",
                             "NetBiosDomain": "[parameters('NetBiosDomain')]",                            
                             "DomainName": "[parameters('DomainName')]",                            
                             "AdminCreds": {

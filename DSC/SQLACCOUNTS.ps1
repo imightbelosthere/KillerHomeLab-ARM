@@ -6,9 +6,9 @@
         [String]$DomainName,        
         [String]$BaseDN,
         [String]$ServiceAccount,        
-        [String]$InstallAccount,        
+        [String]$SQLAdminAccount,        
         [System.Management.Automation.PSCredential]$AdminCreds,
-        [System.Management.Automation.PSCredential]$InstallAccountCreds,
+        [System.Management.Automation.PSCredential]$SQLAdminAccountCreds,
         [System.Management.Automation.PSCredential]$ServiceAccountCreds
     )
 
@@ -16,19 +16,19 @@
 
     [System.Management.Automation.PSCredential ]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($Admincreds.UserName)", $Admincreds.Password)
 
-    $InstallAccountExists = Get-ADUser -Filter * | Where-Object {$_.Name -like $InstallAccount}
+    $SQLAdminAccountExists = Get-ADUser -Filter * | Where-Object {$_.Name -like $SQLAdminAccount}
     $ServiceAccountExists = Get-ADUser -Filter * | Where-Object {$_.Name -like $ServiceAccount}
 
     Node localhost
     {
-        if ($InstallAccountExists -eq $null){        
-            ADUser Install
+        if ($SQLAdminAccountExists -eq $null){        
+            ADUser SQLAdmin
             {
                 Ensure     = 'Present'
-                UserName   = $InstallAccount
+                UserName   = $SQLAdminAccount
                 DomainName = $DomainName
                 Path       = "OU=Service,OU=Accounts,$BaseDN"
-                Password = $InstallAccountcreds
+                Password = $SQLAdminAccountCreds
                 Enabled = $True
             }
 
@@ -37,7 +37,7 @@
                 SetScript =
                 {
                     $acl = get-acl "ad:$using:BaseDN"
-                    $User = Get-ADUser "$using:InstallAccount"
+                    $User = Get-ADUser "$using:SQLAdminAccount"
 
                     # The following object specific ACE is to grant Group permission to change user password on all user objects under OU
                     $objectguid = new-object Guid bf967a86-0de6-11d0-a285-00aa003049e2 # is the rightsGuid for the extended right Create Computer Account
@@ -52,7 +52,7 @@
                 }
                 GetScript =  { @{} }
                 TestScript = { $false}
-                DependsOn = '[ADUser]Install'
+                DependsOn = '[ADUser]SQLAdmin'
             }
 
         }

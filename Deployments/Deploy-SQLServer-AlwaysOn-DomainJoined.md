@@ -33,7 +33,7 @@ Parameters that support changes
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
 - ServiceAccount.  SQL Service Account Name
-- InstallAccount.  SQL Install Account Name
+- SQLAdminAccount.  SQL Admin Account Name
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)

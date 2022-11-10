@@ -26,13 +26,13 @@
                 "description": "NetBios Domain Name"
             }
         },    
-        "InstallAccount": {
+        "SQLAdminAccount": {
             "type": "string",
             "metadata": {
-                "description": "Install Account"
+                "description": "SQL Admin Account"
             }
         },                    
-        "InstallAccountPassword": {
+        "SQLAdminAccountPassword": {
             "type": "securestring",
           "metadata": {
             "description": "SQL Install Account Password"
@@ -71,15 +71,15 @@
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
                             "NetBiosDomain": "[parameters('NetBiosDomain')]",                            
-                            "InstallAccountCreds": {
-                                "UserName": "[parameters('InstallAccount')]",
-                                "Password": "PrivateSettingsRef:InstallAccountPassword"
+                            "SQLAdminAccountCreds": {
+                                "UserName": "[parameters('SQLAdminAccount')]",
+                                "Password": "PrivateSettingsRef:SQLAdminAccountPassword"
                             }                                                                                                                                          
                         }
                 },
                 "protectedSettings": {
                     "Items": {
-                        "InstallAccountPassword": "[parameters('InstallAccountPassword')]"
+                        "SQLAdminAccountPassword": "[parameters('SQLAdminAccountPassword')]"
                     }                    
                 }                                                        
             }

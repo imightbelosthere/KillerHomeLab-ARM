@@ -3,7 +3,7 @@
    param
    (
         [String]$computerName,
-        [String]$InstallAccount,
+        [String]$SQLAdminAccount,
         [String]$NetBiosDomain,
         [String]$DomainName,
         [System.Management.Automation.PSCredential]$Admincreds,
@@ -17,10 +17,10 @@
 
     Node localhost
     {
-        SqlLogin CreateInstallSQLLogin
+        SqlLogin CreateSQLAdminSQLLogin
         {
             Ensure               = 'Present'
-            Name                 = "$NetBiosDomain\$InstallAccount"
+            Name                 = "$NetBiosDomain\$SQLAdminAccount"
             LoginType            = 'WindowsUser'
             ServerName           = "$ComputerName.$DomainName"
             InstanceName         = 'MSSQLSERVER'
@@ -41,7 +41,7 @@
         {
             SetScript =
             {
-                $RawAccount = "$using:NetBiosDomain\$using:InstallAccount"
+                $RawAccount = "$using:NetBiosDomain\$using:SQLAdminAccount"
                 $Account = "'"+$RawAccount+"'"
                 $Role = "'sysadmin'"
                 sqlcmd -S "$using:computername" -q "exec sp_addsrvrolemember $Account, $Role"
@@ -49,7 +49,7 @@
             GetScript =  { @{} }
             TestScript = { $false}
             PsDscRunAsCredential = $Admincreds
-            DependsOn = '[SqlLogin]CreateInstallSQLLogin', '[SqlLogin]CreateSQLSvcSQLLogin'
+            DependsOn = '[SqlLogin]CreateSQLAdminSQLLogin', '[SqlLogin]CreateSQLSvcSQLLogin'
         }
 
         SqlPermission 'GRANTSYSTEM'

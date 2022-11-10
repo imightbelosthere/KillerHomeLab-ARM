@@ -3,12 +3,12 @@
    param
    (     
         [String]$NetBiosDomain,
-        [System.Management.Automation.PSCredential]$InstallAccountCreds
+        [System.Management.Automation.PSCredential]$SQLAdminAccountCreds
     )
 
     Import-DscResource -Module SqlServerDsc # Used for SQL Objects
 
-    [System.Management.Automation.PSCredential ]$SQLInstallCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($InstallAccountCreds.UserName)", $InstallAccountCreds.Password)
+    [System.Management.Automation.PSCredential ]$SQLAdminDomainCreds = New-Object System.Management.Automation.PSCredential ("${NetBiosDomain}\$($SQLAdminAccountCreds.UserName)", $SQLAdminAccountCreds.Password)
 
     Node localhost
     {
@@ -17,7 +17,7 @@
             InstanceName = "MSSQLSERVER"
             Ensure = "Present"
             RestartTimeout = 120
-            PsDscRunAsCredential = $SQLInstallCreds
+            PsDscRunAsCredential = $SQLAdminDomainCreds
         }
     }
 }

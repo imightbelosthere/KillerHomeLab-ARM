@@ -19,13 +19,7 @@
             "metadata": {
                 "description": "Computer Name"
             }
-        },  
-        "Environment": {
-            "type": "string",
-            "metadata": {
-                "description": "Computer Name"
-            }
-        },             
+        },              
         "SQLAGName": {
             "type": "string",
             "metadata": {
@@ -110,16 +104,16 @@
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
         },
-        "InstallAccount": {
+        "SQLAdminAccount": {
             "type": "string",
             "metadata": {
-                "description": "SQL Install Account"
+                "description": "SQL Admin Account"
             }
         },
-        "InstallAccountPassword": {
+        "SQLAdminAccountPassword": {
             "type": "securestring",
             "metadata": {
-                "description": "SQL Install ACcount Password"
+                "description": "SQL Admin Account Password"
             }
         },                                                                                                 
         "_artifactsLocation": {
@@ -170,16 +164,16 @@
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword1"
                             },
-                            "InstallAccountCreds": {
-                                "UserName": "[parameters('InstallAccount')]",
-                                "Password": "PrivateSettingsRef:InstallAccountPassword"
+                            "SQLAdminAccountCreds": {
+                                "UserName": "[parameters('SQLAdminAccount')]",
+                                "Password": "PrivateSettingsRef:SQLAdminAccountPassword"
                             }                                                                                                                                           
                         }
                 },
                 "protectedSettings": {
                     "Items": {
                         "AdminPassword1": "[parameters('adminPassword')]",
-                        "InstallAccountPassword": "[parameters('InstallAccountPassword')]"                        
+                        "SQLAdminAccountPassword": "[parameters('SQLAdminAccountPassword')]"                        
                     }                    
                 }                                                        
             }

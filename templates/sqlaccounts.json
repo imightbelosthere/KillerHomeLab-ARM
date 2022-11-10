@@ -50,13 +50,13 @@
             "description": "SQL Service Account Password"
           }
         },                                                  
-        "InstallAccount": {
+        "SQLAdminAccount": {
             "type": "string",
             "metadata": {
-                "description": "Install Account"
+                "description": "SQL Admin Account"
             }
         },                    
-        "InstallAccountPassword": {
+        "SQLAdminAccountPassword": {
             "type": "securestring",
           "metadata": {
             "description": "SQL Install Account Password"
@@ -110,14 +110,14 @@
                             "DomainName": "[parameters('DomainName')]",                            
                             "BaseDN": "[parameters('BaseDN')]",
                             "ServiceAccount": "[parameters('ServiceAccount')]",                                                        
-                            "InstallAccount": "[parameters('InstallAccount')]",                                                                                    
+                            "SQLAdminAccount": "[parameters('SQLAdminAccount')]",                                                                                    
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword1"
                             },
-                            "InstallAccountCreds": {
-                                "UserName": "[parameters('InstallAccount')]",
-                                "Password": "PrivateSettingsRef:InstallAccountPassword"
+                            "SQLAdminAccountCreds": {
+                                "UserName": "[parameters('SQLAdminAccount')]",
+                                "Password": "PrivateSettingsRef:SQLAdminAccountPassword"
                             },
                             "ServiceAccountCreds": {
                                 "UserName": "[parameters('ServiceAccount')]",
@@ -128,7 +128,7 @@
                 "protectedSettings": {
                     "Items": {
                         "AdminPassword1": "[parameters('adminPassword')]",
-                        "InstallAccountPassword": "[parameters('InstallAccountPassword')]",
+                        "SQLAdminAccountPassword": "[parameters('SQLAdminAccountPassword')]",
                         "ServiceAccountPassword": "[parameters('ServiceAccountPassword')]"
                     }
                 }                                                        
