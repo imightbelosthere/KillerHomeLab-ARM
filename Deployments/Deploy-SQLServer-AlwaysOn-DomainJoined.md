@@ -4,10 +4,11 @@
 This Deployment deploys the following items:
 
 - 1 - Azure KeyVault with Secret contianing Deployment Password
-- 1 - Domain Joined Tools Machine (Windows 11/10)
 - 1 - Managed Availability Set
 - 1 - Azure Load Balancer
 - 2 - D8s_v3 Domain Joined VM's with SQL Server 2019 Datacenter on Windows Server 2022 Datacenter
+- 1 - Storage Account (Used for File Share Witeness)
+- 1 - Domain Joined Tools Machine (Windows Server 2022/2019/2016)
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
