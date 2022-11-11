@@ -62,30 +62,30 @@
                 "description": "Number of VMSS Instances"
             }
         },                
-        "networkInterfaceConfigurations": {
-            "type": "Array",
-            "metadata": {
-                "description": "Virtual Machine Scale Set Size"
-            }
-        },
-        "ScaleInPolicy": {
-            "type": "object",
-            "metadata": {
-                "description": "Scale In Policy"
-            }
-        },
         "upgradePolicy": {
             "type": "string",
             "metadata": {
                 "description": "Upgrade Policy"
             }
         },
-        "platformFaultDomainCount": {
+        "vnetName": {
             "type": "string",
             "metadata": {
-                "description": "Fault Domain Count"
+                "description": "Existing VNET Name that contains the domain controller"
             }
-        },                       
+        },
+        "subnet1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing subnet name that contains the domain controller"
+            }
+        },  
+        "subnet2Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Inside Subnet"
+            }
+        },                                      
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -101,7 +101,11 @@
     },
     "variables": {
         "storageAccountType": "Premium_LRS",
-        "namingInfix": "[toLower(substring(concat(parameters('virtualMachineScaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]"
+        "namingPrefix": "[toLower(substring(concat(parameters('virtualMachineScaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]",
+        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
+        "subnet2Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]",        
+        "Nic1Name": "[concat(variables('namingPrefix'),'-OutsideNic')]",
+        "Nic2Name": "[concat(variables('namingPrefix'),'-InsideNic')]"        
 
     },
     "resources": [
@@ -110,12 +114,19 @@
             "type": "Microsoft.Compute/virtualMachineScaleSets",
             "apiVersion": "[parameters('VirtualMachinesScaleSetAPIVersion')]",
             "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('instanceSize')]",
+                "capacity": "[parameters('VMSSInstanceCount')]"
+            },
             "properties": {
-                "singlePlacementGroup": false,
+                "overprovision": true,
+                "upgradePolicy": {
+                    "mode": "[parameters('upgradePolicy')]"
+                },                
                 "virtualMachineProfile": {
                     "storageProfile": {
                         "osDisk": {
-                            "createOption": "fromImage",
+                            "createOption": "FromImage",
                             "caching": "ReadWrite",
                             "managedDisk": {
                                 "storageAccountType": "[variables('storageAccountType')]"
@@ -128,59 +139,53 @@
                             "version": "[parameters('OSVersion')]"
                         }
                     },
-                    "networkProfile": {
-                        "copy": [
-                            {
-                                "name": "networkInterfaceConfigurations",
-                                "count": "[length(parameters('networkInterfaceConfigurations'))]",
-                                "input": {
-                                    "name": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].name]",
-                                    "properties": {
-                                        "primary": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].primary]",
-                                        "enableAcceleratedNetworking": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].enableAcceleratedNetworking]",
-                                        "ipConfigurations": [
-                                            {
-                                                "name": "[concat(take(parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].name, sub(80, length('-defaultIpConfiguration'))), '-defaultIpConfiguration')]",
-                                                "properties": {
-                                                    "subnet": {
-                                                        "id": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].subnetId]"
-                                                    },
-                                                    "primary": "[parameters('networkInterfaceConfigurations')[copyIndex('networkInterfaceConfigurations')].primary]"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    "diagnosticsProfile": {
-                        "bootDiagnostics": {
-                            "enabled": true
-                        }
-                    },
                     "osProfile": {
-                        "computerNamePrefix": "[variables('namingInfix')]",
+                        "computerNamePrefix": "[variables('namingPrefix')]",
                         "adminUsername": "[parameters('adminUsername')]",
                         "adminPassword": "[parameters('adminPassword')]",
                         "windowsConfiguration": {
                             "provisionVmAgent": true,
                             "timeZone": "[parameters('TimeZone')]"
                         }
+                    },                    
+                    "networkProfile": {
+                        "networkInterfaceConfigurations": [
+                            {
+                                "name": "[variables('Nic1Name')]",
+                                "properties": {
+                                    "primary": true,
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "ipconfig1",
+                                            "properties": {
+                                                "subnet": {
+                                                    "id": "[variables('subnet1Id')]"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "[variables('Nic2Name')]",
+                                "properties": {
+                                    "primary": false,
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "ipconfig1",
+                                            "properties": {
+                                                "subnet": {
+                                                    "id": "[variables('subnet2Id')]"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }                            
+                        ]
                     },
                     "licenseType": "[parameters('licenseType')]"
-                },
-
-                "scaleInPolicy": "[parameters('ScaleInPolicy')]",
-                "overprovision": false,
-                "upgradePolicy": {
-                    "mode": "[parameters('upgradePolicy')]"
-                },
-                "platformFaultDomainCount": "[parameters('platformFaultDomainCount')]"
-            },
-            "sku": {
-                "name": "[parameters('instanceSize')]",
-                "capacity": "[int(parameters('VMSSInstanceCount'))]"
+                }
             }
         }        
     ]

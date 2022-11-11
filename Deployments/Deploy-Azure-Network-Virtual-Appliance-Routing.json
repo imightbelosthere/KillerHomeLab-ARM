@@ -509,8 +509,6 @@
         "HUBVNetGatewaySubnetPrefix": "[concat(parameters('HUBVNetID'),'.0.0/24')]",
         "HUBVNetBastionSubnetPrefix": "[concat(parameters('HUBVNetID'),'.253.0/24')]",
         "HUBVNetFirewallSubnetPrefix": "[concat(parameters('HUBVNetID'),'.254.0/24')]",
-        "HUBOutsideSubnetId": "[subscriptionResourceId('Microsoft.Network/virtualNetworks/subnets', variables('HUBVNetName'), variables('HUBVNetSubnet1Name'))]",
-        "HUBInsideSubnetId": "[subscriptionResourceId('Microsoft.Network/virtualNetworks/subnets', variables('HUBVNetName'), variables('HUBVNetSubnet2Name'))]",
         "SPKVNetName": "[concat(parameters('SPKNamingConvention'),'-VNet')]",
         "SPKVNetPrefix": "[concat(parameters('SPKVNetID'),'.0.0/16')]",    
         "SPKVNetSubnet1Name": "[concat(parameters('SPKNamingConvention'),'-VNet-Subnet1')]", 
@@ -1317,35 +1315,18 @@
                     "VMSSInstanceCount": {
                         "value": "[parameters('VMSSInstanceCount')]"
                     },
-                    "networkInterfaceConfigurations": {
-                        "value": [
-                            {
-                                "name": "[variables('HUBVNetSubnet1Name')]",
-                                "primary": true,
-                                "subnetId": "[variables('HUBOutsideSubnetId')]",
-                                "enableAcceleratedNetworking": false
-                            },
-                            {
-                                "name": "[variables('HUBVNetSubnet2Name')]",
-                                "primary": false,
-                                "subnetId": "[variables('HUBInsideSubnetId')]",
-                                "enableAcceleratedNetworking": false
-                            }
-                        ]
-                    },
-                    "ScaleInPolicy": {
-                        "value": {
-                            "rules": [
-                                "Default"
-                            ]
-                        }
-                    },
                     "upgradePolicy": {
                         "value": "Manual"
-                    },
-                    "platformFaultDomainCount": {
-                        "value": "1"
-                    },                                                                       
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('HUBVNetName')]"
+                    },            
+                    "subnet1Name": {
+                        "value": "[variables('HUBVNetSubnet1Name')]"
+                    },      
+                    "subnet2Name": {
+                        "value": "[variables('HUBVNetSubnet2Name')]"
+                    },                     
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },                                                                                                            
