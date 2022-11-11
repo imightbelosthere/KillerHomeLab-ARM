@@ -1,5 +1,5 @@
-# Azure Virtual Network Appliance Routing
-<img src="./x_Images/xxx.svg" height="600" width="800"/>
+# Azure Network Virtual Appliance Routing
+<img src="./x_Images/AzureNetworkVirtualApplianceRouting.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
