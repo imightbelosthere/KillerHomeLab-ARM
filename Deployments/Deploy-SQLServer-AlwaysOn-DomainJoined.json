@@ -1821,6 +1821,44 @@
                     }
                 }
             }
-        }                        
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Grant-SQL-AdminAccount-LocalAdmin-on-SQLTools",
+            "dependsOn": [
+                "Install-SQL-Management-Studio"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/grantlocaladmin.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                     
+                    "computerName": {
+                        "value": "[variables('sqltoolsname')]"
+                    },              
+                    "Account": {
+                        "value": "[parameters('SQLAdminAccount')]"
+                    },            
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }              
+                }
+            }
+        }                               
     ]
 }
