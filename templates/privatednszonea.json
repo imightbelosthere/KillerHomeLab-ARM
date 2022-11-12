@@ -29,12 +29,11 @@
     },
     "resources": [
         {
-            "type": "Microsoft.Network/privateDnsZones/a",
+            "type": "Microsoft.Network/privateDnsZones/A",
             "name": "[concat(parameters('ZoneName'), '/', parameters('HostName'))]",
             "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
-            "location": "global",
             "properties": {
-                "TTL": 900,
+                "ttl": 900,
                 "aRecords": [
                     {
                         "ipv4Address": "[parameters('IP')]"

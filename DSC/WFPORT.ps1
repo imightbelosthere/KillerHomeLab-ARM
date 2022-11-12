@@ -23,8 +23,8 @@ Configuration WFPORT
                 Enabled               = 'True'
                 Profile               = ('Any')
                 Direction             = $Direction
-                RemotePort            = $Port
-                LocalPort             = ('Any')
+                LocalPort             = $Port
+                RemotePort            = ('Any')
                 Protocol              = $Protocol
                 PsDscRunAsCredential = $Admincreds
             }
@@ -39,8 +39,8 @@ Configuration WFPORT
                 Enabled               = 'True'
                 Profile               = ('Any')
                 Direction             = $Direction
-                RemotePort            = ('Any')
-                LocalPort             = $Port
+                LocalPort             = ('Any')
+                RemotePort            = $Port
                 Protocol              = $Protocol
                 PsDscRunAsCredential = $Admincreds
             }
