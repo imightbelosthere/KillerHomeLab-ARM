@@ -29,7 +29,7 @@
     },
     "resources": [
         {
-            "type": "Microsoft.Network/dnszones/a",
+            "type": "Microsoft.Network/privateDnsZones/a",
             "name": "[concat(parameters('ZoneName'), '/', parameters('HostName'))]",
             "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
             "location": "global",
