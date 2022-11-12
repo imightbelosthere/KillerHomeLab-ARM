@@ -35,7 +35,7 @@
             "location": "global",
             "properties": {
                 "TTL": 900,
-                "ARecords": [
+                "aRecords": [
                     {
                         "ipv4Address": "[parameters('IP')]"
                     }
