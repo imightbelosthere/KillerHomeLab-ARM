@@ -160,11 +160,11 @@
                                             "properties": {
                                                 "subnet": {
                                                     "id": "[variables('subnet1Id')]"
-                                                },
-                                                "enableIPForwarding": true
+                                                }
                                             }
                                         }
-                                    ]
+                                    ],
+                                    "enableIPForwarding": true
                                 }
                             },
                             {
@@ -177,11 +177,11 @@
                                             "properties": {
                                                 "subnet": {
                                                     "id": "[variables('subnet2Id')]"
-                                                },
-                                                "enableIPForwarding": true
+                                                }
                                             }
                                         }
-                                    ]
+                                    ],
+                                    "enableIPForwarding": true
                                 }
                             }                            
                         ]
