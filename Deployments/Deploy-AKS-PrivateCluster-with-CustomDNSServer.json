@@ -1335,9 +1335,6 @@
                     "ManagedClusterPoolAPIVersion": {
                         "value": "[variables('ManagedClusterPoolAPIVersion')]"
                     },  
-                    "PublicIPAddressesAPIVersion": {
-                        "value": "[variables('PublicIPAddressesAPIVersion')]"
-                    },
                     "ServicePrincipalClientId": {
                         "value": "[parameters('ServicePrincipalClientId')]"
                     },                                                         
