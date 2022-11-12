@@ -1316,7 +1316,7 @@
                         "value": "[parameters('VMSSInstanceCount')]"
                     },
                     "upgradePolicy": {
-                        "value": "Manual"
+                        "value": "Automatic"
                     },                    
                     "vnetName": {
                         "value": "[variables('HUBVNetName')]"
