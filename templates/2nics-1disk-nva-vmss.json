@@ -13,7 +13,7 @@
             "metadata": {
                 "description": "Virtual Machine Scale Set Name"
             }
-        },
+        },        
         "TimeZone": {
             "type": "string",
             "metadata": {
@@ -97,7 +97,7 @@
             "metadata": {
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
-        }                
+        }
     },
     "variables": {
         "storageAccountType": "Premium_LRS",
@@ -105,7 +105,7 @@
         "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
         "subnet2Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]",        
         "Nic1Name": "[concat(variables('namingPrefix'),'-OutsideNic')]",
-        "Nic2Name": "[concat(variables('namingPrefix'),'-InsideNic')]"        
+        "Nic2Name": "[concat(variables('namingPrefix'),'-InsideNic')]"
 
     },
     "resources": [
@@ -160,7 +160,8 @@
                                             "properties": {
                                                 "subnet": {
                                                     "id": "[variables('subnet1Id')]"
-                                                }
+                                                },
+                                                "enableIPForwarding": true
                                             }
                                         }
                                     ]
@@ -176,7 +177,8 @@
                                             "properties": {
                                                 "subnet": {
                                                     "id": "[variables('subnet2Id')]"
-                                                }
+                                                },
+                                                "enableIPForwarding": true
                                             }
                                         }
                                     ]
@@ -187,6 +189,6 @@
                     "licenseType": "[parameters('licenseType')]"
                 }
             }
-        }        
+        }
     ]
 }

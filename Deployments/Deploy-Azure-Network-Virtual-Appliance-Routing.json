@@ -1395,6 +1395,64 @@
             }
         },
         {
+            "condition": "[equals(parameters('NVAScaleSet'),'Yes')]",                                                
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-and-Configure-RRAS-ScaleSet",
+            "resourceGroup":  "[parameters('HUBRG')]",
+            "dependsOn": [
+                "Deploy-Windows-RRAS-Network-Virtual-Appliance-ScaleSet"             
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/rrasvmss.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('NVAVMSSName')]"
+                    },
+                    "Site1NextHop": {
+                        "value": "[variables('Site1NextHop')]"
+                    },              
+                    "Site2NextHop": {
+                        "value": "[variables('Site2NextHop')]"
+                    },                            
+                    "SpokeNextHop": {
+                        "value": "[variables('SpokeNextHop')]"
+                    },                             
+                    "OutsideSubnetPrefix": {
+                        "value": "[variables('OutsideSubnetPrefix')]"
+                    },                                             
+                    "InsideSubnetPrefix": {
+                        "value": "[variables('InsideSubnetPrefix')]"
+                    },                              
+                    "Site1VNet": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },          
+                    "Site2VNet": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },  
+                    "SpokeVNet": {
+                        "value": "[variables('SPKVNetPrefix')]"
+                    },                                                                                                                              
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
+        {
             "condition": "[equals(parameters('NVAScaleSet'),'No')]",                                                
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
@@ -1431,6 +1489,43 @@
                 }
             }
         },
+        {
+            "condition": "[equals(parameters('NVAScaleSet'),'Yes')]",                                                
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-Windows-RRAS-Server_ScaleSet",
+            "resourceGroup":  "[parameters('HUBRG')]",            
+            "dependsOn": [
+                "Install-and-Configure-RRAS-ScaleSet"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvmss.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('NVAVMSSName')]"
+                    },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
         {
             "condition": "[equals(parameters('NVAScaleSet'),'No')]",                                                
             "type": "Microsoft.Resources/deployments",
@@ -1471,6 +1566,46 @@
                 }
             }
         },
+        {
+            "condition": "[equals(parameters('NVAScaleSet'),'Yes')]",                                                
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-Routing-Only-ScaleSet",
+            "resourceGroup":  "[parameters('HUBRG')]",            
+            "dependsOn": [
+                "Restart-Windows-RRAS-Server_ScaleSet"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/routingonlyvmss.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('NVAVMSSName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }, 
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                           
+                }
+            }
+        },        
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
