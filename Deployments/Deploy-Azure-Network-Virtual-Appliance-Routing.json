@@ -2391,9 +2391,15 @@
                     "vnet1Name": {
                         "value": "[variables('SITE1VNetName')]"
                     },    
+                    "vnet1RG": {
+                        "value": "[parameters('SITE1RG')]"
+                    },                        
                     "vnet2Name": {
                         "value": "[variables('SITE2VNetName')]"
-                    }                                                                                                                                                                              
+                    },
+                    "vnet2RG": {
+                        "value": "[parameters('SITE2RG')]"
+                    }                                                                                                                                                                   
                 }
             }
         },

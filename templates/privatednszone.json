@@ -17,15 +17,27 @@
         "vnet1Name": {
             "type": "string",
             "metadata": {
-                "description": "Existing DMZ VNET1 Name"
+                "description": "Virtual Network 1 Name"
             }            
-        },     
+        },
+        "vnet1RG": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network 1 Resource Group"
+            }            
+        },             
         "vnet2Name": {
             "type": "string",
             "metadata": {
-                "description": "Existing DMZ VNET2 Name"
+                "description": "Virtual Network 2 Name"
             }            
-        }             
+        },
+        "vnet2RG": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network 2 Resource Group"
+            }            
+        }                     
     },
     "resources": [
         {
@@ -47,7 +59,7 @@
             ],            
             "properties": {
               "virtualNetwork": {
-                    "id":  "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNet1Name'))]"
+                    "id":  "[resourceId(parameters('vnet1RG'), 'Microsoft.Network/virtualNetworks', parameters('vNet1Name'))]"
                 },
                 "registrationEnabled": true
                 }
@@ -62,7 +74,7 @@
             ],                       
             "properties": {
                 "virtualNetwork": {
-                    "id":  "[resourceId('Microsoft.Network/virtualNetworks', parameters('vNet2Name'))]"
+                    "id":  "[resourceId(parameters('vnet2RG'),'Microsoft.Network/virtualNetworks', parameters('vNet2Name'))]"
                 },
                 "registrationEnabled": true
             }
