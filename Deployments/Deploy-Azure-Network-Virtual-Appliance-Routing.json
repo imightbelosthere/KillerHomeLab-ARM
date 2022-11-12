@@ -2103,7 +2103,100 @@
                     }
                 }
             }
-        }, 
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "resourceGroup":   "[parameters('SPKRG')]",            
+            "name": "Install-SQLServer",
+            "dependsOn": [
+                "Deploy-SQLServer-01"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/sql.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('SQLVMName')]"
+                    },
+                    "SQLSASUrl": {
+                        "value": "[parameters('SQLSASUrl')]"
+                    },                                                                     
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Enable-SQL-WindowsFirewall-Port-on-SQLVM",
+            "resourceGroup":   "[parameters('SPKRG')]",            
+            "dependsOn": [
+               "Install-SQLServer"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/windwosfirewallport.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('SQLVMName')]"
+                    },
+                    "FirewallRuleName": {
+                        "value": "Enable-SQL-Management-Studio-Inbound"
+                    },    
+                    "Direction": {
+                        "value": "Inbound"
+                    },                        
+                    "Port": {
+                        "value": "1433"
+                    },
+                    "Protocol": {
+                        "value": "TCP"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },                         
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
@@ -2215,6 +2308,57 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Enable-SQL-WindowsFirewall-Port-on-Site1VM",
+            "resourceGroup":   "[parameters('SITE1RG')]",            
+            "dependsOn": [
+               "Install-SQL-Management-Studio-on-Site1VM"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/windwosfirewallport.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('SITE1VMName')]"
+                    },
+                    "FirewallRuleName": {
+                        "value": "Enable-SQL-Management-Studio-Outbound"
+                    },    
+                    "Direction": {
+                        "value": "Outbound"
+                    },                        
+                    "Port": {
+                        "value": "1433"
+                    },
+                    "Protocol": {
+                        "value": "TCP"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                                                                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Site2-VirtualMachine",
             "resourceGroup":   "[parameters('SITE2RG')]",                              
             "dependsOn": [
@@ -2323,15 +2467,15 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "resourceGroup":   "[parameters('SPKRG')]",            
-            "name": "Install-SQLServer",
+            "name": "Enable-SQL-WindowsFirewall-Port-on-Site2VM",
+            "resourceGroup":   "[parameters('SITE2RG')]",            
             "dependsOn": [
-                "Deploy-SQLServer-01"
-            ],      
+               "Install-SQL-Management-Studio-on-Site2VM"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/sql.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/windwosfirewallport.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -2340,28 +2484,37 @@
                     },
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
-                    },                    
-                    "computerName": {
-                        "value": "[variables('SQLVMName')]"
                     },
-                    "SQLSASUrl": {
-                        "value": "[parameters('SQLSASUrl')]"
-                    },                                                                     
+                    "computerName": {
+                        "value": "[variables('SITE2VMName')]"
+                    },
+                    "FirewallRuleName": {
+                        "value": "Enable-SQL-Management-Studio-Outbound"
+                    },    
+                    "Direction": {
+                        "value": "Outbound"
+                    },                        
+                    "Port": {
+                        "value": "1433"
+                    },
+                    "Protocol": {
+                        "value": "TCP"
+                    },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
-                    },                                                                                                            
+                    },
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
-                    },
+                    },                                                                                                                           
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
-                    },                                                                                                            
+                    },
                     "_artifactsLocationSasToken": {
                         "value": "[parameters('_artifactsLocationSasToken')]"
-                    }                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+                    }
                 }
             }
-        },
+        },                
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
