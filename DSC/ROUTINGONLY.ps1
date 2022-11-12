@@ -2,12 +2,12 @@
 {
    param
    (
-        [String]$ComputerName,
         [System.Management.Automation.PSCredential]$Admincreds                                  
     )
 
     Import-DscResource -Module ComputerManagementDsc # Used for Certificate Authority
 
+    $ComputerName = $env:COMPUTERNAME
     [System.Management.Automation.PSCredential ]$LocalCreds = New-Object System.Management.Automation.PSCredential ("${ComputerName}\$($AdminCreds.UserName)", $AdminCreds.Password)
 
     Node localhost
