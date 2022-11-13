@@ -14,70 +14,30 @@
                 "description": "DNS Zone Name"
               }
         },        
-        "vnet1Name": {
+        "vnetName": {
             "type": "string",
             "metadata": {
                 "description": "Virtual Network 1 Name"
             }            
         },
-        "vnet1RG": {
+        "vnetRG": {
             "type": "string",
             "metadata": {
                 "description": "Virtual Network 1 Resource Group"
             }            
-        },             
-        "vnet2Name": {
-            "type": "string",
-            "metadata": {
-                "description": "Virtual Network 2 Name"
-            }            
-        },
-        "vnet2RG": {
-            "type": "string",
-            "metadata": {
-                "description": "Virtual Network 2 Resource Group"
-            }            
-        }                     
+        }                    
     },
     "resources": [
         {
-            "name": "[parameters('ZoneName')]",
-            "type": "Microsoft.Network/privateDnsZones",
-            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
-            "location": "global",
-            "tags": {},
-            "properties": {},
-            "resources": []
-        },
-        {
-            "name": "[concat(parameters('ZoneName'),'/',parameters('vnet1Name'))]",
+            "name": "[concat(parameters('ZoneName'),'/',parameters('vnetName'))]",
             "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
-            "location": "global",
-            "dependsOn": [
-                "[concat('Microsoft.Network/privateDnsZones/', parameters('ZoneName'))]"
-            ],            
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",            
             "properties": {
               "virtualNetwork": {
-                    "id":  "[resourceId(parameters('vnet1RG'), 'Microsoft.Network/virtualNetworks', parameters('vNet1Name'))]"
+                    "id":  "[resourceId(parameters('vnetRG'), 'Microsoft.Network/virtualNetworks', parameters('vNetName'))]"
                 },
                 "registrationEnabled": true
                 }
-        },
-        {
-            "name": "[concat(parameters('ZoneName'),'/',parameters('vnet2Name'))]",
-            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
-            "location": "global",
-            "dependsOn": [
-                "[concat('Microsoft.Network/privateDnsZones/', parameters('ZoneName'))]"
-            ],                       
-            "properties": {
-                "virtualNetwork": {
-                    "id":  "[resourceId(parameters('vnet2RG'),'Microsoft.Network/virtualNetworks', parameters('vNet2Name'))]"
-                },
-                "registrationEnabled": true
-            }
-        }                                    
+        }                                  
     ]
 }

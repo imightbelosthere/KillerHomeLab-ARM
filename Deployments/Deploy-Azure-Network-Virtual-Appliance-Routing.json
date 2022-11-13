@@ -2298,7 +2298,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelink.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszone.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -2307,19 +2307,7 @@
                     },                      
                     "ZoneName": {
                         "value": "domain.local"
-                    },
-                    "vnet1Name": {
-                        "value": "[variables('SITE1VNetName')]"
-                    },    
-                    "vnet1RG": {
-                        "value": "[parameters('SITE1RG')]"
-                    },                        
-                    "vnet2Name": {
-                        "value": "[variables('SITE2VNetName')]"
-                    },
-                    "vnet2RG": {
-                        "value": "[parameters('SITE2RG')]"
-                    }                                                                                                                                                                   
+                    }                                                                                                                                                                 
                 }
             }
         },
@@ -2352,6 +2340,66 @@
                     }                                                                                                                                                                                                                                                                                                                         
                 }
             }
-        }                                                                                                                                                                                                                                                                                                                                                   
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "resourceGroup":   "[parameters('HUBRG')]",             
+            "name": "Deploy-PrivateDNSZone-Link-for-Site1",
+            "dependsOn": [
+                "Create-PrivateDNSZone-SQL-ARecord"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelink.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },                      
+                    "ZoneName": {
+                        "value": "domain.local"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE1VNetName')]"
+                    },    
+                    "vnetRG": {
+                        "value": "[parameters('SITE1RG')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "resourceGroup":   "[parameters('HUBRG')]",             
+            "name": "Deploy-PrivateDNSZone-Link-for-Site2",
+            "dependsOn": [
+                "Deploy-PrivateDNSZone-Link-for-Site1"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelink.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },                      
+                    "ZoneName": {
+                        "value": "domain.local"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE2VNetName')]"
+                    },    
+                    "vnetRG": {
+                        "value": "[parameters('SITE2RG')]"
+                    }
+                }
+            }
+        }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
     ]
 }
