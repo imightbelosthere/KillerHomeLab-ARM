@@ -919,16 +919,68 @@
                     },                      
                     "ZoneName": {
                         "value": "[variables('PrivateDNSZoneName')]"
-                    },
-                    "vnet1Name": {
-                        "value": "[variables('VNet1Name')]"
-                    },    
-                    "vnet2Name": {
-                        "value": "[variables('VNet2Name')]"
-                    }                                                                                                                                                                              
+                    }                                                                                                                                                                             
                 }
             }
         },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-PrivateDNSZone-Link-for-Spoke",
+            "dependsOn": [
+                "Deploy-PrivateDNSZone"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelink.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },                      
+                    "ZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },    
+                    "vnetRG": {
+                        "value": "[resourceGroup().name]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-PrivateDNSZone-Link-for-Hub",
+            "dependsOn": [
+                "Deploy-PrivateDNSZone-Link-for-Spoke"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelink.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },                      
+                    "ZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },    
+                    "vnetRG": {
+                        "value": "[resourceGroup().name]"
+                    }
+                }
+            }
+        },                
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
@@ -1254,6 +1306,8 @@
             "name": "Deploy-AKSCluster-with-MI",     
             "dependsOn": [
                 "Deploy-PrivateDNSZone",
+                "Deploy-PrivateDNSZone-Link-for-Spoke",
+                "Deploy-PrivateDNSZone-Link-for-Hub",
                 "Assign-UserAssignedMI-for-RG"
             ],  
             "properties": {
