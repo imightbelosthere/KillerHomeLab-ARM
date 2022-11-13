@@ -104,6 +104,7 @@
             },
             "properties": {
                 "kubernetesVersion": "[parameters('KubernetesVersion')]",
+                "dnsPrefix": "[parameters('AKSClusterName')]",                
                 "agentPoolProfiles": [
                     {
                         "name": "nodepool1",
