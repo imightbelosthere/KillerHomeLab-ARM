@@ -31,7 +31,8 @@
         {
             "name": "[concat(parameters('ZoneName'),'/',parameters('vnetName'))]",
             "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",            
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global",                       
             "properties": {
               "virtualNetwork": {
                     "id":  "[resourceId(parameters('vnetRG'), 'Microsoft.Network/virtualNetworks', parameters('vNetName'))]"
