@@ -1435,6 +1435,9 @@
                     "AKSClusterName": {
                         "value": "[variables('AKSClusterName')]"
                     },
+                    "DNSZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    },                     
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
                     },            
