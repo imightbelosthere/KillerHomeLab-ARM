@@ -924,42 +924,12 @@
             }
         },
         {
-			"condition": "[equals(parameters('ClusterCredentialType'),'Service-Principal')]",                        
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-PrivateDNSZone-SP",
-            "dependsOn": [
-                "Deploy-OnPremise-VirtualNetwork",
-                "Deploy-Spoke-VirtualNetwork",
-                "Deploy-Hub-VirtualNetwork",
-                "Deploying-Peering-On-OnPremVNet-for-HubVNet",
-                "Deploying-Peering-On-HubVNet-for-OnPremVNet",                
-                "Deploying-Peering-On-HubVNet-for-SpokeVNet",   
-                "Deploying-Peering-On-SpokeVNet-for-HubVNet"
-            ],            
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszone.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "PrivateDNSZoneAPIVersion": {
-                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
-                    },                      
-                    "ZoneName": {
-                        "value": "[variables('PrivateDNSZoneName')]"
-                    }                                                                                                                                                                             
-                }
-            }
-        },
-        {
+			"condition": "[equals(parameters('ClusterCredentialType'),'Managed-Identity')]",                                    
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-PrivateDNSZone-Link-for-Spoke",
             "dependsOn": [
-                "Deploy-PrivateDNSZone-MI",
-                "Deploy-PrivateDNSZone-SP"
+                "Deploy-PrivateDNSZone-MI"
             ],            
             "properties": {
                 "mode": "Incremental",
@@ -984,6 +954,7 @@
             }
         },        
         {
+			"condition": "[equals(parameters('ClusterCredentialType'),'Managed-Identity')]",                                    
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-PrivateDNSZone-Link-for-Hub",
@@ -1434,9 +1405,6 @@
                     },                                        
                     "AKSClusterName": {
                         "value": "[variables('AKSClusterName')]"
-                    },
-                    "DNSZoneName": {
-                        "value": "[variables('PrivateDNSZoneName')]"
                     },                     
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
