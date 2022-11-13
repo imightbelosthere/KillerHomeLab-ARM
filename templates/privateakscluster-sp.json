@@ -37,13 +37,7 @@
             "metadata": {
                 "description": "Orchestrator Version"
             }
-        },
-        "DNSZoneName": {
-            "type": "String",
-            "metadata": {
-                "description": "AKS Private DNS Name"
-            }            
-        },                           
+        },                    
         "AKSClusterName": {
             "type": "String"
         },
@@ -80,7 +74,6 @@
     },
     "variables": {
         "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]",
-        "DNSZoneID": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', parameters('DNSZoneName'))]",        
         "publicIPAddressName": "[concat(parameters('AKSClusterName'),'-pip')]",
         "AKSNodesResourceGroup": "[concat(resourceGroup().name,'-Nodes')]"
     },
@@ -111,7 +104,6 @@
             },
             "properties": {
                 "kubernetesVersion": "[parameters('KubernetesVersion')]",
-                "fqdnSubdomain": "aks",
                 "agentPoolProfiles": [
                     {
                         "name": "nodepool1",
@@ -157,7 +149,7 @@
                 "enableRBAC": true,                                             
                 "networkProfile": {
                     "networkPlugin": "kubenet",
-                    "networkPolicy": "calico",
+                    "networkPolicy": "azure",
                     "loadBalancerSku": "Standard",
                     "loadBalancerProfile": {
                         "managedOutboundIPs": {
@@ -197,7 +189,7 @@
                 ],
                 "apiServerAccessProfile": {
                     "enablePrivateCluster": true,
-                    "privateDNSZone": "[variables('DNSZoneID')]",
+                    "privateDNSZone": "system",
                     "enablePrivateClusterPublicFQDN": false
                 },
                 "autoScalerProfile": {
