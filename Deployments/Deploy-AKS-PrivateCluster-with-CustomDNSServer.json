@@ -894,10 +894,40 @@
             }
         },
         {
+			"condition": "[equals(parameters('ClusterCredentialType'),'Managed-Identity')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-PrivateDNSZone-MI",
+            "dependsOn": [
+                "Deploy-OnPremise-VirtualNetwork",
+                "Deploy-Spoke-VirtualNetwork",
+                "Deploy-Hub-VirtualNetwork",
+                "Deploying-Peering-On-OnPremVNet-for-HubVNet",
+                "Deploying-Peering-On-HubVNet-for-OnPremVNet",                
+                "Deploying-Peering-On-HubVNet-for-SpokeVNet",   
+                "Deploying-Peering-On-SpokeVNet-for-HubVNet"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszone.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },                      
+                    "ZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    }                                                                                                                                                                             
+                }
+            }
+        },
+        {
 			"condition": "[equals(parameters('ClusterCredentialType'),'Service-Principal')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-PrivateDNSZone",
+            "name": "Deploy-PrivateDNSZone-SP",
             "dependsOn": [
                 "Deploy-OnPremise-VirtualNetwork",
                 "Deploy-Spoke-VirtualNetwork",
@@ -928,7 +958,8 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-PrivateDNSZone-Link-for-Spoke",
             "dependsOn": [
-                "Deploy-PrivateDNSZone"
+                "Deploy-PrivateDNSZone-MI",
+                "Deploy-PrivateDNSZone-SP"
             ],            
             "properties": {
                 "mode": "Incremental",
@@ -1305,7 +1336,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AKSCluster-with-MI",     
             "dependsOn": [
-                "Deploy-PrivateDNSZone",
+                "Deploy-PrivateDNSZone-MI",
                 "Deploy-PrivateDNSZone-Link-for-Spoke",
                 "Deploy-PrivateDNSZone-Link-for-Hub",
                 "Assign-UserAssignedMI-for-RG"
