@@ -13,7 +13,13 @@
             "metadata": {
                 "description": "Managed Cluster Pool API Version"
             }
-        },         
+        }, 
+        "PublicIPAddressesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "PublicIPAddresses API Version"
+            }
+        },                
         "ServicePrincipalClientId": {
             "type": "string",
             "metadata": {
@@ -73,10 +79,22 @@
     },
     "resources": [
         {
+            "name": "[variables('publicIPAddressName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('PublicIPAddressesAPIVersion')]",
+            "location":"[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            }
+        },        
+        {
             "type": "Microsoft.ContainerService/managedClusters",
             "apiVersion": "[parameters('ManagedClusterAPIVersion')]",
             "name": "[parameters('AKSClusterName')]",
-            "location": "[resourceGroup().location]",              
+            "location": "[resourceGroup().location]",    
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+            ],                       
             "sku": {
                 "name": "Basic",
                 "tier": "Free"
