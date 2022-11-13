@@ -142,6 +142,16 @@
                         "enableFIPS": false
                     }                    
                 ],
+                "linuxProfile": {
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[parameters('adminKey')]"
+                            }
+                        ]
+                    }
+                } ,                
                 "servicePrincipalProfile": {
                     "clientId": "[parameters('ServicePrincipalClientId')]"
                 },
@@ -149,7 +159,6 @@
                 "enableRBAC": true,                                             
                 "networkProfile": {
                     "networkPlugin": "kubenet",
-                    "networkPolicy": "azure",
                     "loadBalancerSku": "Standard",
                     "loadBalancerProfile": {
                         "managedOutboundIPs": {
@@ -165,16 +174,7 @@
                     "serviceCidr": "[parameters('serviceCidr')]",
                     "dnsServiceIP": "[parameters('dnsServiceIP')]",
                     "dockerBridgeCidr": "[parameters('dockerBridgeCidr')]",
-                    "outboundType": "loadBalancer",
-                    "podCidrs": [
-                        "[parameters('podCidr')]"
-                    ],
-                    "serviceCidrs": [
-                        "[parameters('serviceCidr')]"
-                    ],
-                    "ipFamilies": [
-                        "IPv4"
-                    ]                                       
+                    "outboundType": "loadBalancer"                                    
                 },
                 "privateLinkResources": [
                     {
@@ -191,57 +191,7 @@
                     "enablePrivateCluster": true,
                     "privateDNSZone": "system",
                     "enablePrivateClusterPublicFQDN": false
-                },
-                "autoScalerProfile": {
-                    "balance-similar-node-groups": "false",
-                    "expander": "random",
-                    "max-empty-bulk-delete": "10",
-                    "max-graceful-termination-sec": "600",
-                    "max-node-provision-time": "15m",
-                    "max-total-unready-percentage": "45",
-                    "new-pod-scale-up-delay": "0s",
-                    "ok-total-unready-count": "3",
-                    "scale-down-delay-after-add": "10m",
-                    "scale-down-delay-after-delete": "10s",
-                    "scale-down-delay-after-failure": "3m",
-                    "scale-down-unneeded-time": "10m",
-                    "scale-down-unready-time": "20m",
-                    "scale-down-utilization-threshold": "0.5",
-                    "scan-interval": "10s",
-                    "skip-nodes-with-local-storage": "false",
-                    "skip-nodes-with-system-pods": "true"
-                },
-                "autoUpgradeProfile": {
-                    "upgradeChannel": "none"
-                },
-                "disableLocalAccounts": false,
-                "securityProfile": {},
-                "storageProfile": {
-                    "diskCSIDriver": {
-                        "enabled": true,
-                        "version": "v1"
-                    },
-                    "fileCSIDriver": {
-                        "enabled": true
-                    },
-                    "snapshotController": {
-                        "enabled": true
-                    }
-                },
-                "publicNetworkAccess": "Enabled",
-                "oidcIssuerProfile": {
-                    "enabled": false
-                },                                
-                "linuxProfile": {
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "ssh": {
-                        "publicKeys": [
-                            {
-                                "keyData": "[parameters('adminKey')]"
-                            }
-                        ]
-                    }
-                }                
+                }               
             }
         },
         {
