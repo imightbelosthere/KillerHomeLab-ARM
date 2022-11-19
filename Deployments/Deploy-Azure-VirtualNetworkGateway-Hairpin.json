@@ -1,0 +1,1332 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptiondeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {        
+        "ONPREMRG": {
+            "type": "string",
+            "defaultValue": "ONPREM-RG",
+            "metadata": {
+                "description": "ONPREM Resource Group"
+            }
+        },               
+        "SITE1Region": {
+            "type": "string",
+            "defaultValue": "USGovArizona", 
+            "metadata": {
+                "description": "Choose Region for Site1 Resources (Example: USGovArizona)"
+            }
+        }, 
+        "SITE1RG": {
+            "type": "string",
+            "defaultValue": "SITE1-RG",
+            "metadata": {
+                "description": "Site1 Resource Group"
+            }
+        },                               
+        "SITE2Region": {
+            "type": "string",
+            "defaultValue": "USDoDEast", 
+            "metadata": {
+                "description": "Choose Region for Site2 Resources  (Example: USDoDEast)"
+            }
+        },
+        "SITE2RG": {
+            "type": "string",
+            "defaultValue": "SITE2-RG",
+            "metadata": {
+                "description": "Site2 Resource Group"
+            }
+        },                                                      
+        "TimeZone": {
+            "type": "string",
+            "defaultValue": "Eastern Standard Time",
+            "allowedValues": [
+                "Afghanistan Standard Time",
+                "Alaskan Standard Time",
+                "Aleutian Standard Time",
+                "Altai Standard Time",
+                "Arab Standard Time",
+                "Arabian Standard Time",
+                "Arabic Standard Time",
+                "Argentina Standard Time",
+                "Astrakhan Standard Time",
+                "Atlantic Standard Time",
+                "AUS Central Standard Time",
+                "Aus Central W. Standard Time",
+                "AUS Eastern Standard Time",
+                "Azerbaijan Standard Time",
+                "Azores Standard Time",
+                "Bahia Standard Time",
+                "Bangladesh Standard Time",
+                "Belarus Standard Time",
+                "Bougainville Standard Time",
+                "Canada Central Standard Time",
+                "Cape Verde Standard Time",
+                "Caucasus Standard Time",
+                "Cen. Australia Standard Time",
+                "Central America Standard Time",
+                "Central Asia Standard Time",
+                "Central Brazilian Standard Time",
+                "Central Europe Standard Time",
+                "Central European Standard Time",
+                "Central Pacific Standard Time",
+                "Central Standard Time (Mexico)",
+                "Central Standard Time",
+                "Chatham Islands Standard Time",
+                "China Standard Time",
+                "Cuba Standard Time",
+                "Dateline Standard Time",
+                "E. Africa Standard Time",
+                "E. Australia Standard Time",
+                "E. Europe Standard Time",
+                "E. South America Standard Time",
+                "Easter Island Standard Time",
+                "Eastern Standard Time (Mexico)",
+                "Eastern Standard Time",
+                "Egypt Standard Time",
+                "Ekaterinburg Standard Time",
+                "Fiji Standard Time",
+                "FLE Standard Time",
+                "Georgian Standard Time",
+                "GMT Standard Time",
+                "Greenland Standard Time",
+                "Greenwich Standard Time",
+                "GTB Standard Time",
+                "Haiti Standard Time",
+                "Hawaiian Standard Time",
+                "India Standard Time",
+                "Iran Standard Time",
+                "Israel Standard Time",
+                "Jordan Standard Time",
+                "Kaliningrad Standard Time",
+                "Korea Standard Time",
+                "Libya Standard Time",
+                "Line Islands Standard Time",
+                "Lord Howe Standard Time",
+                "Magadan Standard Time",
+                "Magallanes Standard Time",
+                "Marquesas Standard Time",
+                "Mauritius Standard Time",
+                "Middle East Standard Time",
+                "Montevideo Standard Time",
+                "Morocco Standard Time",
+                "Mountain Standard Time (Mexico)",
+                "Mountain Standard Time",
+                "Myanmar Standard Time",
+                "N. Central Asia Standard Time",
+                "Namibia Standard Time",
+                "Nepal Standard Time",
+                "New Zealand Standard Time",
+                "Newfoundland Standard Time",
+                "Norfolk Standard Time",
+                "North Asia East Standard Time",
+                "North Asia Standard Time",
+                "North Korea Standard Time",
+                "Omsk Standard Time",
+                "Pacific SA Standard Time",
+                "Pacific Standard Time (Mexico)",
+                "Pacific Standard Time",
+                "Pakistan Standard Time",
+                "Paraguay Standard Time",
+                "Qyzylorda Standard Time",
+                "Romance Standard Time",
+                "Russia Time Zone 10",
+                "Russia Time Zone 11",
+                "Russia Time Zone 3",
+                "Russian Standard Time",
+                "SA Eastern Standard Time",
+                "SA Pacific Standard Time",
+                "SA Western Standard Time",
+                "Saint Pierre Standard Time",
+                "Sakhalin Standard Time",
+                "Samoa Standard Time",
+                "Sao Tome Standard Time",
+                "Saratov Standard Time",
+                "SE Asia Standard Time",
+                "Singapore Standard Time",
+                "South Africa Standard Time",
+                "Sri Lanka Standard Time",
+                "Sudan Standard Time",
+                "Syria Standard Time",
+                "Taipei Standard Time",
+                "Tasmania Standard Time",
+                "Tocantins Standard Time",
+                "Tokyo Standard Time",
+                "Tomsk Standard Time",
+                "Tonga Standard Time",
+                "Transbaikal Standard Time",
+                "Turkey Standard Time",
+                "Turks And Caicos Standard Time",
+                "Ulaanbaatar Standard Time",
+                "US Eastern Standard Time",
+                "US Mountain Standard Time",
+                "UTC",
+                "UTC+12",
+                "UTC+13",
+                "UTC-02",
+                "UTC-08",
+                "UTC-09",
+                "UTC-11",
+                "Venezuela Standard Time",
+                "Vladivostok Standard Time",
+                "Volgograd Standard Time",
+                "W. Australia Standard Time",
+                "W. Central Africa Standard Time",
+                "W. Europe Standard Time",
+                "W. Mongolia Standard Time",
+                "West Asia Standard Time",
+                "West Bank Standard Time",
+                "West Pacific Standard Time",
+                "Yakutsk Standard Time"
+            ],
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },  
+        "VNGSku": {
+            "type": "string",
+            "defaultValue": "Basic",
+            "allowedValues": [
+                "Basic",
+                "VpnGw1",
+                "VpnGw1AZ"
+            ],
+            "metadata": {
+                "description": "Virtual Network Gateway Sku"
+            }
+        },        
+        "AutoShutdownEnabled": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "Enabled Auto Shutdown.  !!!If Enabled, AutoShutdownEmail MUST be added!!!!"
+            }
+        },
+        "AutoShutdownTime": {
+            "type": "string",
+            "defaultValue": "2000",
+            "metadata": {
+                "description": "24-Hour Clock Time for Auto-Shutdown Example: 1900 = 7PM"
+            }
+        },
+        "AutoShutdownEmail": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Auto-Shutdown notification Email Example:  user@domain.com"
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        },
+        "AzureUserObjectID": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Deployment Account Object ID"
+            }
+        },
+        "WindowsServerLicenseType": {
+            "type": "string",
+            "defaultValue": "None",
+            "allowedValues": [
+                "None",
+                "Windows_Server"
+            ],
+            "metadata": {
+                "description": "Windows Server OS License Type"
+            }
+        },
+        "ONPREMNamingConvention": {
+            "type": "string",
+            "defaultValue": "ONPREM",
+            "minLength": 1,
+            "maxLength": 6,
+            "metadata": {
+                "description": "ONPREM Environment Naming Convention"
+            }
+        },      
+        "SITE1NamingConvention": {
+            "type": "string",
+            "defaultValue": "SITE1",
+            "minLength": 1,
+            "maxLength": 5,
+            "metadata": {
+                "description": "Site1 Environment Naming Convention"
+            }
+        },         
+        "SITE2NamingConvention": {
+            "type": "string",
+            "defaultValue": "SITE2",
+            "minLength": 1,
+            "maxLength": 5,
+            "metadata": {
+                "description": "Site2 Environment Naming Convention"
+            }
+        },             
+        "ONPREMVNetID": {
+            "type": "string",
+            "defaultValue": "192.168",
+            "metadata": {
+                "description": "ONPREM VNet Prefix"
+            }
+        },   
+        "SITE1VNetID": {
+            "type": "string",
+            "defaultValue": "172.16",
+            "metadata": {
+                "description": "Site1 VNet Prefix"
+            }
+        },         
+        "SITE2VNetID": {
+            "type": "string",
+            "defaultValue": "172.17",
+            "metadata": {
+                "description": "Site2 VNet Prefix"
+            }
+        },             
+        "NVAVMOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+            "2022-Datacenter",
+            "2019-Datacenter",
+            "2016-Datacenter",
+            "2012-R2-Datacenter"
+            ],
+            "metadata": {
+                "description": "Network Virtual Appliance OS Version"
+            }
+        },
+        "NVAVMOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "NVA OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
+            }
+        },        
+        "ONPREMVMOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+            "2022-Datacenter",
+            "2019-Datacenter",
+            "2016-Datacenter"
+            ],            
+            "metadata": {
+                "description": "ONPREM VM OS Version"
+            }
+        },        
+        "ONPREMVMOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "ONPREM VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+            }
+        },                
+        "SITE1VMOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+            "2022-Datacenter",
+            "2019-Datacenter",
+            "2016-Datacenter"
+            ],            
+            "metadata": {
+                "description": "Site1 VM OS Version"
+            }
+        },                
+        "SITE1VMOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "Site1 VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+            }
+        },                        
+        "SITE2VMOSSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter",
+            "allowedValues": [
+            "2022-Datacenter",
+            "2019-Datacenter",
+            "2016-Datacenter"
+            ],            
+            "metadata": {
+                "description": "Site2 VM OS Version"
+            }
+        },                    
+        "SITE2VMOSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "Site2 VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+            }
+        },                            
+        "NVAVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Network Virtual Appliance VMSize"
+            }
+        },                  
+        "ONPREMVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "ONPREM VMSize"
+            }
+        },        
+        "SITE1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Site1 VMSize"
+            }
+        },            
+        "SITE2VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Site2 VMSize"
+            }
+        },                
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            },
+            "defaultValue": "https://raw.gitONPREMusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
+            },
+            "defaultValue": ""
+        }
+    },
+    "variables": {
+        "DeploymentName": "[deployment().name]",
+        "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
+        "KeyVaultName": "[concat('NVA-', variables('Identifier'))]",
+        "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
+        "ONPREMVNetName": "[concat(parameters('ONPREMNamingConvention'),'-VNet')]",
+        "ONPREMVNetPrefix": "[concat(parameters('ONPREMVNetID'),'.0.0/16')]",    
+        "ONPREMVNetSubnet1Name": "[concat(parameters('ONPREMNamingConvention'),'-VNet-OutsideSubnet')]", 
+        "ONPREMVNetSubnet1Prefix": "[concat(parameters('ONPREMVNetID'),'.1.0/24')]",           
+        "ONPREMVNetSubnet2Name": "[concat(parameters('ONPREMNamingConvention'),'-VNet-InsideSubnet')]",  
+        "ONPREMVNetSubnet2Prefix": "[concat(parameters('ONPREMVNetID'),'.2.0/24')]",    
+        "ONPREMVNetGatewaySubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.0.0/24')]",
+        "ONPREMVNetBastionSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.253.0/24')]",
+        "ONPREMVNetFirewallSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.254.0/24')]",
+        "SITE1VNetName": "[concat(parameters('SITE1NamingConvention'),'-VNet')]",
+        "SITE1VNetPrefix": "[concat(parameters('SITE1VNetID'),'.0.0/16')]",    
+        "SITE1VNetSubnet1Name": "[concat(parameters('SITE1NamingConvention'),'-VNet-Subnet1')]", 
+        "SITE1VNetSubnet1Prefix": "[concat(parameters('SITE1VNetID'),'.1.0/24')]",           
+        "SITE1VNetSubnet2Name": "[concat(parameters('SITE1NamingConvention'),'-VNet-Subnet2')]",  
+        "SITE1VNetSubnet2Prefix": "[concat(parameters('SITE1VNetID'),'.2.0/24')]",    
+        "SITE1VNetGatewaysubnetPrefix": "[concat(parameters('SITE1VNetID'),'.0.0/24')]",
+        "SITE1VNetBastionsubnetPrefix": "[concat(parameters('SITE1VNetID'),'.253.0/24')]",
+        "SITE1VNetFirewallsubnetPrefix": "[concat(parameters('SITE1VNetID'),'.254.0/24')]",
+        "SITE1VNGName": "[concat(parameters('SITE1NamingConvention'),'-VNet1-VNG')]",                                  
+        "SITE2VNetName": "[concat(parameters('SITE2NamingConvention'),'-VNet')]",
+        "SITE2VNetPrefix": "[concat(parameters('SITE2VNetID'),'.0.0/16')]",    
+        "SITE2VNetSubnet1Name": "[concat(parameters('SITE2NamingConvention'),'-VNet-Subnet1')]", 
+        "SITE2VNetSubnet1Prefix": "[concat(parameters('SITE2VNetID'),'.1.0/24')]",           
+        "SITE2VNetSubnet2Name": "[concat(parameters('SITE2NamingConvention'),'-VNet-Subnet2')]",  
+        "SITE2VNetSubnet2Prefix": "[concat(parameters('SITE2VNetID'),'.2.0/24')]",    
+        "SITE2VNetGatewaysubnetPrefix": "[concat(parameters('SITE2VNetID'),'.0.0/24')]",    
+        "SITE2VNetBastionsubnetPrefix": "[concat(parameters('SITE2VNetID'),'.253.0/24')]",    
+        "SITE2VNetFirewallsubnetPrefix": "[concat(parameters('SITE2VNetID'),'.254.0/24')]",    
+        "SITE2VNGName": "[concat(parameters('SITE2NamingConvention'),'-VNet1-VNG')]",                                          
+        "ONPREMRouteTableName": "[concat(parameters('ONPREMNamingConvention'),'-RT')]",                                                                
+        "SITE1RouteTableName": "[concat(parameters('SITE1NamingConvention'),'-RT')]",                                                                
+        "SITE2RouteTableName": "[concat(parameters('SITE2NamingConvention'),'-RT')]",                                                                            
+        "NVAVMName": "[concat(parameters('ONPREMNamingConvention'),'-nva-01')]", 
+        "NVA-Outside-IP": "[concat(parameters('ONPREMVNetID'),'.1.',variables('NVAOutLastOctet'))]",
+        "NVA-Inside-IP": "[concat(parameters('ONPREMVNetID'),'.2.',variables('NVAInLastOctet'))]",            
+        "NVAOutLastOctet": "254",        
+        "NVAInLastOctet": "254",
+        "ONPREMVMName": "[concat(parameters('ONPREMNamingConvention'),'-VM-01')]", 
+        "ONPREMVMIP": "[concat(parameters('ONPREMVNetID'),'.2.',variables('ONPREMVMLastOctet'))]",
+        "ONPREMVMLastOctet": "101",        
+        "SITE1VMName": "[concat(parameters('SITE1NamingConvention'),'-VM-01')]", 
+        "SITE1VMIP": "[concat(parameters('SITE1VNetID'),'.1.',variables('SITE1VMLastOctet'))]",
+        "SITE1VMLastOctet": "101",        
+        "SITE2VMName": "[concat(parameters('SITE2NamingConvention'),'-VM-01')]", 
+        "SITE2VMIP": "[concat(parameters('SITE2VNetID'),'.1.',variables('SITE2VMLastOctet'))]",
+        "SITE2VMLastOctet": "101",            
+        "SITE1NextHop": "[concat(parameters('SITE1VNetID'),'.1.1')]",            
+        "SITE2NextHop": "[concat(parameters('SITE2VNetID'),'.1.1')]",                
+        "OutsideSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.1')]",                        
+        "InsideSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.2')]",
+        "NSG1Name": "[concat(parameters('ONPREMNamingConvention'),'-nva-nsg01')]" ,        
+        "BastionHostAPIVersion": "2021-08-01",
+        "DeploymentAPIVersion": "2021-04-01",
+        "ExtensionsAPIVersion": "2022-03-01",
+        "KeyVaultAPIVersion": "2021-11-01-preview",
+        "KeyVaultSecretAPIVersion": "2021-11-01-preview",
+        "NetworkInterfacesAPIVersion": "2021-08-01",
+        "NetworkSecurityGroupAPIVersion": "2022-01-01",                
+        "PublicIPAddressesAPIVersion": "2021-08-01",
+        "ResourceGroupAPIVersion": "2021-04-01",  
+        "RouteTableAPIVersion": "2022-05-01",
+        "SchedulesAPIVersion": "2018-09-15",
+        "VirtualMachinesAPIVersion": "2022-03-01",
+        "VirtualNetworkAPIVersion": "2020-11-01",
+        "VirtualNetworkGatewayAPIVersion": "2022-05-01",        
+        "ExtensionsTypeHandlerVersion": "2.83"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-ONPREM-ResourceGroup",
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/resourcegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ResourceGroupAPIVersion": {
+                        "value": "[variables('ResourceGroupAPIVersion')]"
+                    },
+                    "ResourceGroupName": {
+                        "value": "[parameters('ONPREMRG')]"
+                    }    
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-Site1-ResourceGroup",
+            "location": "[parameters('SITE1Region')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/resourcegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ResourceGroupAPIVersion": {
+                        "value": "[variables('ResourceGroupAPIVersion')]"
+                    },
+                    "ResourceGroupName": {
+                        "value": "[parameters('SITE1RG')]"
+                    }          
+                }
+            }
+        },                        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-Site2-ResourceGroup",
+            "location": "[parameters('SITE2Region')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/resourcegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ResourceGroupAPIVersion": {
+                        "value": "[variables('ResourceGroupAPIVersion')]"
+                    },
+                    "ResourceGroupName": {
+                        "value": "[parameters('SITE2RG')]"
+                    }
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Password-KeyVault-with-Secret",
+            "resourceGroup":  "[parameters('SITE1RG')]",
+            "dependsOn": [
+                "Create-Site1-ResourceGroup"
+            ],             
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultwithsecret.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },
+                    "KeyVaultName": {
+                        "value": "[variables('KeyVaultName')]"
+                    },
+                    "SecretName": {
+                        "value": "[variables('SecretName')]"
+                    },
+                    "SecretValue": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-ONPREM-VirtualNetwork",
+            "resourceGroup":  "[parameters('ONPREMRG')]",
+            "dependsOn": [
+                "Create-ONPREM-ResourceGroup"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('ONPREMVNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('ONPREMVNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('ONPREMVNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('ONPREMVNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('ONPREMVNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('ONPREMVNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('ONPREMVNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('ONPREMVNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('ONPREMVNetFirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BastionHost-01",
+            "resourceGroup":  "[parameters('SITE1RG')]",            
+            "dependsOn": [
+                "Deploy-Site1-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/bastionhost.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "BastionHostAPIVersion": {
+                        "value": "[variables('BastionHostAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "publicIPAddressName": {
+                        "value": "[concat(variables('SITE1VNetName'),'-Bastion-pip')]"
+                    },
+                    "AllocationMethod": {
+                        "value": "Static"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE1VNetName')]"
+                    },
+                    "subnetName": {
+                        "value": "AzureBastionSubnet"
+                    }
+                }
+            }
+        },                                                    
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site1-VirtualNetwork",
+            "resourceGroup":  "[parameters('SITE1RG')]",
+            "dependsOn": [
+                "Create-Site1-ResourceGroup"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE1VNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE1VNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('SITE1VNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('SITE1VNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('SITE1VNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('SITE1VNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('SITE1VNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('SITE1VNetFirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site1-VirtualNetworkGateway",
+            "resourceGroup":  "[parameters('SITE1RG')]",            
+            "dependsOn": [
+                "Deploy-Site1-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetworkgateway.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkGatewayAPIVersion": {
+                        "value": "[variables('VirtualNetworkGatewayAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "VNGName": {
+                        "value": "[variables('SITE1VNGName')]"
+                    },
+                    "VNGSku": {
+                        "value": "[parameters('VNGSku')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('SITE1VNetName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site2-VirtualNetwork",
+            "resourceGroup":  "[parameters('SITE2RG')]",
+            "dependsOn": [
+                "Create-Site2-ResourceGroup"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE2VNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE2VNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('SITE2VNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('SITE2VNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('SITE2VNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('SITE2VNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('SITE2VNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('SITE2VNetFirewallsubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site2-VirtualNetworkGateway",
+            "resourceGroup":  "[parameters('SITE2RG')]",            
+            "dependsOn": [
+                "Deploy-Site2-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetworkgateway.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkGatewayAPIVersion": {
+                        "value": "[variables('VirtualNetworkGatewayAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "VNGName": {
+                        "value": "[variables('SITE2VNGName')]"
+                    },
+                    "VNGSku": {
+                        "value": "[parameters('VNGSku')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('SITE2VNetName')]"
+                    }
+                }
+            }
+        },                                                   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Windows-RRAS-Network-Virtual-Appliance",
+            "resourceGroup":  "[parameters('ONPREMRG')]",         
+            "dependsOn": [
+                "Deploy-ONPREM-VirtualNetwork"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/2nics-1disk-nva.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "OutsideIP": {
+                        "value": "[variables('NVA-Outside-IP')]"
+                    },
+                    "InsideIP": {
+                        "value": "[variables('NVA-Inside-IP')]"
+                    },              
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('NVAVMOSSku')]"
+                    },                
+                    "OSVersion": {
+                        "value": "[parameters('NVAVMOSVersion')]"
+                    },              
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },            
+                    "VMSize": {
+                        "value": "[parameters('NVAVMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('ONPREMVNetName')]"
+                    },            
+                    "subnet1Name": {
+                        "value": "[variables('ONPREMVNetSubnet1Name')]"
+                    },      
+                    "subnet2Name": {
+                        "value": "[variables('ONPREMVNetSubnet2Name')]"
+                    },                                                                                                                                 
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },  
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },                                                       
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },              
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }                                                                                                                                                                                                                                                                                                                          
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-and-Configure-RRAS",
+            "resourceGroup":  "[parameters('ONPREMRG')]",
+            "dependsOn": [
+                "Deploy-Windows-RRAS-Network-Virtual-Appliance"             
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/rrashair.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "Site1NextHop": {
+                        "value": "[variables('Site1NextHop')]"
+                    },              
+                    "Site2NextHop": {
+                        "value": "[variables('Site2NextHop')]"
+                    },                                                     
+                    "OutsideSubnetPrefix": {
+                        "value": "[variables('OutsideSubnetPrefix')]"
+                    },                                             
+                    "InsideSubnetPrefix": {
+                        "value": "[variables('InsideSubnetPrefix')]"
+                    },                              
+                    "Site1VNet": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },          
+                    "Site2VNet": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },                                                                                                                               
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-Windows-RRAS-Server_01",
+            "resourceGroup":  "[parameters('ONPREMRG')]",            
+            "dependsOn": [
+                "Install-and-Configure-RRAS"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-Routing-Only",
+            "resourceGroup":  "[parameters('ONPREMRG')]",            
+            "dependsOn": [
+                "Restart-Windows-RRAS-Server_01"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/routingonly.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }, 
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                           
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-NVA-NetworksecurityGroup-01",
+            "dependsOn": [
+                "Configure-OCSP"      
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vngnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },                    
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    },                                                                                                      
+                    "VPNOutsideIP": {
+                        "value": "[variables('NVA-Outside-IP')]"
+                    }
+                }
+            }
+        },                                   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-OutsideSubnet",
+            "dependsOn": [
+                "Deploy-NVA-NetworksecurityGroup-01"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('ONPREMVNetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('ONPREMVNetSubnet1Name')]"
+                    },                                                                                                            
+                    "subnetPrefix": {
+                        "value": "[variables('ONPREMVNetSubnet1Prefix')]"
+                    }, 
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    }                                                                                                                                                                                                                             
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-PublicIP-RRAS-Network-Virtual-Appliance",
+            "resourceGroup":  "[parameters('ONPREMRG')]",         
+            "dependsOn": [
+                "Associate-NSG-with-OutsideSubnet"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/publicipaddress.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },                       
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },                   
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "NicName": {
+                        "value": "[concat(variables('NVAVMName'),'-OutsideNic1')]"
+                    },                    
+                    "PrivateIP": {
+                        "value": "[variables('NVA-Outside-IP')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('ONPREMVNetName')]"
+                    },            
+                    "subnetName": {
+                        "value": "[variables('ONPREMVNetSubnet1Name')]"
+                    }                                                                                                                                                                                                                                                                                                                
+                }
+            }
+        },
+
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-ONPREM-RouteTable",
+            "resourceGroup":  "[parameters('ONPREMRG')]",
+            "dependsOn": [
+                "Deploy-ONPREM-VirtualNetwork"          
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/ONPREMspokeroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RouteTableAPIVersion": {
+                        "value": "[variables('RouteTableAPIVersion')]"
+                    },                    
+                    "Name": {
+                        "value": "[variables('ONPREMRouteTableName')]"
+                    },
+                    "Site1Prefix": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },           
+                    "Site2Prefix": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },                         
+                    "RemoteGatewayIP": {
+                        "value": "[variables('NVA-Inside-IP')]"
+                    }
+                }
+            }
+        }, 
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-ONPREM-VirtualNetwork-RouteTable",
+            "resourceGroup":  "[parameters('ONPREMRG')]",               
+            "dependsOn": [
+                "Create-ONPREM-RouteTable"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updateONPREMvnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('ONPREMVNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('ONPREMVNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('ONPREMVNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('ONPREMVNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('ONPREMVNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('ONPREMVNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('ONPREMVNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('ONPREMVNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('ONPREMVNetFirewallsubnetPrefix')]"
+                    },                         
+                    "RouteTableName": {
+                        "value": "[variables('ONPREMRouteTableName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-Site1-VirtualNetwork-RouteTable",
+            "resourceGroup":  "[parameters('SITE1RG')]",               
+            "dependsOn": [
+            "Create-Site1-RouteTable"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatenonONPREMvnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE1VNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE1VNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('SITE1VNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('SITE1VNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('SITE1VNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('SITE1VNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('SITE1VNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('SITE1VNetFirewallsubnetPrefix')]"
+                    },
+                    "RouteTableName": {
+                        "value": "[variables('SITE1RouteTableName')]"
+                    }                                                                                                                                                                                                                              
+                }
+            }
+        },   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-Site2-VirtualNetwork-RouteTable",
+            "resourceGroup":  "[parameters('SITE2RG')]",               
+            "dependsOn": [
+                "Create-Site2-RouteTable"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatenonONPREMvnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE2VNetName')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE2VNetsubnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('SITE2VNetsubnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('SITE2VNetsubnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('SITE2VNetsubnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('SITE2VNetGatewaysubnetPrefix')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('SITE2VNetBastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('SITE2VNetFirewallsubnetPrefix')]"
+                    },
+                    "RouteTableName": {
+                        "value": "[variables('SITE2RouteTableName')]"
+                    }
+                }
+            }
+        }
+    ]
+}
