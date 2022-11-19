@@ -1,5 +1,5 @@
 # Azure Virtual Network Gateway Hairpin
-<img src="./x_Images/AzureNetworkVirtualApplianceRouting.svg" height="600" width="800"/>
+<img src="./x_Images/AzureVirtualNetworkGatewayHairpin.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
