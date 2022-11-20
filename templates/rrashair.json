@@ -71,7 +71,7 @@
     },
     "variables": {
         "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/RRASHAIR.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "RRASHAIRVPN.ps1\\RRASHAIR"
+        "ConfigurationFunction": "RRASHAIR.ps1\\RRASHAIR"
     },
     "resources": [
         {
