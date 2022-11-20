@@ -759,6 +759,39 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Get-Site1-VirtualNetworkGateway-PublicIP",
+            "resourceGroup":  "[parameters('SITE1RG')]",            
+            "dependsOn": [
+                "Deploy-Site1-VirtualNetworkGateway"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetworkgatewaypip.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkGatewayAPIVersion": {
+                        "value": "[variables('VirtualNetworkGatewayAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "VNGName": {
+                        "value": "[variables('SITE1VNGName')]"
+                    },
+                    "VNGSku": {
+                        "value": "[parameters('VNGSku')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('SITE1VNetName')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Site2-VirtualNetwork",
             "resourceGroup":  "[parameters('SITE2RG')]",
             "dependsOn": [
@@ -837,6 +870,39 @@
                 }
             }
         },                                                   
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Get-Site2-VirtualNetworkGateway-PublicIP",
+            "resourceGroup":  "[parameters('SITE2RG')]",            
+            "dependsOn": [
+                "Deploy-Site2-VirtualNetworkGateway"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetworkgatewaypip.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkGatewayAPIVersion": {
+                        "value": "[variables('VirtualNetworkGatewayAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "VNGName": {
+                        "value": "[variables('SITE2VNGName')]"
+                    },
+                    "VNGSku": {
+                        "value": "[parameters('VNGSku')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('SITE2VNetName')]"
+                    }
+                }
+            }
+        },                                                           
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
