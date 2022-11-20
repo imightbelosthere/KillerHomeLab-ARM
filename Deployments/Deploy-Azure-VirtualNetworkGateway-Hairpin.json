@@ -409,7 +409,7 @@
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.gitusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -1048,6 +1048,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-NVA-NetworksecurityGroup-01",
+            "resourceGroup":  "[parameters('ONPREMRG')]",              
             "dependsOn": [
                 "Configure-Routing-Only"      
             ],      
@@ -1074,6 +1075,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Associate-NSG-with-OutsideSubnet",
+            "resourceGroup":  "[parameters('ONPREMRG')]",              
             "dependsOn": [
                 "Deploy-NVA-NetworksecurityGroup-01"
             ],            
