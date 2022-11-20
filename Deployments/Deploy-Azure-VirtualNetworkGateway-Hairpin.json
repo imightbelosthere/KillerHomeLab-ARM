@@ -1049,7 +1049,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-NVA-NetworksecurityGroup-01",
             "dependsOn": [
-                "Configure-OCSP"      
+                "Configure-Routing-Only"      
             ],      
             "properties": {
                 "mode": "Incremental",
