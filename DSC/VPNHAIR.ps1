@@ -50,10 +50,10 @@
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "$VPNINTSITE1VALUE = Get-VpnS2SInterface -Name $using:Site1Name -ErrorAction 0"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "$VPNINTSITE2VALUE = Get-VpnS2SInterface -Name $using:Site2Name -ErrorAction 0"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '}'
-                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'IF ($VPNINTSITE1VALUE -eq $null){'
+                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'IF ($VPNINTSITE1 -eq $null){'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "Add-VpnS2SInterface -Protocol IKEv2 -AuthenticationMethod PSKOnly -NumberOfTries 3 -ResponderAuthenticationMethod PSKOnly -Name $using:Site1Name -Destination $using:Site1RemoteGatewayIP -IPv4Subnet $using:Site1IPv4Subnet:100 -SharedSecret $using:SharedKey"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '}'
-                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'IF ($VPNINTSITE2VALUE -eq $null){'
+                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'IF ($VPNINTSITE2 -eq $null){'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "Add-VpnS2SInterface -Protocol IKEv2 -AuthenticationMethod PSKOnly -NumberOfTries 3 -ResponderAuthenticationMethod PSKOnly -Name $using:Site2Name -Destination $using:Site2RemoteGatewayIP -IPv4Subnet $using:Site2IPv4Subnet:100 -SharedSecret $using:SharedKey"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '}'
 
