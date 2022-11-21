@@ -31,9 +31,9 @@
             SetScript =
             {
                 # Create ConfigureRRAS Script
-                $FalseValue = '$False'
-                $ServiceValue = '$Service'
+                $RemoteAccessValue = '$RemoteAccess'
                 $InstallStatusValue = '$InstallStatus'
+                $ServiceValue = '$Service'
                 $VPNINTSITE1VALUE = '$VPNINTSITE1'
                 $VPNINTSITE2VALUE = '$VPNINTSITE2'
                 Set-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$RemoteAccess = Get-RemoteAccess'
