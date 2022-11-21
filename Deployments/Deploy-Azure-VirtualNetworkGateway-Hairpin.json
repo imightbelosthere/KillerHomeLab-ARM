@@ -227,12 +227,18 @@
                 "description": "The name of the Administrator of the new VM and Domain"
             }
         },
+        "SharedKey": {
+            "type": "string",
+            "metadata": {
+                "description": "Preshared Key for VPN Connection"
+            }
+        },
         "adminPassword": {
             "type": "securestring",
             "metadata": {
                 "description": "The password for the Administrator account of the new VM and Domain"
             }
-        },
+        },        
         "AzureUserObjectID": {
             "type": "string",
             "defaultValue": "",
@@ -1113,10 +1119,70 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-RRAS-Virtual-Private-Network",
+            "resourceGroup":  "[parameters('ONPREMRG')]",            
+            "dependsOn": [
+                "Configure-Routing-Only"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vpnhair.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },                    
+                    "computerName": {
+                        "value": "[variables('NVAVMName')]"
+                    },
+                    "Site1Name": {
+                        "value": "[concat(parameters('SITE1NamingConvention'),'-Azure-Connection')]"
+                    },                    
+                    "Site2Name": {
+                        "value": "[concat(parameters('SITE2NamingConvention'),'-Azure-Connection')]"
+                    },                                        
+                    "Site1RemoteGatewayIP": {
+                        "value": "[reference('Get-Site1-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                    },                                        
+                    "Site2RemoteGatewayIP": {
+                        "value": "[reference('Get-Site2-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                    },                                 
+                    "Site1IPv4Subnet": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },                                         
+                    "Site2IPv4Subnet": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },     
+                    "SharedKey": {
+                        "value": "[parameters('SharedKey')]"
+                    },                                                                                                                               
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },                                                                                                            
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    }, 
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },                                                                                                            
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }                                                                                                                                                                                                                                                                                                           
+                }
+            }
+        },               
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-NVA-NetworksecurityGroup-01",
             "resourceGroup":  "[parameters('ONPREMRG')]",              
             "dependsOn": [
-                "Configure-Routing-Only"      
+                "Configure-RRAS-Virtual-Private-Network"      
             ],      
             "properties": {
                 "mode": "Incremental",
