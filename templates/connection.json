@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ConnectionAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Local Network API Version"
+            }
+        },        
+        "ConnectionName": {
+            "type": "string",
+            "metadata": {
+                "description": "Connection Name"
+              }
+        },
+        "VNGName": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network Gateway Name"
+              }
+        },
+        "LNGName": {
+            "type": "string",
+            "metadata": {
+                "description": "Local Network Gateway Name"
+              }
+        },                
+        "SharedKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Shared Key for Connection"
+            }
+        }      
+    },  
+    "variables": {
+        "virtualNetworkGatewayId1": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworkGateways', parameters('VNGName'))]",
+        "localNetworkGatewayId2": "[resourceId(resourceGroup().name, 'Microsoft.Network/localNetworkGateways', parameters('LNGName'))]"        
+    },         
+    "resources": [
+        {
+            "type": "Microsoft.Network/connections",
+            "apiVersion": "[parameters('ConnectionAPIVersion')]",
+            "name": "[parameters('connectionName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+                "connectionType": "IPSec",
+                "virtualNetworkGateway1": {
+                    "id": "[variables('virtualNetworkGatewayId1')]"
+                },
+                "connectionProtocol": "IKEv2",
+                "sharedKey": "[parameters('sharedKey')]",
+                "localNetworkGateway2": {
+                    "id": "[variables('localNetworkGatewayId2')]"
+                }
+            }
+        }
+
+    ]
+}
