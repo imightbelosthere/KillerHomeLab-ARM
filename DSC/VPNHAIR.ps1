@@ -33,20 +33,18 @@
                 # Create ConfigureRRAS Script
                 $RemoteAccessValue = '$RemoteAccess'
                 $InstallStatusValue = '$InstallStatus'
-                $ServiceValue = '$Service'
                 $VPNINTSITE1VALUE = '$VPNINTSITE1'
                 $VPNINTSITE2VALUE = '$VPNINTSITE2'
                 $Site1IPv4 = "$using:Site1IPv4Subnet"+':100'
                 $Site2IPv4 = "$using:Site2IPv4Subnet"+':100'
                 Set-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$RemoteAccess = Get-RemoteAccess'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "IF ($RemoteAccessValue.VpnS2SStatus -ne 'Installed'){"
+                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'Restart-Service -Name RemoteAccess -ErrorAction 0'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'Install-RemoteAccess -VpnType VpnS2S'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'Import-Module RemoteAccess'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$RemoteAccess = Get-RemoteAccess'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$InstallStatus = $RemoteAccess.VpnS2SStatus'
-                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "while (($ServiceValue.Status -ne 'Running')){sleep 10}"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "while (($InstallStatusValue -ne 'Installed')){sleep 10}"
-                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'sleep 30'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '}'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$VPNINT = Get-VpnS2SInterface'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'IF ($VPNINT -eq $null){'
