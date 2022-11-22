@@ -41,6 +41,7 @@
                 Set-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$RemoteAccess = Get-RemoteAccess'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "IF ($RemoteAccessValue.VpnS2SStatus -ne 'Installed'){"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'Install-RemoteAccess -VpnType VpnS2S'
+                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'Import-Module RemoteAccess'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$RemoteAccess = Get-RemoteAccess'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$InstallStatus = $RemoteAccess.VpnS2SStatus'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "while (($ServiceValue.Status -ne 'Running')){sleep 10}"
