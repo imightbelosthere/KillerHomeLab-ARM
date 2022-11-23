@@ -439,6 +439,8 @@
         "ONPREMVNetGatewaySubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.0.0/24')]",
         "ONPREMVNetBastionSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.253.0/24')]",
         "ONPREMVNetFirewallSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.254.0/24')]",
+        "SITE1ConnectionName": "[concat(variables('SITE1VNGName'), '-to-',variables('SITE1LNGName'))]",                                          
+        "SITE1LNGName": "[concat(parameters('SITE1NamingConvention'),'-OnPrem-LNG')]",                                          
         "SITE1VNetName": "[concat(parameters('SITE1NamingConvention'),'-VNet')]",
         "SITE1VNetPrefix": "[concat(parameters('SITE1VNetID'),'.0.0/16')]",    
         "SITE1VNetSubnet1Name": "[concat(parameters('SITE1NamingConvention'),'-VNet-Subnet1')]", 
@@ -448,7 +450,9 @@
         "SITE1VNetGatewaysubnetPrefix": "[concat(parameters('SITE1VNetID'),'.0.0/24')]",
         "SITE1VNetBastionsubnetPrefix": "[concat(parameters('SITE1VNetID'),'.253.0/24')]",
         "SITE1VNetFirewallsubnetPrefix": "[concat(parameters('SITE1VNetID'),'.254.0/24')]",
-        "SITE1VNGName": "[concat(parameters('SITE1NamingConvention'),'-VNet1-VNG')]",                                  
+        "SITE1VNGName": "[concat(parameters('SITE1NamingConvention'),'-VNet1-VNG')]",
+        "SITE2ConnectionName": "[concat(variables('SITE2VNGName'), '-to-',variables('SITE2LNGName'))]",                                          
+        "SITE2LNGName": "[concat(parameters('SITE2NamingConvention'),'-OnPrem-LNG')]",                                                                                    
         "SITE2VNetName": "[concat(parameters('SITE2NamingConvention'),'-VNet')]",
         "SITE2VNetPrefix": "[concat(parameters('SITE2VNetID'),'.0.0/16')]",    
         "SITE2VNetSubnet1Name": "[concat(parameters('SITE2NamingConvention'),'-VNet-Subnet1')]", 
@@ -1276,6 +1280,138 @@
                     }                                                                                                                                                                                                                                                                                                                
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site1-LocalNetworkGateway",
+            "resourceGroup":  "[parameters('SITE1RG')]",         
+            "dependsOn": [
+                "Add-PublicIP-RRAS-Network-Virtual-Appliance"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/localnetworkgateway.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "LocalNetworkGatewayAPIVersion": {
+                        "value": "[variables('LocalNetworkGatewayAPIVersion')]"
+                    },                       
+                    "LNGName": {
+                        "value": "[variables('SITE1LNGName')]"
+                    },                   
+                    "SubnetPrefix1": {
+                        "value": "[variables('ONPREMVNetPrefix')]"
+                    },
+                    "SubnetPrefix2": {
+                        "value": "[variables('SITE2VNetPrefix')]"
+                    },                    
+                    "RemoteGatewayIP": {
+                        "value": "[reference('Add-PublicIP-RRAS-Network-Virtual-Appliance').outputs.PublicIP.value]"
+                    }                                                                                                                                                                                                                                                                                                            
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site2-LocalNetworkGateway",
+            "resourceGroup":  "[parameters('SITE2RG')]",         
+            "dependsOn": [
+                "Add-PublicIP-RRAS-Network-Virtual-Appliance"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/localnetworkgateway.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "LocalNetworkGatewayAPIVersion": {
+                        "value": "[variables('LocalNetworkGatewayAPIVersion')]"
+                    },                       
+                    "LNGName": {
+                        "value": "[variables('SITE2LNGName')]"
+                    },                   
+                    "SubnetPrefix1": {
+                        "value": "[variables('ONPREMVNetPrefix')]"
+                    },
+                    "SubnetPrefix2": {
+                        "value": "[variables('SITE1VNetPrefix')]"
+                    },                    
+                    "RemoteGatewayIP": {
+                        "value": "[reference('Add-PublicIP-RRAS-Network-Virtual-Appliance').outputs.PublicIP.value]"
+                    }                                                                                                                                                                                                                                                                                                            
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site1-Connection",
+            "resourceGroup":  "[parameters('SITE1RG')]",         
+            "dependsOn": [
+                "Deploy-Site1-LocalNetworkGateway"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connection.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ConnectionAPIVersion": {
+                        "value": "[variables('ConnectionAPIVersion')]"
+                    },                       
+                    "ConnectionName": {
+                        "value": "[variables('SITE1ConnectionName')]"
+                    },                   
+                    "VNGName": {
+                        "value": "[variables('SITE1VNGName')]"
+                    },
+                    "LNGName": {
+                        "value": "[variables('SITE1LNGName')]"
+                    },                    
+                    "SharedKey": {
+                        "value": "[parameters('SharedKey')]"
+                    }                                                                                                                                                                                                                                                                                                            
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site2-Connection",
+            "resourceGroup":  "[parameters('SITE2RG')]",         
+            "dependsOn": [
+                "Deploy-Site2-LocalNetworkGateway"
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/connection.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ConnectionAPIVersion": {
+                        "value": "[variables('ConnectionAPIVersion')]"
+                    },                       
+                    "ConnectionName": {
+                        "value": "[variables('SITE2ConnectionName')]"
+                    },                   
+                    "VNGName": {
+                        "value": "[variables('SITE2VNGName')]"
+                    },
+                    "LNGName": {
+                        "value": "[variables('SITE2LNGName')]"
+                    },                    
+                    "SharedKey": {
+                        "value": "[parameters('SharedKey')]"
+                    }                                                                                                                                                                                                                                                                                                            
+                }
+            }
+        }                        
     ]
 }
