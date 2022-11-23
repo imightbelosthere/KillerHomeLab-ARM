@@ -45,7 +45,7 @@
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$RemoteAccess = Get-RemoteAccess'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$InstallStatus = $RemoteAccess.VpnS2SStatus'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "while (($InstallStatusValue -ne 'Installed')){sleep 10}"
-                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '{'
+                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '}'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "$VPNINTSITE1VALUE = Get-VpnS2SInterface -Name $using:Site1Name -ErrorAction 0"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "$VPNINTSITE2VALUE = Get-VpnS2SInterface -Name $using:Site2Name -ErrorAction 0"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'IF ($VPNINTSITE1 -eq $null){'
