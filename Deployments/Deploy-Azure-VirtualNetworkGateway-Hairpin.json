@@ -654,6 +654,81 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-ONPREM-VirtualMachine",
+            "resourceGroup":   "[parameters('ONPREMRG')]",                              
+            "dependsOn": [
+                "Deploy-ONPREM-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('ONPREMVMName')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('ONPREMVMIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('ONPREMVMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('ONPREMVMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('ONPREMVMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('ONPREMVNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('ONPREMVNetSubnet2Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-BastionHost-01",
             "resourceGroup":  "[parameters('SITE1RG')]",            
             "dependsOn": [
@@ -734,7 +809,82 @@
                     }
                 }
             }
-        }, 
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site1-VirtualMachine",
+            "resourceGroup":   "[parameters('SITE1RG')]",                              
+            "dependsOn": [
+                "Deploy-Site1-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('site1vmname')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('site1vmIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('SITE1VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('SITE1VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('SITE1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE1VNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE1VNetSubnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
@@ -849,6 +999,81 @@
                 }
             }
         },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Site2-VirtualMachine",
+            "resourceGroup":   "[parameters('SITE2RG')]",                              
+            "dependsOn": [
+                "Deploy-Site2-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('site2vmname')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('site2vmIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('SITE2VMOSSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('SITE2VMOSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('SITE2VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('SITE2VNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('SITE2VNetSubnet1Name')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },        
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
