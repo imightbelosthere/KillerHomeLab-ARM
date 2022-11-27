@@ -14,10 +14,22 @@
                 "description": "Network Security Group Name"
             }
         },
+        "SITE1VNGPublicIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Site1 Virtual Network Gateway Public IP"
+            }
+        },        
+        "SITE2VNGPublicIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Site2 Virtual Network Gateway Public IP"
+            }
+        },                
         "VPNOutsideIP": {
             "type": "string",
             "metadata": {
-                "description": "OCSP Private IP Address"
+                "description": "VPN Outside Private IP"
             }
         }
     },
@@ -37,6 +49,10 @@
                             "sourcePortRange": "*",
                             "destinationPortRange": "500",
                             "sourceAddressPrefix": "*",
+                            "sourceAddressPrefixes": [ 
+                                "[parameters('SITE1VNGPublicIP')]",
+                                "[parameters('SITE2VNGPublicIP')]"
+                            ],
                             "destinationAddressPrefix": "[parameters('VPNOutsideIP')]",
                             "access": "Allow",
                             "priority": 1000,
@@ -50,7 +66,10 @@
                             "protocol": "Udp",
                             "sourcePortRange": "*",
                             "destinationPortRange": "4500",
-                            "sourceAddressPrefix": "*",
+                            "sourceAddressPrefixes": [ 
+                                "[parameters('SITE1VNGPublicIP')]",
+                                "[parameters('SITE2VNGPublicIP')]"
+                            ],
                             "destinationAddressPrefix": "[parameters('VPNOutsideIP')]",
                             "access": "Allow",
                             "priority": 2000,

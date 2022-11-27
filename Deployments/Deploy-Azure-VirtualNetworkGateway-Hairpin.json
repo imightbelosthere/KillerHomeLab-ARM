@@ -1430,7 +1430,13 @@
                     },                    
                     "NetworkSecurityGroupname": {
                         "value": "[variables('NSG1Name')]"
-                    },                                                                                                      
+                    },
+                    "SITE1VNGPublicIP": {
+                        "value": "[reference('Get-Site1-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                    },
+                    "SITE2VNGPublicIP": {
+                        "value": "[reference('Get-Site2-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                    },                    
                     "VPNOutsideIP": {
                         "value": "[variables('NVA-Outside-IP')]"
                     }
