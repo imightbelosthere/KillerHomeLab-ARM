@@ -67,9 +67,11 @@
 
                 # Create Scheduled Task
                 $scheduledtask = Get-ScheduledTask "Configure RRAS" -ErrorAction 0
-                $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\SetupRRAS.ps1' -WorkingDirectory 'C:\ConfigureRRAS'
-                Register-ScheduledTask -Action $action -TaskName "Configure RRAS" -Description "Configure RRAS" -User $Username -Password $Password
-                Start-ScheduledTask "Configure RRAS"
+                IF ($scheduledtask -eq $null){
+                    $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\SetupRRAS.ps1' -WorkingDirectory 'C:\ConfigureRRAS'
+                    Register-ScheduledTask -Action $action -TaskName "Configure RRAS" -Description "Configure RRAS" -User $Username -Password $Password
+                    Start-ScheduledTask "Configure RRAS"
+                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
