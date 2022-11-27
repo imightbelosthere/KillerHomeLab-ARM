@@ -1388,7 +1388,10 @@
                     },                                         
                     "Site2IPv4Subnet": {
                         "value": "[variables('SITE2VNetPrefix')]"
-                    },     
+                    }, 
+                    "OutsideSubnetPrefix": {
+                        "value": "[variables('OutsideSubnetPrefix')]"
+                    },                          
                     "SharedKey": {
                         "value": "[parameters('SharedKey')]"
                     },                                                                                                                               

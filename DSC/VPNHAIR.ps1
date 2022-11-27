@@ -9,11 +9,10 @@
         [String]$Site2RemoteGatewayIP,
         [String]$Site1IPv4Subnet,
         [String]$Site2IPv4Subnet,
+        [String]$OutsideSubnetPrefix,
         [String]$SharedKey,
         [System.Management.Automation.PSCredential]$Admincreds                                  
     )
-
-    Import-DscResource -Module ComputerManagementDsc # Task Scheduler
 
     [System.Management.Automation.PSCredential ]$LocalCreds = New-Object System.Management.Automation.PSCredential ("${ComputerName}\$($AdminCreds.UserName)", $AdminCreds.Password)
 
@@ -38,6 +37,12 @@
                 $Site1IPv4 = "$using:Site1IPv4Subnet"+':100'
                 $Site2IPv4 = "$using:Site2IPv4Subnet"+':100'
                 $NULLVALUE = '$null'
+
+                # Create Credentials
+                $Load = "$using:LocalCreds"
+                $Username = $LocalCreds.GetNetworkCredential().Username
+                $Password = $LocalCreds.GetNetworkCredential().Password
+
                 Set-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '$RemoteAccess = Get-RemoteAccess'
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "IF ($RemoteAccessValue.VpnS2SStatus -ne 'Installed'){"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value 'Restart-Service -Name RemoteAccess -ErrorAction 0'
@@ -60,22 +65,28 @@
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "while (($VPNINTSITE2VALUE -eq $NULLVALUE)){sleep 10}"
                 Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value '}'
 
+                # Create Scheduled Task
+                $scheduledtask = Get-ScheduledTask "Configure RRAS" -ErrorAction 0
+                $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\SetupRRAS.ps1' -WorkingDirectory 'C:\ConfigureRRAS'
+                Register-ScheduledTask -Action $action -TaskName "Configure RRAS" -Description "Configure RRAS" -User $Username -Password $Password
+                Start-ScheduledTask "Configure RRAS"
             }
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[File]ConfigureRRASDirectory'
         }
 
-        ScheduledTask CreateConfigureRRAS
+        Script ConfigureNAT
         {
-            TaskName            = 'Configure RRAS'
-            ActionExecutable    = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
-            ScheduleType        = 'Once'
-            StartTime           = (Get-Date).AddMinutes(1)
-            ActionArguments     = 'C:\ConfigureRRAS\SetupRRAS.ps1'
-            Enable              = $true
-            ExecuteAsCredential = $LocalCreds
-            LogonType           = 'Password'
+            SetScript =
+            {
+                $OutsideAdapter = Get-NetIPAddress | Where-Object {$_.IPAddress -like "$using:OutsideSubnetPrefix"+"*"}
+                netsh routing ip nat install
+                netsh routing ip nat add interface $OutsideAdapter.InterfaceAlias
+                netsh routing ip nat set interface $OutsideAdapter.InterfaceAlias mode=full
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
             DependsOn = '[Script]ConfigureRRAS'
         }
     }
