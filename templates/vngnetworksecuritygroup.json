@@ -48,7 +48,6 @@
                             "protocol": "Udp",
                             "sourcePortRange": "*",
                             "destinationPortRange": "500",
-                            "sourceAddressPrefix": "*",
                             "sourceAddressPrefixes": [ 
                                 "[parameters('SITE1VNGPublicIP')]",
                                 "[parameters('SITE2VNGPublicIP')]"
