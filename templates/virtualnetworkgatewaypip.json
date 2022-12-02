@@ -1,0 +1,89 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualNetworkGatewayAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        }, 
+        "PublicIPAddressesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "PublicIPAddresses API Version"
+            }
+        },                 
+        "VNGName": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network Gateway Name"
+              }
+        },
+        "VNGSku": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network Gateway Sku"
+              }
+        },        
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET where VPN Gateway will be connected"
+            }
+        }       
+    },
+    "variables": {
+        "VPNSubnetName": "GatewaySubnet",
+        "PublicIPName": "[concat(parameters('VNGName'),'-pip')]",        
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), variables('VPNSubnetName'))]"
+    },    
+    "resources": [
+        {
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('PublicIPAddressesAPIVersion')]",
+            "name": "[variables('PublicIPName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic"
+            }
+        },        
+        {
+            "type": "Microsoft.Network/virtualNetworkGateways",
+            "apiVersion": "[parameters('VirtualNetworkGatewayAPIVersion')]",
+            "name": "[parameters('VNGName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('PublicIPName'))]"
+            ],
+            "properties": {
+                "gatewayType": "VPN",
+                "ipConfigurations": [
+                    {
+                        "name": "default",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('subnetId')]"
+                            },
+                            "publicIpAddress": {
+                                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIPAddresses', variables('PublicIPName'))]"
+                            }
+                        }
+                    }
+                ],
+                "vpnType": "RouteBased",
+                "sku": {
+                    "name": "[parameters('VNGSku')]",
+                    "tier": "[parameters('VNGSku')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "PublicIP": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/publicIPAddresses', variables('PublicIPName'))).ipAddress]"
+        }
+    }
+}

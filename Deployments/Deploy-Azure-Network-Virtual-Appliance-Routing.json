@@ -1394,9 +1394,15 @@
                     "Name": {
                         "value": "[variables('HUBRouteTableName')]"
                     },
+                    "Site1Name": {
+                        "value": "Site1"
+                    },                    
                     "Site1Prefix": {
                         "value": "[variables('SITE1VNetPrefix')]"
                     },           
+                    "Site2Name": {
+                        "value": "Site2"
+                    },                                             
                     "Site2Prefix": {
                         "value": "[variables('SITE2VNetPrefix')]"
                     },                         
@@ -1427,9 +1433,15 @@
                     "Name": {
                         "value": "[variables('SPKRouteTableName')]"
                     },
+                    "Site1Name": {
+                        "value": "Site1"
+                    },                     
                     "Site1Prefix": {
                         "value": "[variables('SITE1VNetPrefix')]"
-                    },           
+                    },    
+                    "Site2Name": {
+                        "value": "Site2"
+                    },                            
                     "Site2Prefix": {
                         "value": "[variables('SITE2VNetPrefix')]"
                     },                         

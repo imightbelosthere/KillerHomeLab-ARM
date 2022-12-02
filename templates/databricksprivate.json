@@ -1,0 +1,77 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DatabricksWorkspaceAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks Workspace API Version"
+            }
+        },
+        "DatabricksWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks Workspace Name"
+            }
+        },
+        "DatabricksWorkspaceTier": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks Workspace Tier"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks Virtual Network"
+            }
+        },
+        "DatabricksPrivateSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks Private Subnet Name"
+            }
+        },
+        "DatabricksPublicSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks Public Subnet Name"
+            }
+        }
+    },
+    "variables": {
+        "VNetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+        "managedResourceGroupName": "[concat('databricks-rg-', parameters('DatabricksWorkspaceName'), '-', uniqueString(parameters('DatabricksWorkspaceName'), resourceGroup().id))]",
+        "managedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Databricks/workspaces",
+            "name": "[parameters('DatabricksWorkspaceName')]",
+            "apiVersion": "[parameters('DatabricksWorkspaceAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('DatabricksWorkspaceTier')]"
+            },
+            "properties": {
+                "ManagedResourceGroupId": "[variables('managedResourceGroupId')]",
+                "parameters": {
+                    "enableNoPublicIp": {
+                        "value": true
+                    },
+                    "customVirtualNetworkId": {
+                        "value": "[variables('vnetId')]"
+                    },
+                    "customPublicSubnetName": {
+                        "value": "[parameters('DatabricksPublicSubnetName')]"
+                    },
+                    "customPrivateSubnetName": {
+                        "value": "[parameters('DatabricksPrivateSubnetName')]"
+                    }
+                },
+                "publicNetworkAccess": "Disabled",
+                "requiredNsgRules": "NoAzureDatabricksRules"
+            }
+        }
+    ]
+}

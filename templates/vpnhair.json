@@ -1,0 +1,138 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ExtensionsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "ExtensionsTypeHandlerVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Extension Type Handler Version"
+            }
+        },
+        "computerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer Name"
+            }
+        },
+        "Site1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Site1 Name"
+            }
+        },
+        "Site2Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Site2 Name"
+            }
+        }, 
+        "Site1RemoteGatewayIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Site1 RemoteGateway IP"
+            }
+        },                
+        "Site2RemoteGatewayIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Site2 RemoteGateway IP"
+            }
+        },                        
+        "Site1IPv4Subnet": {
+            "type": "string",
+            "metadata": {
+                "description": "Site1 IPv4 Subnet"
+            }
+        },                        
+        "Site2IPv4Subnet": {
+            "type": "string",
+            "metadata": {
+                "description": "Site2 IPv4 Subnet"
+            }
+        }, 
+        "OutsideSubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Outside Subnet Prefix"
+            }
+        },           
+        "SharedKey": {
+            "type": "string",
+            "metadata": {
+                "description": "Shared Key for Connection"
+            }
+        },                                                             
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            }
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation"
+            }
+        }
+    },
+    "variables": {
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/VPNHAIR.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "VPNHAIR.ps1\\VPNHAIR"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('computerName'),'/Microsoft.Powershell.DSC')]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "[parameters('ExtensionsAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "[parameters('ExtensionsTypeHandlerVersion')]",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "WMFVersion": "latest",
+                    "ModulesUrl": "[variables('modulesUrl')]",
+                    "ConfigurationFunction": "[variables('configurationFunction')]",
+                    "Properties": {
+                        "Site1Name": "[parameters('Site1Name')]",
+                        "Site2Name": "[parameters('Site2Name')]",
+                        "Site1RemoteGatewayIP": "[parameters('Site1RemoteGatewayIP')]",
+                        "Site2RemoteGatewayIP": "[parameters('Site2RemoteGatewayIP')]",
+                        "Site1IPv4Subnet": "[parameters('Site1IPv4Subnet')]",
+                        "Site2IPv4Subnet": "[parameters('Site2IPv4Subnet')]",
+                        "OutsideSubnetPrefix": "[parameters('OutsideSubnetPrefix')]",                        
+                        "SharedKey": "[parameters('SharedKey')]",
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"
+                        }
+                    }
+                },
+                "protectedSettings": {
+                    "Items": {
+                        "AdminPassword1": "[parameters('adminPassword')]"
+                    }
+                }
+            }
+        }
+    ]
+}

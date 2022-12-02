@@ -1,0 +1,97 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PublicIPAddressesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "PublicIPAddresses API Version"
+            }
+        },         
+        "NetworkInterfacesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "NetworkInterfaces API Version"
+            }
+        },
+        "computerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer Name"
+            }
+        },
+        "NicName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Interface Card Name"
+            }
+        },        
+        "PrivateIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer Outside IP Address"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET Name that contains the domain controller"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Outside Subnet"
+            }
+        }
+    },
+    "variables": {
+        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]",
+        "NicIPAddress": "[parameters('PrivateIP')]",
+        "publicIPAddressName": "[concat(parameters('computerName'),'-pip')]"          
+    },
+    "resources": [
+        {
+            "name": "[variables('publicIPAddressName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "[parameters('PublicIPAddressesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publicIPAllocationMethod": "Static"
+            }
+        },              
+        {
+            "name": "[parameters('NicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+            ],               
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                          "publicIPAddress": {
+                              "id": "[resourceId ('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
+                            },                            
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[variables('NicIPAddress')]",
+                            "subnet": {
+                                "id": "[variables('subnet1Id')]"
+                            }
+                        }
+                    }
+                ],
+                "enableIPForwarding": true
+            }
+        }
+    ],
+    "outputs": {
+        "PublicIP": {
+            "type": "string",
+            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))).ipAddress]"
+        }
+    }    
+}

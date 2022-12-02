@@ -14,12 +14,24 @@
                 "description": "VPN Gateway Name"
               }
         },
+        "Site1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Site1 Name"
+            }
+        },        
         "Site1Prefix": {
             "type": "string",
             "metadata": {
                 "description": "Site1 Prefix"
             }
         },
+        "Site2Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Site2 Name"
+            }
+        },                
         "Site2Prefix": {
             "type": "string",
             "metadata": {
@@ -43,7 +55,7 @@
                 "disableBgpRoutePropagation": false,
                 "routes": [
                     {
-                        "name": "Site1",
+                        "name": "[parameters('Site1Name')]",
                         "properties": {
                             "addressPrefix": "[parameters('Site1Prefix')]",
                             "nextHopType": "VirtualAppliance",
@@ -52,7 +64,7 @@
                         }
                     },
                     {
-                        "name": "Site2",
+                        "name": "[parameters('Site2Name')]",
                         "properties": {
                             "addressPrefix": "[parameters('Site2Prefix')]",
                             "nextHopType": "VirtualAppliance",
