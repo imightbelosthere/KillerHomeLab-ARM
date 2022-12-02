@@ -1,0 +1,317 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string"
+        },
+        "workspaceName": {
+            "type": "string"
+        },
+        "tier": {
+            "defaultValue": "premium",
+            "type": "string"
+        },
+        "tagValues": {
+            "type": "object"
+        },
+        "enableNoPublicIp": {
+            "type": "bool"
+        },
+        "vnetName": {
+            "type": "string"
+        },
+        "vnetRG": {
+            "type": "string"
+        },
+        "vnetId": {
+            "type": "string"
+        },
+        "publicSubnetName": {
+            "type": "string"
+        },
+        "publicSubnetCIDR": {
+            "type": "string"
+        },
+        "privateSubnetName": {
+            "type": "string"
+        },
+        "privateSubnetCIDR": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "managedResourceGroupName": "[concat('databricks-rg-', parameters('workspaceName'), '-', uniqueString(parameters('workspaceName'), resourceGroup().id))]",
+        "managedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]",
+        "nsgName": "[concat('databricksnsg', uniqueString(parameters('workspaceName')))]",
+        "nsgId": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "name": "[parameters('workspaceName')]",
+            "sku": {
+                "name": "[parameters('tier')]"
+            },
+            "comments": "Please do not use an existing resource group for ManagedResourceGroupId.",
+            "properties": {
+                "ManagedResourceGroupId": "[variables('managedResourceGroupId')]",
+                "parameters": {
+                    "enableNoPublicIp": {
+                        "value": "[parameters('enableNoPublicIp')]"
+                    },
+                    "customVirtualNetworkId": {
+                        "value": "[parameters('vnetId')]"
+                    },
+                    "customPublicSubnetName": {
+                        "value": "[parameters('publicSubnetName')]"
+                    },
+                    "customPrivateSubnetName": {
+                        "value": "[parameters('privateSubnetName')]"
+                    }
+                },
+                "publicNetworkAccess": "Disabled",
+                "requiredNsgRules": "NoAzureDatabricksRules"
+            },
+            "type": "Microsoft.Databricks/workspaces",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName'))]",
+                "['Microsoft.Resources/deployments/nestedTemplate']"
+            ],
+            "tags": "[parameters('tagValues')]"
+        },
+        {
+            "apiVersion": "2019-06-01",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "location": "[parameters('location')]",
+            "name": "[variables('nsgName')]"
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "nestedTemplate",
+            "type": "Microsoft.Resources/deployments",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName'))]"
+            ],
+            "resourceGroup": "[parameters('vnetRG')]",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2019-06-01",
+                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                            "name": "[concat(parameters('vnetName'), '/', parameters('publicSubnetName'))]",
+                            "location": "[parameters('location')]",
+                            "properties": {
+                                "addressPrefix": "[parameters('publicSubnetCIDR')]",
+                                "networkSecurityGroup": {
+                                    "id": "[variables('nsgId')]"
+                                },
+                                "delegations": [
+                                    {
+                                        "name": "[concat('databricks-del-', uniqueString(parameters('publicSubnetName')))]",
+                                        "properties": {
+                                            "serviceName": "Microsoft.Databricks/workspaces"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "apiVersion": "2019-06-01",
+                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                            "name": "[concat(parameters('vnetName'), '/', parameters('privateSubnetName'))]",
+                            "location": "[parameters('location')]",
+                            "dependsOn": [
+                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'), '/subnets/', parameters('publicSubnetName'))]"
+                            ],
+                            "properties": {
+                                "addressPrefix": "[parameters('privateSubnetCIDR')]",
+                                "networkSecurityGroup": {
+                                    "id": "[variables('nsgId')]"
+                                },
+                                "delegations": [
+                                    {
+                                        "name": "[concat('databricks-del-', uniqueString(parameters('privateSubnetName')))]",
+                                        "properties": {
+                                            "serviceName": "Microsoft.Databricks/workspaces"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "parameters": {}
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "type": "Microsoft.Resources/deployments",
+            "name": "Databricks_5f13425e-6d87-401c-9254-37e5391fb01f",
+            "subscriptionId": "e4409240-d678-41c2-9508-691da4fc7120",
+            "resourceGroup": "Databricks-Testing1",
+            "dependsOn": [
+                "[resourceId('Microsoft.Databricks/workspaces', parameters('workspaceName'))]"
+            ],
+            "resources": [],
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {},
+                "template": {
+                    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2019-06-01",
+                            "name": "Databricks/PrivateEndpoints",
+                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                            "location": "usgovvirginia",
+                            "properties": {
+                                "provisioningState": "Succeeded",
+                                "addressPrefix": "172.16.1.40/29",
+                                "delegations": [],
+                                "privateEndpointNetworkPolicies": "Disabled",
+                                "privateLinkServiceNetworkPolicies": "Enabled"
+                            }
+                        }
+                    ],
+                    "outputs": {}
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "type": "Microsoft.Resources/deployments",
+            "name": "Databricks-Workspace_5f13425e-6d87-401c-9254-37e5391fb020",
+            "subscriptionId": "e4409240-d678-41c2-9508-691da4fc7120",
+            "resourceGroup": "Databricks-Testing1",
+            "dependsOn": [
+                "[resourceId('Microsoft.Databricks/workspaces', parameters('workspaceName'))]"
+            ],
+            "resources": [],
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {
+                    "privateEndpointName": {
+                        "value": "Databricks-Workspace1-databricks_ui_api-PE"
+                    },
+                    "privateEndpointConnectionId": {
+                        "value": "/subscriptions/e4409240-d678-41c2-9508-691da4fc7120/resourceGroups/Databricks-Testing1/providers/Microsoft.Network/privateEndpoints/privateLinkServiceConnections/Databricks-Workspace1-databricks_ui_api-PE_e0719908-dd7f-4eda-91d4-73fbc7794086"
+                    },
+                    "privateEndpointConnectionName": {
+                        "value": "Databricks-Workspace1-databricks_ui_api-PE_e0719908-dd7f-4eda-91d4-73fbc7794086"
+                    },
+                    "privateEndpointId": {
+                        "value": "/subscriptions/e4409240-d678-41c2-9508-691da4fc7120/resourceGroups/Databricks-Testing1/providers/Microsoft.Network/privateEndpoints/Databricks-Workspace1-databricks_ui_api-PE"
+                    },
+                    "privateEndpointApiVersion": {
+                        "value": "2019-04-01"
+                    },
+                    "privateLinkServiceId": {
+                        "value": "/subscriptions/e4409240-d678-41c2-9508-691da4fc7120/resourcegroups/Databricks-Testing1/providers/Microsoft.Databricks/workspaces/Databricks-Workspace1"
+                    },
+                    "groupId": {
+                        "value": "databricks_ui_api"
+                    },
+                    "subnetId": {
+                        "value": "/subscriptions/e4409240-d678-41c2-9508-691da4fc7120/resourceGroups/Databricks-Testing1/providers/Microsoft.Network/virtualNetworks/Databricks/subnets/PrivateEndpoints"
+                    },
+                    "location": {
+                        "value": "usgovvirginia"
+                    }
+                },
+                "templatelink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "https://databricksextension.hosting.azureportal.usgovcloudapi.net/databricksextension/Content/1.0.02108.186/DeploymentTemplates/PrivateEndpointForDatabricksAccount.json"
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-05-10",
+            "name": "PrivateDns-5f13425e6d87401c925437e5391fb021",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "Databricks-Testing1",
+            "dependsOn": [
+                "Databricks-Workspace_5f13425e-6d87-401c-9254-37e5391fb020"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "type": "Microsoft.Network/privateDnsZones",
+                            "apiVersion": "2018-09-01",
+                            "name": "privatelink.databricks.azure.us",
+                            "location": "global",
+                            "tags": {},
+                            "properties": {}
+                        },
+                        {
+                            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+                            "apiVersion": "2018-09-01",
+                            "name": "[concat('privatelink.databricks.azure.us', '/', uniqueString(string('/subscriptions/e4409240-d678-41c2-9508-691da4fc7120/resourceGroups/Databricks-Testing1/providers/Microsoft.Network/virtualNetworks/Databricks')))]",
+                            "location": "global",
+                            "dependsOn": [
+                                "privatelink.databricks.azure.us"
+                            ],
+                            "properties": {
+                                "virtualNetwork": {
+                                    "id": "[string('/subscriptions/e4409240-d678-41c2-9508-691da4fc7120/resourceGroups/Databricks-Testing1/providers/Microsoft.Network/virtualNetworks/Databricks')]"
+                                },
+                                "registrationEnabled": false
+                            }
+                        },
+                        {
+                            "apiVersion": "2017-05-10",
+                            "name": "PrivateDnsZoneGroup-5f13425e6d87401c925437e5391fb022",
+                            "type": "Microsoft.Resources/deployments",
+                            "resourceGroup": "Databricks-Testing1",
+                            "dependsOn": [
+                                "privatelink.databricks.azure.us"
+                            ],
+                            "properties": {
+                                "mode": "Incremental",
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "resources": [
+                                        {
+                                            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+                                            "apiVersion": "2020-03-01",
+                                            "name": "[concat('Databricks-Workspace1-databricks_ui_api-PE', '/', 'default')]",
+                                            "location": "global",
+                                            "dependsOn": [],
+                                            "properties": {
+                                                "privateDnsZoneConfigs": [
+                                                    {
+                                                        "name": "privatelink.databricks.azure.us",
+                                                        "properties": {
+                                                            "privateDnsZoneId": "/subscriptions/e4409240-d678-41c2-9508-691da4fc7120/resourceGroups/Databricks-Testing1/providers/Microsoft.Network/privateDnsZones/privatelink.databricks.azure.us"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            "subscriptionId": "e4409240-d678-41c2-9508-691da4fc7120"
+                        }
+                    ]
+                }
+            },
+            "subscriptionId": "e4409240-d678-41c2-9508-691da4fc7120"
+        }
+    ]
+}
