@@ -1,0 +1,78 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PrivateDNSZoneGroupsAPIVersion": {
+            "type": "string",
+            "defaultValue": "2022-05-01",
+            "metadata": {
+                "description": "Private DNS Zone Name"
+            }
+        },
+        "PrivateDNSZoneName": {
+            "type": "string",
+            "defaultValue": "privatelink.databricks.azure.us",
+            "metadata": {
+                "description": "Private DNS Zone API Version"
+            }
+        },
+        "DatabricksWorkspaceName": {
+            "type": "string",
+            "defaultValue": "Databricks-Workspace1",
+            "metadata": {
+                "description": "Databricks Workspace Name"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "Databricks",
+            "metadata": {
+                "description": "Databricks Virtual Network"
+            }
+        }
+    },
+    "variables": {
+        "VNetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+        "PrivateDNSZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', parameters('PrivateDNSZoneName'))]",
+        "UIAPIGroupId": "databricks_ui_api",
+        "UIAPIPrivateEndpointName": "[concat(parameters('DatabricksWorkspaceName'), '-', variables('UIAPIGroupId'),'-PE')]",
+        "UIAPIprivateDnsZoneGroupName": "[concat(variables('UIAPIPrivateEndpointName'), '/', 'default')]",
+        "BrowserAuthGroupId": "browser_authentication",
+        "BrowserAuthPrivateEndpointName": "[concat(parameters('DatabricksWorkspaceName'), '-', variables('BrowserAuthGroupId'),'-PE')]",
+        "BrowserAuthprivateDnsZoneGroupName": "[concat(variables('BrowserAuthPrivateEndpointName'), '/', 'default')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "name": "[variables('UIAPIprivateDnsZoneGroupName')]",
+            "apiVersion": "[parameters('PrivateDNSZoneGroupsAPIVersion')]",
+            "location": "global",
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "[parameters('PrivateDNSZoneName')]",
+                        "properties": {
+                            "privateDnsZoneId": "[variables('PrivateDNSZoneId')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "name": "[variables('BrowserAuthprivateDnsZoneGroupName')]",
+            "apiVersion": "[parameters('PrivateDNSZoneGroupsAPIVersion')]",
+            "location": "global",
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "[parameters('PrivateDNSZoneName')]",
+                        "properties": {
+                            "privateDnsZoneId": "[variables('PrivateDNSZoneId')]"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

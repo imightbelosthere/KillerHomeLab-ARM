@@ -1,0 +1,137 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualNetworkAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks VNet name"
+            }
+        },
+        "vnetprefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks VNet prefix"
+            }
+        },
+        "GatewaySubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Gateway Subnet Prefix"
+            }
+        },
+        "JumpboxSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "JumboxSubnet Name"
+            }
+        },
+        "JumpboxSubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Jumpbox Subnet Prefix"
+            }
+        },
+        "PrivateEndpointsSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Private Endpoints Subnet Name"
+            }
+        },
+        "PrivateEndpointsSubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Private Endpoints Subnet Prefix"
+            }
+        },
+        "BastionsubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Bastion Subnet Prefix"
+            }
+        },
+        "DatabricksPrivateSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks-Private Subnet Name"
+            }
+        },
+        "DatabricksPrivateSubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks-Private Subnet Prefix"
+            }
+        },
+        "DatabricksPublicSubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks-Public Subnet Name"
+            }
+        },
+        "DatabricksPublicSubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks-Public Subnet Prefix"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[parameters('vnetName')]",
+            "apiVersion": "[parameters('VirtualNetworkAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('vnetprefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "GatewaySubnet",
+                        "properties": {
+                            "addressPrefix": "[parameters('GatewaysubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[parameters('JumpboxSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('JumpboxSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[parameters('PrivateEndpointsSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('PrivateEndpointsSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "AzureBastionSubnet",
+                        "properties": {
+                            "addressPrefix": "[parameters('BastionsubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[parameters('DatabricksPrivateSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('DatabricksPrivateSubnetPrefix')]"
+                        }
+                    },
+                    {
+                        "name": "[parameters('DatabricksPublicSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('DatabricksPublicSubnetPrefix')]"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

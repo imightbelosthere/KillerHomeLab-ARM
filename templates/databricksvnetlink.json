@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PrivateDNSZoneAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Private DNS Zone Name"
+            }
+        },
+        "PrivateDNSZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "Private DNS Zone API Version"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Databricks Virtual Network"
+            }
+        }
+    },
+    "variables": {
+        "VNetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+        "VirtualNetworkLinkName": "[concat(parameters('PrivateDNSZoneName'), '/', parameters('vnetName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "name": "[variables('VirtualNetworkLinkName')]",
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global",
+            "properties": {
+                "virtualNetwork": {
+                    "id": "[variables('VNetId')]"
+                },
+                "registrationEnabled": true
+            }
+        }
+    ]
+}

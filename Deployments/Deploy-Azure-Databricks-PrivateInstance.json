@@ -2,6 +2,41 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        },
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "dom-admin",
+            "metadata": {
+                "description": "Administrator Account for Jumpbox"
+            }
+        },
+        "AzureUserObjectID": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Deployment Account Object ID"
+            }
+        },        
+        "NamingConvention": {
+            "type": "string",
+            "defaultValue": "databricks",
+            "maxLength": 10,
+            "metadata": {
+                "description": "Naming Convention for Objects"
+            }
+        },
+        "DatabricksWorkspaceTier": {
+            "type": "string",
+            "defaultValue": "premium",
+            "metadata": {
+                "description": "Databricks Workspace Tier"
+            }
+        },        
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -148,134 +183,43 @@
                 "description": "Time Zone"
             }
         },
-        "AutoShutdownEnabled": {
+        "vnetID": {
             "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "metadata": {
-                "description": "Enabled Auto Shutdown.  !!!If Enabled, AutoShutdownEmail MUST be added!!!!"
-            }
-        },
-        "AutoShutdownTime": {
-            "type": "string",
-            "defaultValue": "2000",
-            "metadata": {
-                "description": "24-Hour Clock Time for Auto-Shutdown Example: 1900 = 7PM"
-            }
-        },
-        "AutoShutdownEmail": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Auto-Shutdown notification Email Example:  user@domain.com"
-            }
-        },
-        "adminUsername": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "The name of the Administrator of the new VM and Domain"
-            }
-        },
-        "adminPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The password for the Administrator account of the new VM and Domain"
-            }
-        },
-        "AzureUserObjectID": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Deployment Account Object ID"
-            }
-        },
-        "WindowsServerLicenseType": {
-            "type": "string",
-            "defaultValue": "None",
-            "allowedValues": [
-                "None",
-                "Windows_Server"
-            ],
-            "metadata": {
-                "description": "Windows Server OS License Type"
-            }
-        },
-        "WindowsClientLicenseType": {
-            "type": "string",
-            "defaultValue": "None",
-            "allowedValues": [
-                "None",
-                "Windows_Client"
-            ],
-            "metadata": {
-                "description": "Windows Client OS License Type"
-            }
-        },
-        "NamingConvention": {
-            "type": "string",
-            "defaultValue": "khl",
-            "maxLength": 4,
-            "metadata": {
-                "description": "VNet1 Name"
-            }
-        },
-        "SubDNSDomain": {
-            "type": "string",
-            "defaultValue": "sub1.",
-            "metadata": {
-                "description": "Sub DNS Domain Name Example:  sub1. must include a DOT AT END"
-            }
-        },
-        "SubDNSBaseDN": {
-            "type": "string",
-            "defaultValue": "DC=sub1,",
-            "metadata": {
-                "description": "Sub DNS Domain Name Example:  DC=sub2,DC=sub1, must include COMMA AT END"
-            }
-        },
-        "NetBiosDomain": {
-            "type": "string",
-            "defaultValue": "sub1",
-            "maxLength": 15,
-            "metadata": {
-                "description": "NetBios Domain Name should the same name as the SubDNSDomain parameter minus the COMMA AT END if the SubDNSDomain and SubDNSBaseDN parameters are used to specify a Sub DNS Naming Structure, but it should be unique if these parameters aren't used."
-            }
-        },
-        "InternalDomain": {
-            "type": "string",
-            "defaultValue": "killerhomelab",
-            "metadata": {
-                "description": "NetBios Domain Name"
-            }
-        },
-        "InternalTLD": {
-            "type": "string",
-            "defaultValue": "com",
-            "allowedValues": [
-                "com",
-                "net",
-                "org",
-                "edu",
-                "gov",
-                "mil",
-                "us",
-                "tk",
-                "ml",
-                "local"
-            ],
-            "metadata": {
-                "description": "Top-Level Domain Name"
-            }
-        },
-        "vnet1ID": {
-            "type": "string",
-            "defaultValue": "172.16",
+            "defaultValue": "172.16.1",
             "metadata": {
                 "description": "VNet1 Prefix"
+            }
+        },
+        "SourceIPAddressRange": {
+            "type": "string",
+            "defaultValue": "47.197.128.52",
+            "metadata": {
+                "description": "Source Public IP Address used to Access Bastion Host"
+            }
+        },
+        "JumpboxVMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Jumpbox Azure VM Size"
+            }
+        },
+        "UIAPIGroupId": {
+            "type": "array",
+            "defaultValue": [
+                "databricks_ui_api"
+            ],
+            "metadata": {
+                "description": "UI API Target Sub Resource"
+            }
+        },
+        "BrowserAuthGroupId": {
+            "type": "array",
+            "defaultValue": [
+                "browser_authentication"
+            ],
+            "metadata": {
+                "description": "Browser Authentication Target Sub Resource"
             }
         },
         "_artifactsLocation": {
@@ -298,29 +242,41 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('ADSS-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
-        "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
-        "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
-        "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
-        "vnet1subnet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
-        "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",
-        "vnet1subnet2Prefix": "[concat(parameters('vnet1ID'),'.2.0/24')]",
-        "vnet1GatewaysubnetPrefix": "[concat(parameters('vnet1ID'),'.0.0/24')]",
-        "vnet1BastionsubnetPrefix": "[concat(parameters('vnet1ID'),'.253.0/24')]",
-        "vnet1FirewallsubnetPrefix": "[concat(parameters('vnet1ID'),'.254.0/24')]",
-        "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
-        "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
+        "vnetName": "[concat(parameters('NamingConvention'),'-VNet')]",
+        "vnetPrefix": "[concat(parameters('vnetID'),'.0/24')]",
+        "GatewaySubnetPrefix": "[concat(parameters('vnetID'),'.0/27')]",
+        "JumpboxSubnetName": "[concat(parameters('NamingConvention'),'-Jumpbox')]",
+        "JumpboxSubnetPrefix": "[concat(parameters('vnetID'),'.32/29')]",
+        "PrivateEndpointsSubnetName": "[concat(parameters('NamingConvention'),'-PrivateEndpoints')]",
+        "PrivateEndpointsSubnetPrefix": "[concat(parameters('vnetID'),'.40/29')]",
+        "DatabricksJumpboxIP": "[concat(parameters('vnetID'),'.37')]",
+        "BastionsubnetPrefix": "[concat(parameters('vnetID'),'.48/29')]",
+        "DatabricksPrivateSubnetName": "[concat(parameters('NamingConvention'),'-Private')]",
+        "DatabricksPrivateSubnetPrefix": "[concat(parameters('vnetID'),'.64/26')]",
+        "DatabricksPublicSubnetName": "[concat(parameters('NamingConvention'),'-Public')]",
+        "DatabricksPublicSubnetPrefix": "[concat(parameters('vnetID'),'.128/26')]",
+        "DatabricksNetworkSecurityGroupName": "[concat(parameters('NamingConvention'),'-NSG')]",
+        "BastionHostNetworkSecurityGroupName": "[concat(parameters('NamingConvention'),'-BastionHost-NSG')]",
+        "DatabricksJumpboxName": "[concat(parameters('NamingConvention'),'-Jump')]",
+        "UIAPIPrivateEndpointIPAddress": "[concat(parameters('vnetID'),'.45')]",
+        "BrowserAuthPrivateEndpointIPAddress": "[concat(parameters('vnetID'),'.46')]",
+        "DatabricksWorkspaceName": "[concat(parameters('NamingConvention'),'-Workspace')]",
+        "PrivateDNSZoneName": "privatelink.databricks.azure.us",
         "BastionHostAPIVersion": "2021-08-01",
+        "DatabricksWorkspaceAPIVersion": "2018-04-01",
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "NetworkInterfacesAPIVersion": "2021-08-01",
+        "NetworkSecurityGroupAPIVersion": "2022-01-01",
+        "PrivateDNSZoneAPIVersion": "2020-06-01",
+        "PrivateDNSZoneGroupsAPIVersion": "2022-05-01",
+        "PrivateEndpointAPIVersion": "2022-05-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
-        "VirtualNetworkAPIVersion": "2020-11-01",
-        "ExtensionsTypeHandlerVersion": "2.83",
-        "DJExtensionsTypeHandlerVersion": "1.3"
+        "VirtualNetworkAPIVersion": "2020-11-01"
     },
     "resources": [
         {
@@ -358,11 +314,11 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-VirtualNetwork-01",
-            "properties": {
+            "name": "Deploy-Databricks-VirtualNetwork",
+            "Properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/vnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksvnet.json.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -370,31 +326,40 @@
                         "value": "[variables('VirtualNetworkAPIVersion')]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[variables('vnetName')]"
                     },
                     "vnetprefix": {
-                        "value": "[variables('vnet1Prefix')]"
+                        "value": "[variables('vnetprefix')]"
                     },
-                    "subnet1Name": {
-                        "value": "[variables('vnet1subnet1Name')]"
+                    "GatewaySubnetPrefix": {
+                        "value": "[variables('GatewaySubnetPrefix')]"
                     },
-                    "subnet1Prefix": {
-                        "value": "[variables('vnet1subnet1Prefix')]"
+                    "JumpboxSubnetName": {
+                        "value": "[variables('JumpboxSubnetName')]"
                     },
-                    "subnet2Name": {
-                        "value": "[variables('vnet1subnet2Name')]"
+                    "JumpboxSubnetPrefix": {
+                        "value": "[variables('JumpboxSubnetPrefix')]"
                     },
-                    "subnet2Prefix": {
-                        "value": "[variables('vnet1subnet2Prefix')]"
+                    "PrivateEndpointsSubnetName": {
+                        "value": "[variables('PrivateEndpointsSubnetName')]"
                     },
-                    "GatewaysubnetPrefix": {
-                        "value": "[variables('vnet1GatewaysubnetPrefix')]"
+                    "PrivateEndpointsSubnetPrefix": {
+                        "value": "[variables('PrivateEndpointsSubnetPrefix')]"
                     },
                     "BastionsubnetPrefix": {
-                        "value": "[variables('vnet1BastionsubnetPrefix')]"
+                        "value": "[variables('BastionsubnetPrefix')]"
                     },
-                    "FirewallsubnetPrefix": {
-                        "value": "[variables('vnet1FirewallsubnetPrefix')]"
+                    "DatabricksPrivateSubnetName": {
+                        "value": "[variables('DatabricksPrivateSubnetName')]"
+                    },
+                    "DatabricksPrivateSubnetPrefix": {
+                        "value": "[variables('DatabricksPrivateSubnetPrefix')]"
+                    },
+                    "DatabricksPublicSubnetName": {
+                        "value": "[variables('DatabricksPublicSubnetName')]"
+                    },
+                    "DatabricksPublicSubnetPrefix": {
+                        "value": "[variables('DatabricksPublicSubnetPrefix')]"
                     }
                 }
             }
@@ -402,14 +367,156 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-BastionHost-01",
+            "name": "Deploy-Databricks-NetworkSecurityGroup",
             "dependsOn": [
-                "Deploy-VirtualNetwork-01"
+                "Deploy-Databricks-VirtualNetwork"
             ],
-            "properties": {
+            "Properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/bastionhost.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[variables('DatabricksNetworkSecurityGroupName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Prepare-Databricks-PrivateSubnet",
+            "dependsOn": [
+                "Deploy-Databricks-NetworkSecurityGroup"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksprepareprivatesubnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[variables('DatabricksNetworkSecurityGroupName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "DatabricksPrivateSubnetName": {
+                        "value": "[variables('DatabricksPrivateSubnetName')]"
+                    },
+                    "DatabricksPrivateSubnetPrefix": {
+                        "value": "[variables('DatabricksPrivateSubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Prepare-Databricks-PublicSubnet",
+            "dependsOn": [
+                "Prepare-Databricks-PrivateSubnet"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databrickspreparepublicsubnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[variables('DatabricksNetworkSecurityGroupName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "DatabricksPublicSubnetName": {
+                        "value": "[variables('DatabricksPublicSubnetName')]"
+                    },
+                    "DatabricksPublicSubnetPrefix": {
+                        "value": "[variables('DatabricksPublicSubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BastionHost-NetworkSecurityGroup",
+            "dependsOn": [
+                "Deploy-Databricks-VirtualNetwork"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksbastionnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[variables('BastionHostNetworkSecurityGroupName')]"
+                    },
+                    "SourceIPAddressRange": {
+                        "value": "[parameters('SourceIPAddressRange')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Prepare-Databricks-AzureBastionSubnet",
+            "dependsOn": [
+                "Deploy-BastionHost-NetworkSecurityGroup"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databrickspreparebastionsubnet.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[variables('BastionHostNetworkSecurityGroupName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('BastionsubnetPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BastionHost",
+            "dependsOn": [
+                "Prepare-Databricks-AzureBastionSubnet"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksbastionhost.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -419,20 +526,243 @@
                     "PublicIPAddressesAPIVersion": {
                         "value": "[variables('PublicIPAddressesAPIVersion')]"
                     },
-                    "publicIPAddressName": {
-                        "value": "[concat(variables('vnet1Name'),'-Bastion-pip')]"
-                    },
                     "AllocationMethod": {
                         "value": "Static"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnetName": {
-                        "value": "AzureBastionSubnet"
+                        "value": "[variables('vnetName')]"
                     }
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Jumpbox",
+            "dependsOn": [
+                "Deploy-Databricks-VirtualNetwork"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksjumpbox.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('DatabricksJumpboxName')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('DatabricksJumpboxIP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsServer"
+                    },
+                    "Offer": {
+                        "value": "WindowsServer"
+                    },
+                    "OSSku": {
+                        "value": "2022-Datacenter"
+                    },
+                    "OSVersion": {
+                        "value": "Latest"
+                    },
+                    "LicenseType": {
+                        "value": "Windows_Server"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('JumpboxVMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('JumpboxSubnetName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "No"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "2000"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "efields@mcitpnetworks.com"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Databricks-Private",
+            "dependsOn": [
+                "Prepare-Databricks-PrivateSubnet",
+                "Prepare-Databricks-PublicSubnet"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksprivate.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "DatabricksWorkspaceAPIVersion": {
+                        "value": "[variables('DatabricksWorkspaceAPIVersion')]"
+                    },
+                    "DatabricksWorkspaceName": {
+                        "value": "[variables('DatabricksWorkspaceName')]"
+                    },
+                    "DatabricksWorkspaceTier": {
+                        "value": "[parameters('DatabricksWorkspaceTier')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "DatabricksPublicSubnetName": {
+                        "value": "[variables('DatabricksPublicSubnetName')]"
+                    },
+                    "DatabricksPrivateSubnetName": {
+                        "value": "[variables('DatabricksPrivateSubnetName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Databricks-PrivateEndpoints",
+            "dependsOn": [
+                "Deploy-Databricks-Private"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksprivateendpoints.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateEndpointAPIVersion": {
+                        "value": "[variables('PrivateEndpointAPIVersion')]"
+                    },
+                    "DatabricksWorkspaceName": {
+                        "value": "[variables('DatabricksWorkspaceName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    },
+                    "PrivateEndpointsSubnetName": {
+                        "value": "[variables('PrivateEndpointsSubnetName')]"
+                    },
+                    "UIAPIGroupId": {
+                        "value": "[parameters('UIAPIGroupId')]"
+                    },
+                    "BrowserAuthGroupId": {
+                        "value": "[parameters('BrowserAuthGroupId')]"
+                    },
+                    "UIAPIPrivateEndpointIPAddress": {
+                        "value": "[variables('UIAPIPrivateEndpointIPAddress')]"
+                    },
+                    "BrowserAuthPrivateEndpointIPAddress": {
+                        "value": "[variables('BrowserAuthPrivateEndpointIPAddress')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Databricks-PrivateDNSZone",
+            "dependsOn": [
+                "Deploy-Databricks-PrivateEndpoints"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksprivatednszone.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },
+                    "PrivateDNSZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    }
+                }
+            }
+        },  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Databricks-PrivateDNSZone-VirtualNetworkLinks",
+            "dependsOn": [
+                "Deploy-Databricks-PrivateDNSZone"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksvnetlink.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },
+                    "PrivateDNSZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Databricks-PrivateDNSZoneGroup",
+            "dependsOn": [
+                "Deploy-Databricks-PrivateDNSZone-VirtualNetworkLinks"
+            ],
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/databricksprivatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },
+                    "PrivateDNSZoneName": {
+                        "value": "[variables('PrivateDNSZoneName')]"
+                    },
+                    "DatabricksWorkspaceName": {
+                        "value": "[variables('DatabricksWorkspaceName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnetName')]"
+                    }
+                }
+            }
+        }                                                                                        
     ]
 }

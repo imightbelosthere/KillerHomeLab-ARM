@@ -1,0 +1,26 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PrivateDNSZoneAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Private DNS Zone Name"
+            }
+        },
+        "PrivateDNSZoneName": {
+            "type": "string",
+            "metadata": {
+                "description": "Private DNS Zone API Version"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "name": "[parameters('PrivateDNSZoneName')]",
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global"
+        }
+    ]
+}

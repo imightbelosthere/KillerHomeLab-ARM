@@ -1,60 +1,54 @@
 {
-    "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion":"1.0.0.0",
-    "parameters":{  
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
         "DatabricksWorkspaceAPIVersion": {
             "type": "string",
-            "defaultValue": "2018-04-01",
             "metadata": {
                 "description": "Databricks Workspace API Version"
             }
         },
         "DatabricksWorkspaceName": {
             "type": "string",
-            "defaultValue": "Databricks-Workspace1",            
             "metadata": {
                 "description": "Databricks Workspace Name"
             }
-        },        
+        },
         "DatabricksWorkspaceTier": {
             "type": "string",
-            "defaultValue": "premium",                        
             "metadata": {
                 "description": "Databricks Workspace Tier"
             }
-        },          
+        },
         "vnetName": {
             "type": "string",
-            "defaultValue": "Databricks",                                    
             "metadata": {
                 "description": "Databricks Virtual Network"
             }
         },
         "DatabricksPrivateSubnetName": {
             "type": "string",
-            "defaultValue": "Databricks-Private",                                    
             "metadata": {
                 "description": "Databricks Private Subnet Name"
             }
         },
         "DatabricksPublicSubnetName": {
             "type": "string",
-            "defaultValue": "Databricks-Public",                                    
             "metadata": {
                 "description": "Databricks Public Subnet Name"
             }
-        }               
+        }
     },
     "variables": {
         "VNetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
         "managedResourceGroupName": "[concat('databricks-rg-', parameters('DatabricksWorkspaceName'), '-', uniqueString(parameters('DatabricksWorkspaceName'), resourceGroup().id))]",
         "managedResourceGroupId": "[concat(subscription().id, '/resourceGroups/', variables('managedResourceGroupName'))]"
-    },    
-    "resources":[  
+    },
+    "resources": [
         {
-            "type": "Microsoft.Databricks/workspaces",            
+            "type": "Microsoft.Databricks/workspaces",
             "name": "[parameters('DatabricksWorkspaceName')]",
-            "apiVersion":"[parameters('DatabricksWorkspaceAPIVersion')]",                      
+            "apiVersion": "[parameters('DatabricksWorkspaceAPIVersion')]",
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "[parameters('DatabricksWorkspaceTier')]"
@@ -78,6 +72,6 @@
                 "publicNetworkAccess": "Disabled",
                 "requiredNsgRules": "NoAzureDatabricksRules"
             }
-        }        
-    ]              
+        }
+    ]
 }

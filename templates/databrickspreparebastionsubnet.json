@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualNetworkAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "VNet name"
+            }
+        },
+        "BastionsubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Bastion Subnet Prefix"
+            }
+        }
+    },
+    "variables": {
+        "NetworkSecurityGroupID": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('NetworkSecurityGroupName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "[parameters('VirtualNetworkAPIVersion')]",
+            "name": "[concat(parameters('vnetName'), '/AzureBastionSubnet')]",
+            "properties": {
+                "addressPrefix": "[parameters('BastionsubnetPrefix')]",
+                "networkSecurityGroup": {
+                    "id": "[variables('NetworkSecurityGroupID')]"
+                },
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        }
+    ]
+}
