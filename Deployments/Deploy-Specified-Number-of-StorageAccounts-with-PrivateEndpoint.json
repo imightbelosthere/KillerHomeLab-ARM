@@ -74,25 +74,19 @@
             "metadata": {
                 "description": "Target Sub Resource"
             }
-        },
-        "PrivateDNSZoneName": {
-            "type": "string",
-            "defaultValue": "privatelink.blob.core.usgovcloudapi.net",
-            "metadata": {
-                "description": "Private DNS Zone Name"
-            }
         }
     },
     "variables": {
+        "PrivateDNSZoneName": "[if(equals(environment(),'AzureUSGovernment'), 'privatelink.blob.core.usgovcloudapi.net', 'privatelink.blob.core.windows.net')]",        
         "VNetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('PrivateEndpointVnetName'))]",
-        "VirtualNetworkLinkName": "[concat(parameters('PrivateDNSZoneName'), '/', parameters('PrivateEndpointVnetName'))]",
+        "VirtualNetworkLinkName": "[concat(variables('PrivateDNSZoneName'), '/', parameters('PrivateEndpointVnetName'))]",
         "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('PrivateEndpointVnetName'), parameters('PrivateEndpointSubnetName'))]",
-        "PrivateDNSZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', parameters('PrivateDNSZoneName'))]"
+        "PrivateDNSZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', variables('PrivateDNSZoneName'))]"
     },
     "resources": [
         {
             "type": "Microsoft.Network/privateDnsZones",
-            "name": "[parameters('PrivateDNSZoneName')]",
+            "name": "[variables('PrivateDNSZoneName')]",
             "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
             "location": "global"
         },
@@ -102,7 +96,7 @@
             "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
             "location": "global",
             "dependsOn": [
-                "[parameters('PrivateDNSZoneName')]"
+                "[variables('PrivateDNSZoneName')]"
             ],
             "properties": {
                 "virtualNetwork": {
@@ -166,12 +160,12 @@
             },
             "dependsOn": [
                 "[concat(parameters('StorageAccountPrefix'), add(copyindex(), parameters('StorageAccountInitialNumber')), '-pe')]",
-                "[parameters('PrivateDNSZoneName')]"
+                "[variables('PrivateDNSZoneName')]"
             ],
             "properties": {
                 "privateDnsZoneConfigs": [
                     {
-                        "name": "[parameters('PrivateDNSZoneName')]",
+                        "name": "[variables('PrivateDNSZoneName')]",
                         "properties": {
                             "privateDnsZoneId": "[variables('PrivateDNSZoneId')]"
                         }
