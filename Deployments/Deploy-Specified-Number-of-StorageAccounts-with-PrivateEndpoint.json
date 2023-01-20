@@ -1,0 +1,183 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "StorageAccountPrefix": {
+            "type": "string",
+            "defaultValue": "namethatequals23charact",
+            "maxLength": 23,
+            "metadata": {
+                "description": "This prefix will be used in combination with the Storage Account Number to create the Storage Account Name"
+            }
+        },
+        "PrivateEndpointVnetName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Private Endpoint Virtual Network"
+            }
+        },
+        "PrivateEndpointSubnetName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Private Endpoint Subnet Name"
+            }
+        },
+        "NumberOfStorageAccountInstances": {
+            "type": "int",
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Number of Storage Accounts that will be created."
+            }
+        },
+        "StorageAccountInitialNumber": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+                "description": "Storage Accout Name Prefix Initial Number."
+            }
+        },
+        "StorageAccountAPIVersion": {
+            "type": "string",
+            "defaultValue": "2022-05-01",
+            "metadata": {
+                "description": "Storage Account API Version"
+            }
+        },
+        "PrivateEndpointAPIVersion": {
+            "type": "string",
+            "defaultValue": "2022-05-01",
+            "metadata": {
+                "description": "Private Endpoint API Version"
+            }
+        },
+        "PrivateDNSZoneAPIVersion": {
+            "type": "string",
+            "defaultValue": "2020-06-01",
+            "metadata": {
+                "description": "Private DNS Zone Name"
+            }
+        },
+        "PrivateDNSZoneGroupsAPIVersion": {
+            "type": "string",
+            "defaultValue": "2022-05-01",
+            "metadata": {
+                "description": "Private DNS Zone Name"
+            }
+        },
+        "GroupId": {
+            "type": "array",
+            "defaultValue": [
+                "blob"
+            ],
+            "metadata": {
+                "description": "Target Sub Resource"
+            }
+        },
+        "PrivateDNSZoneName": {
+            "type": "string",
+            "defaultValue": "privatelink.blob.core.usgovcloudapi.net",
+            "metadata": {
+                "description": "Private DNS Zone Name"
+            }
+        }
+    },
+    "variables": {
+        "VNetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('PrivateEndpointVnetName'))]",
+        "VirtualNetworkLinkName": "[concat(parameters('PrivateDNSZoneName'), '/', parameters('PrivateEndpointVnetName'))]",
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('PrivateEndpointVnetName'), parameters('PrivateEndpointSubnetName'))]",
+        "PrivateDNSZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', parameters('PrivateDNSZoneName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "name": "[parameters('PrivateDNSZoneName')]",
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global"
+        },
+        {
+            "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "name": "[variables('VirtualNetworkLinkName')]",
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global",
+            "dependsOn": [
+                "[parameters('PrivateDNSZoneName')]"
+            ],
+            "properties": {
+                "virtualNetwork": {
+                    "id": "[variables('VNetId')]"
+                },
+                "registrationEnabled": true
+            }
+        },
+        {
+            "apiVersion": "[parameters('StorageAccountAPIVersion')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[concat(parameters('StorageAccountPrefix'), add(copyindex(), parameters('StorageAccountInitialNumber')))]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "storage-loop",
+                "count": "[parameters('NumberOfStorageAccountInstances')]"
+            },
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "allowBlobPublicAccess": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "name": "[concat(parameters('StorageAccountPrefix'), add(copyindex(), parameters('StorageAccountInitialNumber')), '-pe')]",
+            "apiVersion": "[parameters('PrivateEndpointAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "storage-pe-loop",
+                "count": "[parameters('NumberOfStorageAccountInstances')]"
+            },
+            "dependsOn": [
+                "[concat(parameters('StorageAccountPrefix'), add(copyindex(), parameters('StorageAccountInitialNumber')))]"
+            ],
+            "properties": {
+                "subnet": {
+                    "id": "[variables('subnetId')]"
+                },
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[concat(parameters('StorageAccountPrefix'), add(copyindex(), parameters('StorageAccountInitialNumber')), '-pe')]",
+                        "properties": {
+                            "privateLinkServiceId": "[resourceId(resourceGroup().name, 'Microsoft.Storage/storageAccounts', concat(parameters('StorageAccountPrefix'), add(copyIndex(), parameters('StorageAccountInitialNumber'))))]",
+                            "groupIds": "[parameters('GroupId')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "name": "[concat(parameters('StorageAccountPrefix'), add(copyindex(), parameters('StorageAccountInitialNumber')), '-pe', '/', 'default')]",
+            "apiVersion": "[parameters('PrivateDNSZoneGroupsAPIVersion')]",
+            "location": "global",
+            "copy": {
+                "name": "dns-group-loop",
+                "count": "[parameters('NumberOfStorageAccountInstances')]"
+            },
+            "dependsOn": [
+                "[concat(parameters('StorageAccountPrefix'), add(copyindex(), parameters('StorageAccountInitialNumber')), '-pe')]",
+                "[parameters('PrivateDNSZoneName')]"
+            ],
+            "properties": {
+                "privateDnsZoneConfigs": [
+                    {
+                        "name": "[parameters('PrivateDNSZoneName')]",
+                        "properties": {
+                            "privateDnsZoneId": "[variables('PrivateDNSZoneId')]"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
