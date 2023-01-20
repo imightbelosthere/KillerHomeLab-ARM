@@ -4,8 +4,8 @@
     "parameters": {
         "StorageAccountPrefix": {
             "type": "string",
-            "defaultValue": "namethatequals23charact",
-            "maxLength": 23,
+            "defaultValue": "namethatequals23char",
+            "maxLength": 20,
             "metadata": {
                 "description": "This prefix will be used in combination with the Storage Account Number to create the Storage Account Name"
             }
