@@ -19,8 +19,6 @@ param GroupId array = [
   'blob'
 ]
 
-@description('Private DNS Zone Name')
-param PrivateDNSZoneName string = 'privatelink.blob.core.usgovcloudapi.net'
 
 @description('Resource Group Location')
 param location string = resourceGroup().location
@@ -29,6 +27,7 @@ var VNetId = resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks
 var VirtualNetworkLinkName = '${PrivateDNSZoneName}/${PrivateEndpointVnetName}'
 var subnetId = resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', PrivateEndpointVnetName, PrivateEndpointSubnetName)
 var PrivateDNSZoneId = resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', PrivateDNSZoneName)
+var PrivateDNSZoneName = ((environment() == 'AzureUSGovernment') ? 'privatelink.blob.core.usgovcloudapi.net' : 'privatelink.blob.core.windows.net')
 
 resource PrivateDNSZone_Resource 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   name: PrivateDNSZoneName
