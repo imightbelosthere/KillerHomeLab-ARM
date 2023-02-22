@@ -3,7 +3,6 @@
    param
     (
         [String]$DomainName,
-        [String]$NetBiosDomain,
         [System.Management.Automation.PSCredential]$Admincreds,
         [Int]$RetryCount=20,
         [Int]$RetryIntervalSec=30
