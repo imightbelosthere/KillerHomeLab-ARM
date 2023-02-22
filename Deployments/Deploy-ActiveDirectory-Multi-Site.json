@@ -1034,59 +1034,6 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Update-VNet2-DNS_01",
-            "resourceGroup":  "[parameters('Region2RG')]",             
-            "dependsOn": [
-                "Promote-DomainController-01"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetdns.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet2Name')]"
-                    },
-                    "vnetprefix": {
-                        "value": "[variables('vnet2Prefix')]"
-                    },
-                    "subnet1Name": {
-                        "value": "[variables('vnet2subnet1Name')]"
-                    },
-                    "subnet1Prefix": {
-                        "value": "[variables('vnet2subnet1Prefix')]"
-                    },
-                    "subnet2Name": {
-                        "value": "[variables('vnet2subnet2Name')]"
-                    },
-                    "subnet2Prefix": {
-                        "value": "[variables('vnet2subnet2Prefix')]"
-                    },
-                    "GatewaysubnetPrefix": {
-                        "value": "[variables('vnet2GatewaysubnetPrefix')]"
-                    },                    
-                    "BastionsubnetPrefix": {
-                        "value": "[variables('vnet2BastionsubnetPrefix')]"
-                    },
-                    "FirewallsubnetPrefix": {
-                        "value": "[variables('vnet2FirewallsubnetPrefix')]"
-                    },
-                    "DNSServerIP": {
-                        "value": [
-                            "[variables('dc1IP')]"
-                        ]
-                    }
-                }
-            }
-        },        
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Restart-DomainController-01_01",
             "resourceGroup":  "[parameters('Region1RG')]",                         
             "dependsOn": [
@@ -1132,10 +1079,63 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Update-VNet2-DNS_01",
+            "resourceGroup":  "[parameters('Region2RG')]",             
+            "dependsOn": [
+                "Restart-DomainController-01_01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/updatevnetdns.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet2Name')]"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet2Prefix')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('vnet2subnet1Name')]"
+                    },
+                    "subnet1Prefix": {
+                        "value": "[variables('vnet2subnet1Prefix')]"
+                    },
+                    "subnet2Name": {
+                        "value": "[variables('vnet2subnet2Name')]"
+                    },
+                    "subnet2Prefix": {
+                        "value": "[variables('vnet2subnet2Prefix')]"
+                    },
+                    "GatewaysubnetPrefix": {
+                        "value": "[variables('vnet2GatewaysubnetPrefix')]"
+                    },                    
+                    "BastionsubnetPrefix": {
+                        "value": "[variables('vnet2BastionsubnetPrefix')]"
+                    },
+                    "FirewallsubnetPrefix": {
+                        "value": "[variables('vnet2FirewallsubnetPrefix')]"
+                    },
+                    "DNSServerIP": {
+                        "value": [
+                            "[variables('dc1IP')]"
+                        ]
+                    }
+                }
+            }
+        },                
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Configure-Core-DNS-Records_DC1",
             "resourceGroup":  "[parameters('Region1RG')]",                                     
             "dependsOn": [
-                "Restart-DomainController-01_01"
+                "Update-VNet2-DNS_01"
             ],
             "properties": {
                 "mode": "Incremental",

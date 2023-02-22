@@ -13,12 +13,12 @@ This Deployment deploys the following items:
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
 - Configure 1st Domain Controller
+- Update Virtual Network 1 DNS with Domain Controller 1 IP
+- Restart Domain Controller 1
+- Update Virtual Network 2 DNS with Domain Controller 1 IP
 - Configure Reverse DNS Zone 1 and Point Records
 - Configure Organizational Unit Structure
 - Configure AD Sites Unit Structure
-- Update Virtual Network 1 DNS with Domain Controller 1 IP
-- Update Virtual Network 2 DNS with Domain Controller 1 IP
-- Restart Domain Controller 1
 - Configure 2nd Domain Controller
 - Configure Reverse DNS Zone 2 and Point Records
 - Update Virtual Network 2 DNS with Domain Controller 2 IP
