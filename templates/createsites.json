@@ -13,47 +13,35 @@
             "metadata": {
                 "description": "Extension Type Handler Version"
             }
-        },
+        },        
         "computerName": {
             "type": "string",
             "metadata": {
                 "description": "Computer Name"
             }
         },
-        "NetBiosDomain": {
+        "NamingConvention": {
             "type": "string",
             "metadata": {
-                "description": "NetBios Domain Name"
+                "description": "Domain Naming Convention"
             }
         },
-        "InternaldomainName": {
+        "BaseDN": {
             "type": "string",
             "metadata": {
-                "description": "The FQDN of the AD Domain created "
+                "description": "Base Domain Distiguished Name"
             }
         },
-        "ExternaldomainName": {
-            "type": "string",
-          "metadata": {
-            "description": "The External FQDN of the AD Domain created "
-          }
-        },         
-        "ReverseLookup": {
+        "Site1Prefix": {
             "type": "string",
             "metadata": {
-                "description": "The name of Reverse Lookup Zone 1 Network ID"
+                "description": "AD Site 1 Subnet"
             }
-        },
-        "ForwardLookup": {
+        },    
+        "Site2Prefix": {
             "type": "string",
             "metadata": {
-                "description": "The name of Forward Lookup Zone 1 Network ID"
-            }
-        },
-        "dclastoctet": {
-            "type": "string",
-            "metadata": {
-                "description": "DC Last IP Octet"
+                "description": "AD Site 2 Subnet"
             }
         },
         "_artifactsLocation": {
@@ -67,11 +55,11 @@
             "metadata": {
                 "description": "Auto-generated token to access _artifactsLocation"
             }
-        }
+        }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CONFIGDNSINT.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "CONFIGDNSINT.ps1\\CONFIGDNSINT"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CREATESITES.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "CREATESITES.ps1\\CREATESITES"
     },
     "resources": [
         {
@@ -85,19 +73,15 @@
                 "typeHandlerVersion": "[parameters('ExtensionsTypeHandlerVersion')]",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
-                    "WMFVersion": "latest",
+                   "WMFVersion": "latest",                    
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                    "Properties": {
-                        "computerName": "[parameters('computerName')]",
-                        "NetBiosDomain": "[parameters('NetBiosDomain')]",
-                        "InternaldomainName": "[parameters('InternaldomainName')]",
-                        "ReverseLookup": "[parameters('ReverseLookup')]",
-                        "ForwardLookup": "[parameters('ForwardLookup')]",
-                        "dclastoctet": "[parameters('dclastoctet')]"
-                    }
-                },
-                "protectedSettings": {
+                        "Properties": {
+                            "NamingConvention": "[parameters('NamingConvention')]",
+                            "BaseDN": "[parameters('BaseDN')]",                            
+                            "Site1Prefix": "[parameters('Site1Prefix')]",                            
+                            "Site2Prefix": "[parameters('Site2Prefix')]"                                                        
+                        }
                 }
             }
         }

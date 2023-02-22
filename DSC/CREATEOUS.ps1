@@ -9,8 +9,13 @@
 
     Node localhost
     {
+        LocalConfigurationManager
+        {
+            ActionAfterReboot = "StopConfiguration"
+            ConfigurationMode = "ApplyOnly"
+        }
 
-       ADOrganizationalUnit AccountsOU
+        ADOrganizationalUnit AccountsOU
         {
             Name                            = "Accounts"
             Path                            = "$BaseDN"
@@ -18,7 +23,7 @@
             Ensure                          = 'Present'
         }
 
-       ADOrganizationalUnit GroupsOU
+        ADOrganizationalUnit GroupsOU
         {
             Name                            = "Groups"
             Path                            = "$BaseDN"
@@ -26,7 +31,7 @@
             Ensure                          = 'Present'
         }
 
-       ADOrganizationalUnit AdminOU
+        ADOrganizationalUnit AdminOU
         {
             Name                            = "Admin"
             Path                            = "OU=Accounts,$BaseDN"

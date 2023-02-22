@@ -19,13 +19,31 @@
             "metadata": {
                 "description": "Computer Name"
             }
-        },
+        },           
         "Identifier": {
             "type": "string",
             "metadata": {
                 "description": "Unique Identifier for Reboot Key generated for each deployoment"
             }
-        },                 
+        },
+        "DomainName": {
+            "type": "string",
+          "metadata": {
+            "description": "The FQDN of the AD Domain created "
+          }
+        },             
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+          "metadata": {
+            "description": "The password for the Administrator account of the new VM and Domain"
+          }
+        },                                
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -59,10 +77,18 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
-                        "Identifier": "[parameters('Identifier')]"                                                
+                        "Identifier": "[parameters('Identifier')]",
+                        "DomainName": "[parameters('DomainName')]",                                                
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword1"                                                                                   
+                        }                                                                   
                     }
                 },
                 "protectedSettings": {
+                    "Items": {
+                        "AdminPassword1": "[parameters('adminPassword')]"
+                    }                    
                 }                
             }
         }

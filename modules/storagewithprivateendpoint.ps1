@@ -23,4 +23,4 @@ $parameters = @{
     StorageAccountInitialNumber = $StorageAccountInitialNumber
 }
 
-New-AzResourceGroupDeployment -Name "Deploy-$NumberOfStorageAccountInstances-StorageAccounts-with-PrivateEndpoints" -ResourceGroupName Storage-Account-Testing -TemplateFile C:\_DevOpsServer\JAIC-RDP-Solution\templates\storagewithprivateendpoint.bicep -TemplateParameterObject $parameters
+New-AzResourceGroupDeployment -Name "Deploy-$NumberOfStorageAccountInstances-StorageAccounts-with-PrivateEndpoints" -ResourceGroupName Storage-Account-Testing -TemplateFile C:\_GitHub\comingsoon\KillerHomeLab-ARM\modules\storagewithprivateendpoint.bicep -TemplateParameterObject $parameters

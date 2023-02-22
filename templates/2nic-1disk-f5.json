@@ -1,0 +1,309 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualNetworkAPIVersion": {
+            "defaultValue": "2020-11-01",
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "NetworkInterfacesAPIVersion": {
+            "defaultValue": "2021-08-01",
+            "type": "string",
+            "metadata": {
+                "description": "NetworkInterfaces API Version"
+            }
+        },
+        "VirtualMachinesAPIVersion": {
+            "defaultValue": "2022-03-01",            
+            "type": "string",
+            "metadata": {
+                "description": "VirtualMachines API Version"
+            }
+        },
+        "vnetID": {
+            "type": "string",
+            "defaultValue": "140.18",
+            "metadata": {
+                "description": "VNet1 Prefix"
+            }
+        },        
+        "vnetName": {
+            "defaultValue": "F5-VNet1",            
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network Name"
+            }
+        },
+        "subnet1Name": {
+            "defaultValue": "F5-VNet1-ManagementSubnet",            
+            "type": "string",
+            "metadata": {
+                "description": "Management Subnet"
+            }
+        },  
+        "subnet2Name": {
+            "defaultValue": "F5-VNet1-ExternalSubnet",            
+            "type": "string",
+            "metadata": {
+                "description": "External Subnet"
+            }
+        },   
+        "subnet3Name": {
+            "defaultValue": "F5-VNet1-InternalSubnet",            
+            "type": "string",
+            "metadata": {
+                "description": "Internal Subnet"
+            }
+        },                     
+        "computerName": {
+            "defaultValue": "F5-BYOL-VA",                        
+            "type": "string",
+            "metadata": {
+                "description": "Computer Name"
+            }
+        },
+        "VMSize": {
+            "defaultValue": "Standard_D8s_v3",            
+            "type": "string",
+            "metadata": {
+                "description": "VMSize"
+            }
+        },
+        "Publisher": {
+            "defaultValue": "f5-networks",
+            "type": "string",
+            "metadata": {
+                "description": "Image Publisher"
+            }
+        },
+        "Offer": {
+            "defaultValue": "f5-big-ip-byol",
+            "type": "string",
+            "metadata": {
+                "description": "Image Publisher Offer"
+            }
+        },
+        "OSVersion": {
+            "defaultValue": "Latest",
+            "type": "string",
+            "metadata": {
+                "description": "OS Version"
+            }
+        },
+        "OSSku": {
+            "defaultValue": "f5-big-all-1slot-byol",
+            "type": "string",
+            "metadata": {
+                "description": "OS Sku"
+            }
+        },                                                                         
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        }        
+    },
+    "variables": {
+        "storageAccountType": "Premium_LRS",        
+        "vnetPrefix": "[concat(parameters('vnetID'),'.0.0/16')]",
+        "subnet1Prefix": "[concat(parameters('vnetID'),'.1.0/24')]",                
+        "subnet2Prefix": "[concat(parameters('vnetID'),'.2.0/24')]",                
+        "subnet3Prefix": "[concat(parameters('vnetID'),'.3.0/24')]",                        
+        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]",
+        "subnet2Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet2Name'))]",        
+        "subnet3Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet3Name'))]",        
+        "Nic1Name": "[concat(parameters('computerName'),'-mgmt')]",
+        "Nic1IPAddress": "[concat(parameters('vnetID'),'.1.55')]",
+        "Nic2Name": "[concat(parameters('computerName'),'-ext')]",
+        "Nic2IPAddress": "[concat(parameters('vnetID'),'.2.55')]",           
+        "Nic3Name": "[concat(parameters('computerName'),'-int')]",
+        "Nic3IPAddress": "[concat(parameters('vnetID'),'.3.55')]"        
+    },
+    "resources": [
+        {
+            "name": "[parameters('vnetName')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "[parameters('VirtualNetworkAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnetPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[parameters('subnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('subnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('subnet2Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[parameters('subnet3Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('subnet3Prefix')]"
+                        }
+                    }                    
+                ]                
+            }
+        },        
+        {
+            "name": "[variables('Nic1Name')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[variables('Nic1IPAddress')]",
+                            "subnet": {
+                                "id": "[variables('subnet1Id')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('Nic2Name')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[variables('Nic2IPAddress')]",
+                            "subnet": {
+                                "id": "[variables('subnet2Id')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },        
+        {
+            "name": "[variables('Nic3Name')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "[parameters('NetworkInterfacesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnetName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress": "[variables('Nic3IPAddress')]",
+                            "subnet": {
+                                "id": "[variables('subnet3Id')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },        
+        {
+            "name": "[parameters('computerName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "[parameters('VirtualMachinesAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('Nic1Name'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('Nic2Name'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('Nic3Name'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('VMSize')]"
+                },
+                "storageProfile": {
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[variables('storageAccountType')]"
+                        }
+                    },
+                    "imageReference": {
+                        "publisher": "[parameters('Publisher')]",
+                        "offer": "[parameters('Offer')]",
+                        "sku": "[parameters('OSSku')]",
+                        "version": "[parameters('OSVersion')]"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "properties": {
+                                "primary": true
+                            },                            
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('Nic1Name'))]"
+                        },
+                        {
+                            "properties": {
+                                "primary": false
+                            },                            
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('Nic2Name'))]"
+                        },
+                        {
+                            "properties": {
+                                "primary": false
+                            },                            
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('Nic3Name'))]"
+                        }                                                
+                    ]
+                },
+                "osProfile": {
+                    "computerName": "[parameters('computerName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]"
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            },
+            "plan": {
+                "name": "[parameters('OSSku')]",
+                "publisher": "[parameters('Publisher')]",
+                "product": "[parameters('Offer')]"
+            }
+        }
+    ],
+    "outputs": {
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('adminUsername')]"
+        }
+    }
+}

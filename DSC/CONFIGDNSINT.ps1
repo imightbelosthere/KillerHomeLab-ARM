@@ -5,31 +5,36 @@
         [String]$computerName,
         [String]$NetBiosDomain,
         [String]$InternaldomainName,
-        [String]$ExternaldomainName,
-        [String]$ReverseLookup1,
-        [String]$ForwardLookup1,
-        [String]$dc1lastoctet
+        [String]$ReverseLookup,
+        [String]$ForwardLookup,
+        [String]$dclastoctet
     )
 
     Import-DscResource -ModuleName DnsServerDsc
 
     Node localhost
     {
-        DnsServerADZone ReverseADZone1
+        LocalConfigurationManager
         {
-            Name             = "$ReverseLookup1.in-addr.arpa"
+            ActionAfterReboot = "StopConfiguration"
+            ConfigurationMode = "ApplyOnly"
+        }
+
+        DnsServerADZone ReverseADZone
+        {
+            Name             = "$ReverseLookup.in-addr.arpa"
             DynamicUpdate = 'Secure'
             Ensure           = 'Present'
             ReplicationScope = 'Domain'
         }
 
-        DnsRecordPtr DC1PtrRecord
+        DnsRecordPtr DCPtrRecord
         {
             Name      = "$computerName.$InternaldomainName"
-            ZoneName = "$ReverseLookup1.in-addr.arpa"
-            IpAddress = "$ForwardLookup1.$dc1lastoctet"
+            ZoneName = "$ReverseLookup.in-addr.arpa"
+            IpAddress = "$ForwardLookup.$dclastoctet"
             Ensure    = 'Present'
-            DependsOn = "[DnsServerADZone]ReverseADZone1"           
+            DependsOn = "[DnsServerADZone]ReverseADZone"           
         }
     }
 }
