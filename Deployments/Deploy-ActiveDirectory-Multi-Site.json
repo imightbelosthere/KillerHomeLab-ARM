@@ -610,7 +610,6 @@
         "vnet2GatewaysubnetPrefix": "[concat(parameters('vnet2ID'),'.0.0/24')]",
         "vnet2BastionsubnetPrefix": "[concat(parameters('vnet2ID'),'.253.0/24')]",
         "vnet2FirewallsubnetPrefix": "[concat(parameters('vnet2ID'),'.254.0/24')]",
-
         "dc1name": "[concat(parameters('NamingConvention'),'-dc-01')]",
         "dc1IP": "[concat(parameters('vnet1ID'),'.1.',variables('dc1lastoctet'))]",
         "dc1lastoctet": "101",
@@ -626,7 +625,7 @@
         "ReverseLookup1": "[concat('1.',parameters('ReverseLookup1'))]",
         "ReverseLookup2": "[concat('1.',parameters('ReverseLookup2'))]",        
         "ForwardLookup1": "[concat(parameters('vnet1ID'),'.1')]",
-        "ForwardLookup2": "[concat(parameters('vnet1ID'),'.2')]",        
+        "ForwardLookup2": "[concat(parameters('vnet2ID'),'.1')]",        
         "DCDataDisk1Name": "NTDS",
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "BaseDN": "[concat(parameters('SubDNSBaseDN'),'DC=',parameters('InternalDomain'),',DC=',parameters('InternalTLD'))]",
