@@ -2,6 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptiondeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "Region2": {
+            "type": "string",
+            "defaultValue": "", 
+            "metadata": {
+                "description": "Choose Secondary Region"
+            }
+        },        
         "Region1RG": {
             "type": "string",
             "defaultValue": "AD-Site-01",
@@ -9,13 +16,6 @@
                 "description": "Region 1 Resource Group"
             }
         },        
-        "Region2": {
-            "type": "string",
-            "defaultValue": "USGovTexas", 
-            "metadata": {
-                "description": "Choose Region (Example: USGovTexas)"
-            }
-        },
         "Region2RG": {
             "type": "string",
             "defaultValue": "AD-Site-02",
@@ -589,9 +589,10 @@
     },
     "variables": {
         "DeploymentName": "[deployment().name]",
+        "Location": "[environment().]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('ADSS-', variables('Identifier'))]",
-        "SecretName": "[concat(resourceGroup().Name,'-Password')]",
+        "KeyVaultName": "[concat('ADMS-', variables('Identifier'))]",
+        "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
         "vnet1subnet1Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet1')]",
