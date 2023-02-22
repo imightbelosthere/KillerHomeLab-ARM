@@ -89,8 +89,8 @@
         ADDomain FirstDS
         {
             DomainName = $DomainName
-            Credential = $DomainCreds
-            SafemodeAdministratorPassword = $DomainCreds
+            Credential = $DomainCredsFQDN
+            SafemodeAdministratorPassword = $DomainCredsFQDN
             DatabasePath = "N:\NTDS"
             LogPath = "N:\NTDS"
             SysvolPath = "N:\SYSVOL"

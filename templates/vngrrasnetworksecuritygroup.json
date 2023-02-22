@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkSecurityGroupAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group API Version"
+            }
+        },
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name"
+            }
+        },
+        "AZUREVNGPublicIP": {
+            "type": "string",
+            "metadata": {
+                "description": "AZURE Virtual Network Gateway Public IP"
+            }
+        },        
+        "VPNOutsideIP": {
+            "type": "string",
+            "metadata": {
+                "description": "VPN Outside Private IP"
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "[parameters('NetworkSecurityGroupAPIVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[parameters('NetworkSecurityGroupName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "IKE",
+                        "properties": {
+                            "description": "Opens Port IKE (Port 500/UDP)",
+                            "protocol": "Udp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "500",
+                            "sourceAddressPrefixes": [ 
+                                "[parameters('AZUREVNGPublicIP')]"
+                            ],
+                            "destinationAddressPrefix": "[parameters('VPNOutsideIP')]",
+                            "access": "Allow",
+                            "priority": 1000,
+                            "direction": "Inbound"
+                        }
+                    },
+                    {
+                        "name": "IKEv2",
+                        "properties": {
+                            "description": "Opens Port IKEv2 (Port 4500/UDP)",
+                            "protocol": "Udp",
+                            "sourcePortRange": "*",
+                            "destinationPortRange": "4500",
+                            "sourceAddressPrefixes": [ 
+                                "[parameters('AZUREVNGPublicIP')]"
+                            ],
+                            "destinationAddressPrefix": "[parameters('VPNOutsideIP')]",
+                            "access": "Allow",
+                            "priority": 2000,
+                            "direction": "Inbound"
+                        }
+                    }                     
+                ]
+            }
+        }
+    ]
+}

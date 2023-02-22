@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LocalNetworkGatewayAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Local Network API Version"
+            }
+        },         
+        "LNGName": {
+            "type": "string",
+            "metadata": {
+                "description": "Local Gateway Name"
+              }
+        },
+        "SubnetPrefix1": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet Prefix1"
+            }
+        },      
+        "RemoteGatewayIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Remote VPN Gateway IP"
+            }
+        }      
+    },   
+    "resources": [
+        {
+            "type": "Microsoft.Network/localNetworkGateways",
+            "apiVersion": "[parameters('LocalNetworkGatewayAPIVersion')]",
+            "name": "[parameters('LNGName')]",            
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "localNetworkAddressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('SubnetPrefix1')]"                   
+                    ]
+                },
+                "gatewayIpAddress": "[parameters('RemoteGatewayIP')]"
+            }
+        }        
+    ]
+}
