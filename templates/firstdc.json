@@ -20,12 +20,6 @@
                 "description": "Computer Name"
             }
         },
-        "NetBiosDomain": {
-            "type": "string",
-            "metadata": {
-                "description": "NetBios Domain Name"
-            }
-        },
         "domainName": {
             "type": "string",
             "metadata": {
@@ -81,8 +75,7 @@
                             "UserName": "[parameters('adminUsername')]",
                             "Password": "PrivateSettingsRef:AdminPassword1"
                         },
-                        "DomainName": "[parameters('domainName')]",
-                        "NetBiosDomain": "[parameters('NetBiosDomain')]"
+                        "DomainName": "[parameters('domainName')]"
                     }
                 },
                 "protectedSettings": {
