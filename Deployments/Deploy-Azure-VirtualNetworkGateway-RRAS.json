@@ -395,8 +395,6 @@
         "AZUREVNetBastionsubnetPrefix": "[concat(parameters('AZUREVNetID'),'.253.0/24')]",
         "AZUREVNetFirewallsubnetPrefix": "[concat(parameters('AZUREVNetID'),'.254.0/24')]",
         "AZUREVNGName": "[concat(parameters('AZURENamingConvention'),'-VNet1-VNG')]",
-        "ONPREMRouteTableName": "[concat(parameters('ONPREMNamingConvention'),'-RT')]",                                                                
-        "AZURERouteTableName": "[concat(parameters('AZURENamingConvention'),'-RT')]",                                                                
         "NVAVMName": "[concat(parameters('ONPREMNamingConvention'),'-nva-01')]", 
         "NVA-Outside-IP": "[concat(parameters('ONPREMVNetID'),'.1.',variables('NVAOutLastOctet'))]",
         "NVA-Inside-IP": "[concat(parameters('ONPREMVNetID'),'.2.',variables('NVAInLastOctet'))]",            
@@ -423,7 +421,6 @@
         "NetworkSecurityGroupAPIVersion": "2022-01-01",                
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "ResourceGroupAPIVersion": "2021-04-01",  
-        "RouteTableAPIVersion": "2022-05-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",
@@ -994,7 +991,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvmndj.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
