@@ -2,6 +2,7 @@
 {
    param
    (
+        [String]$Identifier
     )
 
     Import-DscResource -Module xPendingReboot # Used for Reboots
@@ -21,10 +22,11 @@
         Script Reboot
         {
             TestScript = {
-            return (Test-Path HKLM:\SOFTWARE\MyMainKey\RebootKey)
+            return (Test-Path "HKLM:\SOFTWARE\MyMainKey\$using:Identifier")
             }
             SetScript = {
-			        New-Item -Path HKLM:\SOFTWARE\MyMainKey\RebootKey -Force
+                    Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\WindowsAzureGuestAgent' -Name DependOnService -Type MultiString -Value Dnscache
+			        New-Item -Path "HKLM:\SOFTWARE\MyMainKey\$using:Identifier" -Force
 			        $global:DSCMachineStatus = 1 
                 }
             GetScript = { return @{result = 'result'}}
