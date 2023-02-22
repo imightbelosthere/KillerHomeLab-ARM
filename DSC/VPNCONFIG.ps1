@@ -53,7 +53,7 @@
                 IF ($scheduledtask -eq $null){
                     $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\SetupRRAS.ps1' -WorkingDirectory 'C:\ConfigureRRAS'
                     Register-ScheduledTask -Action $action -TaskName "Configure RRAS" -Description "Configure RRAS" -User $Username -Password $Password
-                    Start-ScheduledTask "Configure RRAS"
+                    Start-ScheduledTask -TaskName "Configure RRAS"
                 }
             }
             GetScript =  { @{} }
