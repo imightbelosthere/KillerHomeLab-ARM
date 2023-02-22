@@ -589,7 +589,6 @@
     },
     "variables": {
         "DeploymentName": "[deployment().name]",
-        "Location": "[environment().]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('ADMS-', variables('Identifier'))]",
         "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
@@ -1039,7 +1038,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Update-VNet2-DNS",
+            "name": "Update-VNet2-DNS_01",
             "resourceGroup":  "[parameters('Region2RG')]",             
             "dependsOn": [
                 "Promote-DomainController-01"
@@ -1476,7 +1475,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Update-VNet2-DNS",
+            "name": "Update-VNet2-DNS_02",
             "resourceGroup":  "[parameters('Region2RG')]",             
             "dependsOn": [
                 "Promote-DomainController-02"
@@ -1532,7 +1531,7 @@
             "name": "Restart-DomainController-02_01",
             "resourceGroup":  "[parameters('Region2RG')]",                         
             "dependsOn": [
-                "Update-VNet2-DNS"
+                "Update-VNet2-DNS_02"
             ],
             "properties": {
                 "mode": "Incremental",
