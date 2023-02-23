@@ -19,14 +19,13 @@
             Ensure = "Present"
         }
 
-        Script ConfigureRRAS
+        Script RoutingOnly
         {
             SetScript =
             {
                 # Create ConfigureRRAS Script
-                $FalseValue = '$False'
-                Set-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "Install-RemoteAccess -VpnType RoutingOnly"
-                Add-Content -Path C:\ConfigureRRAS\SetupRRAS.ps1 -Value "Import-Module RemoteAccess"
+                Set-Content -Path C:\ConfigureRRAS\RoutingOnly.ps1 -Value "Install-RemoteAccess -VpnType RoutingOnly"
+                Add-Content -Path C:\ConfigureRRAS\RoutingOnly.ps1 -Value "Import-Module RemoteAccess"
             }
             GetScript =  { @{} }
             TestScript = { $false}
@@ -35,15 +34,15 @@
 
         ScheduledTask CreateConfigureRRAS
         {
-            TaskName            = 'Configure RRAS'
+            TaskName            = 'Routing Only'
             ActionExecutable    = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
             ScheduleType        = 'Once'
             StartTime           = (Get-Date).AddMinutes(1)
-            ActionArguments     = 'C:\ConfigureRRAS\SetupRRAS.ps1'
+            ActionArguments     = 'C:\ConfigureRRAS\RoutingOnly.ps1'
             Enable              = $true
             ExecuteAsCredential = $LocalCreds
             LogonType           = 'Password'
-            DependsOn = '[Script]ConfigureRRAS'
+            DependsOn = '[Script]RoutingOnly'
         }
 
         Script AllowLegacy
