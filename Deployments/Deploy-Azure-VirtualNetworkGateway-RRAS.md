@@ -28,8 +28,8 @@ If you can't remember the Username review the Deployment Input tab within your R
 
 Parameters that support changes
 - ONPREMRG.  Resource Group for ONPrem Resources.
-- SITE1Region.  Location for Site1 Resources.
-- SITE1RG.  Resource Group for Site1 Resources.
+- AZURERegion.  Location for AZURE Resources.
+- AZURERG.  Resource Group for AZURE Resources.
 - TimeZone.  Select an appropriate Time Zone.
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
@@ -40,12 +40,12 @@ Parameters that support changes
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - ONPREMNamingConvention. Enter a name that will be used as a naming prefix for (On-Prem Servers, VNets, etc) you are using.
-- SITE1NamingConvention. Enter a name that will be used as a naming prefix for (Site1 Servers, VNets, etc) you are using.
+- AZURENamingConvention. Enter a name that will be used as a naming prefix for (AZURE Servers, VNets, etc) you are using.
 - ONPREMVNetID.  Enter first 2 octets of your desired Address Space for OnPrem Virtual Network(Example:  192.168)
-- SITE1VNetID.  Enter first 2 octets of your desired Address Space for Site1 Virtual Network(Example:  172.16)
+- AZUREVNetID.  Enter first 2 octets of your desired Address Space for AZURE Virtual Network(Example:  172.16)
 - NVAOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) Network Virtual Apliance 1 OS Sku
 - ONPREMVMOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) Hub VM 1 OS Sku
-- SITE1VMOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) Site1 VM 1 OS Sku
+- AZUREVMOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) AZURE VM 1 OS Sku
 - NVAVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - ONPREMVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
-- SITE1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
+- AZUREVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.

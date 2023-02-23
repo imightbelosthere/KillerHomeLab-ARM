@@ -395,7 +395,8 @@
         "AZUREVNetBastionsubnetPrefix": "[concat(parameters('AZUREVNetID'),'.253.0/24')]",
         "AZUREVNetFirewallsubnetPrefix": "[concat(parameters('AZUREVNetID'),'.254.0/24')]",
         "AZUREVNGName": "[concat(parameters('AZURENamingConvention'),'-VNet1-VNG')]",
-        "NVAVMName": "[concat(parameters('ONPREMNamingConvention'),'-nva-01')]", 
+        "NVARouteTableName": "[concat(parameters('ONPREMNamingConvention'),'-NVA-RT')]",                                                                        
+        "NVAVMName": "[concat(parameters('ONPREMNamingConvention'),'-nva-01')]",
         "NVA-Outside-IP": "[concat(parameters('ONPREMVNetID'),'.1.',variables('NVAOutLastOctet'))]",
         "NVA-Inside-IP": "[concat(parameters('ONPREMVNetID'),'.2.',variables('NVAInLastOctet'))]",            
         "NVAOutLastOctet": "254",        
@@ -421,6 +422,7 @@
         "NetworkSecurityGroupAPIVersion": "2022-01-01",                
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "ResourceGroupAPIVersion": "2021-04-01",  
+        "RouteTableAPIVersion": "2022-05-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",
@@ -1273,6 +1275,71 @@
                     }                                                                                                                                                                                                                                                                                                            
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Create-RRAS-RouteTable",
+            "resourceGroup":  "[parameters('ONPREMRG')]",
+            "dependsOn": [
+                "Deploy-AZURE-Connection"
+            ],              
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/rrasroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "RouteTableAPIVersion": {
+                        "value": "[variables('RouteTableAPIVersion')]"
+                    },                    
+                    "Name": {
+                        "value": "[variables('NVARouteTableName')]"
+                    },
+                    "RouteName": {
+                        "value": "Azure"
+                    },                    
+                    "SubnetPrefix": {
+                        "value": "[variables('ONPREMVNetSubnet2Prefix')]"
+                    },           
+                    "RemoteGatewayIP": {
+                        "value": "[variables('NVA-Inside-IP')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-RRAS-RouteTable-with-InsideSubnet",
+            "dependsOn": [
+                "Create-RRAS-RouteTable"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "RouteTableName": {
+                        "value": "[variables('NVARouteTableName')]"
+                    },
+                    "vnetName": {
+                        "value": "[variables('ONPREMVNetName')]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('ONPREMVNetSubnet2Name')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('ONPREMVNetSubnet2Prefix')]"
+                    }
+                }
+            }
+        }               
     ]
 }
