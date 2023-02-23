@@ -184,7 +184,7 @@
                     },
                     "dataDisks": [
                         {
-                            "name": "[concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')), '_', parameters('DataDisk1Name'))]",
+                            "name": "[concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')), parameters('DataDisk1Name'))]",
                             "caching": "None",
                             "diskSizeGB": "[variables('DataDiskSize')]",
                             "lun": 0,
