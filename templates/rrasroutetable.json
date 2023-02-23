@@ -20,10 +20,10 @@
                 "description": "Route Name"
             }
         },        
-        "SitePrefix": {
+        "SubnetPrefix": {
             "type": "string",
             "metadata": {
-                "description": "Site Prefix"
+                "description": "Subnet Prefix"
             }
         },
         "RemoteGatewayIP": {
@@ -45,7 +45,7 @@
                     {
                         "name": "[parameters('RouteName')]",
                         "properties": {
-                            "addressPrefix": "[parameters('SitePrefix')]",
+                            "addressPrefix": "[parameters('SubnetPrefix')]",
                             "nextHopType": "VirtualAppliance",
                             "nextHopIpAddress": "[parameters('RemoteGatewayIP')]",
                             "hasBgpOverride": false
