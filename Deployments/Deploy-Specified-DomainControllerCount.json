@@ -291,6 +291,8 @@
         }
     },
     "variables": {
+        "DeploymentName": "[deployment().name]",
+        "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "VMPrefix": "[concat(parameters('NamingConvention'),'-dc-0')]",
         "IPPrefix": "[concat(parameters('vnetID'),'.1.1')]",      
@@ -416,6 +418,56 @@
                     }
                 }
             }
-        }        
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Restart-DomainController-Count",
+            "dependsOn": [
+                "Promote-DomainController-Count"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvmloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "Identifier": {
+                        "value": "[concat(variables('Identifier'),'-1')]"
+                    },
+                    "DomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },  
+                    "VMPrefix": {
+                        "value": "[variables('VMPrefix')]"
+                    },
+                    "NumberOfVMInstances": {
+                        "value": "[parameters('NumberOfVMInstances')]"
+                    },                                        
+                    "VMInitialNumber": {
+                        "value": "[parameters('VMInitialNumber')]"
+                    },                                                           
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        }               
     ]
 }
