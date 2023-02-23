@@ -37,7 +37,7 @@
                     while (($InstallStatus -ne 'Installed')){
                         Start-Sleep 30
                     }
-                    Add-VpnS2SInterface -Protocol IKEv2 -AuthenticationMethod PSKOnly -NumberOfTries 3 -ResponderAuthenticationMethod PSKOnly -Name $using:AZUREName -Destination $using:AZURERemoteGatewayIP -IPv4Subnet $AZUREIPv4 -SharedSecret $using:SharedKey
+                    Add-VpnS2SInterface -Protocol IKEv2 -AuthenticationMethod PSKOnly -NumberOfTries 3 -ResponderAuthenticationMethod PSKOnly -Name "$using:AZUREName" -Destination "$using:AZURERemoteGatewayIP" -IPv4Subnet $AZUREIPv4 -SharedSecret "$using:SharedKey"
                 }
 
                 # Create ConfigureRRAS Script
