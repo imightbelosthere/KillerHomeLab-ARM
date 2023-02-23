@@ -15,7 +15,21 @@
             "metadata": {
                 "description": "Starting number of Virtual Machine numbering Sequence"
             }
-        },            
+        },
+        "VNetName": {
+            "type": "string",
+            "defaultValue": "KHL-VNet1",
+            "metadata": {
+                "description": "Existing Virtual Network Name"
+            }
+        },       
+        "SubnetName": {
+            "type": "string",
+            "defaultValue": "KHL-VNet1-Subnet1",
+            "metadata": {
+                "description": "Existing Subnet Name"
+            }
+        },                            
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -245,9 +259,8 @@
     },
     "variables": {
         "VMPrefix": "[concat(parameters('NamingConvention'),'-dc-0')]",
-        "IPPrefix": "[concat(parameters('vnetID'),'.1.1')]",        
-        "vnetName": "[concat(parameters('NamingConvention'),'-VNet')]",
-        "subnetName": "[concat(parameters('NamingConvention'),'-VNet-Subnet')]",
+        "IPPrefix": "[concat(parameters('vnetID'),'.1.1')]",      
+        "DCDataDisk1Name": "NTDS",          
         "DeploymentAPIVersion": "2021-04-01",
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "VirtualMachinesAPIVersion": "2022-03-01"
@@ -288,14 +301,17 @@
                     "LicenseType": {
                         "value": "[parameters('WindowsServerLicenseType')]"
                     },
+                    "DataDisk1Name": {
+                        "value": "[variables('DCDataDisk1Name')]"
+                    },                    
                     "VMSize": {
                         "value": "[parameters('VMVMSize')]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnetName')]"
+                        "value": "[parameters('vnetName')]"
                     },
                     "subnetName": {
-                        "value": "[variables('subnetName')]"
+                        "value": "[parameters('subnetName')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
