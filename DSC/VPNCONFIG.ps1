@@ -32,8 +32,9 @@
                     Restart-Service -Name RemoteAccess -ErrorAction 0
                     Install-RemoteAccess -VpnType VpnS2S
                     Import-Module RemoteAccess
-                    $IntallStatus = Get-RemoteAccess
-                    while (($Install -ne 'Installed')){
+                    $RemoteAccess = Get-RemoteAccess
+                    $InstallStatus = $RemoteAccess.VpnS2SStatus
+                    while (($InstallStatus -ne 'Installed')){
                         Start-Sleep 30
                     }
                     Add-VpnS2SInterface -Protocol IKEv2 -AuthenticationMethod PSKOnly -NumberOfTries 3 -ResponderAuthenticationMethod PSKOnly -Name $using:AZUREName -Destination $using:AZURERemoteGatewayIP -IPv4Subnet $AZUREIPv4 -SharedSecret $using:SharedKey
@@ -72,7 +73,7 @@
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[File]ConfigureRRASDirectory'
-            Credential = $Admincreds
+            Credential = $LocalCreds
         }
 
         Script ConfigureNAT

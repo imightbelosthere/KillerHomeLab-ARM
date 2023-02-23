@@ -12,6 +12,12 @@
 
     Import-DscResource -ModuleName DnsServerDsc
 
+    $DNSService = Get-Service -Name DNS
+    $DNSServiceStatus = $DNSService.Status
+    while (($DNSServiceStatus -ne 'Running')){
+        Start-Sleep 30
+    }    
+
     Node localhost
     {
         LocalConfigurationManager
