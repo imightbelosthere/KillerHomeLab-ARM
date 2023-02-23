@@ -1,5 +1,5 @@
-# Azure Virtual Network Gateway RRAS
-<img src="./x_Images/AzureVirtualNetworkGatewayRRAS.svg" height="600" width="800"/>
+# AZHB1 Virtual Network Gateway RRAS
+<img src="./x_Images/AZHB1VirtualNetworkGatewayRRAS.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
@@ -8,11 +8,11 @@ This Deployment deploys the following items:
 - 1 - Virtual Network Gateway
 - 1 - Local Network Gateway
 - 1 - Connection1
-- 2 - Virtual Machines (Azure, On-Prem)
+- 2 - Virtual Machines (AZHB1, On-Prem)
 - 1 - Bastion Host
 - 1 - Windows Routing and Remote Access server (VM with 2 NIC's)
-- 3 - Route Tables
-- 1 - Azure KeyVault with Secret contianing Deployment Password
+- 1 - Route Table
+- 1 - AZHB1 KeyVault with Secret contianing Deployment Password
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
@@ -27,25 +27,25 @@ If you can't remember the Username review the Deployment Input tab within your R
 <img src="./x_Images/DeploymentUsername.png" width="300"/>
 
 Parameters that support changes
+- AZHB1Region.  Location for AZHB1 Resources.
 - ONPREMRG.  Resource Group for ONPrem Resources.
-- AZURERegion.  Location for AZURE Resources.
-- AZURERG.  Resource Group for AZURE Resources.
+- AZHB1RG.  Resource Group for AZHB1 Resources.
 - TimeZone.  Select an appropriate Time Zone.
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
-- Azure UserObject ID.  Object ID for the Azure Using running the deployment
+- Azure UserObject ID.  Object ID for the AZHB1 Using running the deployment
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - ONPREMNamingConvention. Enter a name that will be used as a naming prefix for (On-Prem Servers, VNets, etc) you are using.
-- AZURENamingConvention. Enter a name that will be used as a naming prefix for (AZURE Servers, VNets, etc) you are using.
+- AZHB1NamingConvention. Enter a name that will be used as a naming prefix for (AZHB1 Servers, VNets, etc) you are using.
 - ONPREMVNetID.  Enter first 2 octets of your desired Address Space for OnPrem Virtual Network(Example:  192.168)
-- AZUREVNetID.  Enter first 2 octets of your desired Address Space for AZURE Virtual Network(Example:  172.16)
+- AZHB1VNetID.  Enter first 2 octets of your desired Address Space for AZHB1 Virtual Network(Example:  172.16)
 - NVAOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) Network Virtual Apliance 1 OS Sku
 - ONPREMVMOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) Hub VM 1 OS Sku
-- AZUREVMOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) AZURE VM 1 OS Sku
+- AZHB1VMOSVersion.  Select 2022-Datacenter (Windows 2022), 2019-Datacenter (Windows 2019) or 2016-Datacenter (Windows 2016) AZHB1 VM 1 OS Sku
 - NVAVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - ONPREMVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
-- AZUREVMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
+- AZHB1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.

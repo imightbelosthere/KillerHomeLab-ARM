@@ -16,11 +16,11 @@
                 "description": "ONPREM Resource Group"
             }
         },                
-        "AZURERG": {
+        "AZHB1RG": {
             "type": "string",
-            "defaultValue": "AZURE-RG",
+            "defaultValue": "AZHB1-RG",
             "metadata": {
-                "description": "AZURE Resource Group"
+                "description": "AZHB1 Resource Group"
             }
         },                                                                                  
         "TimeZone": {
@@ -252,13 +252,13 @@
                 "description": "ONPREM Environment Naming Convention"
             }
         },      
-        "AZURENamingConvention": {
+        "AZHB1NamingConvention": {
             "type": "string",
-            "defaultValue": "AZURE",
+            "defaultValue": "AZHB1",
             "minLength": 1,
             "maxLength": 5,
             "metadata": {
-                "description": "AZURE Environment Naming Convention"
+                "description": "AZHB1 Environment Naming Convention"
             }
         },         
         "ONPREMVNetID": {
@@ -268,11 +268,11 @@
                 "description": "ONPREM VNet Prefix"
             }
         },   
-        "AZUREVNetID": {
+        "AZHB1VNetID": {
             "type": "string",
             "defaultValue": "172.16",
             "metadata": {
-                "description": "AZURE VNet Prefix"
+                "description": "AZHB1 VNet Prefix"
             }
         },         
         "NVAVMOSSku": {
@@ -314,7 +314,7 @@
                 "description": "ONPREM VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
             }
         },                
-        "AZUREVMOSSku": {
+        "AZHB1VMOSSku": {
             "type": "string",
             "defaultValue": "2022-Datacenter",
             "allowedValues": [
@@ -323,14 +323,14 @@
             "2016-Datacenter"
             ],            
             "metadata": {
-                "description": "AZURE VM OS Version"
+                "description": "AZHB1 VM OS Version"
             }
         },                
-        "AZUREVMOSVersion": {
+        "AZHB1VMOSVersion": {
             "type": "string",
             "defaultValue": "latest",
             "metadata": {
-                "description": "AZURE VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
+                "description": "AZHB1 VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
             }
         },                                                  
         "NVAVMSize": {
@@ -347,11 +347,11 @@
                 "description": "ONPREM VMSize"
             }
         },        
-        "AZUREVMSize": {
+        "AZHB1VMSize": {
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
             "metadata": {
-                "description": "AZURE VMSize"
+                "description": "AZHB1 VMSize"
             }
         },                         
         "_artifactsLocation": {
@@ -383,18 +383,18 @@
         "ONPREMVNetGatewaySubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.0.0/24')]",
         "ONPREMVNetBastionSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.253.0/24')]",
         "ONPREMVNetFirewallSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.254.0/24')]",
-        "AZUREConnectionName": "[concat(variables('AZUREVNGName'), '-to-',variables('AZURELNGName'))]",                                          
-        "AZURELNGName": "[concat(parameters('AZURENamingConvention'),'-OnPrem-LNG')]",                                          
-        "AZUREVNetName": "[concat(parameters('AZURENamingConvention'),'-VNet')]",
-        "AZUREVNetPrefix": "[concat(parameters('AZUREVNetID'),'.0.0/16')]",    
-        "AZUREVNetSubnet1Name": "[concat(parameters('AZURENamingConvention'),'-VNet-Subnet1')]", 
-        "AZUREVNetSubnet1Prefix": "[concat(parameters('AZUREVNetID'),'.1.0/24')]",           
-        "AZUREVNetSubnet2Name": "[concat(parameters('AZURENamingConvention'),'-VNet-Subnet2')]",  
-        "AZUREVNetSubnet2Prefix": "[concat(parameters('AZUREVNetID'),'.2.0/24')]",    
-        "AZUREVNetGatewaysubnetPrefix": "[concat(parameters('AZUREVNetID'),'.0.0/24')]",
-        "AZUREVNetBastionsubnetPrefix": "[concat(parameters('AZUREVNetID'),'.253.0/24')]",
-        "AZUREVNetFirewallsubnetPrefix": "[concat(parameters('AZUREVNetID'),'.254.0/24')]",
-        "AZUREVNGName": "[concat(parameters('AZURENamingConvention'),'-VNet1-VNG')]",
+        "AZHB1ConnectionName": "[concat(variables('AZHB1VNGName'), '-to-',variables('AZHB1LNGName'))]",                                          
+        "AZHB1LNGName": "[concat(parameters('AZHB1NamingConvention'),'-OnPrem-LNG')]",                                          
+        "AZHB1VNetName": "[concat(parameters('AZHB1NamingConvention'),'-VNet')]",
+        "AZHB1VNetPrefix": "[concat(parameters('AZHB1VNetID'),'.0.0/16')]",    
+        "AZHB1VNetSubnet1Name": "[concat(parameters('AZHB1NamingConvention'),'-VNet-Subnet1')]", 
+        "AZHB1VNetSubnet1Prefix": "[concat(parameters('AZHB1VNetID'),'.1.0/24')]",           
+        "AZHB1VNetSubnet2Name": "[concat(parameters('AZHB1NamingConvention'),'-VNet-Subnet2')]",  
+        "AZHB1VNetSubnet2Prefix": "[concat(parameters('AZHB1VNetID'),'.2.0/24')]",    
+        "AZHB1VNetGatewaysubnetPrefix": "[concat(parameters('AZHB1VNetID'),'.0.0/24')]",
+        "AZHB1VNetBastionsubnetPrefix": "[concat(parameters('AZHB1VNetID'),'.253.0/24')]",
+        "AZHB1VNetFirewallsubnetPrefix": "[concat(parameters('AZHB1VNetID'),'.254.0/24')]",
+        "AZHB1VNGName": "[concat(parameters('AZHB1NamingConvention'),'-VNet1-VNG')]",
         "NVARouteTableName": "[concat(parameters('ONPREMNamingConvention'),'-NVA-RT')]",                                                                        
         "NVAVMName": "[concat(parameters('ONPREMNamingConvention'),'-nva-01')]",
         "NVA-Outside-IP": "[concat(parameters('ONPREMVNetID'),'.1.',variables('NVAOutLastOctet'))]",
@@ -404,10 +404,10 @@
         "ONPREMVMName": "[concat(parameters('ONPREMNamingConvention'),'-VM-01')]", 
         "ONPREMVMIP": "[concat(parameters('ONPREMVNetID'),'.2.',variables('ONPREMVMLastOctet'))]",
         "ONPREMVMLastOctet": "101",        
-        "AZUREVMName": "[concat(parameters('AZURENamingConvention'),'-VM-01')]", 
-        "AZUREVMIP": "[concat(parameters('AZUREVNetID'),'.1.',variables('AZUREVMLastOctet'))]",
-        "AZUREVMLastOctet": "101",        
-        "AZURENextHop": "[concat(parameters('AZUREVNetID'),'.1.1')]",            
+        "AZHB1VMName": "[concat(parameters('AZHB1NamingConvention'),'-VM-01')]", 
+        "AZHB1VMIP": "[concat(parameters('AZHB1VNetID'),'.1.',variables('AZHB1VMLastOctet'))]",
+        "AZHB1VMLastOctet": "101",        
+        "AZHB1NextHop": "[concat(parameters('AZHB1VNetID'),'.1.1')]",            
         "OutsideSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.1')]",                        
         "InsideSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.2')]",
         "NSG1Name": "[concat(parameters('ONPREMNamingConvention'),'-nva-nsg01')]" ,        
@@ -433,7 +433,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Create-AZURE-ResourceGroup",
+            "name": "Create-AZHB1-ResourceGroup",
             "location": "[deployment().location]",            
             "properties": {
                 "mode": "Incremental",
@@ -446,7 +446,7 @@
                         "value": "[variables('ResourceGroupAPIVersion')]"
                     },
                     "ResourceGroupName": {
-                        "value": "[parameters('AZURERG')]"
+                        "value": "[parameters('AZHB1RG')]"
                     }          
                 }
             }
@@ -476,9 +476,9 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Password-KeyVault-with-Secret",
-            "resourceGroup":  "[parameters('AZURERG')]",
+            "resourceGroup":  "[parameters('AZHB1RG')]",
             "dependsOn": [
-                "Create-AZURE-ResourceGroup"
+                "Create-AZHB1-ResourceGroup"
             ],             
             "Properties": {
                 "mode": "Incremental",
@@ -635,9 +635,9 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-BastionHost-01",
-            "resourceGroup":  "[parameters('AZURERG')]",            
+            "resourceGroup":  "[parameters('AZHB1RG')]",            
             "dependsOn": [
-                "Deploy-AZURE-VirtualNetwork"
+                "Deploy-AZHB1-VirtualNetwork"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -653,13 +653,13 @@
                         "value": "[variables('PublicIPAddressesAPIVersion')]"
                     },
                     "publicIPAddressName": {
-                        "value": "[concat(variables('AZUREVNetName'),'-Bastion-pip')]"
+                        "value": "[concat(variables('AZHB1VNetName'),'-Bastion-pip')]"
                     },
                     "AllocationMethod": {
                         "value": "Static"
                     },
                     "vnetName": {
-                        "value": "[variables('AZUREVNetName')]"
+                        "value": "[variables('AZHB1VNetName')]"
                     },
                     "subnetName": {
                         "value": "AzureBastionSubnet"
@@ -670,10 +670,10 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AZURE-VirtualNetwork",
-            "resourceGroup":  "[parameters('AZURERG')]",
+            "name": "Deploy-AZHB1-VirtualNetwork",
+            "resourceGroup":  "[parameters('AZHB1RG')]",
             "dependsOn": [
-                "Create-AZURE-ResourceGroup"
+                "Create-AZHB1-ResourceGroup"
             ],             
             "properties": {
                 "mode": "Incremental",
@@ -686,31 +686,31 @@
                         "value": "[variables('VirtualNetworkAPIVersion')]"
                     },
                     "vnetName": {
-                        "value": "[variables('AZUREVNetName')]"
+                        "value": "[variables('AZHB1VNetName')]"
                     },
                     "vnetprefix": {
-                        "value": "[variables('AZUREVNetPrefix')]"
+                        "value": "[variables('AZHB1VNetPrefix')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('AZUREVNetsubnet1Name')]"
+                        "value": "[variables('AZHB1VNetsubnet1Name')]"
                     },
                     "subnet1Prefix": {
-                        "value": "[variables('AZUREVNetsubnet1Prefix')]"
+                        "value": "[variables('AZHB1VNetsubnet1Prefix')]"
                     },
                     "subnet2Name": {
-                        "value": "[variables('AZUREVNetsubnet2Name')]"
+                        "value": "[variables('AZHB1VNetsubnet2Name')]"
                     },
                     "subnet2Prefix": {
-                        "value": "[variables('AZUREVNetsubnet2Prefix')]"
+                        "value": "[variables('AZHB1VNetsubnet2Prefix')]"
                     },
                     "GatewaysubnetPrefix": {
-                        "value": "[variables('AZUREVNetGatewaysubnetPrefix')]"
+                        "value": "[variables('AZHB1VNetGatewaysubnetPrefix')]"
                     },
                     "BastionsubnetPrefix": {
-                        "value": "[variables('AZUREVNetBastionsubnetPrefix')]"
+                        "value": "[variables('AZHB1VNetBastionsubnetPrefix')]"
                     },
                     "FirewallsubnetPrefix": {
-                        "value": "[variables('AZUREVNetFirewallsubnetPrefix')]"
+                        "value": "[variables('AZHB1VNetFirewallsubnetPrefix')]"
                     }
                 }
             }
@@ -718,10 +718,10 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AZURE-VirtualMachine",
-            "resourceGroup":   "[parameters('AZURERG')]",                              
+            "name": "Deploy-AZHB1-VirtualMachine",
+            "resourceGroup":   "[parameters('AZHB1RG')]",                              
             "dependsOn": [
-                "Deploy-AZURE-VirtualNetwork"
+                "Deploy-AZHB1-VirtualNetwork"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -740,10 +740,10 @@
                         "value": "[variables('SchedulesAPIVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('AZUREvmname')]"
+                        "value": "[variables('AZHB1vmname')]"
                     },
                     "computerIP": {
-                        "value": "[variables('AZUREvmIP')]"
+                        "value": "[variables('AZHB1vmIP')]"
                     },
                     "Publisher": {
                         "value": "MicrosoftWindowsServer"
@@ -752,22 +752,22 @@
                         "value": "WindowsServer"
                     },
                     "OSSku": {
-                        "value": "[parameters('AZUREVMOSSku')]"
+                        "value": "[parameters('AZHB1VMOSSku')]"
                     },
                     "OSVersion": {
-                        "value": "[parameters('AZUREVMOSVersion')]"
+                        "value": "[parameters('AZHB1VMOSVersion')]"
                     },
                     "LicenseType": {
                         "value": "[parameters('WindowsServerLicenseType')]"
                     },
                     "VMSize": {
-                        "value": "[parameters('AZUREVMSize')]"
+                        "value": "[parameters('AZHB1VMSize')]"
                     },
                     "vnetName": {
-                        "value": "[variables('AZUREVNetName')]"
+                        "value": "[variables('AZHB1VNetName')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('AZUREVNetSubnet1Name')]"
+                        "value": "[variables('AZHB1VNetSubnet1Name')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -793,10 +793,10 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AZURE-VirtualNetworkGateway",
-            "resourceGroup":  "[parameters('AZURERG')]",            
+            "name": "Deploy-AZHB1-VirtualNetworkGateway",
+            "resourceGroup":  "[parameters('AZHB1RG')]",            
             "dependsOn": [
-                "Deploy-AZURE-VirtualNetwork"
+                "Deploy-AZHB1-VirtualNetwork"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -812,13 +812,13 @@
                         "value": "[variables('PublicIPAddressesAPIVersion')]"
                     },
                     "VNGName": {
-                        "value": "[variables('AZUREVNGName')]"
+                        "value": "[variables('AZHB1VNGName')]"
                     },
                     "VNGSku": {
                         "value": "[parameters('VNGSku')]"
                     },                    
                     "vnetName": {
-                        "value": "[variables('AZUREVNetName')]"
+                        "value": "[variables('AZHB1VNetName')]"
                     }
                 }
             }
@@ -826,10 +826,10 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Get-AZURE-VirtualNetworkGateway-PublicIP",
-            "resourceGroup":  "[parameters('AZURERG')]",            
+            "name": "Get-AZHB1-VirtualNetworkGateway-PublicIP",
+            "resourceGroup":  "[parameters('AZHB1RG')]",            
             "dependsOn": [
-                "Deploy-AZURE-VirtualNetworkGateway"
+                "Deploy-AZHB1-VirtualNetworkGateway"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -845,13 +845,13 @@
                         "value": "[variables('PublicIPAddressesAPIVersion')]"
                     },
                     "VNGName": {
-                        "value": "[variables('AZUREVNGName')]"
+                        "value": "[variables('AZHB1VNGName')]"
                     },
                     "VNGSku": {
                         "value": "[parameters('VNGSku')]"
                     },                    
                     "vnetName": {
-                        "value": "[variables('AZUREVNetName')]"
+                        "value": "[variables('AZHB1VNetName')]"
                     }
                 }
             }
@@ -962,7 +962,7 @@
                         "value": "[variables('NVAVMName')]"
                     },
                     "AZURENextHop": {
-                        "value": "[variables('AZURENextHop')]"
+                        "value": "[variables('AZHB1NextHop')]"
                     },              
                     "OutsideSubnetPrefix": {
                         "value": "[variables('OutsideSubnetPrefix')]"
@@ -971,7 +971,7 @@
                         "value": "[variables('InsideSubnetPrefix')]"
                     },                              
                     "AZUREVNet": {
-                        "value": "[variables('AZUREVNetPrefix')]"
+                        "value": "[variables('AZHB1VNetPrefix')]"
                     },          
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
@@ -1082,13 +1082,13 @@
                         "value": "[variables('NVAVMName')]"
                     },
                     "AZUREName": {
-                        "value": "[concat(parameters('AZURENamingConvention'),'-Azure-Connection')]"
+                        "value": "[concat(parameters('AZHB1NamingConvention'),'-AZHB1-Connection')]"
                     },                    
                     "AZURERemoteGatewayIP": {
-                        "value": "[reference('Get-AZURE-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                        "value": "[reference('Get-AZHB1-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
                     },                                        
                     "AZUREIPv4Subnet": {
-                        "value": "[variables('AZUREVNetPrefix')]"
+                        "value": "[variables('AZHB1VNetPrefix')]"
                     },                                         
                     "OutsideSubnetPrefix": {
                         "value": "[variables('OutsideSubnetPrefix')]"
@@ -1133,7 +1133,7 @@
                         "value": "[variables('NSG1Name')]"
                     },
                     "AZUREVNGPublicIP": {
-                        "value": "[reference('Get-AZURE-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                        "value": "[reference('Get-AZHB1-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
                     },                   
                     "VPNOutsideIP": {
                         "value": "[variables('NVA-Outside-IP')]"
@@ -1216,8 +1216,8 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AZURE-LocalNetworkGateway",
-            "resourceGroup":  "[parameters('AZURERG')]",         
+            "name": "Deploy-AZHB1-LocalNetworkGateway",
+            "resourceGroup":  "[parameters('AZHB1RG')]",         
             "dependsOn": [
                 "Add-PublicIP-RRAS-Network-Virtual-Appliance"
             ],      
@@ -1232,7 +1232,7 @@
                         "value": "[variables('LocalNetworkGatewayAPIVersion')]"
                     },                       
                     "LNGName": {
-                        "value": "[variables('AZURELNGName')]"
+                        "value": "[variables('AZHB1LNGName')]"
                     },                   
                     "SubnetPrefix1": {
                         "value": "[variables('ONPREMVNetPrefix')]"
@@ -1246,10 +1246,10 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AZURE-Connection",
-            "resourceGroup":  "[parameters('AZURERG')]",         
+            "name": "Deploy-AZHB1-Connection",
+            "resourceGroup":  "[parameters('AZHB1RG')]",         
             "dependsOn": [
-                "Deploy-AZURE-LocalNetworkGateway"
+                "Deploy-AZHB1-LocalNetworkGateway"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -1262,13 +1262,13 @@
                         "value": "[variables('ConnectionAPIVersion')]"
                     },                       
                     "ConnectionName": {
-                        "value": "[variables('AZUREConnectionName')]"
+                        "value": "[variables('AZHB1ConnectionName')]"
                     },                   
                     "VNGName": {
-                        "value": "[variables('AZUREVNGName')]"
+                        "value": "[variables('AZHB1VNGName')]"
                     },
                     "LNGName": {
-                        "value": "[variables('AZURELNGName')]"
+                        "value": "[variables('AZHB1LNGName')]"
                     },                    
                     "SharedKey": {
                         "value": "[parameters('SharedKey')]"
@@ -1282,7 +1282,7 @@
             "name": "Create-RRAS-RouteTable",
             "resourceGroup":  "[parameters('ONPREMRG')]",
             "dependsOn": [
-                "Deploy-AZURE-Connection"
+                "Deploy-AZHB1-Connection"
             ],              
             "properties": {
                 "mode": "Incremental",
@@ -1298,10 +1298,10 @@
                         "value": "[variables('NVARouteTableName')]"
                     },
                     "RouteName": {
-                        "value": "Azure"
+                        "value": "AZHB1"
                     },                    
                     "SubnetPrefix": {
-                        "value": "[variables('AZUREVNetPrefix')]"
+                        "value": "[variables('AZHB1VNetPrefix')]"
                     },           
                     "RemoteGatewayIP": {
                         "value": "[variables('NVA-Inside-IP')]"
