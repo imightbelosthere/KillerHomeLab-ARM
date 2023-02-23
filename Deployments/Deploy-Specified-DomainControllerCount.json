@@ -208,6 +208,14 @@
                 "description": "Naming Convention"
             }
         },
+        "NetBiosDomain": {
+            "type": "string",
+            "defaultValue": "sub1",
+            "maxLength": 15,
+            "metadata": {
+                "description": "NetBios Domain Name should the same name as the SubDNSDomain parameter minus the COMMA AT END if the SubDNSDomain and SubDNSBaseDN parameters are used to specify a Sub DNS Naming Structure, but it should be unique if these parameters aren't used."
+            }
+        },        
         "SubDNSDomain": {
             "type": "string",
             "defaultValue": "sub1.",
@@ -248,6 +256,13 @@
                 "description": "VNet1 Prefix"
             }
         },
+        "ReverseLookup": {
+            "type": "string",
+            "defaultValue": "16.172",
+            "metadata": {
+                "description": "DNS Reverse Lookup Zone Prefix"
+            }
+        },        
         "VMOSSku": {
             "type": "string",
             "defaultValue": "2022-Datacenter",
@@ -294,8 +309,10 @@
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
+        "ReverseLookup": "[concat('1.',parameters('ReverseLookup'))]",
+        "ForwardLookup": "[concat(parameters('vnetID'),'.1')]",        
         "VMPrefix": "[concat(parameters('NamingConvention'),'-dc-0')]",
-        "IPPrefix": "[concat(parameters('vnetID'),'.1.1')]",      
+        "IPPrefix": "[concat(parameters('vnetID'),'.1.1')]",
         "DCDataDisk1Name": "NTDS",          
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",        
@@ -468,6 +485,59 @@
                     }
                 }
             }
-        }               
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-Core-DNS-Records-Count",
+            "dependsOn": [
+                "Restart-DomainController-Count"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configdnsintloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "InternalDomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "ExternalDomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },                    
+                    "ReverseLookup": {
+                        "value": "[variables('ReverseLookup')]"
+                    },
+                    "ForwardLookup": {
+                        "value": "[variables('ForwardLookup')]"
+                    },
+                    "VMPrefix": {
+                        "value": "[variables('VMPrefix')]"
+                    },
+                    "NumberOfVMInstances": {
+                        "value": "[parameters('NumberOfVMInstances')]"
+                    },                                        
+                    "VMInitialNumber": {
+                        "value": "[parameters('VMInitialNumber')]"
+                    },                    
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        }                     
     ]
 }

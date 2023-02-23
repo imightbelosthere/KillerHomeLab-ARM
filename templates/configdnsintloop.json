@@ -1,0 +1,122 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ExtensionsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "ExtensionsTypeHandlerVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Extension Type Handler Version"
+            }
+        },
+        "computerName": {
+            "type": "string",
+            "metadata": {
+                "description": "Computer Name"
+            }
+        },
+        "NetBiosDomain": {
+            "type": "string",
+            "metadata": {
+                "description": "NetBios Domain Name"
+            }
+        },
+        "InternaldomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "The FQDN of the AD Domain created "
+            }
+        },
+        "ExternaldomainName": {
+            "type": "string",
+          "metadata": {
+            "description": "The External FQDN of the AD Domain created "
+          }
+        },         
+        "ReverseLookup": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of Reverse Lookup Zone 1 Network ID"
+            }
+        },
+        "ForwardLookup": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of Forward Lookup Zone 1 Network ID"
+            }
+        },
+        "VMPrefix": {
+            "type": "string",
+            "metadata": {
+            "description": "This prefix will be used in combination with the VM number to create the VM name"
+            }
+        },
+        "NumberOfVMInstances": {
+            "type": "int",
+            "metadata": {
+            "description": "Number of Virtual Machines that will be created."
+            }
+        },  
+        "VMInitialNumber": {
+            "type": "int",
+            "metadata": {
+            "description": "VM name prefix initial number."
+            }
+        },                                                       
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            }
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation"
+            }
+        }
+    },
+    "variables": {
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/CONFIGDNSINT.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "CONFIGDNSINT.ps1\\CONFIGDNSINT",
+        "DCOctet": "[concat('1',parameters('VMInitialNumber'))]"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')), '/Microsoft.Powershell.DSC')]",            
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "[parameters('ExtensionsAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "ConfigureDNSInternal-Loop",
+                "count": "[parameters('NumberOfVMInstances')]"
+            },                                    
+            "properties": {
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "[parameters('ExtensionsTypeHandlerVersion')]",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "WMFVersion": "latest",
+                    "ModulesUrl": "[variables('modulesUrl')]",
+                    "ConfigurationFunction": "[variables('configurationFunction')]",
+                    "Properties": {
+                        "computerName": "[parameters('computerName')]",
+                        "NetBiosDomain": "[parameters('NetBiosDomain')]",
+                        "InternaldomainName": "[parameters('InternaldomainName')]",
+                        "ReverseLookup": "[parameters('ReverseLookup')]",
+                        "ForwardLookup": "[parameters('ForwardLookup')]",
+                        "dclastoctet": "[variables('DCOctet')]"
+                    }
+                },
+                "protectedSettings": {
+                }
+            }
+        }
+    ]
+}
