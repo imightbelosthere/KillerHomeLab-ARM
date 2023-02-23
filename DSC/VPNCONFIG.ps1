@@ -31,9 +31,7 @@
                 Add-Content -Path C:\ConfigureRRAS\VPNConfig.ps1 -Value 'Restart-Service -Name RemoteAccess -ErrorAction 0'
                 Add-Content -Path C:\ConfigureRRAS\VPNConfig.ps1 -Value 'Install-RemoteAccess -VpnType VpnS2S'
                 Add-Content -Path C:\ConfigureRRAS\VPNConfig.ps1 -Value 'Import-Module RemoteAccess'
-                Add-Content -Path C:\ConfigureRRAS\VPNConfig.ps1 -Value '$RemoteAccess = Get-RemoteAccess'
-                Add-Content -Path C:\ConfigureRRAS\VPNConfig.ps1 -Value '$InstallStatus = $RemoteAccess.VpnS2SStatus'
-                Add-Content -Path C:\ConfigureRRAS\VPNConfig.ps1 -Value "while (($InstallStatusValue -ne 'Installed')){Start-Sleep 30}"
+                Add-Content -Path C:\ConfigureRRAS\VPNConfig.ps1 -Value "Start-Sleep 120"
                 Add-Content -Path C:\ConfigureRRAS\VPNConfig.ps1 -Value "Add-VpnS2SInterface -Protocol IKEv2 -AuthenticationMethod PSKOnly -NumberOfTries 3 -ResponderAuthenticationMethod PSKOnly -Name $using:AZUREName -Destination $using:AZURERemoteGatewayIP -IPv4Subnet $AZUREIPv4 -SharedSecret $using:SharedKey"
                 Add-Content -Path C:\ConfigureRRAS\VPNConfig.ps1 -Value '}'
             }
