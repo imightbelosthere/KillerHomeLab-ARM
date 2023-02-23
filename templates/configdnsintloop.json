@@ -14,12 +14,6 @@
                 "description": "Extension Type Handler Version"
             }
         },
-        "computerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Computer Name"
-            }
-        },
         "NetBiosDomain": {
             "type": "string",
             "metadata": {
@@ -106,7 +100,7 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
-                        "computerName": "[parameters('computerName')]",
+                        "computerName": "[concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')))]",
                         "NetBiosDomain": "[parameters('NetBiosDomain')]",
                         "InternaldomainName": "[parameters('InternaldomainName')]",
                         "ReverseLookup": "[parameters('ReverseLookup')]",
