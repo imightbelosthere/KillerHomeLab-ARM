@@ -1301,7 +1301,7 @@
                         "value": "Azure"
                     },                    
                     "SubnetPrefix": {
-                        "value": "[variables('ONPREMVNetSubnet2Prefix')]"
+                        "value": "[variables('AZUREVNetPrefix')]"
                     },           
                     "RemoteGatewayIP": {
                         "value": "[variables('NVA-Inside-IP')]"
