@@ -1313,6 +1313,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Associate-RRAS-RouteTable-with-InsideSubnet",
+            "resourceGroup":  "[parameters('ONPREMRG')]",            
             "dependsOn": [
                 "Create-RRAS-RouteTable"
             ],
