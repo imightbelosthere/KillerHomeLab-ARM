@@ -208,6 +208,39 @@
                 "description": "Naming Convention"
             }
         },
+        "SubDNSDomain": {
+            "type": "string",
+            "defaultValue": "sub1.",
+            "metadata": {
+                "description": "Sub DNS Domain Name Example:  sub1. must include a DOT AT END"
+            }
+        },        
+        "InternalDomain": {
+            "type": "string",
+            "defaultValue": "killerhomelab",
+            "metadata": {
+                "description": "NetBios Domain Name"
+            }
+        },
+        "InternalTLD": {
+            "type": "string",
+            "defaultValue": "com",
+            "allowedValues": [
+                "com",
+                "net",
+                "org",
+                "edu",
+                "gov",
+                "mil",
+                "us",
+                "tk",
+                "ml",
+                "local"
+            ],
+            "metadata": {
+                "description": "Top-Level Domain Name"
+            }
+        },        
         "vnetID": {
             "type": "string",
             "defaultValue": "172.16",
@@ -258,18 +291,21 @@
         }
     },
     "variables": {
+        "InternaldomainName": "[concat(parameters('SubDNSDomain'),parameters('InternalDomain'),'.',parameters('InternalTLD'))]",        
         "VMPrefix": "[concat(parameters('NamingConvention'),'-dc-0')]",
         "IPPrefix": "[concat(parameters('vnetID'),'.1.1')]",      
         "DCDataDisk1Name": "NTDS",          
         "DeploymentAPIVersion": "2021-04-01",
+        "ExtensionsAPIVersion": "2022-03-01",        
         "NetworkInterfacesAPIVersion": "2021-08-01",
-        "VirtualMachinesAPIVersion": "2022-03-01"
+        "VirtualMachinesAPIVersion": "2022-03-01",
+        "ExtensionsTypeHandlerVersion": "2.83"        
     },
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Specified-Machine-Count",
+            "name": "Deploy-Domain-Controller-Count",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -333,6 +369,44 @@
                     }
                 }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Promote-DomainController-Count",
+            "dependsOn": [
+                "Deploy-Domain-Controller-Count"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/otherdcloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "DomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        }        
     ]
 }

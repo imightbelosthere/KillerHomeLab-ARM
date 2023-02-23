@@ -1,0 +1,105 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "ExtensionsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "ExtensionsTypeHandlerVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Extension Type Handler Version"
+            }
+        },        
+        "domainName": {
+            "type": "string",
+          "metadata": {
+            "description": "The FQDN of the AD Domain created "
+          }
+        },
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+          "metadata": {
+            "description": "The password for the Administrator account of the new VM and Domain"
+          }
+        },
+        "VMPrefix": {
+            "type": "string",
+            "metadata": {
+            "description": "This prefix will be used in combination with the VM number to create the VM name"
+            }
+        },
+        "NumberOfVMInstances": {
+            "type": "int",
+            "metadata": {
+            "description": "Number of Virtual Machines that will be created."
+            }
+        },  
+        "VMInitialNumber": {
+            "type": "int",
+            "metadata": {
+            "description": "VM name prefix initial number."
+            }
+        },       
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            }
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access artifactsLocation"
+            }
+        }                
+    },
+    "variables": {
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/OTHERDC.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "OTHERDC.ps1\\OTHERDC"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('VMPrefix'), add(copyindex(), parameters('VMInitialNumber')), '/Microsoft.Powershell.DSC')]",            
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "[parameters('ExtensionsAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "DomainController-Loop",
+                "count": "[parameters('NumberOfVMInstances')]"
+            },            
+            "properties": {
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "[parameters('ExtensionsTypeHandlerVersion')]",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "WMFVersion": "latest",                    
+                    "ModulesUrl": "[variables('modulesUrl')]",
+                    "ConfigurationFunction": "[variables('configurationFunction')]",
+                        "Properties": {
+                            "DomainName": "[parameters('domainName')]",
+                            "AdminCreds": {
+                                "UserName": "[parameters('adminUsername')]",
+                                "Password": "PrivateSettingsRef:AdminPassword1"
+                            }
+                        }
+                },
+                "protectedSettings": {
+                    "Items": {
+                        "AdminPassword1": "[parameters('adminPassword')]"
+                    }
+                }                
+            }
+        }
+    ]
+}
