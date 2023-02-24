@@ -1186,7 +1186,7 @@
             "name": "Create-ActiveDirectory-OUs",
             "resourceGroup":  "[parameters('Region1RG')]",                                                 
             "dependsOn": [
-                "Configure-Core-DNS-Records_DC1"
+                "Update-VNet2-DNS_01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1984,7 +1984,7 @@
             "resourceGroup":  "[parameters('Region2RG')]",                                                 
             "name": "Deploy-Workstation-02-11",
             "dependsOn": [
-                "Configure-Core-DNS-Records_DC2"
+                "Create-ActiveDirectory-OUs"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2060,7 +2060,7 @@
             "name": "Deploy-Workstation-02-10",
             "resourceGroup":  "[parameters('Region2RG')]",                                                             
             "dependsOn": [
-                "Configure-Core-DNS-Records_DC2"
+                "Create-ActiveDirectory-OUs"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2136,7 +2136,7 @@
             "name": "Deploy-Workstation-02-7",
             "resourceGroup":  "[parameters('Region2RG')]",                                                                         
             "dependsOn": [
-                "Configure-Core-DNS-Records_DC2"
+                "Create-ActiveDirectory-OUs"
             ],
             "properties": {
                 "mode": "Incremental",
