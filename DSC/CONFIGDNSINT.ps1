@@ -7,10 +7,13 @@
         [String]$InternaldomainName,
         [String]$ReverseLookup,
         [String]$ForwardLookup,
-        [String]$dclastoctet
+        [String]$dclastoctet,
+        [System.Management.Automation.PSCredential]$Admincreds
     )
 
     Import-DscResource -ModuleName DnsServerDsc
+
+    [System.Management.Automation.PSCredential ]$DomainCredsFQDN = New-Object System.Management.Automation.PSCredential ("$($Admincreds.UserName)@$($InternaldomainName)", $Admincreds.Password)
 
     Node localhost
     {
@@ -38,6 +41,7 @@
             DynamicUpdate = 'Secure'
             Ensure           = 'Present'
             ReplicationScope = 'Domain'
+            Credential = $DomainCredsFQDN
         }
 
         DnsRecordPtr DCPtrRecord
@@ -46,7 +50,8 @@
             ZoneName = "$ReverseLookup.in-addr.arpa"
             IpAddress = "$ForwardLookup.$dclastoctet"
             Ensure    = 'Present'
-            DependsOn = "[DnsServerADZone]ReverseADZone"           
+            DependsOn = "[DnsServerADZone]ReverseADZone"
+            PsDscRunAsCredential = $DomainCredsFQDN       
         }
     }
 }
