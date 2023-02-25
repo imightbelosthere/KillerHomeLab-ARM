@@ -1591,7 +1591,7 @@
                         "value": "[variables('ForwardLookup2')]"
                     },
                     "dclastoctet": {
-                        "value": "[variables('dc1lastoctet')]"
+                        "value": "[variables('dc2lastoctet')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
