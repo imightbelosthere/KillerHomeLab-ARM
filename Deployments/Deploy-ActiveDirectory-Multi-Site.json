@@ -1135,7 +1135,7 @@
             "name": "Configure-Core-DNS-Records_DC1",
             "resourceGroup":  "[parameters('Region1RG')]",                                     
             "dependsOn": [
-                "Update-VNet2-DNS_01"
+                "Restart-DomainController-01_01"
             ],
             "properties": {
                 "mode": "Incremental",
