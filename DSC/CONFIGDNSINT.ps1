@@ -38,7 +38,7 @@
         DnsServerADZone ReverseADZone
         {
             Name             = "$ReverseLookup.in-addr.arpa"
-            ComputerName = $computerName
+            ComputerName = "$computerName.$InternaldomainName"
             DynamicUpdate = 'Secure'
             Ensure           = 'Present'
             ReplicationScope = 'Domain'
