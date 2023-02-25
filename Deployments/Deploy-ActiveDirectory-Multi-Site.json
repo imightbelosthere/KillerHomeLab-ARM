@@ -1128,14 +1128,65 @@
                     }
                 }
             }
-        },                   
+        },       
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-Core-DNS-Records_DC1",
+            "resourceGroup":  "[parameters('Region1RG')]",                                     
+            "dependsOn": [
+                "Update-VNet2-DNS_01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configdnsint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc1name')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "InternalDomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "ExternalDomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },                    
+                    "ReverseLookup": {
+                        "value": "[variables('ReverseLookup1')]"
+                    },
+                    "ForwardLookup": {
+                        "value": "[variables('ForwardLookup1')]"
+                    },
+                    "dclastoctet": {
+                        "value": "[variables('dc1lastoctet')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },                    
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Create-ActiveDirectory-OUs",
             "resourceGroup":  "[parameters('Region1RG')]",                                                 
             "dependsOn": [
-                "Restart-DomainController-01_01"
+                "Configure-Core-DNS-Records_DC1"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1513,13 +1564,64 @@
             }
         },
         {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Configure-Core-DNS-Records_DC2",
+            "resourceGroup":  "[parameters('Region2RG')]",                                     
+            "dependsOn": [
+                "Restart-DomainController-02_01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/configdnsint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('dc2name')]"
+                    },
+                    "NetBiosDomain": {
+                        "value": "[parameters('NetBiosDomain')]"
+                    },
+                    "InternalDomainName": {
+                        "value": "[variables('InternalDomainName')]"
+                    },
+                    "ExternalDomainName": {
+                        "value": "[variables('InternaldomainName')]"
+                    },                    
+                    "ReverseLookup": {
+                        "value": "[variables('ReverseLookup2')]"
+                    },
+                    "ForwardLookup": {
+                        "value": "[variables('ForwardLookup2')]"
+                    },
+                    "dclastoctet": {
+                        "value": "[variables('dc1lastoctet')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },          
+        {
             "condition": "[equals(parameters('WK1OSSku'),'Windows-11')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-11",
             "resourceGroup":  "[parameters('Region1RG')]",                                                 
             "dependsOn": [
-                "Create-ActiveDirectory-OUs"
+                "Configure-Core-DNS-Records_DC2"
             ],
             "properties": {
                 "mode": "Incremental",
