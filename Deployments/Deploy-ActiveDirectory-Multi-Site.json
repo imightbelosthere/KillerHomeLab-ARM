@@ -1111,15 +1111,6 @@
                     "Identifier": {
                         "value": "[concat(variables('Identifier'),'-1')]"
                     },
-                    "DomainName": {
-                        "value": "[variables('InternaldomainName')]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },                                      
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
@@ -1545,15 +1536,6 @@
                     "Identifier": {
                         "value": "[concat(variables('Identifier'),'-1')]"
                     },
-                    "DomainName": {
-                        "value": "[variables('InternaldomainName')]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },                                      
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
