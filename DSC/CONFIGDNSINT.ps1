@@ -23,16 +23,16 @@
             ConfigurationMode = "ApplyOnly"
         }
 
-        $DNSService = Get-Service -Name DNS
-        while (($DNSService.Status -ne 'Running')){
+        $DomainEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Domain*')}
+        while (($DomainEvent -eq $null)){
             Start-Sleep 10
-            $DNSService = Get-Service -Name DNS
+            $DomainEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Domain*')}
         }
 
-        $DNScacheService = Get-Service -Name DNScache
+        $ForestEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Forest*')}
         while (($DNScacheService.Status -ne 'Running')){
             Start-Sleep 10
-            $DNScacheService = Get-Service -Name DNS
+            $ForestEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Forest*')}
         }
        
         DnsServerADZone ReverseADZone
