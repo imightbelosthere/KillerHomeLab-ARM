@@ -7,8 +7,6 @@
         [System.Management.Automation.PSCredential]$Admincreds
     )
     
-    $ComputerName = $env:COMPUTERNAME
-    [System.Management.Automation.PSCredential ]$LocalCreds = New-Object System.Management.Automation.PSCredential ("${ComputerName}\$($AdminCreds.UserName)", $AdminCreds.Password)
     [System.Management.Automation.PSCredential ]$DomainCredsFQDN = New-Object System.Management.Automation.PSCredential ("$($Admincreds.UserName)@$($DomainName)", $Admincreds.Password)
 
     Import-DscResource -Module ComputerManagementDsc # Used for Reboots
@@ -38,7 +36,7 @@
 			            $global:DSCMachineStatus = 1 
                     }
                 GetScript = { return @{result = 'result'}}
-                Credential = $LocalCreds
+                Credential = $Admincreds
             }
 
             PendingReboot RebootNonDomain
