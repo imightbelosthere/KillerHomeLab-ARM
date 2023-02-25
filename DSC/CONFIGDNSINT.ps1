@@ -50,6 +50,7 @@
             Name      = "$computerName.$InternaldomainName"
             ZoneName = "$ReverseLookup.in-addr.arpa"
             IpAddress = "$ForwardLookup.$dclastoctet"
+            DnsServer = "$computerName.$InternaldomainName"
             Ensure    = 'Present'
             DependsOn = "[DnsServerADZone]ReverseADZone"
             PsDscRunAsCredential = $DomainCredsFQDN       
