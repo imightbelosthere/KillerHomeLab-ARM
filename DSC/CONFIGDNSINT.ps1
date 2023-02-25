@@ -21,13 +21,13 @@
         }
 
         $DNSService = Get-Service -Name DNS
-        while (($Service.Status -ne 'Running')){
+        while (($DNSService.Status -ne 'Running')){
             Start-Sleep 10
             $DNSService = Get-Service -Name DNS
         }
 
         $DNScacheService = Get-Service -Name DNScache
-        while (($Service.Status -ne 'Running')){
+        while (($DNScacheService.Status -ne 'Running')){
             Start-Sleep 10
             $DNScacheService = Get-Service -Name DNS
         }
