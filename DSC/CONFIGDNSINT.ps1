@@ -50,7 +50,7 @@
 
         ELSE {
             $DNSLoadedEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4)}
-            while (($DomainLoadedEvent -eq $null)){
+            while (($DNSLoadedEvent -eq $null)){
                 Start-Sleep 10
                 $DNSLoadedEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4)}
             }
