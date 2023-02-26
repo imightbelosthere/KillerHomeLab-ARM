@@ -6,13 +6,10 @@
         [String]$InternaldomainName,
         [String]$ReverseLookup,
         [String]$ForwardLookup,
-        [String]$dclastoctet,
-        [System.Management.Automation.PSCredential]$Admincreds
+        [String]$dclastoctet
     )
 
     Import-DscResource -ModuleName DnsServerDsc
-
-    [System.Management.Automation.PSCredential ]$DomainCredsFQDN = New-Object System.Management.Automation.PSCredential ("$($Admincreds.UserName)@$($InternaldomainName)", $Admincreds.Password)
 
     $Server = Get-ComputerInfo
     $ServerName = $Server.CsDNSHostName
@@ -63,7 +60,6 @@
             DynamicUpdate = 'Secure'
             Ensure           = 'Present'
             ReplicationScope = 'Domain'
-            Credential = $DomainCredsFQDN
         }
 
         DnsRecordPtr DCPtrRecord
@@ -74,7 +70,6 @@
             DnsServer = "$computerName.$InternaldomainName"
             Ensure    = 'Present'
             DependsOn = "[DnsServerADZone]ReverseADZone"
-            PsDscRunAsCredential = $DomainCredsFQDN       
         }
     }
 }
