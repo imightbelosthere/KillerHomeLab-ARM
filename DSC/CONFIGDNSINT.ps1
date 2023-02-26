@@ -30,7 +30,7 @@
         }
 
         $ForestEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Forest*')}
-        while (($DNScacheService.Status -ne 'Running')){
+        while (($ForestEvent -eq $null)){
             Start-Sleep 10
             $ForestEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Forest*')}
         }
