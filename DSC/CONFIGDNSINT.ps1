@@ -25,7 +25,7 @@
 
         $FQDN = "$ComputerName.$InternaldomainName"
         $Forest = Get-ADForest -ErrorAction 0
-        while (($DomainEvent -eq $null)){
+        while (($Forest -eq $null)){
             Start-Sleep 10
             $Forest = Get-ADForest -ErrorAction 0
         }
