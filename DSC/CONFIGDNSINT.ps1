@@ -23,16 +23,33 @@
             ConfigurationMode = "ApplyOnly"
         }
 
-        $DomainEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Domain*')}
-        while (($DomainEvent -eq $null)){
-            Start-Sleep 10
+
+$DomainName = 'sub1.killerhomelab.com'
+$ComputerName = 'khl-dc-01'
+$FQDN = "$ComputerName.$DomainName"
+$Forest = Get-ADForest
+$SchemaMaster = $Forest.SchemaMaster
+
+        IF ($FQDN -eq $SchemaMaster){
             $DomainEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Domain*')}
+            while (($DomainEvent -eq $null)){
+                Start-Sleep 10
+                $DomainEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Domain*')}
+            }
+
+            $ForestEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Forest*')}
+            while (($ForestEvent -eq $null)){
+                Start-Sleep 10
+                $ForestEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Forest*')}
+            }
         }
 
-        $ForestEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Forest*')}
-        while (($ForestEvent -eq $null)){
-            Start-Sleep 10
-            $ForestEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Forest*')}
+        ELSE {
+            $DNSLoadedEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4)}
+            while (($DomainLoadedEvent -eq $null)){
+                Start-Sleep 10
+                $DNSLoadedEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4)}
+            }
         }
        
         DnsServerADZone ReverseADZone
