@@ -23,12 +23,9 @@
             ConfigurationMode = "ApplyOnly"
         }
 
-
-$DomainName = 'sub1.killerhomelab.com'
-$ComputerName = 'khl-dc-01'
-$FQDN = "$ComputerName.$DomainName"
-$Forest = Get-ADForest
-$SchemaMaster = $Forest.SchemaMaster
+        $FQDN = "$ComputerName.$InternaldomainName"
+        $Forest = Get-ADForest
+        $SchemaMaster = $Forest.SchemaMaster
 
         IF ($FQDN -eq $SchemaMaster){
             $DomainEvent = Get-EventLog -LogName "DNS Server" -ErrorAction 0 | Where-Object {($_.InstanceId -like 4500) -and ($_.Message -like '*Domain*')}
