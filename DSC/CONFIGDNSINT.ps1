@@ -24,7 +24,11 @@
         }
 
         $FQDN = "$ComputerName.$InternaldomainName"
-        $Forest = Get-ADForest
+        $Forest = Get-ADForest -ErrorAction 0
+        while (($DomainEvent -eq $null)){
+            Start-Sleep 10
+            $Forest = Get-ADForest -ErrorAction 0
+        }
         $SchemaMaster = $Forest.SchemaMaster
 
         IF ($FQDN -eq $SchemaMaster){
