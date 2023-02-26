@@ -3,7 +3,6 @@
    param
    (
         [String]$computerName,
-        [String]$NetBiosDomain,
         [String]$InternaldomainName,
         [String]$ReverseLookup,
         [String]$ForwardLookup,
@@ -15,6 +14,11 @@
 
     [System.Management.Automation.PSCredential ]$DomainCredsFQDN = New-Object System.Management.Automation.PSCredential ("$($Admincreds.UserName)@$($InternaldomainName)", $Admincreds.Password)
 
+    $Server = Get-ComputerInfo
+    $ServerName = $Server.CsDNSHostName
+    $DomainName = $Server.CsDomain
+    $FQDN = $ServerName + '.' + $DomainName
+
     Node localhost
     {
         LocalConfigurationManager
@@ -23,7 +27,6 @@
             ConfigurationMode = "ApplyOnly"
         }
 
-        $FQDN = "$ComputerName.$InternaldomainName"
         $Forest = Get-ADForest -ErrorAction 0
         while (($Forest -eq $null)){
             Start-Sleep 10

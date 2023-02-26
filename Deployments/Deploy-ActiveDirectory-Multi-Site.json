@@ -1144,9 +1144,6 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
-                    },
                     "InternalDomainName": {
                         "value": "[variables('InternalDomainName')]"
                     },
@@ -1574,9 +1571,6 @@
                     },
                     "computerName": {
                         "value": "[variables('dc2name')]"
-                    },
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
                     },
                     "InternalDomainName": {
                         "value": "[variables('InternalDomainName')]"
