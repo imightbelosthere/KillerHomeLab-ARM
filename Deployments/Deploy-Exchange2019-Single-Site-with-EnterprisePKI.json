@@ -955,13 +955,13 @@
                     "ExternalDomainName": {
                         "value": "[variables('ExternaldomainName')]"
                     },                    
-                    "ReverseLookup1": {
+                    "ReverseLookup": {
                         "value": "[variables('ReverseLookup1')]"
                     },
-                    "ForwardLookup1": {
+                    "ForwardLookup": {
                         "value": "[variables('ForwardLookup1')]"
                     },
-                    "dc1lastoctet": {
+                    "dclastoctet": {
                         "value": "[variables('dc1lastoctet')]"
                     },
                     "_artifactsLocation": {
