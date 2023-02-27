@@ -24,6 +24,12 @@
             ConfigurationMode = "ApplyOnly"
         }
 
+        $Service = Get-Service -Name NTDS
+        while (($Service.Status -ne 'Running')){
+            Start-Sleep 10
+            $Service = Get-Service -Name NTDS
+        }
+
         $Forest = Get-ADForest -ErrorAction 0
         while (($Forest -eq $null)){
             Start-Sleep 10
