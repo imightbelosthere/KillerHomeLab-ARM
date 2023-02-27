@@ -3,7 +3,6 @@
    param
    (
         [String]$computerName,
-        [String]$NetBiosDomain,
         [String]$InternaldomainName,
         [String]$ExternaldomainName,
         [String]$ReverseLookup1,
