@@ -175,14 +175,14 @@
         },
         "KubernetesVersion": {
             "type": "string",
-            "defaultValue": "1.24.3",
+            "defaultValue": "1.24.9",
             "metadata": {
                 "description": "Kubernetes Version"
             }
         },        
         "OrchestratorVersion": {
             "type": "string",
-            "defaultValue": "1.24.3",
+            "defaultValue": "1.24.9",
             "metadata": {
                 "description": "Kubernetes Version"
             }
@@ -1203,7 +1203,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm2.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1679,9 +1679,6 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
-                    },
                     "DomainName": {
                         "value": "[variables('InternaldomainName')]"
                     },
@@ -1762,7 +1759,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/restartvm2.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1810,22 +1807,19 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "NetBiosDomain": {
-                        "value": "[parameters('NetBiosDomain')]"
-                    },
                     "InternalDomainName": {
                         "value": "[variables('InternalDomainName')]"
                     },
                     "ExternalDomainName": {
                         "value": "[variables('InternaldomainName')]"
                     },                    
-                    "ReverseLookup1": {
+                    "ReverseLookup": {
                         "value": "[variables('ReverseLookup0')]"
                     },
-                    "ForwardLookup1": {
+                    "ForwardLookup": {
                         "value": "[variables('ForwardLookup1')]"
                     },
-                    "dc1lastoctet": {
+                    "dclastoctet": {
                         "value": "[variables('dc1lastoctet')]"
                     },
                     "_artifactsLocation": {
