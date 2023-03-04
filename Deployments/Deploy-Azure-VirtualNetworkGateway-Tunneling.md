@@ -1,5 +1,5 @@
-# AZHB1 Virtual Network Gateway Tunneling Add-On
-<img src="./x_Images/AZHB1VirtualNetworkGatewayTunneling.svg" height="600" width="800"/>
+# Azure Virtual Network Gateway Tunneling Add-On
+<img src="./x_Images/VirtualNetworkGatewayTunneling.svg" height="600" width="800"/>
 
 THE FOLLOWING DEPLOYMENT MUST ALREADY EXIST IN ORDER TO USE THIS DEPLOYMENT:
 
