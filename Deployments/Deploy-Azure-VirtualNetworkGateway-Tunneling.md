@@ -1,18 +1,13 @@
-# AZHB1 Virtual Network Gateway RRAS
-<img src="./x_Images/AZHB1VirtualNetworkGatewayRRAS.svg" height="600" width="800"/>
+# AZHB1 Virtual Network Gateway Tunneling Add-On
+<img src="./x_Images/AZHB1VirtualNetworkGateway-Tunneling.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
-- 2 - Resource Groups
-- 2 - Virtual Networks
-- 1 - Virtual Network Gateway
-- 1 - Local Network Gateway
-- 1 - Connection1
-- 2 - Virtual Machines (AZHB1, On-Prem)
-- 1 - Bastion Host
-- 1 - Windows Routing and Remote Access server (VM with 2 NIC's)
+- 1 - Resource Group
+- 1 - Virtual Networks
+- 1 - Virtual Network Peering
+- 1 - Virtual Machine (AZSK1)
 - 1 - Route Table
-- 1 - AZHB1 KeyVault with Secret contianing Deployment Password
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 

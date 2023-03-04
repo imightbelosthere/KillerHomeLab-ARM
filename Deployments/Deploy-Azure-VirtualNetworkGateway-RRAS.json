@@ -1,7 +1,14 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptiondeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {        
+    "parameters": {                      
+        "AZHB1RG": {
+            "type": "string",
+            "defaultValue": "AZHB1-RG",
+            "metadata": {
+                "description": "AZHB1 Resource Group"
+            }
+        },                 
         "ONPREMRegion": {
             "type": "string",
             "defaultValue": "", 
@@ -15,14 +22,7 @@
             "metadata": {
                 "description": "ONPREM Resource Group"
             }
-        },                
-        "AZHB1RG": {
-            "type": "string",
-            "defaultValue": "AZHB1-RG",
-            "metadata": {
-                "description": "AZHB1 Resource Group"
-            }
-        },                                                                                  
+        },                                                                           
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
