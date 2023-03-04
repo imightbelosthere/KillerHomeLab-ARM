@@ -1,6 +1,10 @@
 # AZHB1 Virtual Network Gateway Tunneling Add-On
 <img src="./x_Images/AZHB1VirtualNetworkGateway-Tunneling.svg" height="600" width="800"/>
 
+THE FOLLOWING DEPLOYMENT MUST ALREADY EXIST IN ORDER TO USE THIS DEPLOYMENT:
+
+- Deploy-Azure-VirtualNetworkGateway-RRAS
+
 This Deployment deploys the following items:
 
 - 1 - Resource Group
