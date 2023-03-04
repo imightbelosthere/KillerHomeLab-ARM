@@ -1,5 +1,5 @@
 # Azure Virtual Network Gateway RRAS
-<img src="./x_Images/VirtualNetworkGatewayRRAS.svg" height="600" width="800"/>
+<img src="./x_Images/AzureVirtualNetworkGatewayRRAS.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
