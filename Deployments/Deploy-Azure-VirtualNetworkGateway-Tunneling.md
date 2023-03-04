@@ -1,5 +1,5 @@
 # AZHB1 Virtual Network Gateway Tunneling Add-On
-<img src="./x_Images/AZHB1VirtualNetworkGateway-Tunneling.svg" height="600" width="800"/>
+<img src="./x_Images/AZHB1VirtualNetworkGatewayTunneling.svg" height="600" width="800"/>
 
 THE FOLLOWING DEPLOYMENT MUST ALREADY EXIST IN ORDER TO USE THIS DEPLOYMENT:
 
@@ -26,8 +26,8 @@ If you can't remember the Username review the Deployment Input tab within your R
 <img src="./x_Images/DeploymentUsername.png" width="300"/>
 
 Parameters that support changes
-- AZHB1Region.  Location for AZHB1 Resources.
-- ONPREMRegion.  Location for On-Premise Resources.
+- AZSPKRG.  Resource Group for AZ Spoke Resources.
+- AZHB1RG. Resource Group for AZ HUB Resources.
 - ONPREMRG.  Resource Group for ONPrem Resources.
 - TimeZone.  Select an appropriate Time Zone.
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
