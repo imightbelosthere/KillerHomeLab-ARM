@@ -16,13 +16,6 @@
                 "description": "AZHB1 Resource Group"
             }
         },                                                                                          
-        "ONPREMRegion": {
-            "type": "string",
-            "defaultValue": "", 
-            "metadata": {
-                "description": "Choose Region for ONPREM Resources"
-            }
-        },
         "ONPREMRG": {
             "type": "string",
             "defaultValue": "ONPREM-RG",
@@ -175,19 +168,7 @@
             "metadata": {
                 "description": "Time Zone"
             }
-        },  
-        "VNGSku": {
-            "type": "string",
-            "defaultValue": "Basic",
-            "allowedValues": [
-                "Basic",
-                "VpnGw1",
-                "VpnGw1AZ"
-            ],
-            "metadata": {
-                "description": "Virtual Network Gateway Sku"
-            }
-        },        
+        },       
         "AutoShutdownEnabled": {
             "type": "string",
             "defaultValue": "No",
@@ -218,12 +199,6 @@
             "defaultValue": "",
             "metadata": {
                 "description": "The name of the Administrator of the new VM and Domain"
-            }
-        },
-        "SharedKey": {
-            "type": "string",
-            "metadata": {
-                "description": "Preshared Key for VPN Connection"
             }
         },
         "adminPassword": {
@@ -297,58 +272,7 @@
             "metadata": {
                 "description": "AZHB1 VNet Prefix"
             }
-        },   
-        "NVAVMOSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-            "2022-Datacenter",
-            "2019-Datacenter",
-            "2016-Datacenter",
-            "2012-R2-Datacenter"
-            ],
-            "metadata": {
-                "description": "Network Virtual Appliance OS Version"
-            }
-        },
-        "NVAVMOSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "NVA OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
-            }
-        },        
-        "ONPREMVMOSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-            "2022-Datacenter",
-            "2019-Datacenter",
-            "2016-Datacenter"
-            ],            
-            "metadata": {
-                "description": "ONPREM VM OS Version"
-            }
-        },        
-        "ONPREMVMOSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "ONPREM VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
-            }
-        },                
-        "AZHB1VMOSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-            "2022-Datacenter",
-            "2019-Datacenter",
-            "2016-Datacenter"
-            ],            
-            "metadata": {
-                "description": "AZHB1 VM OS Version"
-            }
-        },                
+        },               
         "AZSPKVMOSSku": {
             "type": "string",
             "defaultValue": "2022-Datacenter",
@@ -360,42 +284,14 @@
             "metadata": {
                 "description": "AZ Spoke VM OS Version"
             }
-        },                        
-        "AZHB1VMOSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "AZHB1 VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
-            }
-        },                                                  
+        },                                                            
         "AZSPKVMOSVersion": {
             "type": "string",
             "defaultValue": "latest",
             "metadata": {
                 "description": "AZ Spoke VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
             }
-        },                                                          
-        "NVAVMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "Network Virtual Appliance VMSize"
-            }
-        },                  
-        "ONPREMVMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "ONPREM VMSize"
-            }
-        },        
-        "AZHB1VMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "AZHB1 VMSize"
-            }
-        },                         
+        },                                                                                  
         "AZSPKVMSize": {
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
@@ -421,20 +317,8 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('VNGRRAS-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('VNGTUN-', variables('Identifier'))]",
         "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
-        "ONPREMVNetName": "[concat(parameters('ONPREMNamingConvention'),'-VNet')]",
-        "ONPREMVNetPrefix": "[concat(parameters('ONPREMVNetID'),'.0.0/16')]",    
-        "ONPREMVNetSubnet1Name": "[concat(parameters('ONPREMNamingConvention'),'-VNet-OutsideSubnet')]", 
-        "ONPREMVNetSubnet1Prefix": "[concat(parameters('ONPREMVNetID'),'.1.0/24')]",           
-        "ONPREMVNetSubnet2Name": "[concat(parameters('ONPREMNamingConvention'),'-VNet-InsideSubnet')]",  
-        "ONPREMVNetSubnet2Prefix": "[concat(parameters('ONPREMVNetID'),'.2.0/24')]",    
-        "ONPREMVNetGatewaySubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.0.0/24')]",
-        "ONPREMVNetBastionSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.253.0/24')]",
-        "ONPREMVNetFirewallSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.254.0/24')]",
-        "AZHB1ConnectionName": "[concat(variables('AZHB1VNGName'), '-to-',variables('AZHB1LNGName'))]",                                          
-        "AZHB1LNGName": "[concat(parameters('AZHB1NamingConvention'),'-OnPrem-LNG')]",                                          
-
         "AZSPKVNetName": "[concat(parameters('AZSPKNamingConvention'),'-VNet')]",
         "AZSPKVNetPrefix": "[concat(parameters('AZSPKVNetID'),'.0.0/16')]",    
         "AZSPKVNetSubnet1Name": "[concat(parameters('AZSPKNamingConvention'),'-VNet-Subnet1')]", 
@@ -447,53 +331,23 @@
 
         "AZHB1VNetName": "[concat(parameters('AZHB1NamingConvention'),'-VNet')]",
         "AZHB1VNetPrefix": "[concat(parameters('AZHB1VNetID'),'.0.0/16')]",    
-        "AZHB1VNetSubnet1Name": "[concat(parameters('AZHB1NamingConvention'),'-VNet-Subnet1')]", 
-        "AZHB1VNetSubnet1Prefix": "[concat(parameters('AZHB1VNetID'),'.1.0/24')]",           
-        "AZHB1VNetSubnet2Name": "[concat(parameters('AZHB1NamingConvention'),'-VNet-Subnet2')]",  
-        "AZHB1VNetSubnet2Prefix": "[concat(parameters('AZHB1VNetID'),'.2.0/24')]",    
-        "AZHB1VNetGatewaysubnetPrefix": "[concat(parameters('AZHB1VNetID'),'.0.0/24')]",
-        "AZHB1VNetBastionsubnetPrefix": "[concat(parameters('AZHB1VNetID'),'.253.0/24')]",
-        "AZHB1VNetFirewallsub]netPrefix": "[concat(parameters('AZHB1VNetID'),'.254.0/24')]",
-
-
-        "AZHB1VNGName": "[concat(parameters('AZHB1NamingConvention'),'-VNet1-VNG')]",
         "NVARouteTableName": "[concat(parameters('ONPREMNamingConvention'),'-NVA-RT')]",                                                                        
         "NVAVMName": "[concat(parameters('ONPREMNamingConvention'),'-nva-01')]",
-        "NVA-Outside-IP": "[concat(parameters('ONPREMVNetID'),'.1.',variables('NVAOutLastOctet'))]",
         "NVA-Inside-IP": "[concat(parameters('ONPREMVNetID'),'.2.',variables('NVAInLastOctet'))]",            
-        "NVAOutLastOctet": "254",        
         "NVAInLastOctet": "254",
-        "ONPREMVMName": "[concat(parameters('ONPREMNamingConvention'),'-VM-01')]", 
-        "ONPREMVMIP": "[concat(parameters('ONPREMVNetID'),'.2.',variables('ONPREMVMLastOctet'))]",
-        "ONPREMVMLastOctet": "101",        
-        "AZHB1VMName": "[concat(parameters('AZHB1NamingConvention'),'-VM-01')]", 
-        "AZHB1VMIP": "[concat(parameters('AZHB1VNetID'),'.1.',variables('AZHB1VMLastOctet'))]",
-        "AZHB1VMLastOctet": "101",        
-
         "AZSPKVMName": "[concat(parameters('AZSPKNamingConvention'),'-VM-01')]", 
         "AZSPKVMIP": "[concat(parameters('AZSPKVNetID'),'.1.',variables('AZSPKVMLastOctet'))]",
         "AZSPKVMLastOctet": "101",        
-
-        "AZHB1NextHop": "[concat(parameters('AZHB1VNetID'),'.1.1')]",            
-        "OutsideSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.1')]",                        
-        "InsideSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.2')]",
-        "NSG1Name": "[concat(parameters('ONPREMNamingConvention'),'-nva-nsg01')]" ,        
-        "BastionHostAPIVersion": "2021-08-01",
-        "ConnectionAPIVersion": "2022-05-01",   
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
-        "LocalNetworkGatewayAPIVersion": "2022-05-01",   
         "NetworkInterfacesAPIVersion": "2021-08-01",
-        "NetworkSecurityGroupAPIVersion": "2022-01-01",                
-        "PublicIPAddressesAPIVersion": "2021-08-01",
         "ResourceGroupAPIVersion": "2021-04-01",  
         "RouteTableAPIVersion": "2022-05-01",
         "SchedulesAPIVersion": "2018-09-15",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",
-        "VirtualNetworkGatewayAPIVersion": "2022-05-01",        
         "VirtualNetworkPeeringAPIVersion": "2022-01-01",                
         "ExtensionsTypeHandlerVersion": "2.83"
     },
