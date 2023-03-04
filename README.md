@@ -24,7 +24,6 @@
 
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-ActiveDirectory-Multi-Site.json)
 [![Deploy To Azure US Gov](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazuregov.svg?sanitize=true)](https://portal.azure.us/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Felliottfieldsjr%2FKillerHomeLab-ARM%2Fcomingsoon%2FDeployments%2FDeploy-ActiveDirectory-Multi-Site.json)
->>>>>>> 830e9152627bb2a49985fe4b7fbf5ac4d36f1138
 
 ### [ADFS, WAP and AD Connect Single-Site - ReadMe](https://github.com/elliottfieldsjr/KillerHomeLab-ARM/blob/main/Deployments/Deploy-ADFS-WAP-and-ADConnect-Single-Site.md)
 
