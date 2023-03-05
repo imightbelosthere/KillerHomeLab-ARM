@@ -33,7 +33,7 @@
 
         ScheduledTask MODVPNConfig
         {
-            TaskName            = 'VPN Config'
+            TaskName            = 'MOD VPN Config'
             ActionExecutable    = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
             ScheduleType        = 'Once'
             StartTime           = (Get-Date).AddMinutes(1)
