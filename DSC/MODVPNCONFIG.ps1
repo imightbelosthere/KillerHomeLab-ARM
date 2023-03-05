@@ -25,7 +25,7 @@
                 $IPV4Subnet = '@("' + $AZUREIPv4 + '","' + $AZURETRANSITIPv4 + '")'
 
                 Set-Content -Path C:\ConfigureRRAS\MODVPNConfig.ps1 -Value '$RemoteAccess = Get-RemoteAccess'
-                Add-Content -Path C:\ConfigureRRAS\MODVPNConfig.ps1 -Value "Get-VpnS2SInterface | Set-VpnS2SInterface -IPv4Subnet $IPV4Subnet"
+                Add-Content -Path C:\ConfigureRRAS\MODVPNConfig.ps1 -Value "Get-VpnS2SInterface | Set-VpnS2SInterface -IPv4Subnet $IPV4Subnet -Force"
             }
             GetScript =  { @{} }
             TestScript = { $false}
