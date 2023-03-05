@@ -1,0 +1,96 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkSecurityGroupAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group API Version"
+            }
+        },
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name"
+            }
+        },
+        "RuleName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Security Rule Name"
+            }
+        },       
+        "RuleAccess": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Security Rule Access"
+            }
+        },                
+        "RulePriority": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Security Rule Priority"
+            }
+        },                        
+        "RuleDirection": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Security Rule Direction"
+            }
+        },                                
+        "RuleDescription": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Security Rule Description"
+            }
+        },                
+        "RuleProtocol": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Security Rule Protocol"
+            }
+        },                        
+        "RuleSourcePortRange": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Security Rule Source Port Range"
+            }
+        },                        
+        "RuleDestinationPortRange": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Security Rule Destination Port Range"
+            }
+        },
+        "RuleSourceAddressPrefixes": {
+            "type": "array",
+            "metadata": {
+                "description": "Network Security Group Security Rule Source Address Prefixes"
+            }
+        },                
+        "RuleDestinationAddressPrefixes": {
+            "type": "array",
+            "metadata": {
+                "description": "Network Security Group Security Rule Destination Address Prefixes"
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "[parameters('NetworkSecurityGroupAPIVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "name": "[concat(parameters('NetworkSecurityGroupName'),'/', parameters('RuleName'))]",
+            "properties": {
+                "access": "[parameters('RuleAccess')]",
+                "priority": "[parameters('RulePriority')]",
+                "direction": "[parameters('RuleDirection')]",
+                "description": "[parameters('RuleDescription')]",
+                "protocol": "[parameters('RuleProtocol')]",
+                "sourcePortRange": "[parameters('RuleSourcePortRange')]",
+                "destinationPortRange": "[parameters('RuleDestinationPortRange')]",
+                "sourceAddressPrefixes": "[parameters('RuleSourceAddressPrefixes')]",
+                "destinationAddressPrefixes": "[parameters('RuleDestinationAddressPrefixes')]"
+            }
+        }
+    ]
+}
