@@ -448,7 +448,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-AZHB2-VirtualNetwork",
-            "resourceGroup":  "[parameters('AZHB1RG')]",
+            "resourceGroup":  "[parameters('AZHB2RG')]",
             "dependsOn": [
                 "Create-AZHB2-ResourceGroup"
             ],             
