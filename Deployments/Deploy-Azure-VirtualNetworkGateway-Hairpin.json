@@ -733,7 +733,9 @@
                         "value": "[variables('NSG1Rule1DestinationPortRange')]"
                     },                          
                     "RuleSourceAddressPrefixes": {
-                        "value": "[reference('Get-AZHB2-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                        "value": [
+                            "[reference('Get-AZHB2-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                        ]
                     },                                                            
                     "RuleDestinationAddressPrefixes": {
                         "value": "[variables('NSG1Rule1DestinationAddressPrefixes')]"
@@ -787,7 +789,9 @@
                         "value": "[variables('NSG1Rule2DestinationPortRange')]"
                     },                          
                     "RuleSourceAddressPrefixes": {
-                        "value": "[reference('Get-AZHB2-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                        "value": [
+                            "[reference('Get-AZHB2-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                        ]
                     },                                                            
                     "RuleDestinationAddressPrefixes": {
                         "value": "[variables('NSG1Rule2DestinationAddressPrefixes')]"
