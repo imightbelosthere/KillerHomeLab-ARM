@@ -16,13 +16,6 @@
                 "description": "AZHB1 Resource Group"
             }
         },                         
-        "ONPREMRegion": {
-            "type": "string",
-            "defaultValue": "", 
-            "metadata": {
-                "description": "Choose Region for ONPREM Resources"
-            }
-        },
         "ONPREMRG": {
             "type": "string",
             "defaultValue": "ONPREM-RG",
@@ -267,16 +260,7 @@
             "metadata": {
                 "description": "AZHB2 Environment Naming Convention"
             }
-        },         
-        "AZHB1NamingConvention": {
-            "type": "string",
-            "defaultValue": "AZHB1",
-            "minLength": 1,
-            "maxLength": 5,
-            "metadata": {
-                "description": "AZHB1 Environment Naming Convention"
-            }
-        },         
+        },                
         "ONPREMVNetID": {
             "type": "string",
             "defaultValue": "192.168",
@@ -290,53 +274,7 @@
             "metadata": {
                 "description": "AZHB2 VNet Prefix"
             }
-        },         
-        "AZHB1VNetID": {
-            "type": "string",
-            "defaultValue": "172.16",
-            "metadata": {
-                "description": "AZHB1 VNet Prefix"
-            }
-        },         
-        "NVAVMOSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-            "2022-Datacenter",
-            "2019-Datacenter",
-            "2016-Datacenter",
-            "2012-R2-Datacenter"
-            ],
-            "metadata": {
-                "description": "Network Virtual Appliance OS Version"
-            }
-        },
-        "NVAVMOSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "NVA OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505, 2012-R2-Datacenter=9600.20371.220504)"
-            }
-        },        
-        "ONPREMVMOSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-            "2022-Datacenter",
-            "2019-Datacenter",
-            "2016-Datacenter"
-            ],            
-            "metadata": {
-                "description": "ONPREM VM OS Version"
-            }
-        },        
-        "ONPREMVMOSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "ONPREM VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
-            }
-        },                
+        },                      
         "AZHB2VMOSSku": {
             "type": "string",
             "defaultValue": "2022-Datacenter",
@@ -348,47 +286,14 @@
             "metadata": {
                 "description": "AZHB2 VM OS Version"
             }
-        },                
-        "AZHB1VMOSSku": {
-            "type": "string",
-            "defaultValue": "2022-Datacenter",
-            "allowedValues": [
-            "2022-Datacenter",
-            "2019-Datacenter",
-            "2016-Datacenter"
-            ],            
-            "metadata": {
-                "description": "AZHB1 VM OS Version"
-            }
-        },                
-        "AZHB1VMOSVersion": {
-            "type": "string",
-            "defaultValue": "latest",
-            "metadata": {
-                "description": "AZHB1 VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
-            }
-        },                                                  
+        },                                                               
         "AZHB2VMOSVersion": {
             "type": "string",
             "defaultValue": "latest",
             "metadata": {
                 "description": "AZHB2 VM OS Version Number (Example:  2022-Datacenter=20348.707.220505, 2019-Datacenter=17763.3131.220505, 2016-Datacenter=14393.5125.220505)"
             }
-        },                                                          
-        "NVAVMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "Network Virtual Appliance VMSize"
-            }
-        },                  
-        "ONPREMVMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "ONPREM VMSize"
-            }
-        },        
+        },                                                           
         "AZHB2VMSize": {
             "type": "string",
             "defaultValue": "Standard_D2s_v3",
@@ -396,19 +301,12 @@
                 "description": "AZHB2 VMSize"
             }
         },                         
-        "AZHB1VMSize": {
-            "type": "string",
-            "defaultValue": "Standard_D2s_v3",
-            "metadata": {
-                "description": "AZHB1 VMSize"
-            }
-        },                         
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/main/"
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -426,14 +324,7 @@
         "ONPREMVNetName": "[concat(parameters('ONPREMNamingConvention'),'-VNet')]",
         "ONPREMVNetPrefix": "[concat(parameters('ONPREMVNetID'),'.0.0/16')]",    
         "ONPREMVNetSubnet1Name": "[concat(parameters('ONPREMNamingConvention'),'-VNet-OutsideSubnet')]", 
-        "ONPREMVNetSubnet1Prefix": "[concat(parameters('ONPREMVNetID'),'.1.0/24')]",           
-        "ONPREMVNetSubnet2Name": "[concat(parameters('ONPREMNamingConvention'),'-VNet-InsideSubnet')]",  
-        "ONPREMVNetSubnet2Prefix": "[concat(parameters('ONPREMVNetID'),'.2.0/24')]",    
-        "ONPREMVNetGatewaySubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.0.0/24')]",
-        "ONPREMVNetBastionSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.253.0/24')]",
-        "ONPREMVNetFirewallSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.254.0/24')]",
-
-        "AZHB2ConnectionName": "[concat(variables('AZHB2VNGName'), '-to-',variables('AZHB1LNGName'))]",                                          
+        "AZHB2ConnectionName": "[concat(variables('AZHB2VNGName'), '-to-',variables('AZHB2LNGName'))]",                                          
         "AZHB2LNGName": "[concat(parameters('AZHB2NamingConvention'),'-OnPrem-LNG')]",                                          
         "AZHB2VNetName": "[concat(parameters('AZHB2NamingConvention'),'-VNet')]",
         "AZHB2VNetPrefix": "[concat(parameters('AZHB2VNetID'),'.0.0/16')]",    
@@ -445,42 +336,17 @@
         "AZHB2VNetBastionsubnetPrefix": "[concat(parameters('AZHB2VNetID'),'.253.0/24')]",
         "AZHB2VNetFirewallsubnetPrefix": "[concat(parameters('AZHB2VNetID'),'.254.0/24')]",
         "AZHB2VNGName": "[concat(parameters('AZHB2NamingConvention'),'-VNet1-VNG')]",
-
-        "AZHB1ConnectionName": "[concat(variables('AZHB1VNGName'), '-to-',variables('AZHB1LNGName'))]",                                          
-        "AZHB1LNGName": "[concat(parameters('AZHB1NamingConvention'),'-OnPrem-LNG')]",                                          
-        "AZHB1VNetName": "[concat(parameters('AZHB1NamingConvention'),'-VNet')]",
-        "AZHB1VNetPrefix": "[concat(parameters('AZHB1VNetID'),'.0.0/16')]",    
-        "AZHB1VNetSubnet1Name": "[concat(parameters('AZHB1NamingConvention'),'-VNet-Subnet1')]", 
-        "AZHB1VNetSubnet1Prefix": "[concat(parameters('AZHB1VNetID'),'.1.0/24')]",           
-        "AZHB1VNetSubnet2Name": "[concat(parameters('AZHB1NamingConvention'),'-VNet-Subnet2')]",  
-        "AZHB1VNetSubnet2Prefix": "[concat(parameters('AZHB1VNetID'),'.2.0/24')]",    
-        "AZHB1VNetGatewaysubnetPrefix": "[concat(parameters('AZHB1VNetID'),'.0.0/24')]",
-        "AZHB1VNetBastionsubnetPrefix": "[concat(parameters('AZHB1VNetID'),'.253.0/24')]",
-        "AZHB1VNetFirewallsubnetPrefix": "[concat(parameters('AZHB1VNetID'),'.254.0/24')]",
-        "AZHB1VNGName": "[concat(parameters('AZHB1NamingConvention'),'-VNet1-VNG')]",
         "NVARouteTableName": "[concat(parameters('ONPREMNamingConvention'),'-NVA-RT')]",                                                                        
         "NVAVMName": "[concat(parameters('ONPREMNamingConvention'),'-nva-01')]",
         "NVA-Outside-IP": "[concat(parameters('ONPREMVNetID'),'.1.',variables('NVAOutLastOctet'))]",
         "NVA-Inside-IP": "[concat(parameters('ONPREMVNetID'),'.2.',variables('NVAInLastOctet'))]",            
         "NVAOutLastOctet": "254",        
         "NVAInLastOctet": "254",
-        "ONPREMVMName": "[concat(parameters('ONPREMNamingConvention'),'-VM-01')]", 
-        "ONPREMVMIP": "[concat(parameters('ONPREMVNetID'),'.2.',variables('ONPREMVMLastOctet'))]",
-        "ONPREMVMLastOctet": "101",        
-
         "AZHB2VMName": "[concat(parameters('AZHB2NamingConvention'),'-VM-01')]", 
         "AZHB2VMIP": "[concat(parameters('AZHB2VNetID'),'.1.',variables('AZHB2VMLastOctet'))]",
         "AZHB2VMLastOctet": "101",        
-        "AZHB2NextHop": "[concat(parameters('AZHB2VNetID'),'.1.1')]",            
-
-        "AZHB1VMName": "[concat(parameters('AZHB1NamingConvention'),'-VM-01')]", 
-        "AZHB1VMIP": "[concat(parameters('AZHB1VNetID'),'.1.',variables('AZHB1VMLastOctet'))]",
-        "AZHB1VMLastOctet": "101",        
-        "AZHB1NextHop": "[concat(parameters('AZHB1VNetID'),'.1.1')]",            
         "OutsideSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.1')]",                        
-        "InsideSubnetPrefix": "[concat(parameters('ONPREMVNetID'),'.2')]",
         "NSG1Name": "[concat(parameters('ONPREMNamingConvention'),'-nva-nsg01')]",        
-
         "NSG1Rule1Name": "[concat(parameters('AZHB2NamingConvention'),'IKEv1-Inbound')]",
         "NSG1Rule1Access": "Allow",                
         "NSG1Rule1Priority": "1500",                
@@ -503,7 +369,6 @@
         "NSG1Rule2DestinationAddressPrefixes": [
             "[variables('NVA-Outside-IP')]"
         ],        
-        "BastionHostAPIVersion": "2021-08-01",
         "ConnectionAPIVersion": "2022-05-01",   
         "DeploymentAPIVersion": "2021-04-01",
         "ExtensionsAPIVersion": "2022-03-01",
@@ -825,7 +690,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Add-NetworksecurityGroup-IKE-SecurityRule",
+            "name": "Add-NetworksecurityGroup-IKEv1-SecurityRule",
             "resourceGroup":  "[parameters('ONPREMRG')]",              
             "dependsOn": [
                 "Add-RRAS-Virtual-Private-Network"      
@@ -844,7 +709,7 @@
                         "value": "[variables('NSG1Name')]"
                     },
                     "RuleName": {
-                        "value": "[variables('NSG1Name')]"
+                        "value": "[variables('NSG1Rule1Name')]"
                     },  
                     "RuleAccess": {
                         "value": "[variables('NSG1Rule1Access')]"
@@ -879,10 +744,64 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-NetworksecurityGroup-IKEv2-SecurityRule",
+            "resourceGroup":  "[parameters('ONPREMRG')]",              
+            "dependsOn": [
+                "Add-NetworksecurityGroup-IKEv1-SecurityRule"      
+            ],      
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networksecuritygroupsecurityrule.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },                    
+                    "NetworkSecurityGroupname": {
+                        "value": "[variables('NSG1Name')]"
+                    },
+                    "RuleName": {
+                        "value": "[variables('NSG1Rule2Name')]"
+                    },  
+                    "RuleAccess": {
+                        "value": "[variables('NSG1Rule2Access')]"
+                    },                                        
+                    "RulePriority": {
+                        "value": "[variables('NSG1Rule2Priority')]"
+                    },                                           
+                    "RuleDirection": {
+                        "value": "[variables('NSG1Rule2Direction')]"
+                    },                                            
+                    "RuleDescription": {
+                        "value": "[variables('NSG1Rule2Description')]"
+                    },                                              
+                    "RuleProtocol": {
+                        "value": "[variables('NSG1Rule2Protocol')]"
+                    },
+                    "RuleSourcePortRange": {
+                        "value": "[variables('NSG1Rule2SourcePortRange')]"
+                    },                    
+                    "RuleDestinationPortRange": {
+                        "value": "[variables('NSG1Rule2DestinationPortRange')]"
+                    },                          
+                    "RuleSourceAddressPrefixes": {
+                        "value": "[reference('Get-AZHB2-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                    },                                                            
+                    "RuleDestinationAddressPrefixes": {
+                        "value": "[variables('NSG1Rule2DestinationAddressPrefixes')]"
+                    }                                                                                                                             
+                }
+            }
+        },          
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Add-PublicIP-RRAS-Network-Virtual-Appliance",
             "resourceGroup":  "[parameters('ONPREMRG')]",         
             "dependsOn": [
-                "Add-NetworksecurityGroup-IKE-SecurityRule"
+                "Add-NetworksecurityGroup-IKEv2-SecurityRule"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -926,18 +845,20 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/localnetworkgatewayrras.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/localnetworkgateway.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
                     "LocalNetworkGatewayAPIVersion": {
                         "value": "[variables('LocalNetworkGatewayAPIVersion')]"
                     },                       
-                    "LNGName": {
+                    "LocalNetworkGatewayName": {
                         "value": "[variables('AZHB2LNGName')]"
                     },                   
-                    "SubnetPrefix1": {
-                        "value": "[variables('ONPREMVNetPrefix')]"
+                    "AddressPrefixes": {
+                        "value": [
+                            "[variables('ONPREMVNetPrefix')]"
+                        ]
                     },
                     "RemoteGatewayIP": {
                         "value": "[reference('Add-PublicIP-RRAS-Network-Virtual-Appliance').outputs.PublicIP.value]"
@@ -981,7 +902,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Add-AZHB1-Route",
+            "name": "Add-AZHB2-Route",
             "resourceGroup":  "[parameters('ONPREMRG')]",
             "dependsOn": [
                 "Deploy-AZHB2-Connection"
