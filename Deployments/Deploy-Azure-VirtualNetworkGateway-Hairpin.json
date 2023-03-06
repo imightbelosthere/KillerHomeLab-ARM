@@ -845,56 +845,44 @@
                     },
                     "RuleName": {
                         "value": "[variables('NSG1Name')]"
-                    },                    
-                    "AZUREVNGPublicIP": {
-                        "value": "[reference('Get-AZHB1-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
-                    },                   
-                    "VPNOutsideIP": {
-                        "value": "[variables('NVA-Outside-IP')]"
-                    }
-                }
-            }
-        },                                   
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Associate-NSG-with-OutsideSubnet",
-            "resourceGroup":  "[parameters('ONPREMRG')]",              
-            "dependsOn": [
-                "Deploy-NVA-NetworksecurityGroup-01"
-            ],            
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },                    
-                    "vnetName": {
-                        "value": "[variables('ONPREMVNetName')]"
+                    },  
+                    "RuleAccess": {
+                        "value": "[variables('NSG1Rule1Access')]"
+                    },                                        
+                    "RulePriority": {
+                        "value": "[variables('NSG1Rule1Priority')]"
+                    },                                           
+                    "RuleDirection": {
+                        "value": "[variables('NSG1Rule1Direction')]"
+                    },                                            
+                    "RuleDescription": {
+                        "value": "[variables('NSG1Rule1Description')]"
+                    },                                              
+                    "RuleProtocol": {
+                        "value": "[variables('NSG1Rule1Protocol')]"
                     },
-                    "subnetName": {
-                        "value": "[variables('ONPREMVNetSubnet1Name')]"
-                    },                                                                                                            
-                    "subnetPrefix": {
-                        "value": "[variables('ONPREMVNetSubnet1Prefix')]"
-                    }, 
-                    "NetworkSecurityGroupname": {
-                        "value": "[variables('NSG1Name')]"
-                    }                                                                                                                                                                                                                             
+                    "RuleSourcePortRange": {
+                        "value": "[variables('NSG1Rule1SourcePortRange')]"
+                    },                    
+                    "RuleDestinationPortRange": {
+                        "value": "[variables('NSG1Rule1DestinationPortRange')]"
+                    },                          
+                    "RuleSourceAddressPrefixes": {
+                        "value": "[reference('Get-AZHB2-VirtualNetworkGateway-PublicIP').outputs.PublicIP.value]"
+                    },                                                            
+                    "RuleDestinationAddressPrefixes": {
+                        "value": "[variables('NSG1Rule1DestinationAddressPrefixes')]"
+                    }                                                                                                                             
                 }
             }
-        },
+        },  
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Add-PublicIP-RRAS-Network-Virtual-Appliance",
             "resourceGroup":  "[parameters('ONPREMRG')]",         
             "dependsOn": [
-                "Associate-NSG-with-OutsideSubnet"
+                "Add-NetworksecurityGroup-IKE-SecurityRule"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -926,12 +914,12 @@
                     }                                                                                                                                                                                                                                                                                                                
                 }
             }
-        },
+        },                                         
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AZHB1-LocalNetworkGateway",
-            "resourceGroup":  "[parameters('AZHB1RG')]",         
+            "name": "Deploy-AZHB2-LocalNetworkGateway",
+            "resourceGroup":  "[parameters('AZHB2RG')]",         
             "dependsOn": [
                 "Add-PublicIP-RRAS-Network-Virtual-Appliance"
             ],      
@@ -946,7 +934,7 @@
                         "value": "[variables('LocalNetworkGatewayAPIVersion')]"
                     },                       
                     "LNGName": {
-                        "value": "[variables('AZHB1LNGName')]"
+                        "value": "[variables('AZHB2LNGName')]"
                     },                   
                     "SubnetPrefix1": {
                         "value": "[variables('ONPREMVNetPrefix')]"
@@ -960,10 +948,10 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AZHB1-Connection",
-            "resourceGroup":  "[parameters('AZHB1RG')]",         
+            "name": "Deploy-AZHB2-Connection",
+            "resourceGroup":  "[parameters('AZHB2RG')]",         
             "dependsOn": [
-                "Deploy-AZHB1-LocalNetworkGateway"
+                "Deploy-AZHB2-LocalNetworkGateway"
             ],      
             "properties": {
                 "mode": "Incremental",
@@ -976,13 +964,13 @@
                         "value": "[variables('ConnectionAPIVersion')]"
                     },                       
                     "ConnectionName": {
-                        "value": "[variables('AZHB1ConnectionName')]"
+                        "value": "[variables('AZHB2ConnectionName')]"
                     },                   
                     "VNGName": {
-                        "value": "[variables('AZHB1VNGName')]"
+                        "value": "[variables('AZHB2VNGName')]"
                     },
                     "LNGName": {
-                        "value": "[variables('AZHB1LNGName')]"
+                        "value": "[variables('AZHB2LNGName')]"
                     },                    
                     "SharedKey": {
                         "value": "[parameters('SharedKey')]"
@@ -993,68 +981,35 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Create-RRAS-RouteTable",
+            "name": "Add-AZHB1-Route",
             "resourceGroup":  "[parameters('ONPREMRG')]",
             "dependsOn": [
-                "Deploy-AZHB1-Connection"
+                "Deploy-AZHB2-Connection"
             ],              
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/rrasroutetable.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/route.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
                     "RouteTableAPIVersion": {
                         "value": "[variables('RouteTableAPIVersion')]"
                     },                    
-                    "Name": {
+                    "RouteTableName": {
                         "value": "[variables('NVARouteTableName')]"
                     },
                     "RouteName": {
-                        "value": "AZHB1"
+                        "value": "[parameters('AZHB2NamingConvention')]"
                     },                    
-                    "SubnetPrefix": {
-                        "value": "[variables('AZHB1VNetPrefix')]"
+                    "RouteAddressPrefix": {
+                        "value": "[variables('AZHB2VNetPrefix')]"
                     },           
-                    "RemoteGatewayIP": {
+                    "RouteNextHop": {
                         "value": "[variables('NVA-Inside-IP')]"
                     }
                 }
             }
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Associate-RRAS-RouteTable-with-InsideSubnet",
-            "resourceGroup":  "[parameters('ONPREMRG')]",            
-            "dependsOn": [
-                "Create-RRAS-RouteTable"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetroutetable.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },
-                    "RouteTableName": {
-                        "value": "[variables('NVARouteTableName')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('ONPREMVNetName')]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('ONPREMVNetSubnet2Name')]"
-                    },
-                    "subnetPrefix": {
-                        "value": "[variables('ONPREMVNetSubnet2Prefix')]"
-                    }
-                }
-            }
-        }               
+        }
     ]
 }
