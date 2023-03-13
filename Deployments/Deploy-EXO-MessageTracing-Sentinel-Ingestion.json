@@ -276,6 +276,8 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('LAMT-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
+        "WebAppName": "[concat(parameters('NamingConvention'),'-MessageTracing')]",
+        "ServerFarmName": "[concat(parameters('NamingConvention'),'-ServerFarm')]",                
         "VNet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
         "VNet1LASubnetName": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]",
@@ -295,8 +297,10 @@
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
+        "StorageAccountAPIVersion": "2022-05-01",
         "VirtualMachinesAPIVersion": "2022-03-01",
-        "VirtualNetworkAPIVersion": "2020-11-01"
+        "VirtualNetworkAPIVersion": "2020-11-01",
+        "WebAppAPIVersion": "2022-03-01"
     },
     "resources": [
         {
@@ -517,7 +521,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-11",
             "dependsOn": [
-                "Deploy-VirtualNetwork-01"
+                "Deploy-VirtualMachines-Subnet-01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -592,7 +596,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-10",
             "dependsOn": [
-                "Deploy-VirtualNetwork-01"
+                "Deploy-VirtualMachines-Subnet-01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -667,7 +671,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-7",
             "dependsOn": [
-                "Deploy-VirtualNetwork-01"
+                "Deploy-VirtualMachines-Subnet-01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -735,6 +739,36 @@
                     }
                 }
             }
-        }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Standard-LogicApp-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicapps.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppAPIVersion": {
+                        "value": "[variables('WebAppAPIVersion')]"
+                    },
+                    "StorageAPIVersion": {
+                        "value": "[variables('StorageAccountAPIVersion')]"
+                    },
+                    "WebAppName": {
+                        "value": "[variables('WebAppName')]"
+                    },         
+                    "ServerFarmName": {
+                        "value": "[variables('ServerFarmName')]"
+                    },                               
+                    "StorageAccountNameHash": {
+                        "value": "StorageAccount"
+                    }
+                }
+            }
+        }        
     ]
 }

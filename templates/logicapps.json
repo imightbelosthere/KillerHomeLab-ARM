@@ -1,0 +1,122 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WebAppAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App API Version"
+            }
+        },
+        "StorageAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account API Version"
+            }
+        },        
+        "WebAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Name"
+            }
+        },
+        "ServerFarmName": {
+            "type": "string",
+            "metadata": {
+                "description": "Service Plan Name"
+            }
+        },
+        "StorageAccountNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account Name Hash"
+            }
+        }        
+    },
+    "variables": {
+    "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
+    "Identifier": "[substring(variables('StorageAccountHash'), 24, 9)]",
+    "StorageAccountName": "[concat('sa', variables('Identifier'))]" 
+    },    
+    "resources": [
+        {
+            "apiVersion": "[parameters('StorageAPIVersion')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "supportsHttpsTrafficOnly": true,
+                "minimumTlsVersion": "TLS1_2"
+            }
+        },
+        {
+            "apiVersion": "[parameters('WebAppAPIVersion')]",
+            "name": "[parameters('WebAppName')]",
+            "type": "Microsoft.Web/sites",
+            "kind": "functionapp,workflowapp",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+            ],
+            "properties": {
+                "name": "[parameters('WebAppName')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~4"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "node"
+                        },
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "~14"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(parameters('WebAppName')), '8024')]"
+                        },
+                        {
+                            "name": "AzureFunctionsJobHost__extensionBundle__id",
+                            "value": "Microsoft.Azure.Functions.ExtensionBundle.Workflows"
+                        },
+                        {
+                            "name": "AzureFunctionsJobHost__extensionBundle__version",
+                            "value": "/[1.*, 2.0.0)"
+                        },
+                        {
+                            "name": "APP_KIND",
+                            "value": "workflowApp"
+                        }
+                    ],
+                    "use32BitWorkerProcess": false,
+                    "ftpsState": "FtpsOnly",
+                    "netFrameworkVersion": "v6.0"
+                },
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('ServerFarmName'))]",
+                "clientAffinityEnabled": false,
+                "virtualNetworkSubnetId": null,
+                "httpsOnly": true,
+                "publicNetworkAccess": "Enabled"
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            }
+        }
+    ]
+}
