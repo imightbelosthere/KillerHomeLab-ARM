@@ -280,26 +280,6 @@
         "ServerFarmName": "[concat(parameters('NamingConvention'),'-ServerFarm')]",
         "VNet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
-        "subnets": {
-            "value": [
-                {
-                    "name": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]",
-                    "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]"
-                },
-                {
-                    "name": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]",
-                    "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]"
-                },
-                {
-                    "name": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]",
-                    "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]"
-                },
-                {
-                    "name": "AzureBastionSubnet",
-                    "addressprefix": "[concat(parameters('vnet1ID'),'.192/26')]"
-                }                                
-            ]
-        },               
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
         "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",
         "wk1lastoctet": "131",
@@ -370,9 +350,25 @@
                         "value": "[variables('vnet1Prefix')]"
                     },
                     "subnets": {
-                        "value": "[variables('subnets')]"
+                        "value": [
+                            {
+                                "name": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]",
+                                "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]"
+                            },
+                            {
+                                "name": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]",
+                                "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]"
+                            },
+                            {
+                                "name": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]",
+                                "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]"
+                            },
+                            {
+                                "name": "AzureBastionSubnet",
+                                "addressprefix": "[concat(parameters('vnet1ID'),'.192/26')]"
+                            }                                
+                        ]
                     }                    
-
                 }
             }
         },

@@ -21,7 +21,7 @@
             }
         },
         "subnets": {
-            "type": "object",
+            "type": "array",
             "metadata": {
                 "description": "Subnets Configuration Information"
             }            
