@@ -9,34 +9,13 @@
             "type": "string",
             "metadata": {
                 "description": "Service Plan Name"
-            }            
+            }
         },
-        "ServerFarmKind": {
-            "type": "string",
-            "metadata": {
-                "description": "Service Farm OS Type:  windows, linux"
-            }            
-        },        
         "sku": {
             "type": "string",
             "metadata": {
-                "description": "Service Sku:  Free, Shared, Basic, Standard, Premium, PremiumV2, PremiumV3"
-            }                        
-        },
-        "skucode": {
-            "type": "string",
-            "metadata": {
                 "description": "Service Sku Code:  F1, D1, B1, etc"
-            }             
-        },
-        "workerSize": {
-            "type": "string"
-        },
-        "workerSizeId": {
-            "type": "string"
-        },
-        "numberOfWorkers": {
-            "type": "string"
+            }
         }
     },
     "resources": [
@@ -45,19 +24,8 @@
             "name": "[parameters('ServerFarmName')]",
             "type": "Microsoft.Web/serverfarms",
             "location": "[resourceGroup().location]",
-            "kind": "[parameters('ServerFarmKind')]",
-            "tags": {},
-            "properties": {
-                "name": "[parameters('ServerFarmName')]",
-                "workerSize": "[parameters('workerSize')]",
-                "workerSizeId": "[parameters('workerSizeId')]",
-                "numberOfWorkers": "[parameters('numberOfWorkers')]",
-                "reserved": true,
-                "zoneRedundant": false
-            },
             "sku": {
-                "Tier": "[parameters('sku')]",
-                "Name": "[parameters('skuCode')]"
+                "Name": "[parameters('sku')]"
             }
         }
     ]

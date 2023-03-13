@@ -290,6 +290,7 @@
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
+        "ServerFarmsAPIVersion": "2022-03-01",        
         "StorageAccountAPIVersion": "2022-05-01",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",
@@ -327,7 +328,7 @@
                     }
                 }
             }
-        },
+        },        
         {
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",            
             "type": "Microsoft.Resources/deployments",
@@ -460,7 +461,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('subnets')[2].Name]"
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -535,7 +536,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('subnets')[2].Name]"
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -610,7 +611,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('subnets')[2].Name]"
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -637,7 +638,34 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-ServerFarm-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/webserverfarm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ServerFarmsAPIVersion": {
+                        "value": "[variables('ServerFarmsAPIVersion')]"
+                    },
+                    "ServerFarmName": {
+                        "value": "[variables('ServerFarmName')]"
+                    },                               
+                    "Sku": {
+                        "value": "S1"
+                    }
+                }
+            }
+        },                
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Standard-LogicApp-01",
+            "dependsOn": [
+                "Deploy-ServerFarm-01"
+            ],            
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
