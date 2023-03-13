@@ -108,7 +108,7 @@
                     "ftpsState": "FtpsOnly",
                     "netFrameworkVersion": "v6.0"
                 },
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('ServerFarmName'))]",
+                "serverFarmId": "[concat('/subscriptions/', subscription().id,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', parameters('ServerFarmName'))]",
                 "clientAffinityEnabled": false,
                 "virtualNetworkSubnetId": null,
                 "httpsOnly": true,
