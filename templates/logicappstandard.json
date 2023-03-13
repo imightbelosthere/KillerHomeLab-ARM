@@ -2,22 +2,23 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "WebAppAPIVersion": {
+        "LogicAppWorkFlowAPIVersion": {
             "type": "string",
+            "defaultValue": "2019-05-01",            
             "metadata": {
-                "description": "Web App API Version"
+                "description": "Logic App WorkFlow API Version"
             }
-        },
+        },        
         "StorageAPIVersion": {
             "type": "string",
             "metadata": {
                 "description": "Storage Account API Version"
             }
         },        
-        "WebAppName": {
+        "LogicAppName": {
             "type": "string",
             "metadata": {
-                "description": "Web App Name"
+                "description": "Logic App Name"
             }
         },
         "ServerFarmName": {
@@ -55,16 +56,16 @@
             }
         },
         {
-            "apiVersion": "[parameters('WebAppAPIVersion')]",
-            "name": "[parameters('WebAppName')]",
-            "type": "Microsoft.Web/sites",
+            "apiVersion": "[parameters('LogicAppWorkFlowAPIVersion')]",
+            "name": "[parameters('LogicAppName')]",
+            "type": "Microsoft.Logic/workflows",
             "kind": "functionapp,workflowapp",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
             ],
             "properties": {
-                "name": "[parameters('WebAppName')]",
+                "name": "[parameters('LogicAppName')]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -89,7 +90,7 @@
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
-                            "value": "[concat(toLower(parameters('WebAppName')), '8024')]"
+                            "value": "[concat(toLower(parameters('LogicAppName')), '8024')]"
                         },
                         {
                             "name": "AzureFunctionsJobHost__extensionBundle__id",

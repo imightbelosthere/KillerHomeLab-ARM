@@ -276,7 +276,7 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('LAMT-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
-        "WebAppName": "[concat(parameters('NamingConvention'),'-MessageTracing')]",
+        "LogicAppName": "[concat(parameters('NamingConvention'),'-MessageTracing')]",
         "ServerFarmName": "[concat(parameters('NamingConvention'),'-ServerFarm')]",
         "VNet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.0/24')]",
@@ -287,6 +287,7 @@
         "DeploymentAPIVersion": "2021-04-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
+        "LogicAppWorkFlowAPIVersion": "2019-05-01",            
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
@@ -678,14 +679,14 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "WebAppAPIVersion": {
-                        "value": "[variables('WebAppAPIVersion')]"
+                    "LogicAppWorkFlowAPIVersion": {
+                        "value": "[variables('LogicAppWorkFlowAPIVersion')]"
                     },
                     "StorageAPIVersion": {
                         "value": "[variables('StorageAccountAPIVersion')]"
                     },
-                    "WebAppName": {
-                        "value": "[variables('WebAppName')]"
+                    "LogicAppName": {
+                        "value": "[variables('LogicAppName')]"
                     },         
                     "ServerFarmName": {
                         "value": "[variables('ServerFarmName')]"
