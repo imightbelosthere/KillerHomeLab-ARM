@@ -225,7 +225,7 @@
         },
         "vnet1ID": {
             "type": "string",
-            "defaultValue": "172.16",
+            "defaultValue": "172.16.1",
             "metadata": {
                 "description": "VNet1 Prefix"
             }
@@ -277,19 +277,32 @@
         "KeyVaultName": "[concat('LAMT-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
         "WebAppName": "[concat(parameters('NamingConvention'),'-MessageTracing')]",
-        "ServerFarmName": "[concat(parameters('NamingConvention'),'-ServerFarm')]",                
+        "ServerFarmName": "[concat(parameters('NamingConvention'),'-ServerFarm')]",
         "VNet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
-        "VNet1LASubnetName": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]",
-        "VNet1LASubnetPrefix": "[concat(parameters('vnet1ID'),'.1.0/26')]",
-        "VNet1PESubnetName": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]",
-        "VNet1PESubnetPrefix": "[concat(parameters('vnet1ID'),'.1.64/26')]",        
-        "VNet1VMsSubnetName": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]",
-        "VNet1VMsSubnetPrefix": "[concat(parameters('vnet1ID'),'.1.128/26')]",        
-        "VNet1BastionSubnetPrefix": "[concat(parameters('vnet1ID'),'.1.192/26')]",                
+        "subnets": {
+            "value": [
+                {
+                    "name": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]",
+                    "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]"
+                },
+                {
+                    "name": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]",
+                    "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]"
+                },
+                {
+                    "name": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]",
+                    "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]"
+                },
+                {
+                    "name": "AzureBastionSubnet",
+                    "addressprefix": "[concat(parameters('vnet1ID'),'.192/26')]"
+                }                                
+            ]
+        },               
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
         "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",
-        "wk1lastoctet": "201",
+        "wk1lastoctet": "131",
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
@@ -343,7 +356,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetwork.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetwork2.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -355,7 +368,11 @@
                     },
                     "vnetprefix": {
                         "value": "[variables('vnet1Prefix')]"
-                    }
+                    },
+                    "subnets": {
+                        "value": "[variables('subnets')]"
+                    }                    
+
                 }
             }
         },
@@ -363,129 +380,9 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-LogicApps-Subnet-01",
-            "dependsOn": [
-                "Deploy-VirtualNetwork-01"
-            ],            
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/subnet.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('VNet1LASubnetName')]"
-                    },                    
-                    "subnetprefix": {
-                        "value": "[variables('VNet1LASubnetPrefix')]"
-                    }
-                }
-            }
-        },        
-        {
-            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-PrivateEndpoints-Subnet-01",
-            "dependsOn": [
-                "Deploy-LogicApps-Subnet-01"
-            ],            
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/subnet.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('VNet1PESubnetName')]"
-                    },                    
-                    "subnetprefix": {
-                        "value": "[variables('VNet1PESubnetPrefix')]"
-                    }
-                }
-            }
-        },                
-        {
-            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-VirtualMachines-Subnet-01",
-            "dependsOn": [
-                "Deploy-PrivateEndpoints-Subnet-01"
-            ],            
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/subnet.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('VNet1VMsSubnetName')]"
-                    },                    
-                    "subnetprefix": {
-                        "value": "[variables('VNet1VMsSubnetPrefix')]"
-                    }
-                }
-            }
-        },                        
-        {
-            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Bastion-Subnet-01",
-            "dependsOn": [
-                "Deploy-VirtualMachines-Subnet-01"
-            ],            
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/subnet.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnetName": {
-                        "value": "AzureBastionSubnet"
-                    },                    
-                    "subnetprefix": {
-                        "value": "[variables('VNet1BastionSubnetPrefix')]"
-                    }
-                }
-            }
-        },                                
-        {
-            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-BastionHost-01",
             "dependsOn": [
-                "Deploy-Bastion-Subnet-01"
+                "Deploy-VirtualNetwork-01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -567,7 +464,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('VNet1VMsSubnetName')]"
+                        "value": "[variables('subnets')[2].Name]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -642,7 +539,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('VNet1VMsSubnetName')]"
+                        "value": "[variables('subnets')[2].Name]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -717,7 +614,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnet1Name": {
-                        "value": "[variables('VNet1VMsSubnetName')]"
+                        "value": "[variables('subnets')[2].Name]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
