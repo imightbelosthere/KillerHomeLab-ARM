@@ -282,7 +282,7 @@
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.0/24')]",
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
         "wk1IP": "[concat(parameters('vnet1ID'),'.',variables('wk1lastoctet'))]",
-        "wk1lastoctet": "131",
+        "wk1lastoctet": "132",
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
