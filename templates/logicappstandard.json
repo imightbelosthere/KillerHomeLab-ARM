@@ -59,7 +59,6 @@
             "apiVersion": "[parameters('LogicAppWorkFlowAPIVersion')]",
             "name": "[parameters('LogicAppName')]",
             "type": "Microsoft.Logic/workflows",
-            "kind": "functionapp,workflowapp",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
