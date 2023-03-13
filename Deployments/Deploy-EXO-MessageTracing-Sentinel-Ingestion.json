@@ -366,7 +366,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetwork.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/subnet.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -379,7 +379,7 @@
                     "subnetName": {
                         "value": "[variables('VNet1LASubnetName')]"
                     },                    
-                    "vnetprefix": {
+                    "subnetprefix": {
                         "value": "[variables('VNet1LASubnetPrefix')]"
                     }
                 }
@@ -396,7 +396,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetwork.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/subnet.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -409,7 +409,7 @@
                     "subnetName": {
                         "value": "[variables('VNet1PESubnetName')]"
                     },                    
-                    "vnetprefix": {
+                    "subnetprefix": {
                         "value": "[variables('VNet1PESubnetPrefix')]"
                     }
                 }
@@ -426,7 +426,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetwork.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/subnet.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -439,7 +439,7 @@
                     "subnetName": {
                         "value": "[variables('VNet1VMsSubnetName')]"
                     },                    
-                    "vnetprefix": {
+                    "subnetprefix": {
                         "value": "[variables('VNet1VMsSubnetPrefix')]"
                     }
                 }
@@ -456,7 +456,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetwork.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/subnet.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -469,7 +469,7 @@
                     "subnetName": {
                         "value": "AzureBastionSubnet"
                     },                    
-                    "vnetprefix": {
+                    "subnetprefix": {
                         "value": "[variables('VNet1BastionSubnetPrefix')]"
                     }
                 }
