@@ -418,7 +418,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-11",
             "dependsOn": [
-                "Deploy-VirtualMachines-Subnet-01"
+                "Deploy-VirtualNetwork-01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -493,7 +493,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-10",
             "dependsOn": [
-                "Deploy-VirtualMachines-Subnet-01"
+                "Deploy-VirtualNetwork-01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -568,7 +568,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-7",
             "dependsOn": [
-                "Deploy-VirtualMachines-Subnet-01"
+                "Deploy-VirtualNetwork-01"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -645,7 +645,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicapps.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappstandard.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
