@@ -19,6 +19,12 @@
             "metadata": {
                 "description": "VNet prefix"
             }
+        },
+        "subnets": {
+            "type": "array",
+            "metadata": {
+                "description": "Subnets Configuration Information"
+            }            
         }
     },
     "resources": [
@@ -32,7 +38,19 @@
                     "addressPrefixes": [
                         "[parameters('vnetprefix')]"
                     ]
-                }
+                },
+                "copy": [
+                    {
+                        "name": "subnets",
+                        "count": "[length(parameters('subnets'))]",
+                        "input": {
+                            "name": "[parameters('subnets')[copyIndex('subnets')].name]",
+                            "properties": {
+                                "addressprefix": "[parameters('subnets')[copyIndex('subnets')].addressPrefix]"
+                            }                            
+                        }
+                    }
+                ]
             }
         }
     ]
