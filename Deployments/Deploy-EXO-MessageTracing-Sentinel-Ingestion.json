@@ -281,7 +281,7 @@
         "VNet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.0/24')]",
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
-        "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",
+        "wk1IP": "[concat(parameters('vnet1ID'),'.',variables('wk1lastoctet'))]",
         "wk1lastoctet": "131",
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
@@ -654,8 +654,11 @@
                         "value": "[variables('ServerFarmName')]"
                     },                               
                     "Sku": {
-                        "value": "S1"
-                    }
+                        "value": "WS1"
+                    },
+                    "Tier": {
+                        "value": "WorkflowStandard"
+                    }                    
                 }
             }
         },                
