@@ -45,7 +45,9 @@
                         "count": "[length(parameters('subnets'))]",
                         "input": {
                             "name": "[parameters('subnets')[copyIndex('subnets')].name]",
-                            "addressPrefix": "[parameters('subnets')[copyIndex('subnets')].properties.addressPrefix]"
+                            "properties": {
+                                "addressprefix": "[parameters('subnets')[copyIndex('subnets')].addressPrefix]"
+                            }                            
                         }
                     }
                 ]
