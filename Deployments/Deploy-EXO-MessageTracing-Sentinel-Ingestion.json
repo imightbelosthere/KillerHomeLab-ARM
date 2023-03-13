@@ -279,7 +279,7 @@
         "WebAppName": "[concat(parameters('NamingConvention'),'-MessageTracing')]",
         "ServerFarmName": "[concat(parameters('NamingConvention'),'-ServerFarm')]",
         "VNet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
-        "VNet1Prefix": "[concat(parameters('vnet1ID'),'.1.0/24')]",
+        "VNet1Prefix": "[concat(parameters('vnet1ID'),'.0/24')]",
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
         "wk1IP": "[concat(parameters('vnet1ID'),'.2.',variables('wk1lastoctet'))]",
         "wk1lastoctet": "131",
