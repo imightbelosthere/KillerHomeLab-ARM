@@ -354,19 +354,27 @@
                         "value": [
                             {
                                 "name": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]"
+                                "properties": {
+                                    "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]"
+                                }
                             },
                             {
                                 "name": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]"
+                                "properties": {
+                                    "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]"
+                                }
                             },
                             {
                                 "name": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]"
+                                "properties": {
+                                    "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]"
+                                }
                             },
                             {
                                 "name": "AzureBastionSubnet",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.192/26')]"
+                                "properties": {
+                                    "addressprefix": "[concat(parameters('vnet1ID'),'.192/26')]"
+                                }
                             }                                
                         ]
                     }                    
