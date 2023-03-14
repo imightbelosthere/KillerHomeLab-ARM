@@ -60,10 +60,10 @@
     },
     "variables": {
         "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
-        "StorageIdentifier": "[substring(variables('StorageAccountHash'), 23, 9)]",
+        "StorageIdentifier": "[substring(variables('StorageAccountHash'), 24, 9)]",
         "StorageAccountName": "[concat('sa', variables('StorageIdentifier'))]",
         "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
-        "KeyVaultIdentifier": "[substring(variables('KeyVaultHash'), 23, 9)]",
+        "KeyVaultIdentifier": "[substring(variables('KeyVaultHash'), 24, 9)]",
         "KeyVaultName": "[concat('sa', variables('KeyVaultIdentifier'))]",
         "secretsPermissions": [
             "Get",
