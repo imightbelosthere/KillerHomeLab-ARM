@@ -129,7 +129,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-                "[concat('Microsoft.KeyVault/vaults/accessPolicies/', variables('KeyVaultName'))]"
+                "[concat('Microsoft.KeyVault/vaults/', variables('KeyVaultName'))]"
             ],
             "properties": {
                 "name": "[parameters('WebAppName')]",
