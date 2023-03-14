@@ -1,0 +1,85 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WebAppAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App API Version"
+            }
+        },
+        "ServerFarmsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Server Farm API Version"
+            }            
+        },                
+        "WebAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Name"
+            }
+        },
+        "ServerFarmName": {
+            "type": "string",
+            "metadata": {
+                "description": "Service Plan Name"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET Name that contains the domain controller"
+            }
+        },
+        "subnet1Name": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing subnet name that contains the domain controller"
+            }
+        },        
+        "Sku": {
+            "type": "string",
+            "metadata": {
+                "description": "Service Sku Code"
+            }
+        },
+        "Tier": {
+            "type": "string",
+            "metadata": {
+                "description": "Service Sku Tier"
+            }
+        }
+    },
+    "variables": {
+        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]"
+    },    
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "[parameters('ServerFarmsAPIVersion')]",
+            "name": "[parameters('serverFarmName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('Sku')]",
+                "tier": "[parameters('Tier')]"
+            },
+            "kind": "app"
+        },   
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "[parameters('WebAppAPIVersion')]",
+            "name": "[parameters('WebAppName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverFarmName'))]"
+            ],            
+            "kind": "app",
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverFarmName'))]",
+                "virtualNetworkSubnetId": "[variables('subnet1Id')]",
+                "vnetRouteAllEnabled": true
+            }
+        }
+    ]
+}

@@ -2,23 +2,22 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "LogicAppWorkFlowAPIVersion": {
+        "WebAppAPIVersion": {
             "type": "string",
-            "defaultValue": "2019-05-01",            
             "metadata": {
-                "description": "Logic App WorkFlow API Version"
+                "description": "Web App API Version"
             }
-        },        
+        },
         "StorageAPIVersion": {
             "type": "string",
             "metadata": {
                 "description": "Storage Account API Version"
             }
         },        
-        "LogicAppName": {
+        "WebAppName": {
             "type": "string",
             "metadata": {
-                "description": "Logic App Name"
+                "description": "Web App Name"
             }
         },
         "ServerFarmName": {
@@ -56,17 +55,63 @@
             }
         },
         {
-            "apiVersion": "[parameters('LogicAppWorkFlowAPIVersion')]",
-            "name": "[parameters('LogicAppName')]",
-            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "[parameters('WebAppAPIVersion')]",
+            "name": "[parameters('WebAppName')]",
+            "type": "Microsoft.Web/sites",
+            "kind": "functionapp,workflowapp",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
             ],
             "properties": {
+                "name": "[parameters('WebAppName')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~4"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "node"
+                        },
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "~14"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(parameters('WebAppName')), '8024')]"
+                        },
+                        {
+                            "name": "AzureFunctionsJobHost__extensionBundle__id",
+                            "value": "Microsoft.Azure.Functions.ExtensionBundle.Workflows"
+                        },
+                        {
+                            "name": "AzureFunctionsJobHost__extensionBundle__version",
+                            "value": "[1.*, 2.0.0)"
+                        },
+                        {
+                            "name": "APP_KIND",
+                            "value": "workflowApp"
+                        }
+                    ],
+                    "use32BitWorkerProcess": false,
+                    "ftpsState": "FtpsOnly",
+                    "netFrameworkVersion": "v6.0"
+                },
                 "definition": {
                     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
                     "contentVersion": "1.0.0.0",
+					"kind": "Stateful",
                     "triggers": {
                         "Recurrence": {
                             "recurrence": {
@@ -76,60 +121,16 @@
                             "type": "Recurrence"
                         }
                     }
-                }
+                },                
+                "serverFarmId": "[concat('/subscriptions/', subscription().id,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', parameters('ServerFarmName'))]",
+                "clientAffinityEnabled": false,
+                "virtualNetworkSubnetId": null,
+                "httpsOnly": true,
+                "publicNetworkAccess": "Enabled"
             },
             "identity": {
                 "type": "SystemAssigned"
             }
-        },
-        {
-            "apiVersion": "[parameters('LogicAppWorkFlowAPIVersion')]",
-            "name": "[concat(parameters('LogicAppName'), '/web')]",
-            "type": "Microsoft.Web/sites/config",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.Logic/workflows/', parameters('LogicAppName'))]"
-            ],            
-            "properties": {
-                "appSettings": [
-                    {
-                        "name": "FUNCTIONS_EXTENSION_VERSION",
-                        "value": "~4"
-                    },
-                    {
-                        "name": "FUNCTIONS_WORKER_RUNTIME",
-                        "value": "node"
-                    },
-                    {
-                        "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                        "value": "~14"
-                    },
-                    {
-                        "name": "AzureWebJobsStorage",
-                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
-                    },
-                    {
-                        "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                        "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
-                    },
-                    {
-                        "name": "WEBSITE_CONTENTSHARE",
-                        "value": "[concat(toLower(parameters('LogicAppName')), '8024')]"
-                    },
-                    {
-                        "name": "AzureFunctionsJobHost__extensionBundle__id",
-                        "value": "Microsoft.Azure.Functions.ExtensionBundle.Workflows"
-                    },
-                    {
-                        "name": "AzureFunctionsJobHost__extensionBundle__version",
-                        "value": "[1.*, 2.0.0)"
-                    },
-                    {
-                        "name": "APP_KIND",
-                        "value": "workflowApp"
-                    }                    
-                ]
-            }
-        }        
+        }
     ]
 }
