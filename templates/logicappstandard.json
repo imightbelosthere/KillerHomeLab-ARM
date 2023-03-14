@@ -205,7 +205,7 @@
         },
         {
             "apiVersion": "[parameters('KeyVaultAPIVersion')]",
-            "name": "[concat(variables('KeyVaultName'),'/accessPolicy')]",
+            "name": "[variables('KeyVaultName')]",
             "type": "Microsoft.KeyVault/vaults/accessPolicies",
             "dependsOn": [
                 "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
