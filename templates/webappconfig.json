@@ -1,0 +1,91 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WebAppAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Web API Version"
+            }
+        },
+        "WebAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Name"
+            }
+        },
+        "WebAppSecret": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Web App Secret"
+            }
+        },        
+        "FrontDoorId": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Name"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Existing VNET Name that contains the domain controller"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Application Gateway Subnet"
+            }
+        }                
+    },
+    "variables": {
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]",
+        "ADAPPSecretName": "[concat(parameters('WebAppName'),'_SP_Secret')]"
+    },     
+    "resources": [
+        {
+            "apiVersion": "[parameters('WebAppAPIVersion')]",
+            "name": "[concat(parameters('WebAppName'), '/web')]",
+            "type": "Microsoft.Web/sites/config",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "alwaysOn": true,
+                "appSettings": [
+                    {
+                        "name":  "[variables('ADAPPSecretName')]",
+                        "value":  "[parameters('WebAppSecret')]"
+                    }
+                ],                
+                "defaultDocuments": [
+                    "Default.htm"
+                ],
+                "detailedErrorLoggingEnabled": true,
+                "healthCheckPath": "/Default.htm",
+                "http20Enabled": true,
+                "httpLoggingEnabled": true,                
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "AzureFrontDoor.Backend",
+                        "action": "Allow",
+                        "tag": "ServiceTag",
+                        "priority": 100,
+                        "name": "FrontDoor1",
+                        "headers": {
+                            "X-Azure-FDID": [
+                                "[parameters('FrontDoorId')]"
+                            ]
+                        }
+                    },
+                    {
+                        "vnetSubnetResourceId": "[variables('subnetId')]",
+                        "action": "Allow",
+                        "tag": "Default",
+                        "priority": 200,
+                        "name": "[parameters('subnetName')]"
+                    }                    
+                ]
+            }
+        }
+    ]
+}
