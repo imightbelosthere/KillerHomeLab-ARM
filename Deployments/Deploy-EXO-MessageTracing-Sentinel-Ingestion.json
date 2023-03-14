@@ -365,20 +365,24 @@
                                         }
                                     }
                                 ]                                
-                                
                             },
                             {
                                 "name": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]"
-
+                                "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]",
+                                "delegations": [
+                                ]                                                                
                             },
                             {
                                 "name": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]"
+                                "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]",
+                                "delegations": [
+                                ]                                                                
                             },
                             {
                                 "name": "AzureBastionSubnet",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.192/26')]"
+                                "addressprefix": "[concat(parameters('vnet1ID'),'.192/26')]",
+                                "delegations": [
+                                ]                                                                
                             }                                
                         ]
                     }                    
