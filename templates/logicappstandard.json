@@ -106,20 +106,25 @@
                     ],
                     "use32BitWorkerProcess": false,
                     "ftpsState": "FtpsOnly",
-                    "netFrameworkVersion": "v6.0"
+                    "netFrameworkVersion": "v6.0",
+                    "resources": [
+                        {
+                            "apiVersion": "2018-11-01",
+                            "name": "web",
+                            "type": "sourcecontrols",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Web/sites/', parameters('WebAppName'))]"
+                            ],
+                        "properties": {
+                            "RepoUrl": "https://github.com/elliottfieldsjr/LogicApp.git",
+                            "branch": "main",
+                            "publishRunbook": true,
+                            "IsManualIntegration": true
+                        }
+                        }
+                    ]                    
                 },
-                "files": {
-                    "workflow.json": {
-                        "definition": {
-                            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
-                            "actions": {},
-                            "contentVersion": "1.0.0.0",
-                            "outputs": {},
-                            "triggers": {}
-                        },
-                        "kind": "Stateful"
-                    }
-                },                             
+
                 "serverFarmId": "[concat('/subscriptions/', subscription().id,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', parameters('ServerFarmName'))]",
                 "clientAffinityEnabled": false,
                 "virtualNetworkSubnetId": null,
