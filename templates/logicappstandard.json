@@ -174,25 +174,8 @@
                     ],
                     "use32BitWorkerProcess": false,
                     "ftpsState": "FtpsOnly",
-                    "netFrameworkVersion": "v6.0",
-                    "resources": [
-                        {
-                            "apiVersion": "2018-11-01",
-                            "name": "web",
-                            "type": "sourcecontrols",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Web/sites/', parameters('WebAppName'))]"
-                            ],
-                            "properties": {
-                                "RepoUrl": "https://github.com/elliottfieldsjr/LogicApp.git",
-                                "branch": "main",
-                                "publishRunbook": true,
-                                "IsManualIntegration": true
-                            }
-                        }
-                    ]                    
+                    "netFrameworkVersion": "v6.0"
                 },
-
                 "serverFarmId": "[concat('/subscriptions/', subscription().id,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', parameters('ServerFarmName'))]",
                 "clientAffinityEnabled": false,
                 "virtualNetworkSubnetId": null,
@@ -202,6 +185,19 @@
             "identity": {
                 "type": "SystemAssigned"
             }
+        },
+        {
+            "type": "Microsoft.Web/sites/sourcecontrols",
+            "apiVersion": "[parameters('WebAppAPIVersion')]",
+            "name": "[format('{0}/{1}', parameters('webAppName'), 'web')]",
+            "properties": {
+                "repoUrl": "https://github.com/elliottfieldsjr/LogicApp.git",
+                "branch": "main",
+                "isManualIntegration": true
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+            ]
         },
         {
             "apiVersion": "[parameters('KeyVaultAPIVersion')]",
