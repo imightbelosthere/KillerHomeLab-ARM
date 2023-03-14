@@ -235,7 +235,7 @@
             "apiVersion": "[parameters('KeyVaultSecretAPIVersion')]",
             "name": "[format('{0}/{1}', variables('KeyVaultName'), 'Message-Trace-Account-UPN')]",
             "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults/accessPolicies', variables('KeyVaultName'), '/add')]"
+                "[format('{0}/{1}', variables('KeyVaultName'), 'add')]"
             ],            
             "properties": {
                 "value": "[parameters('MessageTraceAccountUPN')]"
@@ -246,7 +246,7 @@
             "apiVersion": "[parameters('KeyVaultSecretAPIVersion')]",
             "name": "[format('{0}/{1}', variables('KeyVaultName'), 'Message-Trace-Account-Password')]",
             "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('KeyVaultName'), '/Message-Trace-Account-UPN')]"
+                "[format('{0}/{1}', variables('KeyVaultName'), 'Message-Trace-Account-UPN')]"
             ],            
             "properties": {
                 "value": "[parameters('MessageTraceAccountPassword')]"
