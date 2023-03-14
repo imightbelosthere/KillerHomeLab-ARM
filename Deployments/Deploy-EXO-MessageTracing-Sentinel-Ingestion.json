@@ -184,6 +184,19 @@
                 "description": "Auto-Shutdown notification Email Example:  user@domain.com"
             }
         },
+        "MessageTraceAccountUPN": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The UPN of the Message Trace Account"
+            }
+        },
+        "MessageTraceAccountPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password used for the Message Trace Account"
+            }
+        },        
         "adminUsername": {
             "type": "string",
             "defaultValue": "",
@@ -717,7 +730,13 @@
                     },
                     "AzureUserObjectID": {
                         "value": "[parameters('AzureUserObjectID')]"
-                    }                                       
+                    },
+                    "MessageTraceAccountUPN": {
+                        "value": "[parameters('MessageTraceAccountUPN')]"
+                    },
+                    "MessageTraceAccountPassword": {
+                        "value": "[parameters('MessageTraceAccountPassword')]"
+                    }                                                         
                 }
             }
         },

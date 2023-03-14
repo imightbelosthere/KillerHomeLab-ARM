@@ -56,7 +56,19 @@
             "metadata": {
                 "description": "Azure User Object ID"
             }
-        }                     
+        },
+        "MessageTraceAccountUPN": {
+            "type": "string",
+            "metadata": {
+                "description": "The UPN of the Message Trace Account"
+            }
+        },                                 
+        "MessageTraceAccountPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password used for the Message Trace Account"
+            }
+        }        
     },
     "variables": {
         "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
@@ -105,7 +117,7 @@
                     "bypass": "AzureServices"
                 }
             }
-        },        
+        },
         {
             "apiVersion": "[parameters('StorageAccountAPIVersion')]",
             "type": "Microsoft.Storage/storageAccounts",
@@ -201,7 +213,7 @@
         },
         {
             "apiVersion": "[parameters('KeyVaultAPIVersion')]",
-            "name": "[concat(variables('KeyVaultName'),'/add')]",
+            "name": "[format('{0}/{1}', variables('KeyVaultName'), 'add')]",
             "type": "Microsoft.KeyVault/vaults/accessPolicies",
             "dependsOn": [
                 "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
@@ -217,6 +229,28 @@
                     }
                 ]
             }
-        }        
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "[parameters('KeyVaultSecretAPIVersion')]",
+            "name": "[format('{0}/{1}', variables('KeyVaultName'), 'Message-Trace-Account-UPN')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults/accessPolicies', variables('KeyVaultName'), '/add')]"
+            ],            
+            "properties": {
+                "value": "[parameters('MessageTraceAccountUPN')]"
+            }
+        },    
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "[parameters('KeyVaultSecretAPIVersion')]",
+            "name": "[format('{0}/{1}', variables('KeyVaultName'), 'Message-Trace-Account-Password')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('KeyVaultName'), '/Message-Trace-Account-UPN')]"
+            ],            
+            "properties": {
+                "value": "[parameters('MessageTraceAccountPassword')]"
+            }
+        }                
     ]
 }
