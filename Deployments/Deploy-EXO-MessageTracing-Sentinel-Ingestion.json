@@ -287,7 +287,6 @@
         "DeploymentAPIVersion": "2021-04-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
-        "LogicAppWorkFlowAPIVersion": "2019-05-01",            
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
@@ -697,7 +696,13 @@
                     },
                     "StorageAccountAPIVersion": {
                         "value": "[variables('StorageAccountAPIVersion')]"
-                    },                    
+                    },  
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },                                      
                     "WebAppName": {
                         "value": "[variables('WebAppName')]"
                     },         
@@ -706,7 +711,13 @@
                     },                               
                     "StorageAccountNameHash": {
                         "value": "StorageAccount"
-                    }
+                    },
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    }                                       
                 }
             }
         },

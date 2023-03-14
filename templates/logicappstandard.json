@@ -1,7 +1,7 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
+    "parameters": {        
         "WebAppAPIVersion": {
             "type": "string",
             "metadata": {
@@ -13,6 +13,19 @@
             "metadata": {
                 "description": "Storage Account API Version"
             }
+        },        
+        "KeyVaultAPIVersion": {
+            "type": "string",
+            "defaultValue": "2021-11-01-preview",
+            "metadata": {
+                "description": "KeyVault API Version"
+            }
+        },
+        "KeyVaultSecretAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "KeyVault Secret API Version"
+            }			
         },        
         "WebAppName": {
             "type": "string",
@@ -31,14 +44,68 @@
             "metadata": {
                 "description": "Storage Account Name Hash"
             }
-        }        
+        },
+        "KeyVaultNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Key Vault Name Hash"
+            }
+        },
+        "AzureUserObjectID": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure User Object ID"
+            }
+        }                     
     },
     "variables": {
-    "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
-    "Identifier": "[substring(variables('StorageAccountHash'), 24, 9)]",
-    "StorageAccountName": "[concat('sa', variables('Identifier'))]" 
+        "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
+        "StorageIdentifier": "[substring(variables('StorageAccountHash'), 24, 9)]",
+        "StorageAccountName": "[concat('sa', variables('StorageIdentifier'))]",
+        "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
+        "KeyVaultIdentifier": "[substring(variables('KeyVaultHash'), 24, 9)]",
+        "KeyVaultName": "[concat('sa', variables('KeyVaultIdentifier'))]",
+        "secretsPermissions": [
+            "Get",
+            "List",
+            "Set"
+        ],
+        "tenantID": "[subscription().tenantId]",
+        "skuName": "standard"        
     },    
     "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "name": "[variables('KeyVaultName')]",
+            "apiVersion": "[parameters('KeyVaultAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "enabledForDeployment": true,
+                "enabledForDiskEncryption": true,
+                "enabledForTemplateDeployment": true,
+                "enableSoftDelete": true,
+                "enablePurgeProtection": true,
+                "softDeleteRetentionInDays": 7,
+                "tenantId": "[variables('tenantId')]",
+                "accessPolicies": [
+                    {
+                        "objectId": "[parameters('AzureUserObjectID')]",
+                        "tenantId": "[variables('tenantId')]",
+                        "permissions": {
+                            "secrets": "[variables('secretsPermissions')]"
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "[variables('skuName')]",
+                    "family": "A"
+                },
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "bypass": "AzureServices"
+                }
+            }
+        },        
         {
             "apiVersion": "[parameters('StorageAccountAPIVersion')]",
             "type": "Microsoft.Storage/storageAccounts",
@@ -61,7 +128,8 @@
             "kind": "functionapp,workflowapp",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+                "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+                "[concat('Microsoft.KeyVault/vaults/accessPolicies/', variables('KeyVaultName'))]"
             ],
             "properties": {
                 "name": "[parameters('WebAppName')]",
@@ -115,12 +183,12 @@
                             "dependsOn": [
                                 "[resourceId('Microsoft.Web/sites/', parameters('WebAppName'))]"
                             ],
-                        "properties": {
-                            "RepoUrl": "https://github.com/elliottfieldsjr/LogicApp.git",
-                            "branch": "main",
-                            "publishRunbook": true,
-                            "IsManualIntegration": true
-                        }
+                            "properties": {
+                                "RepoUrl": "https://github.com/elliottfieldsjr/LogicApp.git",
+                                "branch": "main",
+                                "publishRunbook": true,
+                                "IsManualIntegration": true
+                            }
                         }
                     ]                    
                 },
@@ -134,6 +202,25 @@
             "identity": {
                 "type": "SystemAssigned"
             }
-        }
+        },
+        {
+            "apiVersion": "[parameters('KeyVaultAPIVersion')]",
+            "name": "[concat(variables('KeyVaultName'),'/accessPolicy')]",
+            "type": "Microsoft.KeyVault/vaults/accessPolicies",
+            "dependsOn": [
+                "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
+            ],            
+            "properties": {
+                "accessPolicies": [
+                    {
+                        "objectId": "[reference(resourceId(resourceGroup().name, 'Microsoft.Web/sites', parameters('WebAppName'))).IdentityPrincipalId]",
+                        "tenantId": "[variables('tenantId')]",
+                        "permissions": {
+                            "secrets": "[variables('secretsPermissions')]"
+                        }
+                    }
+                ]
+            }
+        }        
     ]
 }
