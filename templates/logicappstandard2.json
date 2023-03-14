@@ -62,7 +62,10 @@
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "[parameters('Sku')]",
-                "tier": "[parameters('Tier')]"
+                "tier": "[parameters('Tier')]",
+                "size": "P1v2",
+                "family": "P1v2",
+                "capacity": 1                
             },
             "kind": "app"
         },   
