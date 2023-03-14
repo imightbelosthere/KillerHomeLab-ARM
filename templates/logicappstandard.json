@@ -225,7 +225,7 @@
             "properties": {
                 "accessPolicies": [
                     {
-                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('WebAppName')), parameters('StorageAccountAPIVersion'), 'full').identity.principalId]",
+                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('WebAppName')), parameters('WebAppAPIVersion'), 'full').identity.principalId]",
                         "tenantId": "[variables('tenantId')]",
                         "permissions": {
                             "secrets": "[variables('secretsPermissions')]"
