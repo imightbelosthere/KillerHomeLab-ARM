@@ -356,7 +356,16 @@
                         "value": [
                             {
                                 "name": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]"
+                                "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]",
+                                "delegations": [
+                                    {
+                                        "name": "delegation",
+                                        "properties": {
+                                            "serviceName": "Microsoft.Web/serverFarms"
+                                        }
+                                    }
+                                ]                                
+                                
                             },
                             {
                                 "name": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]",
