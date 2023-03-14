@@ -654,26 +654,17 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Standard-LogicApp-01",
-            "dependsOn": [
-                "Deploy-VirtualNetwork-01"
-            ],            
+            "name": "Deploy-ServerFarm-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappstandard2.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/webserverfarm.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "WebAppAPIVersion": {
-                        "value": "[variables('WebAppAPIVersion')]"
-                    },
                     "ServerFarmsAPIVersion": {
                         "value": "[variables('ServerFarmsAPIVersion')]"
-                    },                    
-                    "WebAppName": {
-                        "value": "[variables('WebAppName')]"
-                    },         
+                    },
                     "ServerFarmName": {
                         "value": "[variables('ServerFarmName')]"
                     },                               
@@ -682,13 +673,40 @@
                     },
                     "Tier": {
                         "value": "WorkflowStandard"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnet1Name": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]"
                     }                    
+                }
+            }
+        },                       
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Standard-LogicApp-01",
+            "dependsOn": [
+                "Deploy-ServerFarm-01"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappstandard.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppAPIVersion": {
+                        "value": "[variables('WebAppAPIVersion')]"
+                    },
+                    "StorageAccountAPIVersion": {
+                        "value": "[variables('StorageAccountAPIVersion')]"
+                    },                    
+                    "WebAppName": {
+                        "value": "[variables('WebAppName')]"
+                    },         
+                    "ServerFarmName": {
+                        "value": "[variables('ServerFarmName')]"
+                    },                               
+                    "StorageAccountNameHash": {
+                        "value": "StorageAccount"
+                    }
                 }
             }
         },
