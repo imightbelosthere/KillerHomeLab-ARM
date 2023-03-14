@@ -156,6 +156,10 @@
                             "value": "node"
                         },
                         {
+                            "name": "keyVault_VaultUri",
+                            "value": "[reference(resourceId('Microsoft.KeyVault/vaults', variables('KeyVaultName')), parameters('KeyVaultAPIVersion'), 'full').properties.vaultUri]"
+                        },                        
+                        {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
                             "value": "~14"
                         },
@@ -221,7 +225,7 @@
             "properties": {
                 "accessPolicies": [
                     {
-                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('WebAppName')), '2019-08-01', 'full').identity.principalId]",
+                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('WebAppName')), parameters('StorageAccountAPIVersion'), 'full').identity.principalId]",
                         "tenantId": "[variables('tenantId')]",
                         "permissions": {
                             "secrets": "[variables('secretsPermissions')]"
