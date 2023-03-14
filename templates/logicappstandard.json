@@ -8,7 +8,7 @@
                 "description": "Web App API Version"
             }
         },
-        "StorageAPIVersion": {
+        "StorageAccountAPIVersion": {
             "type": "string",
             "metadata": {
                 "description": "Storage Account API Version"
@@ -40,7 +40,7 @@
     },    
     "resources": [
         {
-            "apiVersion": "[parameters('StorageAPIVersion')]",
+            "apiVersion": "[parameters('StorageAccountAPIVersion')]",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageAccountName')]",
             "location": "[resourceGroup().location]",
