@@ -658,9 +658,6 @@
                     "ServerFarmsAPIVersion": {
                         "value": "[variables('ServerFarmsAPIVersion')]"
                     },                    
-                    "StorageAPIVersion": {
-                        "value": "[variables('StorageAccountAPIVersion')]"
-                    },
                     "WebAppName": {
                         "value": "[variables('WebAppName')]"
                     },         
