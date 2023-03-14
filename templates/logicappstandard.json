@@ -213,7 +213,7 @@
             "properties": {
                 "accessPolicies": [
                     {
-                        "objectId": "[reference(resourceId(resourceGroup().name, 'Microsoft.Web/sites', parameters('WebAppName'))).IdentityPrincipalId]",
+                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('WebAppName')), '2019-08-01', 'full').identity.principalId]",
                         "tenantId": "[variables('tenantId')]",
                         "permissions": {
                             "secrets": "[variables('secretsPermissions')]"
