@@ -20,7 +20,7 @@
                 "description": "Managed API Type"
             }
         },
-        "parameterValueSet": {
+        "nonSecretParameterValues": {
             "type": "object",
             "metadata": {
                 "description": "Parameters for Connection"
@@ -44,7 +44,7 @@
                     "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', resourceGroup().location, parameters('ManagedAPIType'))]",
                     "type": "Microsoft.Web/locations/managedApis"              
                 },
-                "parameterValueSet": "[parameters('parameterValueSet')]"
+                "nonSecretParameterValues": "[parameters('nonSecretParameterValues')]"
             }
         }
     ]

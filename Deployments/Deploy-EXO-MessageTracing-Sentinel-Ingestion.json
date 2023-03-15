@@ -300,6 +300,7 @@
         "DeploymentAPIVersion": "2021-04-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
+        "LogAnalyticsWorkspaceAPIVersion": "2021-12-01-preview",        
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
@@ -715,7 +716,13 @@
                     },
                     "KeyVaultSecretAPIVersion": {
                         "value": "[variables('KeyVaultSecretAPIVersion')]"
-                    },                                      
+                    },
+                    "LogAnalyticsWorkspaceAPIVersion": {
+                        "value": "[variables('LogAnalyticsWorkspaceAPIVersion')]"
+                    },      
+                    "WebAppConnectionAPIVersion": {
+                        "value": "[variables('WebAppConnectionAPIVersion')]"
+                    },                                                                                      
                     "WebAppName": {
                         "value": "[variables('WebAppName')]"
                     },         
@@ -728,6 +735,9 @@
                     "KeyVaultNameHash": {
                         "value": "KeyVault"
                     },
+                    "LogAnalyticsWorkspaceNameHash": {
+                        "value": "LogAnalyticsWorkspace"
+                    },                    
                     "AzureUserObjectID": {
                         "value": "[parameters('AzureUserObjectID')]"
                     },
@@ -737,43 +747,6 @@
                     "MessageTraceAccountPassword": {
                         "value": "[parameters('MessageTraceAccountPassword')]"
                     }                                                         
-                }
-            }
-        },
-        {
-            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-KeyVault-Connection",
-            "dependsOn": [
-                "Deploy-Password-KeyVault-with-Secret"
-            ],             
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappconnection.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "WebAppConnectionAPIVersion": {
-                        "value": "[variables('WebAppConnectionAPIVersion')]"
-                    },
-                    "ResourceName": {
-                        "value": "[reference('Deploy-Password-KeyVault-with-Secret').outputs.KeyVaultName.value]"
-                    },
-                    "ManagedAPIType": {
-                        "value": "keyvault"
-                    },   
-                    "parameterValueSet": {
-                        "value": {
-                            "name": "oauthMI",
-                            "values": {
-                                "vaultName": {
-                                    "value": "lamt-20230313124849"
-                                }
-                            }
-                        }
-                    }                                             
                 }
             }
         }                

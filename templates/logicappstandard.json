@@ -26,7 +26,19 @@
             "metadata": {
                 "description": "KeyVault Secret API Version"
             }			
-        },        
+        }, 
+        "LogAnalyticsWorkspaceAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace API Version"
+            }
+        },  
+        "WebAppConnectionAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App API Version"
+            }
+        },                     
         "WebAppName": {
             "type": "string",
             "metadata": {
@@ -51,6 +63,12 @@
                 "description": "Key Vault Name Hash"
             }
         },
+        "LogAnalyticsWorkspaceNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name Hash"
+            }
+        },        
         "AzureUserObjectID": {
             "type": "string",
             "metadata": {
@@ -76,16 +94,34 @@
         "StorageAccountName": "[concat('sa', variables('StorageIdentifier'))]",
         "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
         "KeyVaultIdentifier": "[substring(variables('KeyVaultHash'), 24, 9)]",
-        "KeyVaultName": "[concat('sa', variables('KeyVaultIdentifier'))]",
+        "KeyVaultName": "[concat('kv', variables('KeyVaultIdentifier'))]",
+        "LogAnalyticsWorkspaceHash": "[guid(resourceGroup().id, parameters('LogAnalyticsWorkspaceNameHash'))]",
+        "LogAnalyticsWorkspaceIdentifier": "[substring(variables('LogAnalyticsWorkspaceHash'), 24, 9)]",
+        "LogAnalyticsWorkspaceName": "[concat('la', variables('LogAnalyticsWorkspaceIdentifier'))]",        
         "secretsPermissions": [
             "Get",
             "List",
             "Set"
         ],
         "tenantID": "[subscription().tenantId]",
-        "skuName": "standard"        
+        "KeyVaultSkuName": "standard",
+        "LogAnalyticsSkuName": "PerGB2018"                
     },    
     "resources": [
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "name": "[variables('LogAnalyticsWorkspaceName')]",
+            "apiVersion": "[parameters('LogAnalyticsWorkspaceAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "sku": {
+                    "name": "[variables('LogAnalyticsSkuName')]"
+                },
+                "features": {
+                    "searchVersion": 1
+                }
+            }
+        },        
         {
             "type": "Microsoft.KeyVault/vaults",
             "name": "[variables('KeyVaultName')]",
@@ -109,7 +145,7 @@
                     }
                 ],
                 "sku": {
-                    "name": "[variables('skuName')]",
+                    "name": "[variables('KeyVaultSkuName')]",
                     "family": "A"
                 },
                 "networkAcls": {
@@ -255,6 +291,24 @@
             "properties": {
                 "value": "[parameters('MessageTraceAccountPassword')]"
             }
-        }                
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
+            "name": "[variables('LogAnalyticsWorkspaceName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "V1",
+            "properties": {
+                "displayName": "Connect-to-AzureMonitor",
+                "api": {
+                    "name": "azureloganalyticsdatacollector",
+                    "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', resourceGroup().location, 'azureloganalyticsdatacollector')]",
+                    "type": "Microsoft.Web/locations/managedApis"              
+                },
+                "nonSecretParameterValues": {
+                        "username": "[concat('\"',reference(resourceId('Microsoft.OperationalInsights/workspaces/', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion')).customerId,'\"')]"
+                    }
+            }
+        }                    
     ]
 }
