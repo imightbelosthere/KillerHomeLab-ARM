@@ -329,7 +329,7 @@
         {
             "type": "Microsoft.Web/connections/accessPolicies",
             "apiVersion": "2016-06-01",
-            "name": "[concat(parameters('WebAppName'),'-', reference(resourceId('Microsoft.Web/sites', parameters('WebAppName')), parameters('WebAppAPIVersion'), 'full').identity.principalId)]",
+            "name": "[parameters('WebAppName')]",
             "dependsOn": [
                 "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
             ],
