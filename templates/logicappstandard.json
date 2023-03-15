@@ -297,16 +297,14 @@
             "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
             "name": "azureloganalyticsdatacollector",
             "location": "[resourceGroup().location]",
-            "kind": "V1",
             "properties": {
                 "displayName": "Connect-to-AzureMonitor",
                 "api": {
-                    "name": "azureloganalyticsdatacollector",
-                    "id": "[subscriptionResourceId('Microsoft.Web/locations/managedApis', resourceGroup().location, 'azureloganalyticsdatacollector')]",
-                    "type": "Microsoft.Web/locations/managedApis"              
+                    "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'azureloganalyticsdatacollector')]"
                 },
-                "nonSecretParameterValues": {
-                        "username": "[concat('\"',reference(resourceId('Microsoft.OperationalInsights/workspaces/', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion')).customerId,'\"')]"
+                "parameterValues": {
+                        "username": "[concat('\"',reference(resourceId('Microsoft.OperationalInsights/workspaces/', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion')).customerId,'\"')]",
+                        "password": "[listKeys(resourceId(resourceGroup().name,'Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), providers('Microsoft.OperationalInsights', 'workspaces').apiVersions[0]).primarySharedKey]"
                     }
             }
         }                    

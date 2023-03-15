@@ -309,7 +309,7 @@
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",
         "WebAppAPIVersion": "2022-03-01",
-        "WebAppConnectionAPIVersion": "2016-06-01"        
+        "WebAppConnectionAPIVersion": "2018-07-01-preview"        
     },
     "resources": [
         {
