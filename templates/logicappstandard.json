@@ -229,11 +229,11 @@
                     "appSettings": [
                         {
                             "name": "AZUREMONITOR_API_ID",
-                            "value": "[concat('/subscriptions/', subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/azureloganalyticsdatacollector')]"
+                            "value": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/azureloganalyticsdatacollector')]"
                         },
                         {
                             "name": "AZUREMONITOR_CONNECTION_ID",
-                            "value": "[concat('/subscriptions/', subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/azureloganalyticsdatacollector')]"
+                            "value": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/azureloganalyticsdatacollector')]"
                         },     
                         {
                             "name": "CONNECTION_RUNTIME_URL",
