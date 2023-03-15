@@ -304,12 +304,14 @@
         "NetworkInterfacesAPIVersion": "2021-08-01",
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
+        "SecurityInsightsAPIVersion": "2021-03-01-preview",
         "ServerFarmsAPIVersion": "2022-03-01",        
         "StorageAccountAPIVersion": "2022-05-01",
         "VirtualMachinesAPIVersion": "2022-03-01",
         "VirtualNetworkAPIVersion": "2020-11-01",
         "WebAppAPIVersion": "2022-03-01",
-        "WebAppConnectionAPIVersion": "2018-07-01-preview"        
+        "WebAppConnectionAPIVersion": "2018-07-01-preview",
+        "WebAppConnectionPoliciesAPIVersion": "2016-06-01"     
     },
     "resources": [  
         {
@@ -722,7 +724,13 @@
                     },      
                     "WebAppConnectionAPIVersion": {
                         "value": "[variables('WebAppConnectionAPIVersion')]"
-                    },                                                                                      
+                    },
+                    "WebAppConnectionPoliciesAPIVersion": {
+                        "value": "[variables('WebAppConnectionPoliciesAPIVersion')]"
+                    },                                                                                                          
+                    "SecurityInsightsAPIVersion": {
+                        "value": "[variables('SecurityInsightsAPIVersion')]"
+                    },                                                                                                                              
                     "WebAppName": {
                         "value": "[variables('WebAppName')]"
                     },         

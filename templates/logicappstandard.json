@@ -36,9 +36,21 @@
         "WebAppConnectionAPIVersion": {
             "type": "string",
             "metadata": {
-                "description": "Web App API Version"
+                "description": "Web App Connection API Version"
             }
-        },                     
+        },
+        "WebAppConnectionPoliciesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Connection Policies API Version"
+            }
+        },        
+        "SecurityInsightsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Security Insights API Version"
+            }
+        },                                   
         "WebAppName": {
             "type": "string",
             "metadata": {
@@ -121,7 +133,17 @@
                     "searchVersion": 1
                 }
             }
-        },   
+        },
+        {
+            "type": "Microsoft.SecurityInsights/onboardingStates",
+            "apiVersion": "[parameters('SecurityInsightsAPIVersion')]",
+            "name": "default",
+            "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName'))]"
+            ],
+            "properties": {},
+            "scope": "[concat('Microsoft.OperationalInsights/workspaces/', variables('LogAnalyticsWorkspaceName'))]"
+        },         
         {
             "type": "Microsoft.Web/connections",
             "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
@@ -328,7 +350,7 @@
         },
         {
             "type": "Microsoft.Web/connections/accessPolicies",
-            "apiVersion": "2016-06-01",
+            "apiVersion": "[parameters('WebAppConnectionPoliciesAPIVersion')]",
             "name": "[parameters('WebAppName')]",
             "dependsOn": [
                 "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
