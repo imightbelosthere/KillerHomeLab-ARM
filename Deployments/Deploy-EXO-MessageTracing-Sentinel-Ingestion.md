@@ -1,6 +1,17 @@
 # Deploy Exchange Online Message Tracing Sentinel Ingestion Solution
 <img src="./x_Images/AzureFirewallwithNATGateway.svg" height="600" width="800"/>
 
+## THE FOLLOWING TASKS MUST BE DONE PRIOR RUNNING THIS DEPLOYMENT:
+
+### Exchange Admin Role Group Created and granted the following Roles:
+- Audit Logs
+- Message Tracking
+- View-Only Audit Logs
+- View-Only Configuration
+- View-Only Recipients
+
+### Azure AD User Created and added to previously configured Exchange Admin Role Group
+
 This Deployment deploys the following items:
 
 - 1 - Virtual Network
