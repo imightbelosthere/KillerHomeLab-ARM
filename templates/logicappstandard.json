@@ -298,7 +298,7 @@
             "name": "azureloganalyticsdatacollector",
             "location": "[resourceGroup().location]",
             "properties": {
-                "displayName": "Connect-to-AzureMonitor",
+                "displayName": "azureloganalyticsdatacollector",
                 "api": {
                     "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'azureloganalyticsdatacollector')]"
                 },
