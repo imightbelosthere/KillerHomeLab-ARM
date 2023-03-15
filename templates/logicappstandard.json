@@ -184,6 +184,14 @@
                 "siteConfig": {
                     "appSettings": [
                         {
+                            "name": "AZUREMONITOR_API_ID",
+                            "value": "[concat('/subscriptions/', subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/azureloganalyticsdatacollector')]"
+                        },
+                        {
+                            "name": "AZUREMONITOR_CONNECTION_ID",
+                            "value": "[concat('/subscriptions/', subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/azureloganalyticsdatacollector')]"
+                        },                        
+                        {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
                             "value": "~4"
                         },
