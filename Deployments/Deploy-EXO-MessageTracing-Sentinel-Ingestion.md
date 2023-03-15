@@ -1,5 +1,5 @@
 # Deploy Exchange Online Message Tracing Sentinel Ingestion Solution
-<img src="./x_Images/AzureFirewallwithNATGateway.svg" height="600" width="800"/>
+<img src="./x_Images/xxx.svg" height="600" width="800"/>
 
 ## THE FOLLOWING TASKS MUST BE DONE PRIOR RUNNING THIS DEPLOYMENT:
 
