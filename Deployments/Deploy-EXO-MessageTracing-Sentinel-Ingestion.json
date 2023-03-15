@@ -311,7 +311,7 @@
         "WebAppAPIVersion": "2022-03-01",
         "WebAppConnectionAPIVersion": "2018-07-01-preview"        
     },
-    "resources": [
+    "resources": [  
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
@@ -343,7 +343,7 @@
                     }
                 }
             }
-        },        
+        },    
         {
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",            
             "type": "Microsoft.Resources/deployments",
