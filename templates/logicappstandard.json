@@ -308,6 +308,24 @@
                         "password": "[listKeys(resourceId(resourceGroup().name,'Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), providers('Microsoft.OperationalInsights', 'workspaces').apiVersions[0]).primarySharedKey]"
                     }
             }
-        }                    
+        },
+        {
+            "type": "Microsoft.Web/connections/accessPolicies",
+            "apiVersion": "2016-06-01",
+            "name": "[concat('azureloganalyticsdatacollector/',parameters('WebAppName').identity.principalId)]",
+            "location": "<location>",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/connections', 'azureloganalyticsdatacollector')]"
+            ],
+            "properties": {
+                "principal": {
+                    "type": "ActiveDirectory",
+                    "identity": {
+                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('WebAppName')), parameters('WebAppAPIVersion'), 'full').identity.principalId]",
+                        "tenantId": "[variables('tenantId')]"
+                    }
+                }
+            }
+        }                        
     ]
 }
