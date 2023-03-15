@@ -312,7 +312,7 @@
         {
             "type": "Microsoft.Web/connections/accessPolicies",
             "apiVersion": "2016-06-01",
-            "name": "[concat('azureloganalyticsdatacollector/',parameters('WebAppName').identity.principalId)]",
+            "name": "[concat('azureloganalyticsdatacollector/',parameters('WebAppName'))]",
             "location": "<location>",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/connections', 'azureloganalyticsdatacollector')]"
