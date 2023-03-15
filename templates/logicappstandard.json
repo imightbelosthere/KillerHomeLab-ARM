@@ -121,7 +121,27 @@
                     "searchVersion": 1
                 }
             }
-        },        
+        },   
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
+            "name": "azureloganalyticsdatacollector",
+            "location": "[resourceGroup().location]",
+            "kind": "V2",
+            "dependsOn": [
+                "[concat('Microsoft.OperationalInsights/workspaces/', variables('LogAnalyticsWorkspaceName'))]"
+            ],
+            "properties": {
+                "displayName": "azureloganalyticsdatacollector",
+                "api": {
+                    "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'azureloganalyticsdatacollector')]"
+                },
+                "parameterValues": {
+                        "username": "[concat('\"',reference(resourceId('Microsoft.OperationalInsights/workspaces/', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion')).customerId,'\"')]",
+                        "password": "[listKeys(resourceId(resourceGroup().name,'Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), providers('Microsoft.OperationalInsights', 'workspaces').apiVersions[0]).primarySharedKey]"
+                    }
+            }
+        },             
         {
             "type": "Microsoft.KeyVault/vaults",
             "name": "[variables('KeyVaultName')]",
@@ -177,7 +197,9 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-                "[concat('Microsoft.KeyVault/vaults/', variables('KeyVaultName'))]"
+                "[concat('Microsoft.KeyVault/vaults/', variables('KeyVaultName'))]",
+                "[resourceId('Microsoft.Web/connections', 'azureloganalyticsdatacollector')]"
+
             ],
             "properties": {
                 "name": "[parameters('WebAppName')]",
@@ -190,7 +212,11 @@
                         {
                             "name": "AZUREMONITOR_CONNECTION_ID",
                             "value": "[concat('/subscriptions/', subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/azureloganalyticsdatacollector')]"
-                        },                        
+                        },     
+                        {
+                            "name": "CONNECTION_RUNTIME_URL",
+                            "value": "[reference(resourceId('Microsoft.Web/connections', 'azureloganalyticsdatacollector'), parameters('WebAppConnectionAPIVersion'), 'full').properties.connectionRuntimeUrl]"
+                        },                                           
                         {
                             "name": "FUNCTIONS_EXTENSION_VERSION",
                             "value": "~4"
@@ -301,29 +327,12 @@
             }
         },
         {
-            "type": "Microsoft.Web/connections",
-            "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
-            "name": "azureloganalyticsdatacollector",
-            "location": "[resourceGroup().location]",
-            "kind": "V2",
-            "properties": {
-                "displayName": "azureloganalyticsdatacollector",
-                "api": {
-                    "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'azureloganalyticsdatacollector')]"
-                },
-                "parameterValues": {
-                        "username": "[concat('\"',reference(resourceId('Microsoft.OperationalInsights/workspaces/', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion')).customerId,'\"')]",
-                        "password": "[listKeys(resourceId(resourceGroup().name,'Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), providers('Microsoft.OperationalInsights', 'workspaces').apiVersions[0]).primarySharedKey]"
-                    }
-            }
-        },
-        {
             "type": "Microsoft.Web/connections/accessPolicies",
             "apiVersion": "2016-06-01",
             "name": "[concat('azureloganalyticsdatacollector/',parameters('WebAppName'))]",
             "location": "<location>",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/connections', 'azureloganalyticsdatacollector')]"
+                "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
             ],
             "properties": {
                 "principal": {
