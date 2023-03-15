@@ -36,7 +36,7 @@
             "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
             "location": "[resourceGroup().location]",
             "name": "[parameters('ResourceName')]",
-            "kind": "V1",
+            "kind": "V2",
             "properties": {
                 "displayName": "[variables('ConnectionName')]",
                 "api": {

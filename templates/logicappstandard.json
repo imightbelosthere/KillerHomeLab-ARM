@@ -297,6 +297,7 @@
             "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
             "name": "azureloganalyticsdatacollector",
             "location": "[resourceGroup().location]",
+            "kind": "V2",
             "properties": {
                 "displayName": "azureloganalyticsdatacollector",
                 "api": {

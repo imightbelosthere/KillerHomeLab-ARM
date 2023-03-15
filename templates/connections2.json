@@ -19,7 +19,7 @@
                 "id": "[concat('/subscriptions/', subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/azureloganalyticsdatacollector')]"
             },
             "connection": {
-                "id": "[concat('/subscriptions/', subscription().id,'/resourceGroups/', resourceGroup().location, '/providers/Microsoft.Web/connections/azureloganalyticsdatacollector')]"
+                "id": "[concat('/subscriptions/', subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/azureloganalyticsdatacollector')]"
             },
             "authentication": {
                 "type": "ManagedServiceIdentity"
