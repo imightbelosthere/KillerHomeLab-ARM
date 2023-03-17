@@ -296,6 +296,7 @@
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
         "wk1IP": "[concat(parameters('vnet1ID'),'.',variables('wk1lastoctet'))]",
         "wk1lastoctet": "132",
+        "AzureMonitorPrivateLinkScopeAPIVersion": "2021-07-01-preview",
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "KeyVaultAPIVersion": "2021-11-01-preview",
@@ -730,7 +731,10 @@
                     },                                                                                                          
                     "SecurityInsightsAPIVersion": {
                         "value": "[variables('SecurityInsightsAPIVersion')]"
-                    },                                                                                                                              
+                    },  
+                    "AzureMonitorPrivateLinkScopeAPIVersion": {
+                        "value": "[variables('AzureMonitorPrivateLinkScopeAPIVersion')]"
+                    },                                                                                                                                                  
                     "WebAppName": {
                         "value": "[variables('WebAppName')]"
                     },         
@@ -745,6 +749,9 @@
                     },
                     "LogAnalyticsWorkspaceNameHash": {
                         "value": "LogAnalyticsWorkspace"
+                    },
+                    "AzureMonitorPrivateLinkScopeNameHash": {
+                        "value": "AzureMonitorPrivateLinkScope"
                     },                    
                     "AzureUserObjectID": {
                         "value": "[parameters('AzureUserObjectID')]"

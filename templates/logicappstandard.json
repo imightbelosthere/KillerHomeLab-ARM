@@ -50,7 +50,13 @@
             "metadata": {
                 "description": "Security Insights API Version"
             }
-        },                                   
+        },
+        "AzureMonitorPrivateLinkScopeAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Monitor Private Link Scope API Version"
+            }
+        },                                         
         "WebAppName": {
             "type": "string",
             "metadata": {
@@ -80,7 +86,13 @@
             "metadata": {
                 "description": "Log Analytics Workspace Name Hash"
             }
-        },        
+        },
+        "AzureMonitorPrivateLinkScopeNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name Hash"
+            }
+        },               
         "AzureUserObjectID": {
             "type": "string",
             "metadata": {
@@ -109,7 +121,10 @@
         "KeyVaultName": "[concat('kv', variables('KeyVaultIdentifier'))]",
         "LogAnalyticsWorkspaceHash": "[guid(resourceGroup().id, parameters('LogAnalyticsWorkspaceNameHash'))]",
         "LogAnalyticsWorkspaceIdentifier": "[substring(variables('LogAnalyticsWorkspaceHash'), 24, 9)]",
-        "LogAnalyticsWorkspaceName": "[concat('la', variables('LogAnalyticsWorkspaceIdentifier'))]",        
+        "LogAnalyticsWorkspaceName": "[concat('la', variables('LogAnalyticsWorkspaceIdentifier'))]",
+        "AzureMonitorPrivateLinkScopeHash": "[guid(resourceGroup().id, parameters('AzureMonitorPrivateLinkScopeNameHash'))]",
+        "AzureMonitorPrivateLinkScopeIdentifier": "[substring(variables('AzureMonitorPrivateLinkScopeHash'), 24, 9)]",
+        "AzureMonitorPrivateLinkScopeName": "[concat('ampls', variables('AzureMonitorPrivateLinkScopeIdentifier'))]",
         "secretsPermissions": [
             "Get",
             "List",
@@ -120,6 +135,18 @@
         "LogAnalyticsSkuName": "PerGB2018"                
     },    
     "resources": [
+        {
+            "type": "microsoft.insights/privatelinkscopes",
+            "apiVersion": "[parameters('AzureMonitorPrivateLinkScopeAPIVersion')]",
+            "name": "[variables('AzureMonitorPrivateLinkScopeName')]",
+            "location": "global",
+            "properties": {
+                "accessModeSettings": {
+                    "queryAccessMode": "PrivateOnly",
+                    "ingestionAccessMode": "PrivateOnly"
+                }
+            }
+        },  
         {
             "type": "Microsoft.OperationalInsights/workspaces",
             "name": "[variables('LogAnalyticsWorkspaceName')]",
@@ -134,6 +161,18 @@
                 }
             }
         },
+        {
+            "type": "microsoft.insights/privatelinkscopes/scopedresources",
+            "apiVersion": "[parameters('AzureMonitorPrivateLinkScopeAPIVersion')]",
+            "name": "[concat(variables('AzureMonitorPrivateLinkScopeName'), '/scoped-', variables('LogAnalyticsWorkspaceName'))]",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/privatelinkscopes', variables('AzureMonitorPrivateLinkScopeName'))]",
+                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName'))]"
+            ],
+            "properties": {
+                "linkedResourceId": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion'), 'full').properties.Id]"
+            }
+        },                      
         {
             "type": "Microsoft.SecurityInsights/onboardingStates",
             "apiVersion": "[parameters('SecurityInsightsAPIVersion')]",
