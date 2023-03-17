@@ -296,8 +296,6 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('LAMT-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
-        "WebAppName": "[concat(parameters('NamingConvention'),'-MessageTracing')]",
-        "ServerFarmName": "[concat(parameters('NamingConvention'),'-ServerFarm')]",
         "VNet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.0/24')]",
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
