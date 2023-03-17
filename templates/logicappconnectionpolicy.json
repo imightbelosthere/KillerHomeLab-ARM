@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WebAppConnectionPoliciesAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Connection Policies API Version"
+            }
+        },         
+        "WebAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Name"
+            }            
+        },
+        "WebAppObjectID": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Object ID"
+            }            
+        }        
+    },  
+    "variables": {
+        "tenantID": "[subscription().tenantId]"
+    },        
+    "resources": [
+        {
+            "type": "Microsoft.Web/connections/accessPolicies",
+            "apiVersion": "[parameters('WebAppConnectionPoliciesAPIVersion')]",
+            "name": "[concat('azureloganalyticsdatacollector/', parameters('WebAppName'))]",
+            "dependsOn": [
+                "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
+            ],
+            "properties": {
+                "principal": {
+                    "type": "ActiveDirectory",
+                    "identity": {
+                        "objectId": "[parameters('WebAppObjectID')]",
+                        "tenantId": "[variables('tenantId')]"
+                    }
+                }
+            }
+        }                        
+    ]
+}

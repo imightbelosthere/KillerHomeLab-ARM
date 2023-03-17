@@ -1,14 +1,14 @@
-{
+    {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ServerFarmsAPIVersion": {
             "type": "string"
         },
-        "ServerFarmName": {
+        "ServerFarmNameHash": {
             "type": "string",
             "metadata": {
-                "description": "Service Plan Name"
+                "description": "Service Plan Name Hash"
             }
         },
         "Sku": {
@@ -24,10 +24,15 @@
             }
         }        
     },
+    "variables": {
+        "ServerFarmHash": "[guid(resourceGroup().id, parameters('ServerFarmNameHash'))]",
+        "ServerFarmIdentifier": "[substring(variables('ServerFarmHash'), 24, 9)]",
+        "ServerFarmName": "[concat('sa', variables('ServerFarmIdentifier'))]"
+    },        
     "resources": [
         {
             "apiVersion": "[parameters('ServerFarmsAPIVersion')]",
-            "name": "[parameters('ServerFarmName')]",
+            "name": "[variables('ServerFarmName')]",
             "type": "Microsoft.Web/serverfarms",
             "location": "[resourceGroup().location]",
             "sku": {
@@ -35,5 +40,11 @@
                 "tier": "[parameters('Tier')]"
             }
         }
-    ]
+    ],
+    "outputs": {
+        "ServerFarmName": {
+            "type": "string",
+            "value": "[variables('ServerFarmName')]"
+        }
+    }
 }

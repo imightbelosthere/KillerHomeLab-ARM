@@ -7,30 +7,11 @@
             "metadata": {
                 "description": "Web App API Version"
             }
-        },
-        "StorageAccountAPIVersion": {
-            "type": "string",
-            "metadata": {
-                "description": "Storage Account API Version"
-            }
-        },        
+        },     
         "KeyVaultAPIVersion": {
             "type": "string",
-            "defaultValue": "2021-11-01-preview",
             "metadata": {
                 "description": "KeyVault API Version"
-            }
-        },
-        "KeyVaultSecretAPIVersion": {
-            "type": "string",
-            "metadata": {
-                "description": "KeyVault Secret API Version"
-            }			
-        }, 
-        "LogAnalyticsWorkspaceAPIVersion": {
-            "type": "string",
-            "metadata": {
-                "description": "Log Analytics Workspace API Version"
             }
         },  
         "WebAppConnectionAPIVersion": {
@@ -38,232 +19,46 @@
             "metadata": {
                 "description": "Web App Connection API Version"
             }
-        },
-        "WebAppConnectionPoliciesAPIVersion": {
+        },                                               
+        "WebAppNameHash": {
             "type": "string",
             "metadata": {
-                "description": "Web App Connection Policies API Version"
+                "description": "Web App Name Hash"
             }
         },        
-        "SecurityInsightsAPIVersion": {
-            "type": "string",
-            "metadata": {
-                "description": "Security Insights API Version"
-            }
-        },
-        "AzureMonitorPrivateLinkScopeAPIVersion": {
-            "type": "string",
-            "metadata": {
-                "description": "Azure Monitor Private Link Scope API Version"
-            }
-        },                                         
-        "WebAppName": {
-            "type": "string",
-            "metadata": {
-                "description": "Web App Name"
-            }
-        },
         "ServerFarmName": {
             "type": "string",
             "metadata": {
                 "description": "Service Plan Name"
             }
         },
-        "StorageAccountNameHash": {
+        "StorageAccountName": {
             "type": "string",
             "metadata": {
-                "description": "Storage Account Name Hash"
+                "description": "Storage Account Name"
             }
         },
-        "KeyVaultNameHash": {
+        "KeyVaultName": {
             "type": "string",
             "metadata": {
-                "description": "Key Vault Name Hash"
-            }
-        },
-        "LogAnalyticsWorkspaceNameHash": {
-            "type": "string",
-            "metadata": {
-                "description": "Log Analytics Workspace Name Hash"
-            }
-        },
-        "AzureMonitorPrivateLinkScopeNameHash": {
-            "type": "string",
-            "metadata": {
-                "description": "Log Analytics Workspace Name Hash"
-            }
-        },               
-        "AzureUserObjectID": {
-            "type": "string",
-            "metadata": {
-                "description": "Azure User Object ID"
-            }
-        },
-        "MessageTraceAccountUPN": {
-            "type": "string",
-            "metadata": {
-                "description": "The UPN of the Message Trace Account"
-            }
-        },                                 
-        "MessageTraceAccountPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The password used for the Message Trace Account"
-            }
-        }        
+                "description": "Key Vault Name"
+            }            
+        }                    
     },
     "variables": {
-        "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
-        "StorageIdentifier": "[substring(variables('StorageAccountHash'), 24, 9)]",
-        "StorageAccountName": "[concat('sa', variables('StorageIdentifier'))]",
-        "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
-        "KeyVaultIdentifier": "[substring(variables('KeyVaultHash'), 24, 9)]",
-        "KeyVaultName": "[concat('kv', variables('KeyVaultIdentifier'))]",
-        "LogAnalyticsWorkspaceHash": "[guid(resourceGroup().id, parameters('LogAnalyticsWorkspaceNameHash'))]",
-        "LogAnalyticsWorkspaceIdentifier": "[substring(variables('LogAnalyticsWorkspaceHash'), 24, 9)]",
-        "LogAnalyticsWorkspaceName": "[concat('la', variables('LogAnalyticsWorkspaceIdentifier'))]",
-        "AzureMonitorPrivateLinkScopeHash": "[guid(resourceGroup().id, parameters('AzureMonitorPrivateLinkScopeNameHash'))]",
-        "AzureMonitorPrivateLinkScopeIdentifier": "[substring(variables('AzureMonitorPrivateLinkScopeHash'), 24, 9)]",
-        "AzureMonitorPrivateLinkScopeName": "[concat('ampls', variables('AzureMonitorPrivateLinkScopeIdentifier'))]",
-        "secretsPermissions": [
-            "Get",
-            "List",
-            "Set"
-        ],
-        "tenantID": "[subscription().tenantId]",
-        "KeyVaultSkuName": "standard",
-        "LogAnalyticsSkuName": "PerGB2018"                
+        "WebAppHash": "[guid(resourceGroup().id, parameters('WebAppNameHash'))]",
+        "WebAppIdentifier": "[substring(variables('WebAppHash'), 24, 9)]",
+        "WebAppName": "[concat('sa', variables('WebAppIdentifier'))]"
     },    
-    "resources": [
-        {
-            "type": "microsoft.insights/privatelinkscopes",
-            "apiVersion": "[parameters('AzureMonitorPrivateLinkScopeAPIVersion')]",
-            "name": "[variables('AzureMonitorPrivateLinkScopeName')]",
-            "location": "global",
-            "properties": {
-                "accessModeSettings": {
-                    "queryAccessMode": "PrivateOnly",
-                    "ingestionAccessMode": "PrivateOnly"
-                }
-            }
-        },  
-        {
-            "type": "Microsoft.OperationalInsights/workspaces",
-            "name": "[variables('LogAnalyticsWorkspaceName')]",
-            "apiVersion": "[parameters('LogAnalyticsWorkspaceAPIVersion')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "sku": {
-                    "name": "[variables('LogAnalyticsSkuName')]"
-                },
-                "features": {
-                    "searchVersion": 1
-                }
-            }
-        },
-        {
-            "type": "microsoft.insights/privatelinkscopes/scopedresources",
-            "apiVersion": "[parameters('AzureMonitorPrivateLinkScopeAPIVersion')]",
-            "name": "[concat(variables('AzureMonitorPrivateLinkScopeName'), '/scoped-', variables('LogAnalyticsWorkspaceName'))]",
-            "dependsOn": [
-                "[resourceId('microsoft.insights/privatelinkscopes', variables('AzureMonitorPrivateLinkScopeName'))]",
-                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName'))]"
-            ],
-            "properties": {
-                "linkedResourceId": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion'), 'full').Id]"
-            }
-        },                      
-        {
-            "type": "Microsoft.SecurityInsights/onboardingStates",
-            "apiVersion": "[parameters('SecurityInsightsAPIVersion')]",
-            "name": "default",
-            "dependsOn": [
-                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName'))]"
-            ],
-            "properties": {},
-            "scope": "[concat('Microsoft.OperationalInsights/workspaces/', variables('LogAnalyticsWorkspaceName'))]"
-        },         
-        {
-            "type": "Microsoft.Web/connections",
-            "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
-            "name": "azureloganalyticsdatacollector",
-            "location": "[resourceGroup().location]",
-            "kind": "V2",
-            "dependsOn": [
-                "[concat('Microsoft.OperationalInsights/workspaces/', variables('LogAnalyticsWorkspaceName'))]"
-            ],
-            "properties": {
-                "displayName": "azureloganalyticsdatacollector",
-                "api": {
-                    "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'azureloganalyticsdatacollector')]"
-                },
-                "parameterValues": {
-                        "username": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion'), 'full').properties.customerId]",                        
-                        "password": "[listKeys(resourceId(resourceGroup().name,'Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), providers('Microsoft.OperationalInsights', 'workspaces').apiVersions[0]).primarySharedKey]"
-                    }
-            }
-        },             
-        {
-            "type": "Microsoft.KeyVault/vaults",
-            "name": "[variables('KeyVaultName')]",
-            "apiVersion": "[parameters('KeyVaultAPIVersion')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "enabledForDeployment": true,
-                "enabledForDiskEncryption": true,
-                "enabledForTemplateDeployment": true,
-                "enableSoftDelete": true,
-                "enablePurgeProtection": true,
-                "softDeleteRetentionInDays": 7,
-                "tenantId": "[variables('tenantId')]",
-                "accessPolicies": [
-                    {
-                        "objectId": "[parameters('AzureUserObjectID')]",
-                        "tenantId": "[variables('tenantId')]",
-                        "permissions": {
-                            "secrets": "[variables('secretsPermissions')]"
-                        }
-                    }
-                ],
-                "sku": {
-                    "name": "[variables('KeyVaultSkuName')]",
-                    "family": "A"
-                },
-                "networkAcls": {
-                    "defaultAction": "Allow",
-                    "bypass": "AzureServices"
-                }
-            }
-        },
-        {
-            "apiVersion": "[parameters('StorageAccountAPIVersion')]",
-            "type": "Microsoft.Storage/storageAccounts",
-            "name": "[variables('storageAccountName')]",
-            "location": "[resourceGroup().location]",
-            "tags": {},
-            "sku": {
-                "name": "Standard_LRS"
-            },
-            "kind": "StorageV2",
-            "properties": {
-                "supportsHttpsTrafficOnly": true,
-                "minimumTlsVersion": "TLS1_2"
-            }
-        },
+    "resources": [        
         {
             "apiVersion": "[parameters('WebAppAPIVersion')]",
-            "name": "[parameters('WebAppName')]",
+            "name": "[variables('WebAppName')]",
             "type": "Microsoft.Web/sites",
             "kind": "functionapp,workflowapp",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
-                "[concat('Microsoft.KeyVault/vaults/', variables('KeyVaultName'))]",
-                "[resourceId('Microsoft.Web/connections', 'azureloganalyticsdatacollector')]"
-
-            ],
             "properties": {
-                "name": "[parameters('WebAppName')]",
+                "name": "[variables('WebAppName')]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -288,7 +83,7 @@
                         },
                         {
                             "name": "keyVault_VaultUri",
-                            "value": "[reference(resourceId('Microsoft.KeyVault/vaults', variables('KeyVaultName')), parameters('KeyVaultAPIVersion'), 'full').properties.vaultUri]"
+                            "value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('KeyVaultName')), parameters('KeyVaultAPIVersion'), 'full').properties.vaultUri]"
                         },                        
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
@@ -296,15 +91,15 @@
                         },
                         {
                             "name": "AzureWebJobsStorage",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
                         },
                         {
                             "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
-                            "value": "[concat(toLower(parameters('WebAppName')), '8024')]"
+                            "value": "[concat(toLower(variables('WebAppName')), '8024')]"
                         },
                         {
                             "name": "AzureFunctionsJobHost__extensionBundle__id",
@@ -332,77 +127,16 @@
             "identity": {
                 "type": "SystemAssigned"
             }
+        }
+    ],
+    "outputs": {
+        "WebAppName": {
+            "type": "string",
+            "value": "[variables('WebAppName')]"
         },
-        {
-            "type": "Microsoft.Web/sites/sourcecontrols",
-            "apiVersion": "[parameters('WebAppAPIVersion')]",
-            "name": "[format('{0}/{1}', parameters('webAppName'), 'web')]",
-            "properties": {
-                "repoUrl": "https://github.com/elliottfieldsjr/LogicApp.git",
-                "branch": "main",
-                "isManualIntegration": true
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
-            ]
-        },
-        {
-            "apiVersion": "[parameters('KeyVaultAPIVersion')]",
-            "name": "[format('{0}/{1}', variables('KeyVaultName'), 'add')]",
-            "type": "Microsoft.KeyVault/vaults/accessPolicies",
-            "dependsOn": [
-                "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
-            ],            
-            "properties": {
-                "accessPolicies": [
-                    {
-                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('WebAppName')), parameters('WebAppAPIVersion'), 'full').identity.principalId]",
-                        "tenantId": "[variables('tenantId')]",
-                        "permissions": {
-                            "secrets": "[variables('secretsPermissions')]"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "[parameters('KeyVaultSecretAPIVersion')]",
-            "name": "[format('{0}/{1}', variables('KeyVaultName'), 'Message-Trace-Account-UPN')]",
-            "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', variables('KeyVaultName'))]"
-            ],            
-            "properties": {
-                "value": "[parameters('MessageTraceAccountUPN')]"
-            }
-        },    
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "[parameters('KeyVaultSecretAPIVersion')]",
-            "name": "[format('{0}/{1}', variables('KeyVaultName'), 'Message-Trace-Account-Password')]",
-            "dependsOn": [
-                "[concat('Microsoft.KeyVault/vaults/', variables('KeyVaultName'))]"
-            ],            
-            "properties": {
-                "value": "[parameters('MessageTraceAccountPassword')]"
-            }
-        },
-        {
-            "type": "Microsoft.Web/connections/accessPolicies",
-            "apiVersion": "[parameters('WebAppConnectionPoliciesAPIVersion')]",
-            "name": "[concat('azureloganalyticsdatacollector/', parameters('WebAppName'))]",
-            "dependsOn": [
-                "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
-            ],
-            "properties": {
-                "principal": {
-                    "type": "ActiveDirectory",
-                    "identity": {
-                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('WebAppName')), parameters('WebAppAPIVersion'), 'full').identity.principalId]",
-                        "tenantId": "[variables('tenantId')]"
-                    }
-                }
-            }
-        }                        
-    ]
+        "WebAppObjectId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Web/sites', variables('WebAppName')), parameters('WebAppAPIVersion'), 'full').identity.principalId]"
+        }        
+    }
 }

@@ -4,48 +4,65 @@
     "parameters": {
         "KeyVaultAPIVersion": {
             "type": "string",
-            "defaultValue": "2021-11-01-preview",
             "metadata": {
                 "description": "KeyVault API Version"
             }
         },
-        "keyVaultName": {
+        "WebAppAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App API Version"
+            }
+        },        
+        "KeyVaultName": {
             "type": "string",
             "metadata": {
                 "description": "Key Vault Name"
-            }
+            }            
         },
-        "AzureUserObjectID": {
+        "SecretPermissions": {
+            "type": "array",
+            "metadata": {
+                "description": "Secret Permissions"
+            }
+        },         
+        "ResourceName": {
             "type": "string",
             "metadata": {
-                "description": "Azure User Object ID"
-            }
-        }
-    },
+                "description": "Resource Name"
+            }            
+        },
+        "ResourceType": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource Type"
+            }            
+        }                        
+    },    
     "variables": {
-        "secretsPermissions": [
-            "Get",
-            "List",
-            "Set"
-        ],
         "tenantID": "[subscription().tenantId]"
     },
+    
     "resources": [
         {
-            "type": "Microsoft.KeyVault/vaults/accessPolicies",
-            "name": "[concat(parameters('keyVaultName'),'/accessPolicy')]",
+            "condition": "[equals(parameters('ResourceType'),'WebApp')]",                                                
             "apiVersion": "[parameters('KeyVaultAPIVersion')]",
+            "name": "[format('{0}/{1}', parameters('KeyVaultName'), 'add')]",
+            "type": "Microsoft.KeyVault/vaults/accessPolicies",
+            "dependsOn": [
+                "[concat('Microsoft.Web/sites/', parameters('ResourceName'))]"
+            ],            
             "properties": {
                 "accessPolicies": [
                     {
-                        "objectId": "[parameters('AzureUserObjectID')]",
+                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('ResourceName')), parameters('WebAppAPIVersion'), 'full').identity.principalId]",
                         "tenantId": "[variables('tenantId')]",
                         "permissions": {
-                            "secrets": "[variables('secretsPermissions')]"
+                            "secrets": "[parameters('SecretPermissions')]"
                         }
                     }
                 ]
             }
         }
-    ]
+    ]    
 }

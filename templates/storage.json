@@ -13,6 +13,18 @@
             "metadata": {
                 "description": "Storage Account Name Hash"
             }
+        },
+        "StorageAccountType": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account Type"
+            }
+        },
+        "StorageAccountProperties": {
+            "type": "array",
+            "metadata": {
+                "description": "Storage Account Properties"
+            }
         }        
     },  
     "variables": {
@@ -28,9 +40,10 @@
             "name": "[variables('storageAccountName')]",
             "location": "[resourceGroup().location]",
             "sku": { 
-                "name": "Standard_LRS"
+                "name": "[parameters('StorageAccountType')]"
             },
-            "kind": "StorageV2"
+            "kind": "StorageV2",
+            "properties": "[parameters('StorageAccountProperties')]"
         }             
     ],
     "outputs": {

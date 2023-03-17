@@ -399,7 +399,6 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('NWCM-', variables('Identifier'))]",
         "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
-        "WorkSpaceName": "[concat(parameters('NamingConvention'),'-LAW-',parameters('UniqueID'))]",
         "CMName": "[concat(parameters('NamingConvention'),'-CM-',parameters('UniqueID'))]", 
         "ManagedIDName": "[concat(parameters('NamingConvention'),'-ManagedID-',parameters('UniqueID'))]",
         "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
@@ -603,8 +602,8 @@
                     "LogAnalyticsWorkspaceAPIVersion": {
                         "value": "[variables('LogAnalyticsWorkspaceAPIVersion')]"
                     },                    
-                    "workspaceName": {
-                        "value": "[variables('WorkSpaceName')]"
+                    "LogAnalyticsWorkspaceNameHash": {
+                        "value": "LogAnalyticsWorkspace"
                     },
                     "WorkspaceLocation": {
                         "value": "[parameters('WorkspaceLocation')]"
@@ -2658,7 +2657,7 @@
                         "value": "[variables('vm1name')]"
                     },
                     "workspaceName": {
-                        "value": "[variables('WorkSpaceName')]"
+                        "value": "[reference('Deploy-LogAnalysticsWorkspace').outputs.WorkspaceName.value]"
                     },
                     "WorkspaceResourceGroup": {
                         "value": "[parameters('Region1RG')]"
@@ -2700,7 +2699,7 @@
                         "value": "[variables('vm2name')]"
                     },
                     "workspaceName": {
-                        "value": "[variables('WorkSpaceName')]"
+                        "value": "[reference('Deploy-LogAnalysticsWorkspace').outputs.WorkspaceName.value]"
                     },
                     "WorkspaceResourceGroup": {
                         "value": "[parameters('Region1RG')]"
@@ -2742,7 +2741,7 @@
                         "value": "[variables('vm3name')]"
                     },
                     "workspaceName": {
-                        "value": "[variables('WorkSpaceName')]"
+                        "value": "[reference('Deploy-LogAnalysticsWorkspace').outputs.WorkspaceName.value]"
                     },
                     "WorkspaceResourceGroup": {
                         "value": "[parameters('Region1RG')]"
@@ -2784,7 +2783,7 @@
                         "value": "[variables('vm4name')]"
                     },
                     "workspaceName": {
-                        "value": "[variables('WorkSpaceName')]"
+                        "value": "[reference('Deploy-LogAnalysticsWorkspace').outputs.WorkspaceName.value]"
                     },
                     "WorkspaceResourceGroup": {
                         "value": "[parameters('Region1RG')]"
@@ -2826,7 +2825,7 @@
                         "value": "[variables('vm5name')]"
                     },
                     "workspaceName": {
-                        "value": "[variables('WorkSpaceName')]"
+                        "value": "[reference('Deploy-LogAnalysticsWorkspace').outputs.WorkspaceName.value]"
                     },
                     "WorkspaceResourceGroup": {
                         "value": "[parameters('Region1RG')]"

@@ -8,12 +8,12 @@
                 "description": "Log Analytics Workspace API Version"
             }
         },    
-        "workspaceName": {
+        "LogAnalyticsWorkspaceNameHash": {
             "type": "string",
             "metadata": {
-            "description": "Specifies the name of the workspace."
+                "description": "Log Analytics Workspace Name Hash"
             }
-        },
+        }, 
         "WorkspaceLocation": {
             "type": "string",
             "metadata": {
@@ -27,10 +27,15 @@
             }
         }
     },
+    "variables": {
+        "LogAnalyticsWorkspaceHash": "[guid(resourceGroup().id, parameters('LogAnalyticsWorkspaceNameHash'))]",
+        "LogAnalyticsWorkspaceIdentifier": "[substring(variables('LogAnalyticsWorkspaceHash'), 24, 9)]",
+        "LogAnalyticsWorkspaceName": "[concat('la', variables('LogAnalyticsWorkspaceIdentifier'))]"
+    },        
     "resources": [
         {
             "type": "Microsoft.OperationalInsights/workspaces",
-            "name": "[parameters('workspaceName')]",
+            "name": "[variables('LogAnalyticsWorkspaceName')]",
             "apiVersion": "[parameters('LogAnalyticsWorkspaceAPIVersion')]",
             "location": "[parameters('WorkspaceLocation')]",
             "properties": {
@@ -42,5 +47,15 @@
                 }
             }
         }    
-   ]
+   ],
+    "outputs": {
+        "WorkspaceName": {
+            "type": "string",
+            "value": "[variables('LogAnalyticsWorkspaceName')]"
+        },
+        "WorkspaceID": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion'), 'full').resourceId]"
+        }
+    }
 }

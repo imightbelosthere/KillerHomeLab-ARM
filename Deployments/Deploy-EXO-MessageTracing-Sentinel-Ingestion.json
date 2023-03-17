@@ -12,7 +12,14 @@
             "metadata": {
                 "description": "Type of Logic App"
             }
-        },        
+        }, 
+        "WorkspaceLocation": {
+            "type": "string",
+            "defaultValue": "USGovVirginia",      
+            "metadata": {
+                "description": "Choose a Log Analytics Workspace Location"
+            }
+        },                
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -670,7 +677,39 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-ServerFarm-01",
+            "name": "Deploy-LogicApp-StorageAccount",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/storage.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "StorageAccountAPIVersion": {
+                        "value": "[variables('StorageAccountAPIVersion')]"
+                    },   
+                    "StorageAccountNameHash": {
+                        "value": "StorageAccount"
+                    },
+                    "StorageAccountType": {
+                        "value": "Standard_LRS"
+                    },
+                    "StorageAccountProperties": {
+                        "value": [
+                            {
+                                "supportsHttpsTrafficOnly": true,
+                                "minimumTlsVersion": "TLS1_2"                            
+                            }
+                        ]
+                    }                                        
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-ServerFarm",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -681,8 +720,8 @@
                     "ServerFarmsAPIVersion": {
                         "value": "[variables('ServerFarmsAPIVersion')]"
                     },
-                    "ServerFarmName": {
-                        "value": "[variables('ServerFarmName')]"
+                    "ServerFarmNameHash": {
+                        "value": "ServerFarm"
                     },                               
                     "Sku": {
                         "value": "WS1"
@@ -692,14 +731,254 @@
                     }                    
                 }
             }
-        },                       
+        },
         {
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Standard-LogicApp-01",
+            "name": "Deploy-AzureMonitor-PrivateLinkScope",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatelinkscope.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AzureMonitorPrivateLinkScopeAPIVersion": {
+                        "value": "[variables('AzureMonitorPrivateLinkScopeAPIVersion')]"
+                    },
+                    "AzureMonitorPrivateLinkScopeNameHash": {
+                        "value": "AzureMonitorPrivateLinkScope"
+                    },                               
+                    "QueryAccessMode": {
+                        "value": "PrivateOnly"
+                    },
+                    "IngestionAccessMode": {
+                        "value": "PrivateOnly"
+                    }                    
+                }
+            }
+        },                               
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogAnalyticsWorkspace",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/loganalyticsworkspace.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "LogAnalyticsWorkspaceAPIVersion": {
+                        "value": "[variables('LogAnalyticsWorkspaceAPIVersion')]"
+                    },      
+                    "LogAnalyticsWorkspaceNameHash": {
+                        "value": "LogAnalyticsWorkspace"
+                    },                                  
+                    "WorkspaceLocation": {
+                        "value": "[parameters('WorkspaceLocation')]"
+                    },                    
+                    "sku": {
+                        "value": "PerGB2018"
+                    }            
+                }
+            }
+        },                                       
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AzureMonitor-PrivateLinkScope-Resource",
             "dependsOn": [
-                "Deploy-ServerFarm-01"
+                "Deploy-AzureMonitor-PrivateLinkScope",
+                "Deploy-LogAnalyticsWorkspace"                
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatelinkscoperesource.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AzureMonitorPrivateLinkScopeAPIVersion": {
+                        "value": "[variables('AzureMonitorPrivateLinkScopeAPIVersion')]"
+                    },      
+                    "LogAnalyticsWorkspaceName": {
+                        "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.WorkspaceName.value]"
+                    },                                  
+                    "AzureMonitorPrivateLinkScopeName": {
+                        "value": "[reference('eploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value]"
+                    },                                                      
+                    "ResourceID": {
+                        "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.WorkspaceID.value]"
+                    }         
+                }
+            }
+        },                                               
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Onboard-Sentinel",
+            "dependsOn": [
+                "Deploy-AzureMonitor-PrivateLinkScope-Resource"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/sentinel.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SecurityInsightsAPIVersion": {
+                        "value": "[variables('SecurityInsightsAPIVersion')]"
+                    },      
+                    "LogAnalyticsWorkspaceName": {
+                        "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.WorkspaceName.value]"
+                    }
+                }
+            }
+        },                                                       
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-LogAnalytics-Connection",
+            "dependsOn": [
+                "Onboard-Sentinel"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappconnection.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppConnectionAPIVersion": {
+                        "value": "[variables('WebAppConnectionAPIVersion')]"
+                    },
+                    "ResourceAPIVersion": {
+                        "value": "[variables('LogAnalyticsWorkspaceAPIVersion')]"
+                    },                        
+                    "ResourceName": {
+                        "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.WorkspaceName.value]"
+                    },
+                    "ManagedAPIType": {
+                        "value": "azureloganalyticsdatacollector"
+                    }                    
+                }
+            }
+        },                                                               
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-KeyVault",
+            "dependsOn": [
+                "Onboard-Sentinel"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvault.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault"
+                    },      
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    },
+                    "SecretPermissions": {
+                        "value": [
+                            "Get",
+                            "List",
+                            "Set"                            
+                        ]
+                    },                                                      
+                    "SkuName": {
+                        "value": "Standard"
+                    }                    
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-KeyVault-Username-Secret",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultsecret.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },   
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },                                  
+                    "SecretName": {
+                        "value": "Message-Trace-Account-UPN"
+                    },
+                    "SecretValue": {
+                        "value": "[parameters('MessageTraceAccountUPN')]"
+                    }                                        
+                }
+            }
+        },                                                                             
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-KeyVault-Password-Secret",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultsecret.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },   
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },                                  
+                    "SecretName": {
+                        "value": "Message-Trace-Account-Password"
+                    },
+                    "SecretValue": {
+                        "value": "[parameters('MessageTraceAccountPassword')]"
+                    }                                        
+                }
+            }
+        },                                                                                               
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Standard-LogicApp",
+            "dependsOn": [
+                "Deploy-LogicApp-ServerFarm",
+                "Deploy-AzureMonitor-PrivateLinkScope",
+                "Deploy-LogicApp-LogAnalytics-Connection",
+                "Deploy-LogicApp-KeyVault",
+                "Deploy-LogicApp-StorageAccount"
             ],            
             "properties": {
                 "mode": "Incremental",
@@ -710,60 +989,149 @@
                 "parameters": {
                     "WebAppAPIVersion": {
                         "value": "[variables('WebAppAPIVersion')]"
-                    },
-                    "StorageAccountAPIVersion": {
-                        "value": "[variables('StorageAccountAPIVersion')]"
                     },  
                     "KeyVaultAPIVersion": {
                         "value": "[variables('KeyVaultAPIVersion')]"
                     },
-                    "KeyVaultSecretAPIVersion": {
-                        "value": "[variables('KeyVaultSecretAPIVersion')]"
-                    },
-                    "LogAnalyticsWorkspaceAPIVersion": {
-                        "value": "[variables('LogAnalyticsWorkspaceAPIVersion')]"
-                    },      
                     "WebAppConnectionAPIVersion": {
                         "value": "[variables('WebAppConnectionAPIVersion')]"
                     },
                     "WebAppConnectionPoliciesAPIVersion": {
                         "value": "[variables('WebAppConnectionPoliciesAPIVersion')]"
-                    },                                                                                                          
-                    "SecurityInsightsAPIVersion": {
-                        "value": "[variables('SecurityInsightsAPIVersion')]"
-                    },  
-                    "AzureMonitorPrivateLinkScopeAPIVersion": {
-                        "value": "[variables('AzureMonitorPrivateLinkScopeAPIVersion')]"
-                    },                                                                                                                                                  
-                    "WebAppName": {
-                        "value": "[variables('WebAppName')]"
-                    },         
-                    "ServerFarmName": {
-                        "value": "[variables('ServerFarmName')]"
-                    },                               
-                    "StorageAccountNameHash": {
-                        "value": "StorageAccount"
-                    },
-                    "KeyVaultNameHash": {
-                        "value": "KeyVault"
-                    },
-                    "LogAnalyticsWorkspaceNameHash": {
-                        "value": "LogAnalyticsWorkspace"
-                    },
-                    "AzureMonitorPrivateLinkScopeNameHash": {
-                        "value": "AzureMonitorPrivateLinkScope"
+                    },                                                                                                                                                                                                                                                              
+                    "WebAppNameHash": {
+                        "value": "WebApp"
                     },                    
-                    "AzureUserObjectID": {
-                        "value": "[parameters('AzureUserObjectID')]"
+                    "ServerFarmName": {
+                        "value": "[reference('Deploy-LogicApp-ServerFarm').outputs.ServerFarmName.value]"
                     },
-                    "MessageTraceAccountUPN": {
-                        "value": "[parameters('MessageTraceAccountUPN')]"
+                    "StorageAccountName": {
+                        "value": "[reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value]"
                     },
-                    "MessageTraceAccountPassword": {
-                        "value": "[parameters('MessageTraceAccountPassword')]"
-                    }                                                         
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    }                    
                 }
             }
-        }                
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-FunctionApp",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault",
+                "Deploy-Standard-LogicApp"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/functionappsourcecontrol.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppAPIVersion": {
+                        "value": "[variables('WebAppAPIVersion')]"
+                    },      
+                    "WebAppName": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    }                                       
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-FunctionApp",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault",
+                "Deploy-Standard-LogicApp"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/functionappsourcecontrol.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppAPIVersion": {
+                        "value": "[variables('WebAppAPIVersion')]"
+                    },      
+                    "WebAppName": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    }                                       
+                }
+            }
+        },                                                                                                                                                                                                                                                                                                                                                                            
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-KeyVault-ACL",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault",
+                "Deploy-Standard-LogicApp",
+                "Deploy-FunctionApp"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultacl.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "WebAppAPIVersion": {
+                        "value": "[variables('WebAppAPIVersion')]"
+                    },      
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },
+                    "SecretPermissions": {
+                        "value": [
+                            "Get",
+                            "List",
+                            "Set"                            
+                        ]
+                    },                                                      
+                    "ResourceName": {
+                        "value": "[reference('Deploy-Standard-LogicApp-01').outputs.WebAppName.value]"
+                    },
+                    "ResourceType": {
+                        "value": "WebApp"
+                    }                                        
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-LogAnalytics-Connection-Policy",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault-ACL"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappconnectionpolicy.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppConnectionPoliciesAPIVersion": {
+                        "value": "[variables('WebAppConnectionPoliciesAPIVersion')]"
+                    },      
+                    "WebAppName": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    },
+                    "WebAppObjectID": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppObjectID.value]"
+                    }                                                           
+                }
+            }
+        }                                                                                                                                                                                                                                                                                                                                                                  
     ]
 }

@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AzureMonitorPrivateLinkScopeAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Monitor Private Link Scope API Version"
+            }
+        },
+        "AzureMonitorPrivateLinkScopeNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name Hash"
+            }
+        },        
+        "QueryAccessMode": {
+            "type": "string",
+            "metadata": {
+                "description": "Query Access Mode"
+            }
+        },
+        "IngestionAccessMode": {
+            "type": "string",
+            "metadata": {
+                "description": "Ingestion Access Mode"
+            }
+        }                          
+    },
+    "variables": {
+        "AzureMonitorPrivateLinkScopeHash": "[guid(resourceGroup().id, parameters('AzureMonitorPrivateLinkScopeNameHash'))]",
+        "AzureMonitorPrivateLinkScopeIdentifier": "[substring(variables('AzureMonitorPrivateLinkScopeHash'), 24, 9)]",
+        "AzureMonitorPrivateLinkScopeName": "[concat('ampls', variables('AzureMonitorPrivateLinkScopeIdentifier'))]"
+    },     
+    "resources": [
+        {
+            "type": "microsoft.insights/privatelinkscopes",
+            "apiVersion": "[parameters('AzureMonitorPrivateLinkScopeAPIVersion')]",
+            "name": "[variables('AzureMonitorPrivateLinkScopeName')]",
+            "location": "global",
+            "properties": {
+                "accessModeSettings": {
+                    "queryAccessMode": "[parameters('QueryAccessMode')]",
+                    "ingestionAccessMode": "[parameters('IngestionAccessMode')]"
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "AzureMonitorPrivateLinkScopeName": {
+            "type": "string",
+            "value": "[variables('AzureMonitorPrivateLinkScopeName')]"
+        }
+    }
+}
