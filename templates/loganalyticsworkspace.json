@@ -53,9 +53,9 @@
             "type": "string",
             "value": "[variables('LogAnalyticsWorkspaceName')]"
         },
-        "WorkspaceID": {
+        "ResourceID": {
             "type": "string",
-            "value": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion'), 'full').resourceId]"
+            "value": "[concat(subscription().id, '/resourcegroups/', resourceGroup().name, '/providers/microsoft.operationalinsights/workspaces/', variables('LogAnalyticsWorkspaceName')).ResourceID]"
         }
     }
 }
