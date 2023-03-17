@@ -809,7 +809,7 @@
                         "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.WorkspaceName.value]"
                     },                                  
                     "AzureMonitorPrivateLinkScopeName": {
-                        "value": "[reference('eploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value]"
+                        "value": "[reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value]"
                     },                                                      
                     "ResourceID": {
                         "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.WorkspaceID.value]"
