@@ -21,7 +21,7 @@
             }
         },
         "StorageAccountProperties": {
-            "type": "array",
+            "type": "object",
             "metadata": {
                 "description": "Storage Account Properties"
             }

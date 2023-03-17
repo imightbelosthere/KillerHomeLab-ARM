@@ -334,7 +334,7 @@
                     "KeyVaultAPIVersion": {
                         "value": "[variables('KeyVaultAPIVersion')]"
                     },
-                    "KeyVaultSecretAPIVersion": {
+                    "KeyVaultSec444retAPIVersion": {
                         "value": "[variables('KeyVaultSecretAPIVersion')]"
                     },
                     "KeyVaultName": {
