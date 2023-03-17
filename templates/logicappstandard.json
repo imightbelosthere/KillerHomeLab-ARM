@@ -170,7 +170,7 @@
                 "[resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName'))]"
             ],
             "properties": {
-                "linkedResourceId": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion'), 'full').properties.Id]"
+                "linkedResourceId": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('LogAnalyticsWorkspaceName')), parameters('LogAnalyticsWorkspaceAPIVersion'), 'full').Id]"
             }
         },                      
         {
