@@ -1073,7 +1073,7 @@
                         ]
                     },                                                      
                     "ResourceName": {
-                        "value": "[reference('Deploy-Standard-LogicApp-01').outputs.WebAppName.value]"
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
                     },
                     "ResourceType": {
                         "value": "WebApp"
