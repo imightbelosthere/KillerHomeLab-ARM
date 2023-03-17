@@ -1038,32 +1038,7 @@
                     }                                       
                 }
             }
-        },
-        {
-            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-FunctionApp",
-            "dependsOn": [
-                "Deploy-LogicApp-KeyVault",
-                "Deploy-Standard-LogicApp"
-            ],             
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/functionappsourcecontrol.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "WebAppAPIVersion": {
-                        "value": "[variables('WebAppAPIVersion')]"
-                    },      
-                    "WebAppName": {
-                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
-                    }                                       
-                }
-            }
-        },                                                                                                                                                                                                                                                                                                                                                                            
+        },                                                                                                                                                                                                                                                                                                                                                                           
         {
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
