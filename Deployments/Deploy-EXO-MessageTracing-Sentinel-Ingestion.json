@@ -1003,7 +1003,13 @@
                     },
                     "KeyVaultName": {
                         "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
-                    }                    
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[concat(parameters('NamingConvention'),'--VNet1-LogicApp')]"
+                    }                                      
                 }
             }
         },
