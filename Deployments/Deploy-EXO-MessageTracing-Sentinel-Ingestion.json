@@ -1008,7 +1008,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnet1Name": {
-                        "value": "[concat(parameters('NamingConvention'),'--VNet1-LogicApp')]"
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]"
                     }                                      
                 }
             }
