@@ -1003,12 +1003,6 @@
                     },
                     "KeyVaultName": {
                         "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
-                    },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
-                    },
-                    "subnet1Name": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]"
                     }                                      
                 }
             }
@@ -1106,6 +1100,36 @@
                     }                                                           
                 }
             }
-        }                                                                                                                                                                                                                                                                                                                                                                  
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Isolate-Standard-LogicApp",
+            "dependsOn": [
+                "Deploy-LogicApp-LogAnalytics-Connection-Policy"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappstandardisolated.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppAPIVersion": {
+                        "value": "[variables('WebAppAPIVersion')]"
+                    },  
+                    "WebAppNameHash": {
+                        "value": "WebApp"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]"
+                    }                                      
+                }
+            }
+        }                                                                                                                                                                                                                                                                                                                                                                                 
     ]
 }

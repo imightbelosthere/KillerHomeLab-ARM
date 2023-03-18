@@ -43,25 +43,12 @@
             "metadata": {
                 "description": "Key Vault Name"
             }            
-        },
-        "vnetName": {
-            "type": "string",
-            "metadata": {
-                "description": "Existing VNET Name that contains the domain controller"
-            }
-        },
-        "subnet1Name": {
-            "type": "string",
-            "metadata": {
-                "description": "Existing subnet name that contains the domain controller"
-            }
-        }              
+        }
     },
     "variables": {
         "WebAppHash": "[guid(resourceGroup().id, parameters('WebAppNameHash'))]",
         "WebAppIdentifier": "[substring(variables('WebAppHash'), 24, 9)]",
-        "WebAppName": "[concat('la', variables('WebAppIdentifier'))]",
-        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]"        
+        "WebAppName": "[concat('la', variables('WebAppIdentifier'))]"
     },    
     "resources": [        
         {
@@ -137,10 +124,8 @@
                 },
                 "serverFarmId": "[concat('/subscriptions/', subscription().id,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', parameters('ServerFarmName'))]",
                 "clientAffinityEnabled": false,
-                "virtualNetworkSubnetId": "[variables('subnet1Id')]",
-                "httpsOnly": true,
-                "publicNetworkAccess": "Disabled",
-                "vnetRouteAllEnabled": true
+                "virtualNetworkSubnetId": null,
+                "httpsOnly": true
             },
             "identity": {
                 "type": "SystemAssigned"
