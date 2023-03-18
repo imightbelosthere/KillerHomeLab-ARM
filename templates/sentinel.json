@@ -20,9 +20,6 @@
             "type": "Microsoft.SecurityInsights/onboardingStates",
             "apiVersion": "[parameters('SecurityInsightsAPIVersion')]",
             "name": "default",
-            "dependsOn": [
-                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('LogAnalyticsWorkspaceName'))]"
-            ],
             "properties": {},
             "scope": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('LogAnalyticsWorkspaceName'))]"
         }       
