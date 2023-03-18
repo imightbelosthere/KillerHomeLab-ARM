@@ -55,7 +55,7 @@
         },
         "ResourceID": {
             "type": "string",
-            "value": "[concat(subscription().id, '/resourcegroups/', resourceGroup().name, '/providers/microsoft.operationalinsights/workspaces/', variables('LogAnalyticsWorkspaceName')).ResourceID]"
+            "value": "[concat(subscription().id, '/resourcegroups/', resourceGroup().name, '/providers/microsoft.operationalinsights/workspaces/', variables('LogAnalyticsWorkspaceName'))]"
         }
     }
 }
