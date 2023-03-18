@@ -30,7 +30,7 @@
     "variables": {
         "LogAnalyticsWorkspaceHash": "[guid(resourceGroup().id, parameters('LogAnalyticsWorkspaceNameHash'))]",
         "LogAnalyticsWorkspaceIdentifier": "[substring(variables('LogAnalyticsWorkspaceHash'), 24, 9)]",
-        "LogAnalyticsWorkspaceName": "[concat('la', variables('LogAnalyticsWorkspaceIdentifier'))]"
+        "LogAnalyticsWorkspaceName": "[concat('law', variables('LogAnalyticsWorkspaceIdentifier'))]"
     },        
     "resources": [
         {

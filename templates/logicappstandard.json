@@ -48,7 +48,7 @@
     "variables": {
         "WebAppHash": "[guid(resourceGroup().id, parameters('WebAppNameHash'))]",
         "WebAppIdentifier": "[substring(variables('WebAppHash'), 24, 9)]",
-        "WebAppName": "[concat('sa', variables('WebAppIdentifier'))]"
+        "WebAppName": "[concat('la', variables('WebAppIdentifier'))]"
     },    
     "resources": [        
         {

@@ -27,7 +27,7 @@
     "variables": {
         "ServerFarmHash": "[guid(resourceGroup().id, parameters('ServerFarmNameHash'))]",
         "ServerFarmIdentifier": "[substring(variables('ServerFarmHash'), 24, 9)]",
-        "ServerFarmName": "[concat('sa', variables('ServerFarmIdentifier'))]"
+        "ServerFarmName": "[concat('sf', variables('ServerFarmIdentifier'))]"
     },        
     "resources": [
         {

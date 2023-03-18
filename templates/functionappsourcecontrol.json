@@ -24,10 +24,7 @@
                 "repoUrl": "https://github.com/elliottfieldsjr/LogicApp.git",
                 "branch": "main",
                 "isManualIntegration": true
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('WebAppName'))]"
-            ]
+            }
         }
     ]
 }
