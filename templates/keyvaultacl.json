@@ -48,10 +48,7 @@
             "condition": "[equals(parameters('ResourceType'),'WebApp')]",                                                
             "apiVersion": "[parameters('KeyVaultAPIVersion')]",
             "name": "[format('{0}/{1}', parameters('KeyVaultName'), 'add')]",
-            "type": "Microsoft.KeyVault/vaults/accessPolicies",
-            "dependsOn": [
-                "[concat('Microsoft.Web/sites/', parameters('ResourceName'))]"
-            ],            
+            "type": "Microsoft.KeyVault/vaults/accessPolicies",            
             "properties": {
                 "accessPolicies": [
                     {

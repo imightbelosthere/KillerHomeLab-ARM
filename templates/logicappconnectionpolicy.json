@@ -29,9 +29,6 @@
             "type": "Microsoft.Web/connections/accessPolicies",
             "apiVersion": "[parameters('WebAppConnectionPoliciesAPIVersion')]",
             "name": "[concat('azureloganalyticsdatacollector/', parameters('WebAppName'))]",
-            "dependsOn": [
-                "[concat('Microsoft.Web/sites/', parameters('WebAppName'))]"
-            ],
             "properties": {
                 "principal": {
                     "type": "ActiveDirectory",
