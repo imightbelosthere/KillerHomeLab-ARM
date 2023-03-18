@@ -334,7 +334,7 @@
                     "KeyVaultAPIVersion": {
                         "value": "[variables('KeyVaultAPIVersion')]"
                     },
-                    "KeyVaultSec444retAPIVersion": {
+                    "KeyVaultSecretAPIVersion": {
                         "value": "[variables('KeyVaultSecretAPIVersion')]"
                     },
                     "KeyVaultName": {
@@ -693,12 +693,10 @@
                         "value": "Standard_LRS"
                     },
                     "StorageAccountProperties": {
-                        "value": [
-                            {
-                                "supportsHttpsTrafficOnly": true,
-                                "minimumTlsVersion": "TLS1_2"                            
-                            }
-                        ]
+                        "value": {
+                            "supportsHttpsTrafficOnly": true,
+                            "minimumTlsVersion": "TLS1_2"                            
+                        }
                     }                                        
                 }
             }
