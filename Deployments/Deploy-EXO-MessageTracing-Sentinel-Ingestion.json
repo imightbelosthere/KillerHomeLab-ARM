@@ -991,10 +991,7 @@
                     },
                     "WebAppConnectionAPIVersion": {
                         "value": "[variables('WebAppConnectionAPIVersion')]"
-                    },
-                    "WebAppConnectionPoliciesAPIVersion": {
-                        "value": "[variables('WebAppConnectionPoliciesAPIVersion')]"
-                    },                                                                                                                                                                                                                                                              
+                    },                                                                                                                                                                                                                                                             
                     "WebAppNameHash": {
                         "value": "WebApp"
                     },                    
