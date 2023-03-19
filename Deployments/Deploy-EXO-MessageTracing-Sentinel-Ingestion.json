@@ -1155,7 +1155,7 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint",
+            "name": "Deploy-AMPLS-PrivateEndpoint",
             "dependsOn": [
                 "Deploy-LogicApp-LogAnalytics-Connection-Policy"
             ],             
@@ -1191,9 +1191,9 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint-DNSZones",
+            "name": "Deploy-AMPLS-PrivateEndpoint-DNSZones",
             "dependsOn": [
-                "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint"
+                "Deploy-AMPLS-PrivateEndpoint"
             ],             
             "properties": {
                 "mode": "Incremental",
@@ -1231,9 +1231,9 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint-DNSZone-Links",
+            "name": "Deploy-AMPLS-PrivateEndpoint-DNSZone-Links",
             "dependsOn": [
-                "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint-DNSZones"
+                "Deploy-AMPLS-PrivateEndpoint-DNSZones"
             ],             
             "properties": {
                 "mode": "Incremental",
@@ -1276,7 +1276,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-StorageAccount-PrivateEndpoints",
             "dependsOn": [
-                "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint-DNSZones"
+                "Deploy-AMPLS-PrivateEndpoint-DNSZones"
             ],             
             "properties": {
                 "mode": "Incremental",
