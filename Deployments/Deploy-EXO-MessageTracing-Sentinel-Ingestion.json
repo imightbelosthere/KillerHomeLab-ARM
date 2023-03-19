@@ -392,7 +392,7 @@
                                 ]                                
                             },
                             {
-                                "name": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]",
+                                "name": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]",
                                 "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]",
                                 "delegations": [
                                 ]                                                                
@@ -1155,7 +1155,7 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-LogicApp-PrivateEndpoint",
+            "name": "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint",
             "dependsOn": [
                 "Deploy-LogicApp-LogAnalytics-Connection-Policy"
             ],             
@@ -1173,7 +1173,7 @@
                         "value": "[reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value]"
                     },
                     "ResourceProviderType": {
-                        "value": "Microsoft.Insights/privateLinkScopes"
+                        "value": "microsoft.insights/privatelinkscopes"
                     },
                     "GroupId": {
                         "value": "azuremonitor"
@@ -1182,8 +1182,8 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]"
-                    }                                      
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
+                    }
                 }
             }
         },
@@ -1191,9 +1191,9 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-LogicApp-PrivateEndpoint-DNSZones",
+            "name": "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint-DNSZones",
             "dependsOn": [
-                "Deploy-LogicApp-PrivateEndpoint"
+                "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint"
             ],             
             "properties": {
                 "mode": "Incremental",
@@ -1226,6 +1226,59 @@
                     }                                                   
                 }
             }
-        }                
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-StorageAccount-PrivateEndpoints",
+            "dependsOn": [
+                "Deploy-AzureMonitorPrivateLinkScope-PrivateEndpoint-DNSZones"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateendpointloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateEndpointAPIVersion": {
+                        "value": "[variables('PrivateEndpointAPIVersion')]"
+                    },      
+                    "ResourceName": {
+                        "value": "[reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value]"
+                    },
+                    "ResourceProviderType": {
+                        "value": "Microsoft.Storage/storageAccounts"
+                    },
+                    "PrivateEndpointSettings": {
+                        "value": [
+                            {
+                                "name": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value, '-blob')]",
+                                "GroupId": "blob"                              
+                            },
+                            {
+                                "name": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value, '-table')]",
+                                "GroupId": "table"                              
+                            },
+                            {
+                                "name": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value, '-queue')]",
+                                "GroupId": "queue"                              
+                            },
+                            {
+                                "name": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value, '-file')]",
+                                "GroupId": "file"                              
+                            }
+                        ]
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]"
+                    }
+                }
+            }
+        }                        
     ]
 }

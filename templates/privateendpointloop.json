@@ -1,0 +1,74 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PrivateEndpointAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Private Endpoint API Version"
+            }
+        },
+        "ResourceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource Name"
+            }
+        },
+        "ResourceProviderType": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource Provider Type"
+            }
+        },        
+        "PrivateEndpointSettings": {
+            "type": "array",
+            "metadata": {
+                "description": "Private Endpoint Settings"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network"
+            }
+        },
+        "SubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet Name"
+            }
+        }
+    },
+    "variables": {
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('SubnetName'))]",
+        "privateLinkResource": "[resourceId(resourceGroup().name, parameters('ResourceProviderType'), parameters('ResourceName'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "name": "[parameters('PrivateEndpointSettings')[copyIndex('PrivateEndpointSettings')].name]",
+            "apiVersion": "[parameters('PrivateEndpointAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "copy": {
+                "name": "PrivateEndpointSettings",
+                "count": "[length(parameters('PrivateEndpointSettings'))]"
+            },            
+            "properties": {
+                "subnet": {
+                    "id": "[variables('subnetId')]"
+                },
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[parameters('PrivateEndpointSettings')[copyIndex('PrivateEndpointSettings')].name]",
+                        "properties": {
+                            "privateLinkServiceId": "[variables('privateLinkResource')]",
+                            "groupIds": [
+                                "[parameters('PrivateEndpointSettings')[copyIndex('PrivateEndpointSettings')].GroupId]"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
