@@ -1221,7 +1221,7 @@
                             },
                             {
                                 "name": "privatelink.blob.core.usgovcloudapi.net"                               
-                            }                                                        
+                            }
                         ]
                     }                                                   
                 }
@@ -1275,7 +1275,7 @@
                         "value": "[variables('vnet1Name')]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]"
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
                     }
                 }
             }
