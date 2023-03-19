@@ -1157,12 +1157,12 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-LogicApp-PrivateEndpoint",
             "dependsOn": [
-                "Deploy-LogicApp-KeyVault-ACL"
+                "Deploy-LogicApp-LogAnalytics-Connection-Policy"
             ],             
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappconnectionpolicy.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateendpoint.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
