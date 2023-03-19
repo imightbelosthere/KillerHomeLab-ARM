@@ -22,7 +22,7 @@
             "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
             "location": "global",
             "copy": {
-                "name": "PrivateDNSZone-loop",
+                "name": "PrivateDNSZoneNameNames",
                 "count": "[length(parameters('PrivateDNSZoneNameNames'))]"
             }            
         }
