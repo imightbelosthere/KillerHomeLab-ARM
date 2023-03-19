@@ -8,10 +8,10 @@
                 "description": "Private DNS Zone Name"
             }
         },
-        "PrivateDNSZoneName": {
-            "type": "string",
+        "PrivateDNSZoneNameNames": {
+            "type": "array",
             "metadata": {
-                "description": "Private DNS Zone API Version"
+                "description": "Private DNS Zone Names"
             }
         },
         "vnetName": {
@@ -22,15 +22,18 @@
         }
     },
     "variables": {
-        "VNetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
-        "VirtualNetworkLinkName": "[concat(parameters('PrivateDNSZoneName'), '/', parameters('vnetName'))]"
+        "VNetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
     },
     "resources": [
         {
             "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-            "name": "[variables('VirtualNetworkLinkName')]",
+            "name": "[concat(    parameters('PrivateDNSZoneNameNames')[copyIndex('PrivateDNSZoneNameNames')].name, '/', parameters('vnetName')    )]",
             "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
             "location": "global",
+            "copy": {
+                "name": "PrivateDNSZoneNameNames",
+                "count": "[length(parameters('PrivateDNSZoneNameNames'))]"
+            } ,            
             "properties": {
                 "virtualNetwork": {
                     "id": "[variables('VNetId')]"
