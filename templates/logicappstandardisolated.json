@@ -8,12 +8,42 @@
                 "description": "Web App API Version"
             }
         },     
+        "KeyVaultAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "KeyVault API Version"
+            }
+        },  
+        "WebAppConnectionAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Connection API Version"
+            }
+        },                                               
         "WebAppNameHash": {
             "type": "string",
             "metadata": {
                 "description": "Web App Name Hash"
             }
         },        
+        "ServerFarmName": {
+            "type": "string",
+            "metadata": {
+                "description": "Service Plan Name"
+            }
+        },
+        "StorageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account Name"
+            }
+        },
+        "KeyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "Key Vault Name"
+            }            
+        },
         "vnetName": {
             "type": "string",
             "metadata": {
@@ -25,13 +55,13 @@
             "metadata": {
                 "description": "Existing subnet name that contains the domain controller"
             }
-        }              
+        }          
     },
     "variables": {
         "WebAppHash": "[guid(resourceGroup().id, parameters('WebAppNameHash'))]",
         "WebAppIdentifier": "[substring(variables('WebAppHash'), 24, 9)]",
         "WebAppName": "[concat('la', variables('WebAppIdentifier'))]",
-        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]"        
+        "subnet1Id": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnet1Name'))]"                
     },    
     "resources": [        
         {
@@ -42,10 +72,89 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "name": "[variables('WebAppName')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "WEBSITE_CONTENTOVERVNET",
+                            "value": "1"
+                        },
+                        {
+                            "name": "AZUREMONITOR_API_ID",
+                            "value": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/azureloganalyticsdatacollector')]"
+                        },
+                        {
+                            "name": "AZUREMONITOR_CONNECTION_ID",
+                            "value": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/connections/azureloganalyticsdatacollector')]"
+                        },     
+                        {
+                            "name": "CONNECTION_RUNTIME_URL",
+                            "value": "[reference(resourceId('Microsoft.Web/connections', 'azureloganalyticsdatacollector'), parameters('WebAppConnectionAPIVersion'), 'full').properties.connectionRuntimeUrl]"
+                        },                                           
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~4"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "node"
+                        },
+                        {
+                            "name": "keyVault_VaultUri",
+                            "value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('KeyVaultName')), parameters('KeyVaultAPIVersion'), 'full').properties.vaultUri]"
+                        },                        
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "~14"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=', environment().suffixes.storage)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(variables('WebAppName')), '8024')]"
+                        },
+                        {
+                            "name": "AzureFunctionsJobHost__extensionBundle__id",
+                            "value": "Microsoft.Azure.Functions.ExtensionBundle.Workflows"
+                        },
+                        {
+                            "name": "AzureFunctionsJobHost__extensionBundle__version",
+                            "value": "[1.*, 2.0.0)"
+                        },
+                        {
+                            "name": "APP_KIND",
+                            "value": "workflowApp"
+                        }
+                    ],
+                    "use32BitWorkerProcess": false,
+                    "ftpsState": "FtpsOnly",
+                    "netFrameworkVersion": "v6.0"
+                },
+                "serverFarmId": "[concat('/subscriptions/', subscription().id,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', parameters('ServerFarmName'))]",
+                "clientAffinityEnabled": false,
                 "virtualNetworkSubnetId": "[variables('subnet1Id')]",
                 "publicNetworkAccess": "Disabled",
-                "vnetRouteAllEnabled": true
+                "vnetRouteAllEnabled": true,
+                "httpsOnly": true
+            },
+            "identity": {
+                "type": "SystemAssigned"
             }
         }
-    ]
+    ],
+    "outputs": {
+        "WebAppName": {
+            "type": "string",
+            "value": "[variables('WebAppName')]"
+        },
+        "WebAppObjectId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Web/sites', variables('WebAppName')), parameters('WebAppAPIVersion'), 'full').identity.principalId]"
+        }        
+    }
 }

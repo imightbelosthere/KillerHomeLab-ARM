@@ -62,10 +62,6 @@
                 "siteConfig": {
                     "appSettings": [
                         {
-                            "name": "WEBSITE_CONTENTOVERVNET",
-                            "value": "1"
-                        },
-                        {
                             "name": "AZUREMONITOR_API_ID",
                             "value": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/azureloganalyticsdatacollector')]"
                         },
@@ -124,7 +120,6 @@
                 },
                 "serverFarmId": "[concat('/subscriptions/', subscription().id,'/resourcegroups/', resourceGroup().name, '/providers/Microsoft.Web/serverfarms/', parameters('ServerFarmName'))]",
                 "clientAffinityEnabled": false,
-                "virtualNetworkSubnetId": null,
                 "httpsOnly": true
             },
             "identity": {
