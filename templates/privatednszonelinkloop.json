@@ -38,7 +38,7 @@
                 "virtualNetwork": {
                     "id": "[variables('VNetId')]"
                 },
-                "registrationEnabled": true
+                "registrationEnabled": false
             }
         }
     ]
