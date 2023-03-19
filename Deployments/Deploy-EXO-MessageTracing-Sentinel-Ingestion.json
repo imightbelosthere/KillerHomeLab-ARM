@@ -1075,7 +1075,7 @@
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
                     },
-                    "subnet1Name": {
+                    "subnetName": {
                         "value": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]"
                     }                                      
                 }
@@ -1181,7 +1181,7 @@
                     "vnetName": {
                         "value": "[variables('vnet1Name')]"
                     },
-                    "subnet1Name": {
+                    "subnetName": {
                         "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]"
                     }                                      
                 }
