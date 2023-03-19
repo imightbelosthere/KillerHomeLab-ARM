@@ -18,7 +18,7 @@
     "resources": [
         {
             "type": "Microsoft.Network/privateDnsZones",
-            "name": "[parameters('PrivateDNSZoneNameNames')[copyIndex('subnets')].name]",
+            "name": "[copyIndex('PrivateDNSZoneNameNames').name]",
             "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
             "location": "global",
             "copy": {
