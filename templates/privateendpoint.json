@@ -8,115 +8,60 @@
                 "description": "Private Endpoint API Version"
             }
         },
-        "DatabricksWorkspaceName": {
+        "ResourceName": {
             "type": "string",
             "metadata": {
-                "description": "Databricks Workspace Name"
+                "description": "Resource Name"
+            }
+        },
+        "ResourceProviderType": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource Provider Type"
+            }
+        },        
+        "GroupId": {
+            "type": "string",
+            "metadata": {
+                "description": "Target Sub Resource"
             }
         },
         "vnetName": {
             "type": "string",
             "metadata": {
-                "description": "Databricks Virtual Network"
+                "description": "Virtual Network"
             }
         },
-        "PrivateEndpointsSubnetName": {
+        "SubnetName": {
             "type": "string",
             "metadata": {
-                "description": "Private Endpoints Subnet Name"
-            }
-        },
-        "UIAPIGroupId": {
-            "type": "array",
-            "metadata": {
-                "description": "UI API Target Sub Resource"
-            }
-        },
-        "BrowserAuthGroupId": {
-            "type": "array",
-            "metadata": {
-                "description": "Browser Authentication Target Sub Resource"
-            }
-        },
-        "UIAPIPrivateEndpointIPAddress": {
-            "type": "string",
-            "metadata": {
-                "description": "UI API Private Endpoint IP Address"
-            }
-        },
-        "BrowserAuthPrivateEndpointIPAddress": {
-            "type": "string",
-            "metadata": {
-                "description": "Browser Authentication Private Endpoint IP Address"
+                "description": "Subnet Name"
             }
         }
     },
     "variables": {
-        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('PrivateEndpointsSubnetName'))]",
-        "privateLinkResource": "[resourceId(resourceGroup().name, 'Microsoft.Databricks/workspaces', parameters('DatabricksWorkspaceName'))]",
-        "UIAPIGroupId": "databricks_ui_api",
-        "UIAPIPrivateEndpointName": "[concat(parameters('DatabricksWorkspaceName'), '-', variables('UIAPIGroupId'),'-PE')]",
-        "UIAPIPrivateEndpointIPName": "[concat(variables('UIAPIGroupId'),'-IP')]",
-        "BrowserAuthGroupId": "browser_authentication",
-        "BrowserAuthPrivateEndpointName": "[concat(parameters('DatabricksWorkspaceName'), '-', variables('BrowserAuthGroupId'),'-PE')]",
-        "BrowserAuthPrivateEndpointIPName": "[concat(variables('BrowserAuthGroupId'),'-IP')]"
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('SubnetName'))]",
+        "privateLinkResource": "[resourceId(resourceGroup().name, parameters('ResourceProviderType'), parameters('ResourceName'))]",
+        "PrivateEndpointName": "[concat(parameters('ResourceName'), '-', parameters('GroupId'),'-PE')]"
     },
     "resources": [
         {
             "type": "Microsoft.Network/privateEndpoints",
-            "name": "[variables('UIAPIPrivateEndpointName')]",
+            "name": "[variables('PrivateEndpointName')]",
             "apiVersion": "[parameters('PrivateEndpointAPIVersion')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "subnet": {
                     "id": "[variables('subnetId')]"
                 },
-                "ipConfigurations": [
-                    {
-                        "name": "[variables('UIAPIPrivateEndpointIPName')]",
-                        "properties": {
-                            "groupId": "[variables('UIAPIGroupId')]",
-                            "memberName": "[variables('UIAPIGroupId')]",
-                            "privateIPAddress": "[parameters('UIAPIPrivateEndpointIPAddress')]"
-                        }
-                    }
-                ],
                 "privateLinkServiceConnections": [
                     {
-                        "name": "[variables('UIAPIPrivateEndpointName')]",
+                        "name": "[variables('PrivateEndpointName')]",
                         "properties": {
                             "privateLinkServiceId": "[variables('privateLinkResource')]",
-                            "groupIds": "[parameters('UIAPIGroupId')]"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "type": "Microsoft.Network/privateEndpoints",
-            "name": "[variables('BrowserAuthPrivateEndpointName')]",
-            "apiVersion": "[parameters('PrivateEndpointAPIVersion')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "subnet": {
-                    "id": "[variables('subnetId')]"
-                },
-                "ipConfigurations": [
-                    {
-                        "name": "[variables('BrowserAuthPrivateEndpointIPName')]",
-                        "properties": {
-                            "groupId": "[variables('BrowserAuthGroupId')]",
-                            "memberName": "[resourceGroup().location]",
-                            "privateIPAddress": "[parameters('BrowserAuthPrivateEndpointIPAddress')]"
-                        }
-                    }
-                ],
-                "privateLinkServiceConnections": [
-                    {
-                        "name": "[variables('BrowserAuthPrivateEndpointName')]",
-                        "properties": {
-                            "privateLinkServiceId": "[variables('privateLinkResource')]",
-                            "groupIds": "[parameters('BrowserAuthGroupId')]"
+                            "groupIds": [
+                                "[parameters('GroupId')]"
+                            ]
                         }
                     }
                 ]

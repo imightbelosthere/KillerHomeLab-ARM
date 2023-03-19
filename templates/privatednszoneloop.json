@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PrivateDNSZoneAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Private DNS Zone Name"
+            }
+        },
+        "PrivateDNSZoneNameNames": {
+            "type": "array",
+            "metadata": {
+                "description": "Private DNS Zone Names"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateDnsZones",
+            "name": "[parameters('PrivateDNSZoneNameNames')[copyIndex('subnets')].name]",
+            "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
+            "location": "global",
+            "copy": {
+                "name": "PrivateDNSZone-loop",
+                "count": "[length(parameters('PrivateDNSZoneNameNames'))]"
+            }            
+        }
+    ]
+}

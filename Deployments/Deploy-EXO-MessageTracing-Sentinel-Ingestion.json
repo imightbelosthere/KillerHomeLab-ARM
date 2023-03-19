@@ -308,6 +308,10 @@
         "KeyVaultSecretAPIVersion": "2021-11-01-preview",
         "LogAnalyticsWorkspaceAPIVersion": "2021-12-01-preview",        
         "NetworkInterfacesAPIVersion": "2021-08-01",
+        "NetworkSecurityGroupAPIVersion": "2022-01-01",
+        "PrivateDNSZoneAPIVersion": "2020-06-01",
+        "PrivateDNSZoneGroupsAPIVersion": "2022-05-01",
+        "PrivateEndpointAPIVersion": "2022-05-01",        
         "PublicIPAddressesAPIVersion": "2021-08-01",
         "SchedulesAPIVersion": "2018-09-15",
         "SecurityInsightsAPIVersion": "2021-03-01-preview",
@@ -1146,6 +1150,82 @@
                     }                                                           
                 }
             }
-        }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault-ACL"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappconnectionpolicy.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateEndpointAPIVersion": {
+                        "value": "[variables('PrivateEndpointAPIVersion')]"
+                    },      
+                    "ResourceName": {
+                        "value": "[reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value]"
+                    },
+                    "ResourceProviderType": {
+                        "value": "Microsoft.Insights/privateLinkScopes"
+                    },
+                    "GroupId": {
+                        "value": "azuremonitor"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEnndpoints')]"
+                    }                                      
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint-DNSZones",
+            "dependsOn": [
+                "Deploy-LogicApp-PrivateEndpoint"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszoneloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.monitor.azure.us"                               
+                            },
+                            {
+                                "name": "privatelink.oms.opinsights.azure.us"                               
+                            },
+                            {
+                                "name": "privatelink.ods.opinsights.azure.us"                               
+                            },
+                            {
+                                "name": "privatelink.agentsvc.azure-automation.us"                               
+                            },
+                            {
+                                "name": "privatelink.blob.core.usgovcloudapi.net"                               
+                            }                                                        
+                        ]
+                    }                                                   
+                }
+            }
+        }                
     ]
 }
