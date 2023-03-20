@@ -1285,8 +1285,8 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    "PrivateDNSZoneAPIVersion": {
-                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
                     },      
                     "PrivateDNSZoneGroups": {
                         "value": [
