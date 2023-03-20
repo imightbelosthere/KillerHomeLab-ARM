@@ -1321,7 +1321,13 @@
                                 }
                             }                                                                                                                                            
                         ]
-                    }
+                    },
+                    "ResourceName": {
+                        "value": "[reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value]"
+                    },
+                    "GroupId": {
+                        "value": "azuremonitor"
+                    }                    
                 }
             }
         },                
