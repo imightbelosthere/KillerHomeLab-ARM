@@ -8,10 +8,10 @@
                 "description": "Private DNS Zone Name"
             }
         },
-        "PrivateDnsZoneConfigs": {
-            "type": "array",
+        "PrivateDnsZoneGroupProperties": {
+            "type": "object",
             "metadata": {
-                "description": "Private DNS Zone Configs"
+                "description": "Private DNS Zone Group Properties"
             }
         },
         "ResourceName": {
@@ -37,9 +37,7 @@
             "name": "[variables('PrivateDnsZoneGroupName')]",
             "apiVersion": "[parameters('PrivateDNSZoneGroupsAPIVersion')]",
             "location": "global",
-            "properties": {
-                "privateDnsZoneConfigs": "[parameters('PrivateDnsZoneConfigs')]"
-            }
+            "properties": "[parameters('PrivateDnsZoneGroupProperties')]"
         }
     ]
 }
