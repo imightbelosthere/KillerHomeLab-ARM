@@ -1338,7 +1338,7 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-StorageAccount-PrivateEndpoints",
+            "name": "Deploy-Storage-PrivateEndpoints",
             "dependsOn": [
                 "Deploy-AMPLS-PrivateEndpoint-DNSZone-Groups"
             ],             
@@ -1391,9 +1391,43 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-StorageAccount-PrivateEndpoint-DNSZone-Links",
+            "name": "Deploy-Storage-PrivateEndpoint-DNSZones",
             "dependsOn": [
-                "Deploy-StorageAccount-PrivateEndpoints"
+                "Deploy-Storage-PrivateEndpoints"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszoneloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.file.core.usgovcloudapi.net"                               
+                            },
+                            {
+                                "name": "privatelink.queue.core.usgovcloudapi.net"                               
+                            },
+                            {
+                                "name": "privatelink.table.core.usgovcloudapi.net"                               
+                            }
+                        ]
+                    }                                                   
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Storage-PrivateEndpoint-DNSZone-Links",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZones"
             ],             
             "properties": {
                 "mode": "Incremental",
@@ -1423,6 +1457,166 @@
                     }                                                                       
                 }
             }
-        }                              
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BlobStorage-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-blob-core-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value)]"
+                    },
+                    "GroupId": {
+                        "value": "blob"
+                    }                    
+                }
+            }
+        },                              
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-QueueStorage-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-queue-core-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value)]"
+                    },
+                    "GroupId": {
+                        "value": "queue"
+                    }                    
+                }
+            }
+        },                                     
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-QueueStorage-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-file-core-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value)]"
+                    },
+                    "GroupId": {
+                        "value": "file"
+                    }                    
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-QueueStorage-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-table-core-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.table.core.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value)]"
+                    },
+                    "GroupId": {
+                        "value": "table"
+                    }                    
+                }
+            }
+        }
     ]
 }
