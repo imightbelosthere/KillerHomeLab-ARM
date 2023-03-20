@@ -1617,6 +1617,141 @@
                     }                    
                 }
             }
-        }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-KeyVault-PrivateEndpoint",
+            "dependsOn": [
+                "Deploy-TableStorage-PrivateEndpoint-DNSZone-Group"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateendpoint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateEndpointAPIVersion": {
+                        "value": "[variables('PrivateEndpointAPIVersion')]"
+                    },      
+                    "ResourceName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },
+                    "ResourceProviderType": {
+                        "value": "Microsoft.KeyVault/vaults"
+                    },
+                    "GroupId": {
+                        "value": "vault"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-KeyVault-PrivateEndpoint-DNSZone",
+            "dependsOn": [
+                "Deploy-KeyVault-PrivateEndpoint"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszoneloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.vaultcore.usgovcloudapi.net"                               
+                            }
+                        ]
+                    }                                                   
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-KeyVault-PrivateEndpoint-DNSZone-Link",
+            "dependsOn": [
+                "Deploy-KeyVault-PrivateEndpoint-DNSZone"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelinkloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.vaultcore.usgovcloudapi.net"                               
+                            }
+                        ]
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    }                                                                       
+                }
+            }
+        },                
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-KeyVault-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-KeyVault-PrivateEndpoint-DNSZone-Link"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-vaultcore-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },
+                    "GroupId": {
+                        "value": "vault"
+                    }                    
+                }
+            }
+        }                      
     ]
 }
