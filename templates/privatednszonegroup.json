@@ -8,10 +8,10 @@
                 "description": "Private DNS Zone Name"
             }
         },
-        "PrivateDNSZoneName": {
-            "type": "string",
+        "PrivateDnsZoneConfigs": {
+            "type": "array",
             "metadata": {
-                "description": "Private DNS Zone API Version"
+                "description": "Private DNS Zone Configs"
             }
         },
         "ResourceName": {
@@ -28,7 +28,6 @@
         }
     },
     "variables": {
-        "PrivateDNSZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', parameters('PrivateDNSZoneName'))]",
         "PrivateEndpointName": "[concat(parameters('ResourceName'), '-', parameters('GroupId'))]",
         "PrivateDnsZoneGroupName": "[concat(variables('PrivateEndpointName'), '/', 'default')]"
     },
@@ -39,14 +38,7 @@
             "apiVersion": "[parameters('PrivateDNSZoneGroupsAPIVersion')]",
             "location": "global",
             "properties": {
-                "privateDnsZoneConfigs": [
-                    {
-                        "name": "[parameters('PrivateDNSZoneName')]",
-                        "properties": {
-                            "privateDnsZoneId": "[variables('PrivateDNSZoneId')]"
-                        }
-                    }
-                ]
+                "privateDnsZoneConfigs": "[parameters('PrivateDnsZoneConfigs')]"
             }
         }
     ]

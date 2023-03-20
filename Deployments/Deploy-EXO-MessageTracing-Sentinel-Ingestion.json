@@ -1287,31 +1287,41 @@
                 "parameters": {
                     "PrivateDNSZoneGroupsAPIVersion": {
                         "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
-                    },      
-                    "PrivateDNSZoneGroups": {
+                    },   
+                    "PrivateDnsZoneConfigs": {
                         "value": [
-                            {
-                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",
-                                "ZoneName": "privatelink.monitor.azure.us"
+                            {                            
+                                "name": "privatelink-monitor-azure-us",
+                                "properties": {
+                                    "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.monitor.azure.us')]"
+                                }
                             },
-                            {
-                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",
-                                "ZoneName": "privatelink.oms.opinsights.azure.us"                               
+                            {                            
+                                "name": "privatelink-oms-opinsights-azure-us",
+                                "properties": {
+                                    "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.oms.opinsights.azure.us')]"
+                                }
                             },
-                            {
-                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",                                
-                                "ZoneName": "privatelink.ods.opinsights.azure.us"                               
+                            {                            
+                                "name": "privatelink-ods-opinsights-azure-us",
+                                "properties": {
+                                    "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.ods.opinsights.azure.us')]"
+                                }
                             },
-                            {
-                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",                                
-                                "ZoneName": "privatelink.agentsvc.azure-automation.us"                               
+                            {                            
+                                "name": "privatelink-agentsvc-azure-automation-us",
+                                "properties": {
+                                    "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.agentsvc.azure-automation.us')]"
+                                }
                             },
-                            {
-                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",                                
-                                "ZoneName": "privatelink.blob.core.usgovcloudapi.net"                               
-                            }
+                            {                            
+                                "name": "privatelink-blob-core-usgovcloudapi-net",
+                                "properties": {
+                                    "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net0')]"
+                                }
+                            }                                                                                                                                            
                         ]
-                    }                                                                       
+                    }
                 }
             }
         },                
