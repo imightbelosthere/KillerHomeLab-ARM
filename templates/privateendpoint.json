@@ -42,7 +42,7 @@
     "variables": {
         "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('SubnetName'))]",
         "privateLinkResource": "[resourceId(resourceGroup().name, parameters('ResourceProviderType'), parameters('ResourceName'))]",
-        "PrivateEndpointName": "[concat(parameters('ResourceName'), '-', parameters('GroupId'),'-PE')]"
+        "PrivateEndpointName": "[concat(parameters('ResourceName'), '-', parameters('GroupId'))]"
     },
     "resources": [
         {

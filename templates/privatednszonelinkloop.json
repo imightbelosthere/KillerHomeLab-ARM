@@ -27,7 +27,7 @@
     "resources": [
         {
             "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
-            "name": "[concat(    parameters('PrivateDNSZoneNameNames')[copyIndex('PrivateDNSZoneNameNames')].name, '/', parameters('vnetName')    )]",
+            "name": "[concat(parameters('PrivateDNSZoneNameNames')[copyIndex('PrivateDNSZoneNameNames')].name, '/', parameters('vnetName'))]",
             "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
             "location": "global",
             "copy": {

@@ -1274,6 +1274,51 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AMPLS-PrivateEndpoint-DNSZone-Groups",
+            "dependsOn": [
+                "Deploy-AMPLS-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegrouploop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneGroups": {
+                        "value": [
+                            {
+                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",
+                                "ZoneName": "privatelink.monitor.azure.us"
+                            },
+                            {
+                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",
+                                "ZoneName": "privatelink.oms.opinsights.azure.us"                               
+                            },
+                            {
+                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",                                
+                                "ZoneName": "privatelink.ods.opinsights.azure.us"                               
+                            },
+                            {
+                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",                                
+                                "ZoneName": "privatelink.agentsvc.azure-automation.us"                               
+                            },
+                            {
+                                "PrivateEndpointName": "[concat(reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value, '-azuremonitor')]",                                
+                                "ZoneName": "privatelink.blob.core.usgovcloudapi.net"                               
+                            }
+                        ]
+                    }                                                                       
+                }
+            }
+        },                
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-StorageAccount-PrivateEndpoints",
             "dependsOn": [
                 "Deploy-AMPLS-PrivateEndpoint-DNSZones"
@@ -1322,6 +1367,43 @@
                     }
                 }
             }
-        }                        
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-StorageAccount-PrivateEndpoint-DNSZone-Links",
+            "dependsOn": [
+                "Deploy-StorageAccount-PrivateEndpoints"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelinkloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.file.core.usgovcloudapi.net"                               
+                            },
+                            {
+                                "name": "privatelink.queue.core.usgovcloudapi.net"                               
+                            },
+                            {
+                                "name": "privatelink.table.core.usgovcloudapi.net"                               
+                            }
+                        ]
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    }                                                                       
+                }
+            }
+        }                              
     ]
 }
