@@ -1542,7 +1542,7 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-QueueStorage-PrivateEndpoint-DNSZone-Group",
+            "name": "Deploy-FileStorage-PrivateEndpoint-DNSZone-Group",
             "dependsOn": [
                 "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
             ],             
@@ -1582,7 +1582,7 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-QueueStorage-PrivateEndpoint-DNSZone-Group",
+            "name": "Deploy-TableStorage-PrivateEndpoint-DNSZone-Group",
             "dependsOn": [
                 "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
             ],             
