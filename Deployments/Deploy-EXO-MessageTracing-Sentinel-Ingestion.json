@@ -1294,31 +1294,32 @@
                                 {                            
                                     "name": "privatelink-monitor-azure-us",
                                     "properties": {
-                                        "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.monitor.azure.us')]"
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.monitor.azure.us')]"
+                                        
                                     }
                                 },
                                 {                            
                                     "name": "privatelink-oms-opinsights-azure-us",
                                     "properties": {
-                                        "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.oms.opinsights.azure.us')]"
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.oms.opinsights.azure.us')]"
                                     }
                                 },
                                 {                            
                                     "name": "privatelink-ods-opinsights-azure-us",
                                     "properties": {
-                                        "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.ods.opinsights.azure.us')]"
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.ods.opinsights.azure.us')]"
                                     }
                                 },
                                 {                            
                                     "name": "privatelink-agentsvc-azure-automation-us",
                                     "properties": {
-                                        "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.agentsvc.azure-automation.us')]"
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.agentsvc.azure-automation.us')]"                                        
                                     }
                                 },
                                 {                            
                                     "name": "privatelink-blob-core-usgovcloudapi-net",
                                     "properties": {
-                                        "privateDnsZoneId": "[resourceId(resourceGroup().name, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.core.usgovcloudapi.net0')]"
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.usgovcloudapi.net')]"                                                                                
                                     }
                                 }      
                             ]                                                                                                                                                                      
