@@ -71,7 +71,7 @@
     "outputs": {
         "PrivateEndpointName": {
             "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName')))]"
+            "value": "[variables('PrivateEndpointName')]"
         },
         "PrivateEndpointFQDN1": {
             "type": "string",
