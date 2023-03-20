@@ -1321,7 +1321,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-StorageAccount-PrivateEndpoints",
             "dependsOn": [
-                "Deploy-AMPLS-PrivateEndpoint-DNSZones"
+                "Deploy-AMPLS-PrivateEndpoint-DNSZone-Groups"
             ],             
             "properties": {
                 "mode": "Incremental",
