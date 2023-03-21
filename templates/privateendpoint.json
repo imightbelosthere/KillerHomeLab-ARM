@@ -72,46 +72,6 @@
         "PrivateEndpointName": {
             "type": "string",
             "value": "[variables('PrivateEndpointName')]"
-        },
-        "PrivateEndpointFQDN1": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[0].Fqdn]"
-        },
-        "PrivateEndpointFQDN2": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[1].Fqdn]"
-        },
-        "PrivateEndpointFQDN3": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[2].Fqdn]"
-        },
-        "PrivateEndpointFQDN4": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[3].Fqdn]"
-        },
-        "PrivateEndpointFQDN5": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[4].Fqdn]"
-        },
-        "PrivateEndpointFQDN6": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[5].Fqdn]"
-        },
-        "PrivateEndpointFQDN7": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[6].Fqdn]"
-        },
-        "PrivateEndpointFQDN8": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[7].Fqdn]"
-        },
-        "PrivateEndpointFQDN9": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[8].Fqdn]"
-        },
-        "PrivateEndpointFQDN10": {
-            "type": "string",
-            "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Network/privateEndpoints', variables('PrivateEndpointName'))).CustomDnsConfigs[9].Fqdn]"
         }                                                                                
     }    
 }
