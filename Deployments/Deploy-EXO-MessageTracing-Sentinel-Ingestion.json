@@ -2043,52 +2043,87 @@
                     "RuleProperties": {
                         "value": [
                             {
-                                "RuleName": "Allow-All-VirtualNetwork-Inbound",
-                                "RuleAccess": "Allow",                               
-                                "RulePriority": "3000",
-                                "RuleDirection": "Inbound",
-                                "RuleDescription": "Allow All Traffic within Virtual Network Inbound",
-                                "RuleProtocol": "*",
-                                "RuleSourcePortRange": "*",
-                                "RuleDestinationPortRange": "*",
-                                "RuleSourceAddressPrefix": "VirtualNetwork",
-                                "RuleDestinationAddressPrefix": "VirtualNetwork"
+                                "name": "Allow-All-VirtualNetwork-Inbound",                                
+                                "properties": {
+                                    "access": "Allow",                               
+                                    "priority": "3000",
+                                    "direction": "Inbound",
+                                    "description": "Allow All Traffic within Virtual Network Inbound",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "sestinationPortRange": "*",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "VirtualNetwork"
+                                }
                             },
                             {
-                                "RuleName": "Deny-All-Inbound",
-                                "RuleAccess": "Deny",                               
-                                "RulePriority": "4000",
-                                "RuleDirection": "Inbound",
-                                "RuleDescription": "Deny All Inbound Traffic",
-                                "RuleProtocol": "*",
-                                "RuleSourcePortRange": "*",
-                                "RuleDestinationPortRange": "*",
-                                "RuleSourceAddressPrefix": "*",
-                                "RuleDestinationAddressPrefix": "*"
+                                "name": "Deny-All-Inbound",
+                                "properties": {
+                                    "access": "Deny",                               
+                                    "priority": "4000",
+                                    "direction": "Inbound",
+                                    "description": "Deny All Inbound Traffic",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",                                                           
+                                    "destinationPortRange": "*",
+                                    "sourceAddressPrefix": "*",                                                                                             
+                                    "destinationAddressPrefix": "*"
+                                }
                             },
                             {
-                                "RuleName": "Allow-All-VirtualNetwork-Outbound",
-                                "RuleAccess": "Allow",                               
-                                "RulePriority": "3000",
-                                "RuleDirection": "Outbound",
-                                "RuleDescription": "Allow All Traffic within Virtual Network Outbound",
-                                "RuleProtocol": "*",
-                                "RuleSourcePortRange": "*",
-                                "RuleDestinationPortRange": "*",
-                                "RuleSourceAddressPrefix": "VirtualNetwork",
-                                "RuleDestinationAddressPrefix": "VirtualNetwork"
+                                "name": "Allow-Office365-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2900",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Office M265 Gov IP's",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefixes": [
+                                        "20.35.241.194",
+                                        "20.35.245.2",
+                                        "20.35.242.130",
+                                        "40.66.16.194",
+                                        "20.35.244.162",
+                                        "40.66.16.2",
+                                        "20.35.245.66",
+                                        "20.35.244.194",
+                                        "40.66.16.66",
+                                        "40.66.16.130",
+                                        "20.35.244.98",
+                                        "40.66.17.130"                                    
+                                    ]
+                                }                                
+                            },
+                            {
+                                "name": "Allow-All-VirtualNetwork-Outbound",                                
+                                "properties": {                                                                
+                                    "access": "Allow",                               
+                                    "priority": "3000",
+                                    "direction": "Outbound",
+                                    "description": "Allow All Traffic within Virtual Network Outbound",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "*",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "VirtualNetwork"
+                                }
                             },                                                                                    
                             {
-                                "RuleName": "Deny-All-Outbound",
-                                "RuleAccess": "Deny",                               
-                                "RulePriority": "4000",
-                                "RuleDirection": "Outbound",
-                                "RuleDescription": "Deny All Outbound Traffic",
-                                "RuleProtocol": "*",
-                                "RuleSourcePortRange": "*",
-                                "RuleDestinationPortRange": "*",
-                                "RuleSourceAddressPrefix": "*",
-                                "RuleDestinationAddressPrefix": "*"
+                                "name": "Deny-All-Outbound",
+                                "properties": {                                                                                                
+                                    "access": "Deny",                               
+                                    "priority": "4000",
+                                    "direction": "Outbound",
+                                    "description": "Deny All Outbound Traffic",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "*",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "*"
+                                }
                             }                            
                         ]
                     }                                                   
