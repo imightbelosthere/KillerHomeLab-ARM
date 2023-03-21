@@ -1752,6 +1752,142 @@
                     }                    
                 }
             }
-        }                      
+        },
+
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint",
+            "dependsOn": [
+                "Deploy-KeyVault-PrivateEndpoint-DNSZone-Group"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateendpoint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateEndpointAPIVersion": {
+                        "value": "[variables('PrivateEndpointAPIVersion')]"
+                    },      
+                    "ResourceName": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    },
+                    "ResourceProviderType": {
+                        "value": "Microsoft.Web/sites"
+                    },
+                    "GroupId": {
+                        "value": "sites"
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint-DNSZone",
+            "dependsOn": [
+                "Deploy-LogicApp-PrivateEndpoint"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszoneloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.azurewebsites.us"                               
+                            }
+                        ]
+                    }                                                   
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint-DNSZone-Link",
+            "dependsOn": [
+                "Deploy-LogicApp-PrivateEndpoint-DNSZone"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelinkloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.azurewebsites.us"                               
+                            }
+                        ]
+                    },
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    }                                                                       
+                }
+            }
+        },                
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-LogicApp-PrivateEndpoint-DNSZone-Link"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-azurewebsites-us",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.azurewebsites.us')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    },
+                    "GroupId": {
+                        "value": "sites"
+                    }                    
+                }
+            }
+        }
     ]
 }
