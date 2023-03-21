@@ -2043,16 +2043,16 @@
                     "RuleProperties": {
                         "value": [
                             {
-                                "RuleName": "Deny-All-Outbound",
-                                "RuleAccess": "Deny",                               
-                                "RulePriority": "4000",
-                                "RuleDirection": "Outbound",
-                                "RuleDescription": "Deny All Outbound Traffic",
+                                "RuleName": "Allow-All-VirtualNetwork-Inbound",
+                                "RuleAccess": "Allow",                               
+                                "RulePriority": "3000",
+                                "RuleDirection": "Inbound",
+                                "RuleDescription": "Allow All Traffic within Virtual Network Inbound",
                                 "RuleProtocol": "*",
                                 "RuleSourcePortRange": "*",
                                 "RuleDestinationPortRange": "*",
-                                "RuleSourceAddressPrefix": "*",
-                                "RuleDestinationAddressPrefix": "*"
+                                "RuleSourceAddressPrefix": "VirtualNetwork",
+                                "RuleDestinationAddressPrefix": "VirtualNetwork"
                             },
                             {
                                 "RuleName": "Deny-All-Inbound",
@@ -2060,6 +2060,30 @@
                                 "RulePriority": "4000",
                                 "RuleDirection": "Inbound",
                                 "RuleDescription": "Deny All Inbound Traffic",
+                                "RuleProtocol": "*",
+                                "RuleSourcePortRange": "*",
+                                "RuleDestinationPortRange": "*",
+                                "RuleSourceAddressPrefix": "*",
+                                "RuleDestinationAddressPrefix": "*"
+                            },
+                            {
+                                "RuleName": "Allow-All-VirtualNetwork-Outbound",
+                                "RuleAccess": "Allow",                               
+                                "RulePriority": "3000",
+                                "RuleDirection": "Outbound",
+                                "RuleDescription": "Allow All Traffic within Virtual Network Outbound",
+                                "RuleProtocol": "*",
+                                "RuleSourcePortRange": "*",
+                                "RuleDestinationPortRange": "*",
+                                "RuleSourceAddressPrefix": "VirtualNetwork",
+                                "RuleDestinationAddressPrefix": "VirtualNetwork"
+                            },                                                                                    
+                            {
+                                "RuleName": "Deny-All-Outbound",
+                                "RuleAccess": "Deny",                               
+                                "RulePriority": "4000",
+                                "RuleDirection": "Outbound",
+                                "RuleDescription": "Deny All Outbound Traffic",
                                 "RuleProtocol": "*",
                                 "RuleSourcePortRange": "*",
                                 "RuleDestinationPortRange": "*",
