@@ -2049,8 +2049,12 @@
                                 "RuleDirection": "Outbound",
                                 "RuleDescription": "Deny All Outbound Traffic",
                                 "RuleProtocol": "*",
-                                "RuleSourcePortRange": "*",
-                                "RuleDestinationPortRange": "*",
+                                "RuleSourcePortRanges": [
+                                    "*"
+                                ],
+                                "RuleDestinationPortRanges": [
+                                    "*"
+                                ],
                                 "RuleSourceAddressPrefixes": [
                                     "*"
                                 ],
@@ -2065,8 +2069,12 @@
                                 "RuleDirection": "Inbound",
                                 "RuleDescription": "Deny All Inbound Traffic",
                                 "RuleProtocol": "*",
-                                "RuleSourcePortRange": "*",
-                                "RuleDestinationPortRange": "*",
+                                "RuleSourcePortRanges": [
+                                    "*"
+                                ],
+                                "RuleDestinationPortRanges": [
+                                    "*"
+                                ],
                                 "RuleSourceAddressPrefixes": [
                                     "*"
                                 ],
