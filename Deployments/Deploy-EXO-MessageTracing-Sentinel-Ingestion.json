@@ -892,19 +892,30 @@
                     "KeyVaultNameHash": {
                         "value": "KeyVault"
                     },      
-                    "AzureUserObjectID": {
-                        "value": "[parameters('AzureUserObjectID')]"
-                    },
-                    "SecretPermissions": {
-                        "value": [
-                            "Get",
-                            "List",
-                            "Set"                            
-                        ]
-                    },                                                      
-                    "SkuName": {
-                        "value": "Standard"
-                    }                    
+                    "KeyVaultProperties": {
+                        "value": {
+                            "enabledForDeployment": true,
+                            "enabledForDiskEncryption": true,
+                            "enabledForTemplateDeployment": true,
+                            "enableSoftDelete": true,
+                            "enablePurgeProtection": true,
+                            "softDeleteRetentionInDays": 7,
+                            "tenantId": "[subscription().tenantId]",
+                            "accessPolicies": [
+                                {
+                                    "objectId": "[parameters('AzureUserObjectID')]",
+                                    "tenantId": "[subscription().tenantId]",
+                                    "permissions": {
+                                        "secrets": [
+                                            "Get",
+                                            "List",
+                                            "Set"                            
+                                        ]
+                                    }
+                                }
+                            ]                                                     
+                        }
+                    }          
                 }
             }
         },
@@ -1622,9 +1633,44 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-KeyVault-PrivateEndpoint",
+            "name": "Disable-PublicAccess-LogicApp-StorageAccount",
             "dependsOn": [
                 "Deploy-TableStorage-PrivateEndpoint-DNSZone-Group"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/storage.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "StorageAccountAPIVersion": {
+                        "value": "[variables('StorageAccountAPIVersion')]"
+                    },   
+                    "StorageAccountNameHash": {
+                        "value": "StorageAccount"
+                    },
+                    "StorageAccountType": {
+                        "value": "Standard_LRS"
+                    },
+                    "StorageAccountProperties": {
+                        "value": {
+                            "supportsHttpsTrafficOnly": true,
+                            "minimumTlsVersion": "TLS1_2",
+                            "publicNetworkAccess": "Disabled",
+                            "allowBlobPublicAccess": true                                                   
+                        }
+                    }                                        
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-KeyVault-PrivateEndpoint",
+            "dependsOn": [
+                "Disable-PublicAccess-LogicApp-StorageAccount"
             ],             
             "properties": {
                 "mode": "Incremental",
@@ -1753,14 +1799,62 @@
                 }
             }
         },
-
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Disable-PublicAccess-LogicApp-KeyVault",
+            "dependsOn": [
+                "Deploy-KeyVault-PrivateEndpoint-DNSZone-Group"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvault.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault"
+                    },      
+                    "KeyVaultProperties": {
+                        "value": {
+                            "publicNetworkAccess": "Disabled",
+                            "enabledForDeployment": true,
+                            "enabledForDiskEncryption": true,
+                            "enabledForTemplateDeployment": true,
+                            "enableSoftDelete": true,
+                            "enablePurgeProtection": true,
+                            "softDeleteRetentionInDays": 7,
+                            "tenantId": "[subscription().tenantId]",
+                            "accessPolicies": [
+                                {
+                                    "objectId": "[parameters('AzureUserObjectID')]",
+                                    "tenantId": "[subscription().tenantId]",
+                                    "permissions": {
+                                        "secrets": [
+                                            "Get",
+                                            "List",
+                                            "Set"                            
+                                        ]
+                                    }
+                                }
+                            ]                                                     
+                        }
+                    }          
+                }
+            }
+        },
         {
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-LogicApp-PrivateEndpoint",
             "dependsOn": [
-                "Deploy-KeyVault-PrivateEndpoint-DNSZone-Group"
+                "Disable-PublicAccess-LogicApp-KeyVault"
             ],             
             "properties": {
                 "mode": "Incremental",
@@ -1888,6 +1982,6 @@
                     }                    
                 }
             }
-        }
+        }        
     ]
 }

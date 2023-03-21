@@ -15,30 +15,17 @@
                 "description": "Key Vault Name Hash"
             }
         },                      
-        "AzureUserObjectID": {
-            "type": "string",
+        "KeyVaultProperties": {
+            "type": "object",
             "metadata": {
-                "description": "Azure User Object ID"
+                "description": "Key Vault Properties"
             }
-        },
-        "SecretPermissions": {
-            "type": "array",
-            "metadata": {
-                "description": "Secret Permissions"
-            }
-        },        
-        "SkuName": {
-            "type": "string",
-            "metadata": {
-                "description": "Azure Key Vault Sku Name"
-            }
-        }        
+        }
     },    
     "variables": {
         "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
         "KeyVaultIdentifier": "[substring(variables('KeyVaultHash'), 24, 9)]",
-        "KeyVaultName": "[concat('kv', variables('KeyVaultIdentifier'))]",        
-        "tenantID": "[subscription().tenantId]"
+        "KeyVaultName": "[concat('kv', variables('KeyVaultIdentifier'))]"
     },
     
     "resources": [
@@ -47,32 +34,7 @@
             "name": "[variables('KeyVaultName')]",
             "apiVersion": "[parameters('KeyVaultAPIVersion')]",
             "location": "[resourceGroup().location]",
-            "properties": {
-                "enabledForDeployment": true,
-                "enabledForDiskEncryption": true,
-                "enabledForTemplateDeployment": true,
-                "enableSoftDelete": true,
-                "enablePurgeProtection": true,
-                "softDeleteRetentionInDays": 7,
-                "tenantId": "[variables('tenantId')]",
-                "accessPolicies": [
-                    {
-                        "objectId": "[parameters('AzureUserObjectID')]",
-                        "tenantId": "[variables('tenantId')]",
-                        "permissions": {
-                            "secrets": "[parameters('secretPermissions')]"
-                        }
-                    }
-                ],
-                "sku": {
-                    "name": "[parameters('SkuName')]",
-                    "family": "A"
-                },
-                "networkAcls": {
-                    "defaultAction": "Allow",
-                    "bypass": "AzureServices"
-                }
-            }
+            "properties": "[parameters('KeyVaultProperties')]"
         }
     ],
     "outputs": {
