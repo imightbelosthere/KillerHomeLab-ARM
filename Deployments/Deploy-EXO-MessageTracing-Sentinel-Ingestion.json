@@ -2010,7 +2010,7 @@
                         "value": "[variables('NetworkSecurityGroupAPIVersion')]"
                     },   
                     "NetworkSecurityGroupNameHash": {
-                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                        "value": "NetworkSecurityGroup"
                     }               
                 }
             }
