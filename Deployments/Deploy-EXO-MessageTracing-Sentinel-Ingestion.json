@@ -1990,6 +1990,82 @@
                     }                    
                 }
             }
-        }        
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-NetworkSecurityGroup",
+            "dependsOn": [
+                "Deploy-LogicApp-PrivateEndpoint-DNSZone-Group"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },   
+                    "NetworkSecurityGroupNameHash": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    }               
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-NetworkSecurityGroup-Rules",
+            "dependsOn": [
+                "Deploy-LogicApp-NetworkSecurityGroup"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networksecuritygroupsecurityruleloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
+                    },                    
+                    "RuleProperties": {
+                        "value": [
+                            {
+                                "RuleName": "Deny-All-Outbound",
+                                "RuleAccess": "Deny",                               
+                                "RulePriority": "4000",
+                                "RuleDirection": "Outbound",
+                                "RuleDescription": "Deny All Outbound Traffic",
+                                "RuleProtocol": "*",
+                                "RuleSourcePortRange": "*",
+                                "RuleDestinationPortRange": "*",
+                                "RuleSourceAddressPrefixes": "*",
+                                "RuleDestinationAddressPrefixes": "*"
+                            },
+                            {
+                                "RuleName": "Deny-All-Inbound",
+                                "RuleAccess": "Deny",                               
+                                "RulePriority": "4000",
+                                "RuleDirection": "Inbound",
+                                "RuleDescription": "Deny All Inbound Traffic",
+                                "RuleProtocol": "*",
+                                "RuleSourcePortRange": "*",
+                                "RuleDestinationPortRange": "*",
+                                "RuleSourceAddressPrefixes": "*",
+                                "RuleDestinationAddressPrefixes": "*"
+                            }                            
+                        ]
+                    }                                                   
+                }
+            }
+        }               
     ]
 }

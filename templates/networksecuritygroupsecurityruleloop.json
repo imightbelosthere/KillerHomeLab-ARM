@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkSecurityGroupAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group API Version"
+            }
+        },
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name"
+            }
+        },      
+        "RuleProperties": {
+            "type": "array",
+            "metadata": {
+                "description": "Rule Properties"
+            }
+        }        
+    },
+    "resources": [
+        {
+            "apiVersion": "[parameters('NetworkSecurityGroupAPIVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "name": "[concat(parameters('NetworkSecurityGroupName'),'/', parameters('RuleProperties')[copyIndex('')].RuleName)]",
+            "copy": {
+                "name": "RuleProperties",
+                "count": "[length(parameters('RuleProperties'))]"
+            } ,            
+            "properties": {
+                "access": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleAccess]",
+                "priority": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RulePriority]",
+                "direction": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDirection]",
+                "description": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDescription]",
+                "protocol": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleProtocol]",
+                "sourcePortRange": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleSourcePortRange]",
+                "destinationPortRange": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDestinationPortRange]",
+                "sourceAddressPrefixes": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleSourceAddressPrefixes]",
+                "destinationAddressPrefixes": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDestinationAddressPrefixes]"
+            }
+        }
+    ]
+}
