@@ -1850,7 +1850,11 @@
                             "sku": {
                                 "name": "standard",
                                 "family": "A"
-                            }                                                         
+                            },
+                            "networkAcls": {
+                                "bypass": "AzureServices",
+                                "defaultAction": "Deny"
+                            }                                                                                     
                         }
                     }          
                 }
