@@ -2051,7 +2051,7 @@
                                     "description": "Allow All Traffic within Virtual Network Inbound",
                                     "protocol": "*",
                                     "sourcePortRange": "*",
-                                    "sestinationPortRange": "*",
+                                    "destinationPortRange": "*",
                                     "sourceAddressPrefix": "VirtualNetwork",
                                     "destinationAddressPrefix": "VirtualNetwork"
                                 }
