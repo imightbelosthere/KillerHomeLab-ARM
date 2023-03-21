@@ -38,8 +38,8 @@
                 "protocol": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleProtocol]",
                 "sourcePortRange": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleSourcePortRange]",
                 "destinationPortRange": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDestinationPortRange]",
-                "sourceAddressPrefixes": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleSourceAddressPrefixes]",
-                "destinationAddressPrefixes": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDestinationAddressPrefixes]"
+                "sourceAddressPrefix": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleSourceAddressPrefix]",
+                "destinationAddressPrefix": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDestinationAddressPrefix]"
             }
         }
     ]
