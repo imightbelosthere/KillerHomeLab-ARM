@@ -36,8 +36,8 @@
                 "direction": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDirection]",
                 "description": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDescription]",
                 "protocol": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleProtocol]",
-                "sourcePortRanges": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleSourcePortRanges]",
-                "destinationPortRanges": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDestinationPortRanges]",
+                "sourcePortRange": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleSourcePortRange]",
+                "destinationPortRange": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDestinationPortRange]",
                 "sourceAddressPrefixes": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleSourceAddressPrefixes]",
                 "destinationAddressPrefixes": "[parameters('RuleProperties')[copyIndex('RuleProperties')].RuleDestinationAddressPrefixes]"
             }
