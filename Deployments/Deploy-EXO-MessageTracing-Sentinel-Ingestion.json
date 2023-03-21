@@ -913,7 +913,11 @@
                                         ]
                                     }
                                 }
-                            ]                                                     
+                            ],
+                            "sku": {
+                                "name": "standard",
+                                "family": "A"
+                            }                                                                                
                         }
                     }          
                 }
@@ -1842,7 +1846,11 @@
                                         ]
                                     }
                                 }
-                            ]                                                     
+                            ],
+                            "sku": {
+                                "name": "standard",
+                                "family": "A"
+                            }                                                         
                         }
                     }          
                 }
