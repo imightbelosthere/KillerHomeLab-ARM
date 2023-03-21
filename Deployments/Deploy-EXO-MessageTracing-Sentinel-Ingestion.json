@@ -2051,8 +2051,12 @@
                                 "RuleProtocol": "*",
                                 "RuleSourcePortRange": "*",
                                 "RuleDestinationPortRange": "*",
-                                "RuleSourceAddressPrefixes": "*",
-                                "RuleDestinationAddressPrefixes": "*"
+                                "RuleSourceAddressPrefixes": [
+                                    "*"
+                                ],
+                                "RuleDestinationAddressPrefixes": [
+                                    "*"
+                                ]
                             },
                             {
                                 "RuleName": "Deny-All-Inbound",
@@ -2063,8 +2067,12 @@
                                 "RuleProtocol": "*",
                                 "RuleSourcePortRange": "*",
                                 "RuleDestinationPortRange": "*",
-                                "RuleSourceAddressPrefixes": "*",
-                                "RuleDestinationAddressPrefixes": "*"
+                                "RuleSourceAddressPrefixes": [
+                                    "*"
+                                ],
+                                "RuleDestinationAddressPrefixes": [
+                                    "*"
+                                ]
                             }                            
                         ]
                     }                                                   
