@@ -2331,12 +2331,6 @@
                     },
                     "delegations": {
                         "value": [
-                            {
-                                "name": "delegation",
-                                "properties": {
-                                    "serviceName": "Microsoft.Web/serverFarms"
-                                }
-                            }
                         ]                        
                     }                                           
                 }
@@ -2374,6 +2368,12 @@
                     },
                     "delegations": {
                         "value": [
+                            {
+                                "name": "delegation",
+                                "properties": {
+                                    "serviceName": "Microsoft.Web/serverFarms"
+                                }
+                            }
                         ]                        
                     }                            
                 }
