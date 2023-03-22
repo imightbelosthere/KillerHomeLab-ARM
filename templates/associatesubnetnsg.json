@@ -46,7 +46,6 @@
                 "networkSecurityGroup": {
                     "id": "[variables('NetworkSecurityGroupID')]"
                 },                
-                "delegations": [],
                 "privateEndpointNetworkPolicies": "Disabled",
                 "privateLinkServiceNetworkPolicies": "Enabled"
             }
