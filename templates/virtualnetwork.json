@@ -56,10 +56,6 @@
         }
     ],
     "outputs": {
-        "VirtualNetworkName": {
-            "type": "string",
-            "value": "[parameters('VirtualNetworkName')]"
-        },
         "VirtualNetworkSubnetNames": {
             "type": "array",
             "copy": {
