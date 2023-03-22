@@ -2138,7 +2138,7 @@
                                     "description": "Allow 443/TCP from Virtual Network to Azure Storage Service Tag",
                                     "protocol": "TCP",
                                     "sourcePortRange": "*",
-                                    "destinationPortRange": "1433",
+                                    "destinationPortRange": "443",
                                     "sourceAddressPrefix": "VirtualNetwork",
                                     "destinationAddressPrefix": "Storage"
                                 }                                
