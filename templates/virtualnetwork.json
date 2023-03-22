@@ -58,7 +58,7 @@
     "outputs": {
         "VirtualNetworkSubnetNames": {
             "type": "int",
-            "value": "[length(parameters('subnets')).name]"
+            "value": "[length(parameters('subnets'))]"
         }        
     }
 }
