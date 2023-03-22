@@ -296,6 +296,9 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('LAMT-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
+        "VirtualNetworkHash": "[guid(resourceGroup().id, 'VirtualNetworkName')]",
+        "VirtualNetworkIdentifier": "[substring(variables('VirtualNetworkHash'), 24, 9)]",
+        "VirtualNetworkName": "[concat('vnet', variables('VirtualNetworkIdentifier'))]",
         "VNet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.0/24')]",
         "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
@@ -371,8 +374,8 @@
                     "VirtualNetworkAPIVersion": {
                         "value": "[variables('VirtualNetworkAPIVersion')]"
                     },
-                    "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                    "VirtualNetworkName": {
+                        "value": "[variables('VirtualNetworkName')]"
                     },
                     "vnetprefix": {
                         "value": "[variables('vnet1Prefix')]"
@@ -380,7 +383,7 @@
                     "subnets": {
                         "value": [
                             {
-                                "name": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]",
+                                "name": "[concat(variables('VirtualNetworkName'),'-LogicApp')]",
                                 "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]",
                                 "delegations": [
                                     {
@@ -392,13 +395,13 @@
                                 ]                                
                             },
                             {
-                                "name": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]",
+                                "name": "[concat(variables('VirtualNetworkName'),'-PrivateEndpoints')]",
                                 "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]",
                                 "delegations": [
                                 ]                                                                
                             },
                             {
-                                "name": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]",
+                                "name": "[concat(variables('VirtualNetworkName'),'-VirtualMachines')]",
                                 "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]",
                                 "delegations": [
                                 ]                                                                
@@ -2130,7 +2133,7 @@
                                 }                                
                             },                                                                                    
                             {
-                                "name": "Allow-AzureSQL-Outbound",
+                                "name": "Allow-AzureStorage-Outbound",
                                 "properties": {                                
                                     "access": "Allow",                               
                                     "priority": "2400",

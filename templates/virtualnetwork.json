@@ -8,10 +8,10 @@
                 "description": "Virtual Network API Version"
             }
         },
-        "vnetName": {
+        "VirtualNetworkName": {
             "type": "string",
             "metadata": {
-                "description": "VNet name"
+                "description": "VirtualNetwork Name"
             }
         },
         "vnetprefix": {
@@ -30,7 +30,7 @@
     "resources": [
         {
             "type": "Microsoft.Network/virtualNetworks",
-            "name": "[parameters('vnetName')]",
+            "name": "[parameters('VirtualNetworkName')]",
             "apiVersion": "[parameters('VirtualNetworkAPIVersion')]",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -54,5 +54,18 @@
                 ]
             }
         }
-    ]
+    ],
+    "outputs": {
+        "VirtualNetworkName": {
+            "type": "string",
+            "value": "[parameters('VirtualNetworkName')]"
+        },
+        "Subnets": {
+            "type": "array",
+            "copy": {
+                "count": "[length(parameters('subnets'))]",
+                "input": "[parameters('subnets')[copyIndex('subnets')].name]"
+            }
+        }
+    }
 }
