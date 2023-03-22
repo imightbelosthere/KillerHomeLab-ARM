@@ -2261,6 +2261,96 @@
                     }                                                   
                 }
             }
-        }               
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-VirtualMachine-Subnet",
+            "dependsOn": [
+                "Deploy-LogicApp-NetworkSecurityGroup-Rules"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-PrivateEndpoints-Subnet",
+            "dependsOn": [
+                "Associate-NSG-with-VirtualMachine-Subnet"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-LogicApp-Subnet",
+            "dependsOn": [
+                "Associate-NSG-with-PrivateEndpoints-Subnet"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
+                    },                    
+                    "vnetName": {
+                        "value": "[variables('vnet1Name')]"
+                    },
+                    "subnetName": {
+                        "value": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]"
+                    }
+                }
+            }
+        }                                       
     ]
 }
