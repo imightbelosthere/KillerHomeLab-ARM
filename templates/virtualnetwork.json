@@ -59,6 +59,13 @@
         "VirtualNetworkName": {
             "type": "string",
             "value": "[parameters('VirtualNetworkName')]"
-        }
+        },
+        "storageEndpoints": {
+            "type": "array",
+            "copy": {
+                "count": "[parameters('subnets')]",
+                "input": "[reference(concat(copyIndex(), parameters('subnets'))).name]"
+            }
+        }        
     }
 }
