@@ -31,7 +31,14 @@
             "metadata": {
                 "description": "Subnet 1 Prefix"
             }
-        }
+        },
+        "Delegations": {
+            "type": "Object",
+            "metadata": {
+                "description": "Subnet Delegations"
+            }
+        }        
+
     },    
     "variables": {
         "NetworkSecurityGroupID": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('NetworkSecurityGroupName'))]"
@@ -46,7 +53,7 @@
                 "networkSecurityGroup": {
                     "id": "[variables('NetworkSecurityGroupID')]"
                 },                
-                "delegations": [],
+                "delegations": "[parameters('Delegations')]",
                 "privateEndpointNetworkPolicies": "Disabled",
                 "privateLinkServiceNetworkPolicies": "Enabled"
             }
