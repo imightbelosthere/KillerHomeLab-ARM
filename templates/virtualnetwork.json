@@ -63,7 +63,7 @@
         "storageEndpoints": {
             "type": "array",
             "copy": {
-                "count": "[parameters('subnets')]",
+                "count": "[length(parameters('subnets'))]",
                 "input": "[reference(concat(copyIndex(), parameters('subnets'))).name]"
             }
         }        
