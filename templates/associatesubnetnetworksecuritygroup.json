@@ -33,7 +33,7 @@
             }
         },
         "Delegations": {
-            "type": "Object",
+            "type": "Array",
             "metadata": {
                 "description": "Subnet Delegations"
             }
