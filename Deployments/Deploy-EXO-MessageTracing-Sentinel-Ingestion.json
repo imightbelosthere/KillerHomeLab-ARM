@@ -235,14 +235,6 @@
                 "description": "Windows Client OS License Type"
             }
         },
-        "NamingConvention": {
-            "type": "string",
-            "defaultValue": "khl",
-            "maxLength": 4,
-            "metadata": {
-                "description": "VNet1 Name"
-            }
-        },
         "vnet1ID": {
             "type": "string",
             "defaultValue": "172.16.1",
@@ -294,14 +286,15 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('LAMT-', variables('Identifier'))]",
+        "PasswordKeyVaultName": "[concat('LAMT-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
-        "VirtualNetworkHash": "[guid(resourceGroup().id, 'VirtualNetworkName')]",
-        "VirtualNetworkIdentifier": "[substring(variables('VirtualNetworkHash'), 24, 9)]",
-        "VirtualNetworkName": "[concat('vnet', variables('VirtualNetworkIdentifier'))]",
-        "VNet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
+        "LogicAppSubnet": "LogicApp",
+        "PrivateEndpointSubnet": "PrivateEndpoints",
+        "VirtualMachinesSubnet": "VirtualMachines",        
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.0/24')]",
-        "wk1name": "[concat(parameters('NamingConvention'),'-wk-01')]",
+        "wk1nameHash": "[guid(resourceGroup().id, 'VirtualMachine')]",
+        "wk1Identifier": "[substring(variables('wk1nameHash'), 24, 9)]",
+        "wk1name": "[concat('vm', variables('wk1Identifier'))]" ,
         "wk1IP": "[concat(parameters('vnet1ID'),'.',variables('wk1lastoctet'))]",
         "wk1lastoctet": "132",
         "AzureMonitorPrivateLinkScopeAPIVersion": "2021-07-01-preview",
@@ -345,7 +338,7 @@
                         "value": "[variables('KeyVaultSecretAPIVersion')]"
                     },
                     "KeyVaultName": {
-                        "value": "[variables('KeyVaultName')]"
+                        "value": "[variables('PasswordKeyVaultName')]"
                     },
                     "SecretName": {
                         "value": "[variables('SecretName')]"
@@ -374,8 +367,8 @@
                     "VirtualNetworkAPIVersion": {
                         "value": "[variables('VirtualNetworkAPIVersion')]"
                     },
-                    "VirtualNetworkName": {
-                        "value": "[variables('VirtualNetworkName')]"
+                    "VirtualNetworkNameHash": {
+                        "value": "VirtualNetwork"
                     },
                     "vnetprefix": {
                         "value": "[variables('vnet1Prefix')]"
@@ -383,7 +376,7 @@
                     "subnets": {
                         "value": [
                             {
-                                "name": "[concat(variables('VirtualNetworkName'),'-LogicApp')]",
+                                "name": "[variables('LogicAppSubnet')]",
                                 "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]",
                                 "delegations": [
                                     {
@@ -395,13 +388,13 @@
                                 ]                                
                             },
                             {
-                                "name": "[concat(variables('VirtualNetworkName'),'-PrivateEndpoints')]",
+                                "name": "[variables('PrivateEndpointSubnet')]",
                                 "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]",
                                 "delegations": [
                                 ]                                                                
                             },
                             {
-                                "name": "[concat(variables('VirtualNetworkName'),'-VirtualMachines')]",
+                                "name": "[variables('VirtualMachinesSubnet')]",
                                 "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]",
                                 "delegations": [
                                 ]                                                                
@@ -439,13 +432,13 @@
                         "value": "[variables('PublicIPAddressesAPIVersion')]"
                     },
                     "publicIPAddressName": {
-                        "value": "[concat(variables('vnet1Name'),'-Bastion-pip')]"
+                        "value": "[concat(reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value,'-Bastion-pip')]"
                     },
                     "AllocationMethod": {
                         "value": "Static"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnetName": {
                         "value": "AzureBastionSubnet"
@@ -502,10 +495,10 @@
                         "value": "[parameters('WK1VMSize')]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnet1Name": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]"
+                        "value": "[variables('VirtualMachinesSubnet')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -577,10 +570,10 @@
                         "value": "[parameters('WK1VMSize')]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnet1Name": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]"
+                        "value": "[variables('VirtualMachinesSubnet')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -652,10 +645,10 @@
                         "value": "[parameters('WK1VMSize')]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnet1Name": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]"
+                        "value": "[variables('VirtualMachinesSubnet')]"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
@@ -1091,10 +1084,10 @@
                         "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]"
+                        "value": "[variables('LogicAppSubnet')]"
                     }                                      
                 }
             }
@@ -1197,10 +1190,10 @@
                         "value": "azuremonitor"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
+                        "value": "[variables('PrivateEndpointSubnet')]"
                     }
                 }
             }
@@ -1283,7 +1276,7 @@
                         ]
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     }                                                                       
                 }
             }
@@ -1397,10 +1390,10 @@
                         ]
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
+                        "value": "[variables('PrivateEndpointSubnet')]"
                     }
                 }
             }
@@ -1471,7 +1464,7 @@
                         ]
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     }                                                                       
                 }
             }
@@ -1699,10 +1692,10 @@
                         "value": "vault"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
+                        "value": "[variables('PrivateEndpointSubnet')]"
                     }
                 }
             }
@@ -1761,7 +1754,7 @@
                         ]
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     }                                                                       
                 }
             }
@@ -1891,10 +1884,10 @@
                         "value": "sites"
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
+                        "value": "[variables('PrivateEndpointSubnet')]"
                     }
                 }
             }
@@ -1953,7 +1946,7 @@
                         ]
                     },
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     }                                                                       
                 }
             }
@@ -2287,10 +2280,10 @@
                         "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
                     },                    
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-VirtualMachines')]"
+                        "value": "[variables('VirtualMachinesSubnet')]"
                     }
                 }
             }
@@ -2317,10 +2310,10 @@
                         "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
                     },                    
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-PrivateEndpoints')]"
+                        "value": "[variables('PrivateEndpointSubnet')]"
                     }
                 }
             }
@@ -2347,10 +2340,10 @@
                         "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
                     },                    
                     "vnetName": {
-                        "value": "[variables('vnet1Name')]"
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
                     },
                     "subnetName": {
-                        "value": "[concat(parameters('NamingConvention'),'-VNet1-LogicApp')]"
+                        "value": "[variables('LogicAppSubnet')]"
                     }
                 }
             }
