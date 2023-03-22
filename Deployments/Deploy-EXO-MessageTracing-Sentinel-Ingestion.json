@@ -2069,7 +2069,139 @@
                                     "sourceAddressPrefix": "*",                                                                                             
                                     "destinationAddressPrefix": "*"
                                 }
-                            },
+                            },                            
+                            {
+                                "name": "Allow-LogAppsManagement-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2000",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Logic App Management Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "LogicAppsManagement"
+                                }                                
+                            },                                                                                                                                            
+                            {
+                                "name": "Allow-ResourceManager-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2100",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Resource Manager Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzureResourceManager"
+                                }                                
+                            },                                                                                                                                            
+                            {
+                                "name": "Allow-AzurePortal-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2200",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Portal Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzurePortal"
+                                }                                
+                            },                                                                                                                
+                            {
+                                "name": "Allow-AzureAD-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2300",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443&80/TCP from Virtual Network to Azure Active Directory Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRanges": [
+                                        "443",
+                                        "80"
+                                    ],
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzureActiveDirectory"
+                                }                                
+                            },                                                                                    
+                            {
+                                "name": "Allow-AzureSQL-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2400",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Storage Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "1433",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "Storage"
+                                }                                
+                            },                                                                  
+                            {
+                                "name": "Allow-AzureSQL-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2500",
+                                    "direction": "Outbound",
+                                    "description": "Allow 1433/TCP from Virtual Network to Azure Sql Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "1433",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "Sql"
+                                }                                
+                            },                                                                                    
+                            {
+                                "name": "Allow-AzureConnectors-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2600",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Connectors Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzureConnectors"
+                                }                                
+                            },                                                                                    
+                            {
+                                "name": "Allow-APIManagement-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2700",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443 and 3443 TCP from Virtual Network to Azure API Management Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRanges": [
+                                        "443",
+                                        "3443"
+                                    ],
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "ApiManagement"
+                                }                                
+                            },                                                        
+                            {
+                                "name": "Allow-AzureMonitor-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2800",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Monitor Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzureMonitor"
+                                }                                
+                            },                            
                             {
                                 "name": "Allow-Office365-Outbound",
                                 "properties": {                                
