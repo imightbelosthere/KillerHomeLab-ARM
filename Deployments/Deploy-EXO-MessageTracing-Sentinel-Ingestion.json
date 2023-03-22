@@ -288,10 +288,14 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "PasswordKeyVaultName": "[concat('LAMT-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
-        "LogicAppSubnet": "LogicApp",
-        "PrivateEndpointSubnet": "PrivateEndpoints",
-        "VirtualMachinesSubnet": "VirtualMachines",        
         "VNet1Prefix": "[concat(parameters('vnet1ID'),'.0/24')]",
+        "LogicAppSubnet": "LogicApp",
+        "LogicAppSubnetPrefix": "[concat(parameters('vnet1ID'),'.0/26')]",
+        "PrivateEndpointSubnet": "PrivateEndpoints",
+        "PrivateEndpointSubnetPrefix": "[concat(parameters('vnet1ID'),'.64/26')]",
+        "VirtualMachinesSubnet": "VirtualMachines",        
+        "VirtualMachinesSubnetPrefix": "[concat(parameters('vnet1ID'),'.128/26')]",
+        "BastionSubnetPrefix": "[concat(parameters('vnet1ID'),'.192/26')]",
         "wk1nameHash": "[guid(resourceGroup().id, 'VirtualMachine')]",
         "wk1Identifier": "[substring(variables('wk1nameHash'), 24, 9)]",
         "wk1name": "[concat('vm', variables('wk1Identifier'))]" ,
@@ -377,7 +381,7 @@
                         "value": [
                             {
                                 "name": "[variables('LogicAppSubnet')]",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.0/26')]",
+                                "addressprefix": "[variables('LogicAppSubnetPrefix')]",
                                 "delegations": [
                                     {
                                         "name": "delegation",
@@ -389,19 +393,19 @@
                             },
                             {
                                 "name": "[variables('PrivateEndpointSubnet')]",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.64/26')]",
+                                "addressprefix": "[variables('PrivateEndpointSubnetPrefix')]",
                                 "delegations": [
                                 ]                                                                
                             },
                             {
                                 "name": "[variables('VirtualMachinesSubnet')]",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.128/26')]",
+                                "addressprefix": "[variables('VirtualMachinesSubnetPrefix')]",
                                 "delegations": [
                                 ]                                                                
                             },
                             {
                                 "name": "AzureBastionSubnet",
-                                "addressprefix": "[concat(parameters('vnet1ID'),'.192/26')]",
+                                "addressprefix": "[variables('BastionSubnetPrefix')]",
                                 "delegations": [
                                 ]                                                                
                             }                                
@@ -2284,7 +2288,10 @@
                     },
                     "subnetName": {
                         "value": "[variables('VirtualMachinesSubnet')]"
-                    }
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('VirtualMachinesSubnetPrefix')]"
+                    }                    
                 }
             }
         },
@@ -2314,7 +2321,10 @@
                     },
                     "subnetName": {
                         "value": "[variables('PrivateEndpointSubnet')]"
-                    }
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('PrivateEndpointSubnetPrefix')]"
+                    }                    
                 }
             }
         },
@@ -2344,7 +2354,10 @@
                     },
                     "subnetName": {
                         "value": "[variables('LogicAppSubnet')]"
-                    }
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('LogicAppSubnetPrefix')]"
+                    }                    
                 }
             }
         }                                       
