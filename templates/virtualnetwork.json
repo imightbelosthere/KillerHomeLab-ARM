@@ -60,7 +60,9 @@
             "type": "array",
             "copy": {
                 "count": "[length(parameters('subnets'))]",
-                "input": "[reference(copyIndex(), parameters('subnets')).name]"
+                "input": {
+                    "name": "[parameters('subnets')[copyIndex('subnets')].name]"
+                }
             }
         }        
     }
