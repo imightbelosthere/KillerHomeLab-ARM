@@ -2213,46 +2213,9 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Associate-NSG-with-VirtualMachine-Subnet",
-            "dependsOn": [
-                "Deploy-LogicApp-NetworkSecurityGroup-Rules"
-            ],             
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "VirtualNetworkAPIVersion": {
-                        "value": "[variables('VirtualNetworkAPIVersion')]"
-                    },
-                    "NetworkSecurityGroupName": {
-                        "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
-                    },                    
-                    "vnetName": {
-                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
-                    },
-                    "subnetName": {
-                        "value": "[variables('VirtualMachinesSubnet')]"
-                    },
-                    "subnetPrefix": {
-                        "value": "[variables('VirtualMachinesSubnetPrefix')]"
-                    },
-                    "delegations": {
-                        "value": [
-                        ]                        
-                    }                                        
-                }
-            }
-        },
-        {
-            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Associate-NSG-with-PrivateEndpoints-Subnet",
             "dependsOn": [
-                "Associate-NSG-with-VirtualMachine-Subnet"
+                "Deploy-LogicApp-NetworkSecurityGroup-Rules"
             ],             
             "properties": {
                 "mode": "Incremental",
