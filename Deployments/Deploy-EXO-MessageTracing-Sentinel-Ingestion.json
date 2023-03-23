@@ -1984,7 +1984,6 @@
                         "value": {
                             "supportsHttpsTrafficOnly": true,
                             "minimumTlsVersion": "TLS1_2",
-                            "publicNetworkAccess": "Disabled",
                             "allowBlobPublicAccess": false,
                             "networkAcls": {
                                 "bypass": "AzureServices",
