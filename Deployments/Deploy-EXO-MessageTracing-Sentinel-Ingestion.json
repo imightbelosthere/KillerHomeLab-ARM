@@ -698,13 +698,8 @@
                     },
                     "StorageAccountProperties": {
                         "value": {
-                            "allowBlobPublicAccess": false,                            
                             "supportsHttpsTrafficOnly": true,
-                            "minimumTlsVersion": "TLS1_2",
-                            "networkAcls": {
-                                "bypass": "AzureServices",
-                                "defaultAction": "Deny"
-                            }                                                      
+                            "minimumTlsVersion": "TLS1_2"                                                      
                         }
                     }                                        
                 }
@@ -1965,9 +1960,48 @@
             "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-LogicApp-NetworkSecurityGroup",
+            "name": "Disable-PublicAccess-LogicApp-StorageAccount",
             "dependsOn": [
                 "Deploy-LogicApp-PrivateEndpoint-DNSZone-Group"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/storage.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "StorageAccountAPIVersion": {
+                        "value": "[variables('StorageAccountAPIVersion')]"
+                    },   
+                    "StorageAccountNameHash": {
+                        "value": "StorageAccount"
+                    },
+                    "StorageAccountType": {
+                        "value": "Standard_LRS"
+                    },
+                    "StorageAccountProperties": {
+                        "value": {
+                            "supportsHttpsTrafficOnly": true,
+                            "minimumTlsVersion": "TLS1_2",
+                            "publicNetworkAccess": "Disabled",
+                            "allowBlobPublicAccess": false,
+                            "networkAcls": {
+                                "bypass": "AzureServices",
+                                "defaultAction": "Deny"
+                            }                                                                            
+                        }
+                    }                                        
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-NetworkSecurityGroup",
+            "dependsOn": [
+                "Disable-PublicAccess-LogicApp-StorageAccount"
             ],             
             "properties": {
                 "mode": "Incremental",
