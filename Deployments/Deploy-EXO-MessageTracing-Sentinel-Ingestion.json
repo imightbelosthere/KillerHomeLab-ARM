@@ -1116,9 +1116,6 @@
                 "parameters": {
                     "KeyVaultAPIVersion": {
                         "value": "[variables('KeyVaultAPIVersion')]"
-                    },
-                    "WebAppAPIVersion": {
-                        "value": "[variables('WebAppAPIVersion')]"
                     },      
                     "KeyVaultName": {
                         "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
@@ -1130,12 +1127,9 @@
                             "Set"                            
                         ]
                     },                                                      
-                    "ResourceName": {
-                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
-                    },
-                    "ResourceType": {
-                        "value": "WebApp"
-                    }                                        
+                    "ResourceObjectID": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppObjectId.value]"
+                    }
                 }
             }
         },

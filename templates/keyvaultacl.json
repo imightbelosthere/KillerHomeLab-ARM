@@ -7,13 +7,7 @@
             "metadata": {
                 "description": "KeyVault API Version"
             }
-        },
-        "WebAppAPIVersion": {
-            "type": "string",
-            "metadata": {
-                "description": "Web App API Version"
-            }
-        },        
+        },      
         "KeyVaultName": {
             "type": "string",
             "metadata": {
@@ -26,18 +20,12 @@
                 "description": "Secret Permissions"
             }
         },         
-        "ResourceName": {
+        "ResourceObjectID": {
             "type": "string",
             "metadata": {
-                "description": "Resource Name"
+                "description": "Resource Object ID"
             }            
-        },
-        "ResourceType": {
-            "type": "string",
-            "metadata": {
-                "description": "Resource Type"
-            }            
-        }                        
+        }                      
     },    
     "variables": {
         "tenantID": "[subscription().tenantId]"
@@ -45,14 +33,13 @@
     
     "resources": [
         {
-            "condition": "[equals(parameters('ResourceType'),'WebApp')]",                                                
             "apiVersion": "[parameters('KeyVaultAPIVersion')]",
             "name": "[format('{0}/{1}', parameters('KeyVaultName'), 'add')]",
             "type": "Microsoft.KeyVault/vaults/accessPolicies",            
             "properties": {
                 "accessPolicies": [
                     {
-                        "objectId": "[reference(resourceId('Microsoft.Web/sites', parameters('ResourceName')), parameters('WebAppAPIVersion'), 'full').identity.principalId]",
+                        "objectId": "[parameters('ResourceObjectID')]",
                         "tenantId": "[variables('tenantId')]",
                         "permissions": {
                             "secrets": "[parameters('SecretPermissions')]"
