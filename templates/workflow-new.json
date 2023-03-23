@@ -1,0 +1,211 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "For_each": {
+                "actions": {
+                    "Send_Data": {
+                        "inputs": {
+                            "body": "@{items('For_each')}",
+                            "headers": {
+                                "Log-Type": "Message_Tracking_Logs"
+                            },
+                            "host": {
+                                "connection": {
+                                    "referenceName": "azureloganalyticsdatacollector"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/api/logs"
+                        },
+                        "runAfter": {},
+                        "type": "ApiConnection"
+                    }
+                },
+                "foreach": "@body('Parse_JSON')?['d']?['results']",
+                "runAfter": {
+                    "Parse_JSON": [
+                        "Succeeded"
+                    ]
+                },
+                "runtimeConfiguration": {
+                    "secureData": {
+                        "properties": [
+                            "outputs"
+                        ]
+                    }
+                },                
+                "type": "Foreach"
+            },
+            "Get_secret": {
+                "inputs": {
+                    "parameters": {
+                        "secretName": "Message-Trace-Account-UPN"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "keyVault",
+                        "operationId": "getSecret",
+                        "serviceProviderId": "/serviceProviders/keyVault"
+                    }
+                },
+                "runAfter": {},
+                "runtimeConfiguration": {
+                    "secureData": {
+                        "properties": [
+                            "outputs"
+                        ]
+                    }
+                },                
+                "type": "ServiceProvider"
+            },
+            "Get_secret_2": {
+                "inputs": {
+                    "parameters": {
+                        "secretName": "Message-Trace-Account-Password"
+                    },
+                    "serviceProviderConfiguration": {
+                        "connectionName": "keyVault",
+                        "operationId": "getSecret",
+                        "serviceProviderId": "/serviceProviders/keyVault"
+                    }
+                },
+                "runAfter": {
+                    "Get_secret": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ServiceProvider"
+            },
+            "HTTP": {
+                "inputs": {
+                    "authentication": {
+                        "password": "@body('Get_secret_2')?['value']",
+                        "type": "Basic",
+                        "username": "@body('Get_secret')?['value']"
+                    },
+                    "headers": {
+                        "Accept": "application/octet-stream"
+                    },
+                    "method": "GET",
+                    "uri": "https://outlook.office365.us/ecp/reportingwebservice/reporting.svc/MessageTrace?$format=json"
+                },
+                "runAfter": {
+                    "Get_secret_2": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Http"
+            },
+            "Parse_JSON": {
+                "inputs": {
+                    "content": "@body('HTTP')",
+                    "schema": {
+                        "properties": {
+                            "d": {
+                                "properties": {
+                                    "results": {
+                                        "items": {
+                                            "properties": {
+                                            "EndDate": {
+                                                "type": "string"
+                                            },
+                                            "FromIP": {},
+                                            "Index": {
+                                                "type": "integer"
+                                            },
+                                            "MessageId": {
+                                                "type": "string"
+                                            },
+                                            "MessageTraceId": {
+                                                "type": "string"
+                                            },
+                                            "Organization": {
+                                                "type": "string"
+                                            },
+                                            "Received": {
+                                                "type": "string"
+                                            },
+                                            "RecipientAddress": {
+                                                "type": "string"
+                                            },
+                                            "SenderAddress": {
+                                                "type": "string"
+                                            },
+                                            "Size": {
+                                                "type": "integer"
+                                            },
+                                            "StartDate": {
+                                                "type": "string"
+                                            },
+                                            "Status": {
+                                                "type": "string"
+                                            },
+                                            "Subject": {
+                                                "type": "string"
+                                            },
+                                            "ToIP": {},
+                                            "__metadata": {
+                                                "properties": {
+                                                "id": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                },
+                                                "uri": {
+                                                    "type": "string"
+                                                }
+                                                },
+                                                "type": "object"
+                                            }
+                                            },
+                                            "required": [
+                                            "__metadata",
+                                            "Organization",
+                                            "MessageId",
+                                            "Received",
+                                            "SenderAddress",
+                                            "RecipientAddress",
+                                            "Subject",
+                                            "Status",
+                                            "ToIP",
+                                            "FromIP",
+                                            "Size",
+                                            "MessageTraceId",
+                                            "StartDate",
+                                            "EndDate",
+                                            "Index"
+                                            ],
+                                            "type": "object"
+                                        },
+                                        "type": "array"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "runAfter": {
+                    "HTTP": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ParseJson"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "Recurrence": {
+                "recurrence": {
+                    "frequency": "Minute",
+                    "interval": 15
+                },
+                "type": "Recurrence"
+            }
+        }
+    },
+    "kind": "Stateful"
+}
