@@ -3,28 +3,32 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "LogicAppWorkFlowAPIVersion": {
-            "type": "string",
-            "defaultValue": "2019-05-01",            
+            "type": "string",           
             "metadata": {
                 "description": "Logic App WorkFlow API Version"
             }
         },
-        "WorkFlowName": {
+        "WebAppNameHash": {
             "type": "string",
-            "defaultValue": "Get-MessageTracing-Stateful",
             "metadata": {
-                "description": "Name of Workflow"
+                "description": "Web App Name Hash"
             }
-        }                              
+        }                                     
     },
     "variables": {
+        "WebAppHash": "[guid(resourceGroup().id, parameters('WebAppNameHash'))]",
+        "WebAppIdentifier": "[substring(variables('WebAppHash'), 24, 9)]",
+        "WebAppName": "[concat('la', variables('WebAppIdentifier'))]"
     },    
     "resources": [
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "[parameters('LogicAppWorkFlowAPIVersion')]",
             "location": "[resourceGroup().location]",
-            "name": "[parameters('WorkFlowName')]",
+            "name": "[variables('WebAppName')]",
+            "identity": {
+                "type": "SystemAssigned"
+            },            
             "properties": {
                 "definition": {
                     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
@@ -41,18 +45,34 @@
                     "actions": {
                         "Get_secret": {
                             "inputs": {
-                                "parameters": {
-                                    "secretName": "SecretName"
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['keyvault']['connectionId']"
+                                    }
                                 },
-                                "serviceProviderConfiguration": {
-                                    "connectionName": "LAMT-20230313163538",
-                                    "operationId": "getSecret",
-                                    "serviceProviderId": "/serviceProviders/keyVault"
-                                }
+                                "method": "get",
+                                "path": "/secrets/@{encodeURIComponent('Message-Trace-Account-UPN')}/value"
                             },
                             "runAfter": {},
-                            "type": "ServiceProvider"
+                            "type": "ApiConnection"
                         },
+                        "Get_secret_2": {
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['keyvault']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/secrets/@{encodeURIComponent('Message-Trace-Secret')}/value"
+                            },
+                            "runAfter": {
+                                "Get_secret": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection"
+                        },                        
                         "HTTP": {
                             "inputs": {
                                 "authentication": {
@@ -67,7 +87,7 @@
                                 "uri": "https://outlook.office365.us/ecp/reportingwebservice/reporting.svc/MessageTrace?$format=json"
                             },
                             "runAfter": {
-                                "Get_secret": [
+                                "Get_secret_2": [
                                     "Succeeded"
                                 ]
                             },
@@ -203,5 +223,15 @@
                 }                
             }
         }        
-    ]
+    ],
+    "outputs": {
+        "WebAppName": {
+            "type": "string",
+            "value": "[variables('WebAppName')]"
+        },
+        "WebAppObjectId": {
+            "type": "string",
+            "value": "[reference(resourceId('Microsoft.Logic/workflows', variables('WebAppName')), parameters('LogicAppWorkFlowAPIVersion'), 'full').identity.principalId]"
+        }        
+    }
 }

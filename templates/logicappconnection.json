@@ -45,6 +45,24 @@
                         "password": "[listKeys(resourceId(resourceGroup().name,'Microsoft.OperationalInsights/workspaces', parameters('ResourceName')), providers('Microsoft.OperationalInsights', 'workspaces').apiVersions[0]).primarySharedKey]"
                     }
             }
-        }
+        },
+        {
+            "condition": "[equals(parameters('ManagedAPIType'),'keyvault')]",                                    
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
+            "name": "azureloganalyticsdatacollector",
+            "location": "[resourceGroup().location]",
+            "kind": "V2",
+            "properties": {
+                "displayName": "keyvault",
+                "api": {
+                    "id": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'keyvault')]"
+                },
+                "parameterValues": {
+                        "username": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('ResourceName')), parameters('ResourceAPIVersion'), 'full').properties.customerId]",                        
+                        "password": "[listKeys(resourceId(resourceGroup().name,'Microsoft.OperationalInsights/workspaces', parameters('ResourceName')), providers('Microsoft.OperationalInsights', 'workspaces').apiVersions[0]).primarySharedKey]"
+                    }
+            }
+        }        
     ]
 }
