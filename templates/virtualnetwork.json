@@ -63,7 +63,8 @@
     "outputs": {
         "VirtualNetworkName": {
             "type": "string",
-            "value": "[variables('VirtualNetworkName')]"
+            "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', variables('VirtualNetworkName')), parameters('VirtualNetworkAPIVersion'), 'full').name]"
+            
         }
     }
 }
