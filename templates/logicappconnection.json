@@ -50,7 +50,7 @@
             "condition": "[equals(parameters('ManagedAPIType'),'keyvault')]",                                    
             "type": "Microsoft.Web/connections",
             "apiVersion": "[parameters('WebAppConnectionAPIVersion')]",
-            "name": "azureloganalyticsdatacollector",
+            "name": "keyvault",
             "location": "[resourceGroup().location]",
             "kind": "V2",
             "properties": {
