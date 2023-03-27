@@ -1617,7 +1617,12 @@
                     "StorageAccountProperties": {
                         "value": {
                             "supportsHttpsTrafficOnly": true,
-                            "minimumTlsVersion": "TLS1_2"                                                      
+                            "minimumTlsVersion": "TLS1_2",
+                            "networkAcls": {
+                                "bypass": "AzureServices",
+                                "defaultAction": "Deny"
+                            },
+                             "allowBlobPublicAccess": false                                                                             
                         }
                     }                                        
                 }
