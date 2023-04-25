@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "StorageAccountAPIVersion": {
+            "defaultValue": "2022-05-01",
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account API Version"
+            }
+        },        
+        "StorageAccountName": {
+            "type": "string",
+            "defaultValue": "restorelab01reports",            
+            "metadata": {
+                "description": "Storage Account Name"
+            }
+        },
+        "ContainerName": {
+            "type": "string",
+            "defaultValue": "20220420",                        
+            "metadata": {
+                "description": "Container Name"
+            }
+        }    
+    },  
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "[parameters('StorageAccountAPIVersion')]",
+            "name": "[format('{0}/default/{1}', parameters('StorageAccountName'), parameters('ContainerName'))]"
+        }
+    ] 
+}
+  
