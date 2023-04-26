@@ -237,14 +237,6 @@
                 "description": "Sub DNS Domain Name Example:  DC=sub2,DC=sub1, must include COMMA AT END"
             }
         },
-        "NetBiosDomain": {
-            "type": "string",
-            "defaultValue": "sub1",
-            "maxLength": 15,
-            "metadata": {
-                "description": "NetBios Domain Name should the same name as the SubDNSDomain parameter minus the COMMA AT END if the SubDNSDomain and SubDNSBaseDN parameters are used to specify a Sub DNS Naming Structure, but it should be unique if these parameters aren't used."
-            }
-        },
         "InternalDomain": {
             "type": "string",
             "defaultValue": "killerhomelab",
@@ -343,7 +335,7 @@
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/main/"
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
