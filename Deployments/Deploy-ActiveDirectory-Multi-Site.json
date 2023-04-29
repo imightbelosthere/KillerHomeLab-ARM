@@ -1538,7 +1538,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Configure-Core-DNS-Records_DC2",
-            "resourceGroup":  "[parameters('Region2RG')]",                                     
+            "resourceGroup":  "[parameters('Region1RG')]",                                     
             "dependsOn": [
                 "Restart-DomainController-02_01"
             ],
@@ -1556,7 +1556,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[variables('dc2name')]"
+                        "value": "[variables('dc1name')]"
                     },
                     "InternalDomainName": {
                         "value": "[variables('InternalDomainName')]"
