@@ -400,7 +400,6 @@
         "KeyVaultName": "[concat('NWCM-', variables('Identifier'))]",
         "SecretName": "[concat(variables('KeyVaultName'),'-Password')]",
         "CMName": "[concat(parameters('NamingConvention'),'-CM-',parameters('UniqueID'))]", 
-        "ManagedIDName": "[concat(parameters('NamingConvention'),'-ManagedID-',parameters('UniqueID'))]",
         "Contributor": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1Prefix": "[concat(parameters('vnet1ID'),'.0.0/16')]",
@@ -2479,8 +2478,8 @@
                     "UserAssignedMIAPIVersion": {
                         "value": "[variables('UserAssignedMIAPIVersion')]"
                     },
-                    "ManagedIDName": {
-                        "value": "[variables('ManagedIDName')]"
+                    "ManagedIDNameHash": {
+                        "value": "ManagedID"
                     }
                 }
             }
@@ -2663,7 +2662,7 @@
                         "value": "[parameters('Region1RG')]"
                     },              
                     "ManagedIDName": {
-                        "value": "[variables('ManagedIDName')]"
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
                     }, 
                     "ScriptLocation": {
                         "value": "[parameters('WorkspaceLocation')]"
@@ -2705,7 +2704,7 @@
                         "value": "[parameters('Region1RG')]"
                     },              
                     "ManagedIDName": {
-                        "value": "[variables('ManagedIDName')]"
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
                     }, 
                     "ScriptLocation": {
                         "value": "[parameters('WorkspaceLocation')]"
@@ -2747,7 +2746,7 @@
                         "value": "[parameters('Region1RG')]"
                     },              
                     "ManagedIDName": {
-                        "value": "[variables('ManagedIDName')]"
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
                     }, 
                     "ScriptLocation": {
                         "value": "[parameters('WorkspaceLocation')]"
@@ -2789,7 +2788,7 @@
                         "value": "[parameters('Region1RG')]"
                     },              
                     "ManagedIDName": {
-                        "value": "[variables('ManagedIDName')]"
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
                     }, 
                     "ScriptLocation": {
                         "value": "[parameters('WorkspaceLocation')]"
@@ -2831,7 +2830,7 @@
                         "value": "[parameters('Region1RG')]"
                     },              
                     "ManagedIDName": {
-                        "value": "[variables('ManagedIDName')]"
+                        "value": "[reference('Create-UserAssigned-ManagedID').outputs.manageduseridentityname.value]"
                     }, 
                     "ScriptLocation": {
                         "value": "[parameters('WorkspaceLocation')]"
