@@ -184,7 +184,7 @@
             "type": "string",
             "defaultValue": "1.25.6",
             "metadata": {
-                "description": "Kubernetes Version"
+                "description": "Orchestrator Version"
             }
         },                
         "adminUsername": {
