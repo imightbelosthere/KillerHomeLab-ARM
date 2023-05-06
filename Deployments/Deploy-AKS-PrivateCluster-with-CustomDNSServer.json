@@ -175,8 +175,9 @@
         },
         "KubernetesVersion": {
             "type": "string",
-            "defaultValue": "1.26.0",
+            "defaultValue": "1.26.3",
             "allowedValues": [
+                "1.26.3",
                 "1.26.0",
                 "1.25.6"
             ],            
@@ -186,8 +187,9 @@
         },        
         "OrchestratorVersion": {
             "type": "string",
-            "defaultValue": "1.26.0",
+            "defaultValue": "1.26.3",
             "allowedValues": [
+                "1.26.3",
                 "1.26.0",
                 "1.25.6"
             ],            
