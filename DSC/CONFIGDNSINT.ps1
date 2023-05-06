@@ -10,6 +10,7 @@
     )
 
     Import-DscResource -ModuleName DnsServerDsc
+    Import-DscResource -ModuleName ActiveDirectoryDsc
 
     Node localhost
     {
@@ -68,6 +69,13 @@
             GetScript =  { @{} }
             TestScript = { $false}
         }
+
+        WaitForADDomain Domain
+        {
+            DomainName           = $InternaldomainName
+            WaitTimeout          = 600
+            RestartCount         = 2
+        }
        
         DnsServerADZone ReverseADZone
         {
@@ -76,7 +84,7 @@
             DynamicUpdate = 'Secure'
             Ensure           = 'Present'
             ReplicationScope = 'Domain'
-            DependsOn = '[Script]CheckDNS'
+            DependsOn = '[WaitForADDomain]Domain'
         }
 
         DnsRecordPtr DCPtrRecord
