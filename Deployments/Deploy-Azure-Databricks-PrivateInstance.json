@@ -192,14 +192,14 @@
         },
         "SourceIPAddressRange": {
             "type": "string",
-            "defaultValue": "47.197.128.52",
+            "defaultValue": "1.1.1.1",
             "metadata": {
                 "description": "Source Public IP Address used to Access Bastion Host"
             }
         },
         "JumpboxVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Jumpbox Azure VM Size"
             }
@@ -227,7 +227,7 @@
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/main/"
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
