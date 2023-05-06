@@ -24,7 +24,7 @@
         {
             ActionAfterReboot = "StopConfiguration"
             ConfigurationMode = "ApplyOnly"
-        }
+        }]
 
         Script EnableTls12
         {
@@ -37,10 +37,19 @@
             TestScript = { $false}
         }
 
+        WaitForADDomain LocateDomain
+        {
+            DomainName = $DomainName
+            WaitTimeout = 600
+            RestartCount = 2
+            DependsOn = '[Script]EnableTls12'
+        }
+
         WindowsFeature DNS
         {
             Ensure = "Present"
             Name = "DNS"
+            DependsOn = '[WaitForADDomain]LocateDomain'
         }
 
         Script EnableDNSDiags
@@ -103,15 +112,6 @@
             DependsOn = "[WindowsFeature]ADDSTools"
         }
 
-        WaitForADDomain LocateDomain
-        {
-            DomainName = $DomainName
-            WaitTimeout = 600
-            RestartCount = 2
-            WaitForValidCredentials = $true      
-            Credential = $DomainCredsFQDN
-        }
-
         ADDomainController OtherDS
         {
             DomainName = $DomainName
@@ -120,7 +120,7 @@
             DatabasePath = "N:\NTDS"
             LogPath = "N:\NTDS"
             SysvolPath = "N:\SYSVOL"
-            DependsOn = '[WaitForADDomain]LocateDomain'
+            DependsOn = '[WindowsFeature]ADAdminCenter'
         }
 
         Script UpdateDNSSettings
