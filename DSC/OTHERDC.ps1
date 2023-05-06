@@ -24,7 +24,7 @@
         {
             ActionAfterReboot = "StopConfiguration"
             ConfigurationMode = "ApplyOnly"
-        }]
+        }
 
         Script EnableTls12
         {
