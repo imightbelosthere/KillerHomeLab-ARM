@@ -12,6 +12,8 @@
     Import-DscResource -ModuleName DnsServerDsc
     Import-DscResource -ModuleName ActiveDirectoryDsc
 
+    [System.Management.Automation.PSCredential ]$DomainCredsFQDN = New-Object System.Management.Automation.PSCredential ("$($Admincreds.UserName)@$($InternaldomainName)", $Admincreds.Password)
+
     Node localhost
     {
         LocalConfigurationManager
@@ -75,6 +77,7 @@
             DomainName           = $InternaldomainName
             WaitTimeout          = 600
             RestartCount         = 2
+            DependsOn = '[Script]CheckDNS'
         }
        
         DnsServerADZone ReverseADZone

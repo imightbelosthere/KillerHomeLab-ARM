@@ -939,7 +939,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/firstdc.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domaincontroller.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -952,9 +952,12 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "DomainName": {
+                    "InternaldomainName": {
                         "value": "[variables('InternaldomainName')]"
                     },
+                    "PrimaryDC": {
+                        "value": "Yes"
+                    },                    
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },
@@ -1150,7 +1153,7 @@
                     },
                     "dclastoctet": {
                         "value": "[variables('dc1lastoctet')]"
-                    },
+                    },                   
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
@@ -1414,7 +1417,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/otherdc.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domaincontroller.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1427,9 +1430,12 @@
                     "computerName": {
                         "value": "[variables('dc2name')]"
                     },
-                    "DomainName": {
+                    "InternaldomainName": {
                         "value": "[variables('InternaldomainName')]"
                     },
+                    "PrimaryDC": {
+                        "value": "No"
+                    },               
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },
@@ -1572,7 +1578,7 @@
                     },
                     "dclastoctet": {
                         "value": "[variables('dc2lastoctet')]"
-                    },                   
+                    },                                      
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
