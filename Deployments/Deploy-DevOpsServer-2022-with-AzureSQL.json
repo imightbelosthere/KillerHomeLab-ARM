@@ -401,7 +401,7 @@
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/main/"
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -658,7 +658,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/firstdc.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domaincontroller.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -671,9 +671,12 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "DomainName": {
+                    "InternaldomainName": {
                         "value": "[variables('InternaldomainName')]"
                     },
+                    "PrimaryDC": {
+                        "value": "Yes"
+                    },                    
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },
@@ -814,6 +817,12 @@
                     "dclastoctet": {
                         "value": "[variables('dc1lastoctet')]"
                     },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                    
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
