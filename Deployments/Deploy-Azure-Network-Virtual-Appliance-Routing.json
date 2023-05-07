@@ -422,35 +422,35 @@
         },                            
         "NVAVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Network Virtual Appliance VMSize"
             }
         },                  
         "HUBVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "HUB VMSize"
             }
         },        
         "SITE1VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Site1 VMSize"
             }
         },            
         "SITE2VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Site2 VMSize"
             }
         },                
         "SQLVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D8s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "SQL VMSize"
             }
