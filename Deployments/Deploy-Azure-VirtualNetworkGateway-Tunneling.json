@@ -294,7 +294,7 @@
         },                                                                                  
         "AZSPKVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "AZ Spoke VMSize"
             }

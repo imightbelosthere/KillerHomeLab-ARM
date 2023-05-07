@@ -296,7 +296,7 @@
         },                                                           
         "AZHB2VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "AZHB2 VMSize"
             }
