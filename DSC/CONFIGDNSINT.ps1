@@ -6,11 +6,15 @@
         [String]$InternaldomainName,
         [String]$ReverseLookup,
         [String]$ForwardLookup,
-        [String]$dclastoctet
+        [String]$dclastoctet,
+        [System.Management.Automation.PSCredential]$Admincreds
+
     )
 
     Import-DscResource -ModuleName DnsServerDsc
     Import-DscResource -ModuleName ActiveDirectoryDsc
+
+    [System.Management.Automation.PSCredential ]$DomainCredsFQDN = New-Object System.Management.Automation.PSCredential ("$($Admincreds.UserName)@$($InternaldomainName)", $Admincreds.Password)
 
     Node localhost
     {
@@ -75,6 +79,7 @@
             DomainName           = $InternaldomainName
             WaitTimeout          = 600
             RestartCount         = 2
+            Credential = $DomainCredsFQDN
             DependsOn = '[Script]CheckDNS'
         }
        
