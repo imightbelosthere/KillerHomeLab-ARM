@@ -11,14 +11,12 @@
         },        
         "StorageAccountName": {
             "type": "string",
-            "defaultValue": "restorelab01reports",            
             "metadata": {
                 "description": "Storage Account Name"
             }
         },
         "ContainerName": {
             "type": "string",
-            "defaultValue": "20220420",                        
             "metadata": {
                 "description": "Container Name"
             }
