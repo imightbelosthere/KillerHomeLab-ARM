@@ -1,5 +1,5 @@
-# Azure Virtual Network Gateway Tunneling Add-On
-<img src="./x_Images/AzureVirtualNetworkGatewayTunneling.svg" height="600" width="800"/>
+# Azure Virtual Network Gateway - Gateway Transit Add-On
+<img src="./x_Images/AzureVirtualNetworkGatewayGatewayTransit.svg" height="600" width="800"/>
 
 THE FOLLOWING DEPLOYMENT MUST ALREADY EXIST IN ORDER TO USE THIS DEPLOYMENT:
 
