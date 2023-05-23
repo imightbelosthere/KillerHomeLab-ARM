@@ -348,7 +348,7 @@
         },
         "SQLVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D8s_v3",
+            "defaultValue": "Standard_d8ds_v5",
             "metadata": {
                 "description": "SQL VMSize"
             }
@@ -375,7 +375,7 @@
         },
         "SQLTOOLSVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "SQL Tools VMSize"
             }
@@ -385,7 +385,7 @@
             "metadata": {
                 "description": "The location of resources, such as templates and DSC modules, that the template depends on"
             },
-            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/main/"
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
