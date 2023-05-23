@@ -175,16 +175,26 @@
         },
         "KubernetesVersion": {
             "type": "string",
-            "defaultValue": "1.24.6",
+            "defaultValue": "1.26.3",
+            "allowedValues": [
+                "1.26.3",
+                "1.26.0",
+                "1.25.6"
+            ],            
             "metadata": {
                 "description": "Kubernetes Version"
             }
         },        
         "OrchestratorVersion": {
             "type": "string",
-            "defaultValue": "1.24.6",
+            "defaultValue": "1.26.3",
+            "allowedValues": [
+                "1.26.3",
+                "1.26.0",
+                "1.25.6"
+            ],            
             "metadata": {
-                "description": "Kubernetes Version"
+                "description": "Orchestrator Version"
             }
         },                
         "adminUsername": {
@@ -255,14 +265,6 @@
             "defaultValue": "DC=sub1,",
             "metadata": {
                 "description": "Sub DNS Domain Name Example:  DC=sub2,DC=sub1, must include COMMA AT END"
-            }
-        },
-        "NetBiosDomain": {
-            "type": "string",
-            "defaultValue": "sub1",
-            "maxLength": 15,
-            "metadata": {
-                "description": "NetBios Domain Name should the same name as the SubDNSDomain parameter minus the COMMA AT END if the SubDNSDomain and SubDNSBaseDN parameters are used to specify a Sub DNS Naming Structure, but it should be unique if these parameters aren't used."
             }
         },
         "InternalDomain": {
@@ -400,21 +402,21 @@
         },                                        
         "DNSVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "DNS PRoxy VMSize"
             }
         },
         "DC1VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Domain Controller1 VMSize"
             }
         },        
         "WK1VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Workstation VMSize"
             }
@@ -914,7 +916,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelink.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelinkrg.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -943,7 +945,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelink.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelinkrg.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1666,7 +1668,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/firstdc.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domaincontroller.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1679,9 +1681,12 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "DomainName": {
+                    "InternaldomainName": {
                         "value": "[variables('InternaldomainName')]"
                     },
+                    "PrimaryDC": {
+                        "value": "Yes"
+                    },                    
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },

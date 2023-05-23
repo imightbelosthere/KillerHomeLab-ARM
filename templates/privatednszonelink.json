@@ -5,40 +5,38 @@
         "PrivateDNSZoneAPIVersion": {
             "type": "string",
             "metadata": {
-                "description": "Private DNS Zone API Version"
+                "description": "Private DNS Zone Name"
             }
-        },        
-        "ZoneName": {
+        },
+        "PrivateDNSZoneName": {
             "type": "string",
             "metadata": {
-                "description": "DNS Zone Name"
-              }
-        },        
+                "description": "Private DNS Zone API Version"
+            }
+        },
         "vnetName": {
             "type": "string",
             "metadata": {
-                "description": "Virtual Network 1 Name"
-            }            
-        },
-        "vnetRG": {
-            "type": "string",
-            "metadata": {
-                "description": "Virtual Network 1 Resource Group"
-            }            
-        }                    
+                "description": "Virtual Network"
+            }
+        }
+    },
+    "variables": {
+        "VNetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+        "VirtualNetworkLinkName": "[concat(parameters('PrivateDNSZoneName'), '/', parameters('vnetName'))]"
     },
     "resources": [
         {
-            "name": "[concat(parameters('ZoneName'),'/',parameters('vnetName'))]",
             "type": "Microsoft.Network/privateDnsZones/virtualNetworkLinks",
+            "name": "[variables('VirtualNetworkLinkName')]",
             "apiVersion": "[parameters('PrivateDNSZoneAPIVersion')]",
-            "location": "global",                       
+            "location": "global",
             "properties": {
-              "virtualNetwork": {
-                    "id":  "[resourceId(parameters('vnetRG'), 'Microsoft.Network/virtualNetworks', parameters('vNetName'))]"
+                "virtualNetwork": {
+                    "id": "[variables('VNetId')]"
                 },
                 "registrationEnabled": true
-                }
-        }                                  
+            }
+        }
     ]
 }

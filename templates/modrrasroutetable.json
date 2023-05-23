@@ -1,0 +1,79 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "RouteTableAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Table API Version"
+            }
+        },        
+        "Name": {
+            "type": "string",
+            "metadata": {
+                "description": "VPN Gateway Name"
+              }
+        },
+        "RouteName": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Name"
+            }
+        },        
+        "TRANSITRouteName": {
+            "type": "string",
+            "metadata": {
+                "description": "TRANSIT Route Name"
+            }
+        },                
+        "SubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet Prefix"
+            }
+        },
+        "TRANSITSubnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "TRANSIT Subnet Prefix"
+            }
+        },        
+        "RemoteGatewayIP": {
+            "type": "string",
+            "metadata": {
+                "description": "Remote VPN Gateway IP"
+            }
+        }       
+    },   
+    "resources": [
+        {
+            "type": "Microsoft.Network/routeTables",
+            "apiVersion": "[parameters('RouteTableAPIVersion')]",
+            "name": "[parameters('Name')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "disableBgpRoutePropagation": false,
+                "routes": [
+                    {
+                        "name": "[parameters('RouteName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('SubnetPrefix')]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('RemoteGatewayIP')]",
+                            "hasBgpOverride": false
+                        }
+                    },
+                    {
+                        "name": "[parameters('TRANSITRouteName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('TRANSITSubnetPrefix')]",
+                            "nextHopType": "VirtualAppliance",
+                            "nextHopIpAddress": "[parameters('RemoteGatewayIP')]",
+                            "hasBgpOverride": false
+                        }
+                    }                    
+                ]
+            }
+        }     
+    ]
+}

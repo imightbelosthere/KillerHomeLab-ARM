@@ -1,7 +1,14 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptiondeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {        
+    "parameters": {                      
+        "AZHB1RG": {
+            "type": "string",
+            "defaultValue": "AZHB1-RG",
+            "metadata": {
+                "description": "AZHB1 Resource Group"
+            }
+        },                 
         "ONPREMRegion": {
             "type": "string",
             "defaultValue": "", 
@@ -15,14 +22,7 @@
             "metadata": {
                 "description": "ONPREM Resource Group"
             }
-        },                
-        "AZHB1RG": {
-            "type": "string",
-            "defaultValue": "AZHB1-RG",
-            "metadata": {
-                "description": "AZHB1 Resource Group"
-            }
-        },                                                                                  
+        },                                                                           
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -335,21 +335,21 @@
         },                                                  
         "NVAVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Network Virtual Appliance VMSize"
             }
         },                  
         "ONPREMVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "ONPREM VMSize"
             }
         },        
         "AZHB1VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "AZHB1 VMSize"
             }

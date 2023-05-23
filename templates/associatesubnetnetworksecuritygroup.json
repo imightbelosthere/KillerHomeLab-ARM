@@ -1,0 +1,62 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualNetworkAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name"
+            }
+        },        
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "VNet name"
+            }
+        },
+        "subnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet 1 Name"
+            }
+        },
+        "subnetPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet 1 Prefix"
+            }
+        },
+        "Delegations": {
+            "type": "Array",
+            "metadata": {
+                "description": "Subnet Delegations"
+            }
+        }        
+
+    },    
+    "variables": {
+        "NetworkSecurityGroupID": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('NetworkSecurityGroupName'))]"
+    },
+    "resources": [
+                {
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "apiVersion": "[parameters('VirtualNetworkAPIVersion')]",
+            "name": "[concat(parameters('vnetName'), '/', parameters('subnetName'))]",
+            "properties": {
+                "addressPrefix": "[parameters('subnetPrefix')]",
+                "networkSecurityGroup": {
+                    "id": "[variables('NetworkSecurityGroupID')]"
+                },                
+                "delegations": "[parameters('Delegations')]",
+                "privateEndpointNetworkPolicies": "Disabled",
+                "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+        }
+    ]
+}

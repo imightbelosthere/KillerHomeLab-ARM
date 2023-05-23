@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkSecurityGroupAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group API Version"
+            }
+        },
+        "NetworkSecurityGroupNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name Hash"
+            }
+        }
+    },
+    "variables": {
+    "NetworkSecurityGroupHash": "[guid(resourceGroup().id, parameters('NetworkSecurityGroupNameHash'))]",
+    "Identifier": "[substring(variables('NetworkSecurityGroupHash'), 24, 9)]",
+    "NetworkSecurityGroupName": "[concat('nsg', variables('Identifier'))]" ,
+    "NetworkSecurityGroupId": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('NetworkSecurityGroupName'))]"
+    },     
+    "resources": [
+        {
+            "apiVersion": "[parameters('NetworkSecurityGroupAPIVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('NetworkSecurityGroupName')]",
+            "location": "[resourceGroup().location]"
+        }
+    ],
+    "outputs": {
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "value": "[variables('NetworkSecurityGroupName')]"
+        },
+        "NetworkSecurityGroupId": {
+            "type": "string",
+            "value": "[variables('NetworkSecurityGroupId')]"
+        }
+    }  
+}

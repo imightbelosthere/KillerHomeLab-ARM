@@ -1,0 +1,40 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "AzureMonitorPrivateLinkScopeAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Monitor Private Link Scope API Version"
+            }
+        },      
+        "LogAnalyticsWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name"
+            }
+        },
+        "AzureMonitorPrivateLinkScopeName": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Monitor Private Link Scope Name"
+            }
+        },        
+        "ResourceID": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name"
+            }
+        }                                  
+    },
+    "resources": [
+        {
+            "type": "microsoft.insights/privatelinkscopes/scopedresources",
+            "apiVersion": "[parameters('AzureMonitorPrivateLinkScopeAPIVersion')]",
+            "name": "[concat(parameters('AzureMonitorPrivateLinkScopeName'), '/scoped-', parameters('LogAnalyticsWorkspaceName'))]",
+            "properties": {
+                "linkedResourceId": "[parameters('ResourceID')]"
+            }
+        }
+    ]
+}

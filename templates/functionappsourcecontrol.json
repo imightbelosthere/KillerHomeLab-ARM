@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WebAppAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App API Version"
+            }
+        },     
+        "WebAppName": {
+            "type": "string",
+            "metadata": {
+                "description": "Web App Name Hash"
+            }
+        }                
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites/sourcecontrols",
+            "apiVersion": "[parameters('WebAppAPIVersion')]",
+            "name": "[format('{0}/{1}', parameters('WebAppName'), 'web')]",
+            "properties": {
+                "repoUrl": "https://github.com/elliottfieldsjr/LogicApp.git",
+                "branch": "main",
+                "isManualIntegration": true
+            }
+        }
+    ]
+}

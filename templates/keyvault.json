@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "KeyVaultAPIVersion": {
+            "type": "string",
+            "defaultValue": "2021-11-01-preview",
+            "metadata": {
+                "description": "KeyVault API Version"
+            }
+        },
+        "KeyVaultNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "Key Vault Name Hash"
+            }
+        },                      
+        "KeyVaultProperties": {
+            "type": "object",
+            "metadata": {
+                "description": "Key Vault Properties"
+            }
+        }
+    },    
+    "variables": {
+        "KeyVaultHash": "[guid(resourceGroup().id, parameters('KeyVaultNameHash'))]",
+        "KeyVaultIdentifier": "[substring(variables('KeyVaultHash'), 24, 9)]",
+        "KeyVaultName": "[concat('kv', variables('KeyVaultIdentifier'))]"
+    },
+    
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "name": "[variables('KeyVaultName')]",
+            "apiVersion": "[parameters('KeyVaultAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": "[parameters('KeyVaultProperties')]"
+        }
+    ],
+    "outputs": {
+        "KeyVaultName": {
+            "type": "string",
+            "value": "[variables('KeyVaultName')]"
+        }
+    }    
+}

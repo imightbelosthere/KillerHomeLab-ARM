@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "NetworkSecurityGroupAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group API Version"
+            }
+        },
+        "NetworkSecurityGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name"
+            }
+        },      
+        "RuleProperties": {
+            "type": "array",
+            "metadata": {
+                "description": "Rule Properties"
+            }
+        }        
+    },
+    "resources": [
+        {
+            "apiVersion": "[parameters('NetworkSecurityGroupAPIVersion')]",
+            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+            "name": "[concat(parameters('NetworkSecurityGroupName'),'/', parameters('RuleProperties')[copyIndex('')].Name)]",
+            "copy": {
+                "name": "RuleProperties",
+                "count": "[length(parameters('RuleProperties'))]"
+            } ,            
+            "properties": "[parameters('RuleProperties')[copyIndex('RuleProperties')].properties]"
+        }
+    ]
+}

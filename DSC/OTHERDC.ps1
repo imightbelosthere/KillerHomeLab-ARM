@@ -2,7 +2,7 @@
 {
    param
     (
-        [String]$DomainName,
+        [String]$InternaldomainName,
         [System.Management.Automation.PSCredential]$Admincreds,
         [Int]$RetryCount=20,
         [Int]$RetryIntervalSec=30
@@ -13,7 +13,7 @@
     Import-DscResource -ModuleName ComputerManagementDsc # Used for Reboots
     Import-DscResource -ModuleName DNSServerDsc
 
-    [System.Management.Automation.PSCredential ]$DomainCredsFQDN = New-Object System.Management.Automation.PSCredential ("$($Admincreds.UserName)@$($DomainName)", $Admincreds.Password)
+    [System.Management.Automation.PSCredential ]$DomainCredsFQDN = New-Object System.Management.Automation.PSCredential ("$($Admincreds.UserName)@$($InternaldomainName)", $Admincreds.Password)
 
     $Interface=Get-NetAdapter|Where Name -Like "Ethernet*"|Select-Object -First 1
     $InterfaceAlias=$($Interface.Name)
@@ -37,10 +37,19 @@
             TestScript = { $false}
         }
 
+        WaitForADDomain LocateDomain
+        {
+            DomainName = $InternaldomainName
+            WaitTimeout = 600
+            RestartCount = 2
+            DependsOn = '[Script]EnableTls12'
+        }
+
         WindowsFeature DNS
         {
             Ensure = "Present"
             Name = "DNS"
+            DependsOn = '[WaitForADDomain]LocateDomain'
         }
 
         Script EnableDNSDiags
@@ -103,24 +112,15 @@
             DependsOn = "[WindowsFeature]ADDSTools"
         }
 
-        WaitForADDomain LocateDomain
-        {
-            DomainName = $DomainName
-            WaitTimeout = 600
-            RestartCount = 2
-            WaitForValidCredentials = $true      
-            Credential = $DomainCredsFQDN
-        }
-
         ADDomainController OtherDS
         {
-            DomainName = $DomainName
+            DomainName = $InternaldomainName
             Credential = $DomainCredsFQDN
             SafemodeAdministratorPassword = $DomainCredsFQDN
             DatabasePath = "N:\NTDS"
             LogPath = "N:\NTDS"
             SysvolPath = "N:\SYSVOL"
-            DependsOn = '[WaitForADDomain]LocateDomain'
+            DependsOn = '[WindowsFeature]ADAdminCenter'
         }
 
         Script UpdateDNSSettings

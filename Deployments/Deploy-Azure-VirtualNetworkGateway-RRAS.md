@@ -1,5 +1,5 @@
-# AZHB1 Virtual Network Gateway RRAS
-<img src="./x_Images/AZHB1VirtualNetworkGatewayRRAS.svg" height="600" width="800"/>
+# Azure Virtual Network Gateway RRAS
+<img src="./x_Images/AzureVirtualNetworkGatewayRRAS.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
@@ -28,8 +28,8 @@ If you can't remember the Username review the Deployment Input tab within your R
 
 Parameters that support changes
 - AZHB1Region.  Location for AZHB1 Resources.
+- ONPREMRegion.  Location for On-Premise Resources.
 - ONPREMRG.  Resource Group for ONPrem Resources.
-- AZHB1RG.  Resource Group for AZHB1 Resources.
 - TimeZone.  Select an appropriate Time Zone.
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)

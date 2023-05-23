@@ -404,14 +404,6 @@
                 "description": "Sub DNS Domain Name Example:  DC=sub2,DC=sub1, must include COMMA AT END"
             }
         },
-        "NetBiosDomain": {
-            "type": "string",
-            "defaultValue": "sub1",
-            "maxLength": 15,
-            "metadata": {
-                "description": "NetBios Domain Name should the same name as the SubDNSDomain parameter minus the COMMA AT END if the SubDNSDomain and SubDNSBaseDN parameters are used to specify a Sub DNS Naming Structure, but it should be unique if these parameters aren't used."
-            }
-        },
         "InternalDomain": {
             "type": "string",
             "defaultValue": "killerhomelab",
@@ -508,14 +500,14 @@
         },        
         "DC1VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Domain Controller1 VMSize"
             }
         },
         "DC2VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Domain Controller2 VMSize"
             }
@@ -560,14 +552,14 @@
         },        
         "WK1VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Workstation1 VMSize"
             }
         },
         "WK2VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Workstation2 VMSize"
             }
@@ -947,7 +939,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/firstdc.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domaincontroller.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -960,9 +952,12 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "DomainName": {
+                    "InternaldomainName": {
                         "value": "[variables('InternaldomainName')]"
                     },
+                    "PrimaryDC": {
+                        "value": "Yes"
+                    },                    
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },
@@ -1158,7 +1153,7 @@
                     },
                     "dclastoctet": {
                         "value": "[variables('dc1lastoctet')]"
-                    },
+                    },                   
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },
@@ -1422,7 +1417,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/otherdc.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domaincontroller.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -1435,9 +1430,12 @@
                     "computerName": {
                         "value": "[variables('dc2name')]"
                     },
-                    "DomainName": {
+                    "InternaldomainName": {
                         "value": "[variables('InternaldomainName')]"
                     },
+                    "PrimaryDC": {
+                        "value": "No"
+                    },               
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },
@@ -1580,7 +1578,7 @@
                     },
                     "dclastoctet": {
                         "value": "[variables('dc2lastoctet')]"
-                    },                   
+                    },                                      
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },

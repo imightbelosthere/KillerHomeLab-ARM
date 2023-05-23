@@ -1,6 +1,11 @@
 # Deploy Azure AD Domain Services Tools VM
 <img src="./x_Images/AzureADDomainServicesToolsVM.svg" height="600" width="800"/>
 
+Requirements
+- Azure AD Group must be created called "AAD DC Administrators"
+- Account used for "AzureUserName" parameter must be a member of the "AAD DC Administrators" Group
+- Account used for "AzureUserName" parameter must have it's password reset using the Self-Service Password Reset (SSPO)
+
 This Deployment deploys the following items:
 
 - 1 - Azure KeyVault with Secret contianing Deployment Password

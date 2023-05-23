@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "SecurityInsightsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Sentinel API Version"
+            }
+        },
+        "LogAnalyticsWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name"
+            }
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.SecurityInsights/onboardingStates",
+            "apiVersion": "[parameters('SecurityInsightsAPIVersion')]",
+            "name": "default",
+            "properties": {},
+            "scope": "[concat('Microsoft.OperationalInsights/workspaces/', parameters('LogAnalyticsWorkspaceName'))]"
+        }       
+    ]
+}

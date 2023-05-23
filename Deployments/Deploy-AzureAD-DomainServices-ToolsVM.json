@@ -267,7 +267,7 @@
         }, 
         "ADTOOLSVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "AD Tools VM VMSize"
             }
@@ -290,7 +290,7 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('AVD-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('AADDS-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",        
         "vnet1Name": "[concat(parameters('NamingConvention'),'-VNet1')]",
         "vnet1subnet2Name": "[concat(parameters('NamingConvention'),'-VNet1-Subnet2')]",

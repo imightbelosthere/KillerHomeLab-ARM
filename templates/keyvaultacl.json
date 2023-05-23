@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "KeyVaultAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "KeyVault API Version"
+            }
+        },      
+        "KeyVaultName": {
+            "type": "string",
+            "metadata": {
+                "description": "Key Vault Name"
+            }            
+        },
+        "SecretPermissions": {
+            "type": "array",
+            "metadata": {
+                "description": "Secret Permissions"
+            }
+        },         
+        "ResourceObjectID": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource Object ID"
+            }            
+        }                      
+    },    
+    "variables": {
+        "tenantID": "[subscription().tenantId]"
+    },
+    
+    "resources": [
+        {
+            "apiVersion": "[parameters('KeyVaultAPIVersion')]",
+            "name": "[format('{0}/{1}', parameters('KeyVaultName'), 'add')]",
+            "type": "Microsoft.KeyVault/vaults/accessPolicies",            
+            "properties": {
+                "accessPolicies": [
+                    {
+                        "objectId": "[parameters('ResourceObjectID')]",
+                        "tenantId": "[variables('tenantId')]",
+                        "permissions": {
+                            "secrets": "[parameters('SecretPermissions')]"
+                        }
+                    }
+                ]
+            }
+        }
+    ]    
+}

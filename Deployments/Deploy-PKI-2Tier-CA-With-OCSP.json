@@ -379,7 +379,7 @@
         },
         "DC1VMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Domain Controller1 VMSize"
             }
@@ -406,7 +406,7 @@
         },
         "RCAVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Root CA VMSize"
             }
@@ -433,7 +433,7 @@
         },
         "ICAVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "Issuing CA VMSize"
             }
@@ -460,7 +460,7 @@
         },
         "OCSPVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "OCSP VMSize"
             }
@@ -735,7 +735,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/firstdc.json', parameters('_artifactsLocationSasToken')))]",
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/domaincontroller.json', parameters('_artifactsLocationSasToken')))]",
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
@@ -748,9 +748,12 @@
                     "computerName": {
                         "value": "[variables('dc1name')]"
                     },
-                    "DomainName": {
+                    "InternaldomainName": {
                         "value": "[variables('InternaldomainName')]"
                     },
+                    "PrimaryDC": {
+                        "value": "Yes"
+                    },                    
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
                     },
@@ -891,6 +894,12 @@
                     "dclastoctet": {
                         "value": "[variables('dc1lastoctet')]"
                     },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },                                        
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
                     },

@@ -256,7 +256,7 @@
         },
         "SQLVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D8s_v3",
+            "defaultValue": "Standard_d8ds_v5",
             "metadata": {
                 "description": "SQL VMSize"
             }

@@ -285,7 +285,7 @@
         },
         "VMVMSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_d2ds_v5",
             "metadata": {
                 "description": "VMSize"
             }
@@ -409,8 +409,11 @@
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
-                    "DomainName": {
+                    "InternaldomainName": {
                         "value": "[variables('InternaldomainName')]"
+                    },
+                    "PrimaryDC": {
+                        "value": "No"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"

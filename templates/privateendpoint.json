@@ -1,0 +1,77 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PrivateEndpointAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Private Endpoint API Version"
+            }
+        },
+        "ResourceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource Name"
+            }
+        },
+        "ResourceProviderType": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource Provider Type"
+            }
+        },        
+        "GroupId": {
+            "type": "string",
+            "metadata": {
+                "description": "Target Sub Resource"
+            }
+        },
+        "vnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network"
+            }
+        },
+        "SubnetName": {
+            "type": "string",
+            "metadata": {
+                "description": "Subnet Name"
+            }
+        }
+    },
+    "variables": {
+        "subnetId": "[resourceId(resourceGroup().name, 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('SubnetName'))]",
+        "privateLinkResource": "[resourceId(resourceGroup().name, parameters('ResourceProviderType'), parameters('ResourceName'))]",
+        "PrivateEndpointName": "[concat(parameters('ResourceName'), '-', parameters('GroupId'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateEndpoints",
+            "name": "[variables('PrivateEndpointName')]",
+            "apiVersion": "[parameters('PrivateEndpointAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "subnet": {
+                    "id": "[variables('subnetId')]"
+                },
+                "privateLinkServiceConnections": [
+                    {
+                        "name": "[variables('PrivateEndpointName')]",
+                        "properties": {
+                            "privateLinkServiceId": "[variables('privateLinkResource')]",
+                            "groupIds": [
+                                "[parameters('GroupId')]"
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "PrivateEndpointName": {
+            "type": "string",
+            "value": "[variables('PrivateEndpointName')]"
+        }                                                                                
+    }    
+}

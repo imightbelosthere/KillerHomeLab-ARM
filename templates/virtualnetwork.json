@@ -1,0 +1,70 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VirtualNetworkAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Virtual Network API Version"
+            }
+        },
+        "VirtualNetworkNameHash": {
+            "type": "string",
+            "metadata": {
+                "description": "VirtualNetwork Name Hash"
+            }
+        },
+        "vnetprefix": {
+            "type": "string",
+            "metadata": {
+                "description": "VNet prefix"
+            }
+        },
+        "subnets": {
+            "type": "array",
+            "metadata": {
+                "description": "Subnets Configuration Information"
+            }            
+        }
+    },
+    "variables": {
+        "VirtualNetworkHash": "[guid(resourceGroup().id, parameters('VirtualNetworkNameHash'))]",
+        "VirtualNetworkIdentifier": "[substring(variables('VirtualNetworkHash'), 24, 9)]",
+        "VirtualNetworkName": "[concat('vnet', variables('VirtualNetworkIdentifier'))]"
+    },     
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('VirtualNetworkName')]",
+            "apiVersion": "[parameters('VirtualNetworkAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('vnetprefix')]"
+                    ]
+                },
+                "copy": [
+                    {
+                        "name": "subnets",
+                        "count": "[length(parameters('subnets'))]",
+                        "input": {
+                            "name": "[parameters('subnets')[copyIndex('subnets')].name]",
+                            "properties": {
+                                "addressprefix": "[parameters('subnets')[copyIndex('subnets')].addressPrefix]",
+                                "delegations": "[parameters('subnets')[copyIndex('subnets')].delegations]"
+                            }                            
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "VirtualNetworkName": {
+            "type": "string",
+            "value": "[variables('VirtualNetworkName')]"
+            
+        }
+    }
+}

@@ -1,0 +1,2394 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "LogicAppType": {
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+                "Standard",
+                "Consumption"
+            ],
+            "metadata": {
+                "description": "Type of Logic App"
+            }
+        }, 
+        "WorkspaceLocation": {
+            "type": "string",
+            "defaultValue": "USGovVirginia",      
+            "metadata": {
+                "description": "Choose a Log Analytics Workspace Location"
+            }
+        },                
+        "TimeZone": {
+            "type": "string",
+            "defaultValue": "Eastern Standard Time",
+            "allowedValues": [
+                "Afghanistan Standard Time",
+                "Alaskan Standard Time",
+                "Aleutian Standard Time",
+                "Altai Standard Time",
+                "Arab Standard Time",
+                "Arabian Standard Time",
+                "Arabic Standard Time",
+                "Argentina Standard Time",
+                "Astrakhan Standard Time",
+                "Atlantic Standard Time",
+                "AUS Central Standard Time",
+                "Aus Central W. Standard Time",
+                "AUS Eastern Standard Time",
+                "Azerbaijan Standard Time",
+                "Azores Standard Time",
+                "Bahia Standard Time",
+                "Bangladesh Standard Time",
+                "Belarus Standard Time",
+                "Bougainville Standard Time",
+                "Canada Central Standard Time",
+                "Cape Verde Standard Time",
+                "Caucasus Standard Time",
+                "Cen. Australia Standard Time",
+                "Central America Standard Time",
+                "Central Asia Standard Time",
+                "Central Brazilian Standard Time",
+                "Central Europe Standard Time",
+                "Central European Standard Time",
+                "Central Pacific Standard Time",
+                "Central Standard Time (Mexico)",
+                "Central Standard Time",
+                "Chatham Islands Standard Time",
+                "China Standard Time",
+                "Cuba Standard Time",
+                "Dateline Standard Time",
+                "E. Africa Standard Time",
+                "E. Australia Standard Time",
+                "E. Europe Standard Time",
+                "E. South America Standard Time",
+                "Easter Island Standard Time",
+                "Eastern Standard Time (Mexico)",
+                "Eastern Standard Time",
+                "Egypt Standard Time",
+                "Ekaterinburg Standard Time",
+                "Fiji Standard Time",
+                "FLE Standard Time",
+                "Georgian Standard Time",
+                "GMT Standard Time",
+                "Greenland Standard Time",
+                "Greenwich Standard Time",
+                "GTB Standard Time",
+                "Haiti Standard Time",
+                "Hawaiian Standard Time",
+                "India Standard Time",
+                "Iran Standard Time",
+                "Israel Standard Time",
+                "Jordan Standard Time",
+                "Kaliningrad Standard Time",
+                "Korea Standard Time",
+                "Libya Standard Time",
+                "Line Islands Standard Time",
+                "Lord Howe Standard Time",
+                "Magadan Standard Time",
+                "Magallanes Standard Time",
+                "Marquesas Standard Time",
+                "Mauritius Standard Time",
+                "Middle East Standard Time",
+                "Montevideo Standard Time",
+                "Morocco Standard Time",
+                "Mountain Standard Time (Mexico)",
+                "Mountain Standard Time",
+                "Myanmar Standard Time",
+                "N. Central Asia Standard Time",
+                "Namibia Standard Time",
+                "Nepal Standard Time",
+                "New Zealand Standard Time",
+                "Newfoundland Standard Time",
+                "Norfolk Standard Time",
+                "North Asia East Standard Time",
+                "North Asia Standard Time",
+                "North Korea Standard Time",
+                "Omsk Standard Time",
+                "Pacific SA Standard Time",
+                "Pacific Standard Time (Mexico)",
+                "Pacific Standard Time",
+                "Pakistan Standard Time",
+                "Paraguay Standard Time",
+                "Qyzylorda Standard Time",
+                "Romance Standard Time",
+                "Russia Time Zone 10",
+                "Russia Time Zone 11",
+                "Russia Time Zone 3",
+                "Russian Standard Time",
+                "SA Eastern Standard Time",
+                "SA Pacific Standard Time",
+                "SA Western Standard Time",
+                "Saint Pierre Standard Time",
+                "Sakhalin Standard Time",
+                "Samoa Standard Time",
+                "Sao Tome Standard Time",
+                "Saratov Standard Time",
+                "SE Asia Standard Time",
+                "Singapore Standard Time",
+                "South Africa Standard Time",
+                "Sri Lanka Standard Time",
+                "Sudan Standard Time",
+                "Syria Standard Time",
+                "Taipei Standard Time",
+                "Tasmania Standard Time",
+                "Tocantins Standard Time",
+                "Tokyo Standard Time",
+                "Tomsk Standard Time",
+                "Tonga Standard Time",
+                "Transbaikal Standard Time",
+                "Turkey Standard Time",
+                "Turks And Caicos Standard Time",
+                "Ulaanbaatar Standard Time",
+                "US Eastern Standard Time",
+                "US Mountain Standard Time",
+                "UTC",
+                "UTC+12",
+                "UTC+13",
+                "UTC-02",
+                "UTC-08",
+                "UTC-09",
+                "UTC-11",
+                "Venezuela Standard Time",
+                "Vladivostok Standard Time",
+                "Volgograd Standard Time",
+                "W. Australia Standard Time",
+                "W. Central Africa Standard Time",
+                "W. Europe Standard Time",
+                "W. Mongolia Standard Time",
+                "West Asia Standard Time",
+                "West Bank Standard Time",
+                "West Pacific Standard Time",
+                "Yakutsk Standard Time"
+            ],
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },
+        "AutoShutdownEnabled": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "Enabled Auto Shutdown.  !!!If Enabled, AutoShutdownEmail MUST be added!!!!"
+            }
+        },
+        "AutoShutdownTime": {
+            "type": "string",
+            "defaultValue": "2000",
+            "metadata": {
+                "description": "24-Hour Clock Time for Auto-Shutdown Example: 1900 = 7PM"
+            }
+        },
+        "AutoShutdownEmail": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Auto-Shutdown notification Email Example:  user@domain.com"
+            }
+        },
+        "MessageTraceAccountUPN": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The UPN of the Message Trace Account"
+            }
+        },
+        "MessageTraceAccountPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password used for the Message Trace Account"
+            }
+        },        
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        },
+        "AzureUserObjectID": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Deployment Account Object ID"
+            }
+        },
+        "WindowsClientLicenseType": {
+            "type": "string",
+            "defaultValue": "None",
+            "allowedValues": [
+                "None",
+                "Windows_Client"
+            ],
+            "metadata": {
+                "description": "Windows Client OS License Type"
+            }
+        },
+        "vnet1ID": {
+            "type": "string",
+            "defaultValue": "172.16.1",
+            "metadata": {
+                "description": "VNet1 Prefix"
+            }
+        },
+        "WK1OSSku": {
+            "type": "string",
+            "defaultValue": "Windows-11",
+            "allowedValues": [
+                "Windows-11",
+                "Windows-10",
+                "Windows-7"
+            ],
+            "metadata": {
+                "description": "Workstation1 OS Sku"
+            }
+        },
+        "WK1OSVersion": {
+            "type": "string",
+            "defaultValue": "latest",
+            "metadata": {
+                "description": "WK1 OS Version Number (Example:  Windows-11=22000.675.220507, Windows-10=19044.1706.220505, Windows-7=7601.25954.220506)"
+            }
+        },
+        "WK1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_D2s_v3",
+            "metadata": {
+                "description": "Workstation1 VMSize"
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            },
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
+            },
+            "defaultValue": ""
+        }
+    },
+    "variables": {
+        "DeploymentName": "[deployment().name]",
+        "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
+        "PasswordKeyVaultName": "[concat('LAMT-', variables('Identifier'))]",
+        "SecretName": "[concat(resourceGroup().Name,'-Password')]",
+        "VNet1Prefix": "[concat(parameters('vnet1ID'),'.0/24')]",
+        "LogicAppSubnet": "LogicApp",
+        "LogicAppSubnetPrefix": "[concat(parameters('vnet1ID'),'.0/26')]",
+        "PrivateEndpointSubnet": "PrivateEndpoints",
+        "PrivateEndpointSubnetPrefix": "[concat(parameters('vnet1ID'),'.64/26')]",
+        "VirtualMachinesSubnet": "VirtualMachines",        
+        "VirtualMachinesSubnetPrefix": "[concat(parameters('vnet1ID'),'.128/26')]",
+        "BastionSubnetPrefix": "[concat(parameters('vnet1ID'),'.192/26')]",
+        "wk1nameHash": "[guid(resourceGroup().id, 'VirtualMachine')]",
+        "wk1Identifier": "[substring(variables('wk1nameHash'), 24, 9)]",
+        "wk1name": "[concat('vm', variables('wk1Identifier'))]" ,
+        "wk1IP": "[concat(parameters('vnet1ID'),'.',variables('wk1lastoctet'))]",
+        "wk1lastoctet": "132",
+        "AzureMonitorPrivateLinkScopeAPIVersion": "2021-07-01-preview",
+        "BastionHostAPIVersion": "2021-08-01",
+        "DeploymentAPIVersion": "2021-04-01",
+        "KeyVaultAPIVersion": "2021-11-01-preview",
+        "KeyVaultSecretAPIVersion": "2021-11-01-preview",
+        "LogAnalyticsWorkspaceAPIVersion": "2021-12-01-preview",
+        "LogicAppWorkFlowAPIVersion": "2019-05-01",      
+        "NetworkInterfacesAPIVersion": "2021-08-01",
+        "NetworkSecurityGroupAPIVersion": "2022-01-01",
+        "PrivateDNSZoneAPIVersion": "2020-06-01",
+        "PrivateDNSZoneGroupsAPIVersion": "2022-05-01",
+        "PrivateEndpointAPIVersion": "2022-05-01",        
+        "PublicIPAddressesAPIVersion": "2021-08-01",
+        "SchedulesAPIVersion": "2018-09-15",
+        "SecurityInsightsAPIVersion": "2021-03-01-preview",
+        "ServerFarmsAPIVersion": "2022-03-01",        
+        "StorageAccountAPIVersion": "2022-05-01",
+        "VirtualMachinesAPIVersion": "2022-03-01",
+        "VirtualNetworkAPIVersion": "2020-11-01",
+        "WebAppAPIVersion": "2022-03-01",
+        "WebAppConnectionAPIVersion": "2018-07-01-preview",
+        "WebAppConnectionPoliciesAPIVersion": "2016-06-01"     
+    },
+    "resources": [  
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Password-KeyVault-with-Secret",
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultwithsecret.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },
+                    "KeyVaultName": {
+                        "value": "[variables('PasswordKeyVaultName')]"
+                    },
+                    "SecretName": {
+                        "value": "[variables('SecretName')]"
+                    },
+                    "SecretValue": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    }
+                }
+            }
+        },    
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-VirtualNetwork-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/virtualnetwork.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "VirtualNetworkNameHash": {
+                        "value": "VirtualNetwork"
+                    },
+                    "vnetprefix": {
+                        "value": "[variables('vnet1Prefix')]"
+                    },
+                    "subnets": {
+                        "value": [
+                            {
+                                "name": "[variables('LogicAppSubnet')]",
+                                "addressprefix": "[variables('LogicAppSubnetPrefix')]",
+                                "delegations": [
+                                    {
+                                        "name": "delegation",
+                                        "properties": {
+                                            "serviceName": "Microsoft.Web/serverFarms"
+                                        }
+                                    }
+                                ]                                
+                            },
+                            {
+                                "name": "[variables('PrivateEndpointSubnet')]",
+                                "addressprefix": "[variables('PrivateEndpointSubnetPrefix')]",
+                                "delegations": [
+                                ]                                                                
+                            },
+                            {
+                                "name": "[variables('VirtualMachinesSubnet')]",
+                                "addressprefix": "[variables('VirtualMachinesSubnetPrefix')]",
+                                "delegations": [
+                                ]                                                                
+                            },
+                            {
+                                "name": "AzureBastionSubnet",
+                                "addressprefix": "[variables('BastionSubnetPrefix')]",
+                                "delegations": [
+                                ]                                                                
+                            }                                
+                        ]
+                    }                    
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BastionHost-01",
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/bastionhost.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "BastionHostAPIVersion": {
+                        "value": "[variables('BastionHostAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "publicIPAddressName": {
+                        "value": "[concat(reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value,'-Bastion-pip')]"
+                    },
+                    "AllocationMethod": {
+                        "value": "Static"
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnetName": {
+                        "value": "AzureBastionSubnet"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[and(equals(parameters('WK1OSSku'),'Windows-11'), equals(parameters('LogicAppType'),'Standard'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-11",
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-11"
+                    },
+                    "OSSku": {
+                        "value": "win11-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('VirtualMachinesSubnet')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[and(equals(parameters('WK1OSSku'),'Windows-10'), equals(parameters('LogicAppType'),'Standard'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-10",
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-10"
+                    },
+                    "OSSku": {
+                        "value": "win10-21h2-ent"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('VirtualMachinesSubnet')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[and(equals(parameters('WK1OSSku'),'Windows-7'), equals(parameters('LogicAppType'),'Standard'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-7",
+            "dependsOn": [
+                "Deploy-VirtualNetwork-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[variables('wk1name')]"
+                    },
+                    "computerIP": {
+                        "value": "[variables('wk1IP')]"
+                    },
+                    "Publisher": {
+                        "value": "MicrosoftWindowsDesktop"
+                    },
+                    "Offer": {
+                        "value": "Windows-7"
+                    },
+                    "OSSku": {
+                        "value": "win7-enterprise"
+                    },
+                    "OSVersion": {
+                        "value": "[parameters('WK1OSVersion')]"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnet1Name": {
+                        "value": "[variables('VirtualMachinesSubnet')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-StorageAccount",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/storage.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "StorageAccountAPIVersion": {
+                        "value": "[variables('StorageAccountAPIVersion')]"
+                    },   
+                    "StorageAccountNameHash": {
+                        "value": "StorageAccount"
+                    },
+                    "StorageAccountType": {
+                        "value": "Standard_LRS"
+                    },
+                    "StorageAccountProperties": {
+                        "value": {
+                            "supportsHttpsTrafficOnly": true,
+                            "minimumTlsVersion": "TLS1_2"                                                      
+                        }
+                    }                                        
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-ServerFarm",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/webserverfarm.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ServerFarmsAPIVersion": {
+                        "value": "[variables('ServerFarmsAPIVersion')]"
+                    },
+                    "ServerFarmNameHash": {
+                        "value": "ServerFarm"
+                    },                               
+                    "Sku": {
+                        "value": "WS1"
+                    },
+                    "Tier": {
+                        "value": "WorkflowStandard"
+                    }                    
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AzureMonitor-PrivateLinkScope",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatelinkscope.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AzureMonitorPrivateLinkScopeAPIVersion": {
+                        "value": "[variables('AzureMonitorPrivateLinkScopeAPIVersion')]"
+                    },
+                    "AzureMonitorPrivateLinkScopeNameHash": {
+                        "value": "AzureMonitorPrivateLinkScope"
+                    },                               
+                    "QueryAccessMode": {
+                        "value": "PrivateOnly"
+                    },
+                    "IngestionAccessMode": {
+                        "value": "PrivateOnly"
+                    }                    
+                }
+            }
+        },                               
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogAnalyticsWorkspace",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/loganalyticsworkspace.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "LogAnalyticsWorkspaceAPIVersion": {
+                        "value": "[variables('LogAnalyticsWorkspaceAPIVersion')]"
+                    },      
+                    "LogAnalyticsWorkspaceNameHash": {
+                        "value": "LogAnalyticsWorkspace"
+                    },                                  
+                    "WorkspaceLocation": {
+                        "value": "[parameters('WorkspaceLocation')]"
+                    },                    
+                    "sku": {
+                        "value": "PerGB2018"
+                    }            
+                }
+            }
+        },                                       
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AzureMonitor-PrivateLinkScope-Resource",
+            "dependsOn": [
+                "Deploy-AzureMonitor-PrivateLinkScope",
+                "Deploy-LogAnalyticsWorkspace"                
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatelinkscoperesource.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "AzureMonitorPrivateLinkScopeAPIVersion": {
+                        "value": "[variables('AzureMonitorPrivateLinkScopeAPIVersion')]"
+                    },      
+                    "LogAnalyticsWorkspaceName": {
+                        "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.WorkspaceName.value]"
+                    },                                  
+                    "AzureMonitorPrivateLinkScopeName": {
+                        "value": "[reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value]"
+                    },                                                      
+                    "ResourceID": {
+                        "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.ResourceID.value]"
+                    }         
+                }
+            }
+        },                                               
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Onboard-Sentinel",
+            "dependsOn": [
+                "Deploy-LogAnalyticsWorkspace"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/sentinel.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "SecurityInsightsAPIVersion": {
+                        "value": "[variables('SecurityInsightsAPIVersion')]"
+                    },      
+                    "LogAnalyticsWorkspaceName": {
+                        "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.WorkspaceName.value]"
+                    }
+                }
+            }
+        },                                                       
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-LogAnalytics-Connection",
+            "dependsOn": [
+                "Onboard-Sentinel"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappconnection.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppConnectionAPIVersion": {
+                        "value": "[variables('WebAppConnectionAPIVersion')]"
+                    },
+                    "ResourceAPIVersion": {
+                        "value": "[variables('LogAnalyticsWorkspaceAPIVersion')]"
+                    },                        
+                    "ResourceName": {
+                        "value": "[reference('Deploy-LogAnalyticsWorkspace').outputs.WorkspaceName.value]"
+                    },
+                    "ManagedAPIType": {
+                        "value": "azureloganalyticsdatacollector"
+                    }                    
+                }
+            }
+        },                                                               
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-KeyVault",
+            "dependsOn": [
+                "Onboard-Sentinel"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvault.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault"
+                    },      
+                    "KeyVaultProperties": {
+                        "value": {
+                            "enabledForDeployment": true,
+                            "enabledForDiskEncryption": true,
+                            "enabledForTemplateDeployment": true,
+                            "enableSoftDelete": true,
+                            "enablePurgeProtection": true,
+                            "softDeleteRetentionInDays": 7,
+                            "tenantId": "[subscription().tenantId]",
+                            "accessPolicies": [
+                                {
+                                    "objectId": "[parameters('AzureUserObjectID')]",
+                                    "tenantId": "[subscription().tenantId]",
+                                    "permissions": {
+                                        "secrets": [
+                                            "Get",
+                                            "List",
+                                            "Set"                            
+                                        ]
+                                    }
+                                }
+                            ],
+                            "sku": {
+                                "name": "standard",
+                                "family": "A"
+                            }                                                                                
+                        }
+                    }          
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-KeyVault-Username-Secret",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultsecret.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },   
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },                                  
+                    "SecretName": {
+                        "value": "Message-Trace-Account-UPN"
+                    },
+                    "SecretValue": {
+                        "value": "[parameters('MessageTraceAccountUPN')]"
+                    }                                        
+                }
+            }
+        },                                                                             
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-KeyVault-Password-Secret",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultsecret.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },   
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },                                  
+                    "SecretName": {
+                        "value": "Message-Trace-Account-Password"
+                    },
+                    "SecretValue": {
+                        "value": "[parameters('MessageTraceAccountPassword')]"
+                    }                                        
+                }
+            }
+        },  
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Consumption')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-KeyVaultConnection",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappconnection.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppConnectionAPIVersion": {
+                        "value": "[variables('WebAppConnectionAPIVersion')]"
+                    },
+                    "ResourceAPIVersion": {
+                        "value": "[variables('LogAnalyticsWorkspaceAPIVersion')]"
+                    },                        
+                    "ResourceName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },
+                    "ManagedAPIType": {
+                        "value": "keyvault"
+                    }                    
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Consumption')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Consumption-LogicApp",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVaultConnection"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappworkflow.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "LogicAppWorkFlowAPIVersion": {
+                        "value": "[variables('LogicAppWorkFlowAPIVersion')]"
+                    },  
+                    "WebAppNameHash": {
+                        "value": "WebApp"
+                    }
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Standard-LogicApp",
+            "dependsOn": [
+                "Deploy-LogicApp-ServerFarm",
+                "Deploy-AzureMonitor-PrivateLinkScope",
+                "Deploy-LogicApp-LogAnalytics-Connection",
+                "Deploy-LogicApp-KeyVault",
+                "Deploy-LogicApp-StorageAccount"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappstandard.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppAPIVersion": {
+                        "value": "[variables('WebAppAPIVersion')]"
+                    },  
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "WebAppConnectionAPIVersion": {
+                        "value": "[variables('WebAppConnectionAPIVersion')]"
+                    },                                                                                                                                                                                                                                                             
+                    "WebAppNameHash": {
+                        "value": "WebApp"
+                    },                    
+                    "ServerFarmName": {
+                        "value": "[reference('Deploy-LogicApp-ServerFarm').outputs.ServerFarmName.value]"
+                    },
+                    "StorageAccountName": {
+                        "value": "[reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value]"
+                    },
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    }                                      
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-FunctionApp",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault",
+                "Deploy-Standard-LogicApp"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/functionappsourcecontrol.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppAPIVersion": {
+                        "value": "[variables('WebAppAPIVersion')]"
+                    },      
+                    "WebAppName": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    }                                       
+                }
+            }
+        }, 
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Isolate-Standard-LogicApp",
+            "dependsOn": [
+                "Deploy-FunctionApp"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappstandardisolated.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppAPIVersion": {
+                        "value": "[variables('WebAppAPIVersion')]"
+                    },  
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "WebAppConnectionAPIVersion": {
+                        "value": "[variables('WebAppConnectionAPIVersion')]"
+                    },                                                                                                                                                                                                                                                             
+                    "WebAppNameHash": {
+                        "value": "WebApp"
+                    },                    
+                    "ServerFarmName": {
+                        "value": "[reference('Deploy-LogicApp-ServerFarm').outputs.ServerFarmName.value]"
+                    },
+                    "StorageAccountName": {
+                        "value": "[reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value]"
+                    },
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('LogicAppSubnet')]"
+                    }                                      
+                }
+            }
+        },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-LogAnalytics-Connection-Policy",
+            "dependsOn": [
+                "Isolate-Standard-LogicApp"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/logicappconnectionpolicy.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "WebAppConnectionPoliciesAPIVersion": {
+                        "value": "[variables('WebAppConnectionPoliciesAPIVersion')]"
+                    },      
+                    "WebAppName": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    },
+                    "WebAppObjectID": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppObjectID.value]"
+                    }                                                           
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AMPLS-PrivateEndpoint",
+            "dependsOn": [
+                "Deploy-LogicApp-LogAnalytics-Connection-Policy"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateendpoint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateEndpointAPIVersion": {
+                        "value": "[variables('PrivateEndpointAPIVersion')]"
+                    },      
+                    "ResourceName": {
+                        "value": "[reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value]"
+                    },
+                    "ResourceProviderType": {
+                        "value": "microsoft.insights/privatelinkscopes"
+                    },
+                    "GroupId": {
+                        "value": "azuremonitor"
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('PrivateEndpointSubnet')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AMPLS-PrivateEndpoint-DNSZones",
+            "dependsOn": [
+                "Deploy-AMPLS-PrivateEndpoint"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszoneloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.monitor.azure.us"                               
+                            },
+                            {
+                                "name": "privatelink.oms.opinsights.azure.us"                               
+                            },
+                            {
+                                "name": "privatelink.ods.opinsights.azure.us"                               
+                            },
+                            {
+                                "name": "privatelink.agentsvc.azure-automation.us"                               
+                            },
+                            {
+                                "name": "privatelink.blob.core.usgovcloudapi.net"                               
+                            }
+                        ]
+                    }                                                   
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AMPLS-PrivateEndpoint-DNSZone-Links",
+            "dependsOn": [
+                "Deploy-AMPLS-PrivateEndpoint-DNSZones"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelinkloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.monitor.azure.us"                               
+                            },
+                            {
+                                "name": "privatelink.oms.opinsights.azure.us"                               
+                            },
+                            {
+                                "name": "privatelink.ods.opinsights.azure.us"                               
+                            },
+                            {
+                                "name": "privatelink.agentsvc.azure-automation.us"                               
+                            },
+                            {
+                                "name": "privatelink.blob.core.usgovcloudapi.net"                               
+                            }
+                        ]
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    }                                                                       
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-AMPLS-PrivateEndpoint-DNSZone-Groups",
+            "dependsOn": [
+                "Deploy-AMPLS-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-monitor-azure-us",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.monitor.azure.us')]"
+                                        
+                                    }
+                                },
+                                {                            
+                                    "name": "privatelink-oms-opinsights-azure-us",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.oms.opinsights.azure.us')]"
+                                    }
+                                },
+                                {                            
+                                    "name": "privatelink-ods-opinsights-azure-us",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.ods.opinsights.azure.us')]"
+                                    }
+                                },
+                                {                            
+                                    "name": "privatelink-agentsvc-azure-automation-us",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.agentsvc.azure-automation.us')]"                                        
+                                    }
+                                },
+                                {                            
+                                    "name": "privatelink-blob-core-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.usgovcloudapi.net')]"                                                                                
+                                    }
+                                }      
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[reference('Deploy-AzureMonitor-PrivateLinkScope').outputs.AzureMonitorPrivateLinkScopeName.value]"
+                    },
+                    "GroupId": {
+                        "value": "azuremonitor"
+                    }                    
+                }
+            }
+        },                
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Storage-PrivateEndpoints",
+            "dependsOn": [
+                "Deploy-AMPLS-PrivateEndpoint-DNSZone-Groups"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateendpointloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateEndpointAPIVersion": {
+                        "value": "[variables('PrivateEndpointAPIVersion')]"
+                    },      
+                    "ResourceName": {
+                        "value": "[reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value]"
+                    },
+                    "ResourceProviderType": {
+                        "value": "Microsoft.Storage/storageAccounts"
+                    },
+                    "PrivateEndpointSettings": {
+                        "value": [
+                            {
+                                "name": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value, '-blob')]",
+                                "GroupId": "blob"                              
+                            },
+                            {
+                                "name": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value, '-table')]",
+                                "GroupId": "table"                              
+                            },
+                            {
+                                "name": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value, '-queue')]",
+                                "GroupId": "queue"                              
+                            },
+                            {
+                                "name": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value, '-file')]",
+                                "GroupId": "file"                              
+                            }
+                        ]
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('PrivateEndpointSubnet')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Storage-PrivateEndpoint-DNSZones",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoints"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszoneloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.file.core.usgovcloudapi.net"                               
+                            },
+                            {
+                                "name": "privatelink.queue.core.usgovcloudapi.net"                               
+                            },
+                            {
+                                "name": "privatelink.table.core.usgovcloudapi.net"                               
+                            }
+                        ]
+                    }                                                   
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Storage-PrivateEndpoint-DNSZone-Links",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZones"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelinkloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.file.core.usgovcloudapi.net"                               
+                            },
+                            {
+                                "name": "privatelink.queue.core.usgovcloudapi.net"                               
+                            },
+                            {
+                                "name": "privatelink.table.core.usgovcloudapi.net"                               
+                            }
+                        ]
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    }                                                                       
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BlobStorage-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-blob-core-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value)]"
+                    },
+                    "GroupId": {
+                        "value": "blob"
+                    }                    
+                }
+            }
+        },                              
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-QueueStorage-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-queue-core-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.queue.core.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value)]"
+                    },
+                    "GroupId": {
+                        "value": "queue"
+                    }                    
+                }
+            }
+        },                                     
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-FileStorage-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-file-core-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.file.core.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value)]"
+                    },
+                    "GroupId": {
+                        "value": "file"
+                    }                    
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-TableStorage-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-Storage-PrivateEndpoint-DNSZone-Links"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-table-core-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.table.core.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[concat(reference('Deploy-LogicApp-StorageAccount').outputs.StorageAccountName.value)]"
+                    },
+                    "GroupId": {
+                        "value": "table"
+                    }                    
+                }
+            }
+        },
+
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-KeyVault-PrivateEndpoint",
+            "dependsOn": [
+                "Deploy-TableStorage-PrivateEndpoint-DNSZone-Group"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateendpoint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateEndpointAPIVersion": {
+                        "value": "[variables('PrivateEndpointAPIVersion')]"
+                    },      
+                    "ResourceName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },
+                    "ResourceProviderType": {
+                        "value": "Microsoft.KeyVault/vaults"
+                    },
+                    "GroupId": {
+                        "value": "vault"
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('PrivateEndpointSubnet')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-KeyVault-PrivateEndpoint-DNSZone",
+            "dependsOn": [
+                "Deploy-KeyVault-PrivateEndpoint"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszoneloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.vaultcore.usgovcloudapi.net"                               
+                            }
+                        ]
+                    }                                                   
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-KeyVault-PrivateEndpoint-DNSZone-Link",
+            "dependsOn": [
+                "Deploy-KeyVault-PrivateEndpoint-DNSZone"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelinkloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.vaultcore.usgovcloudapi.net"                               
+                            }
+                        ]
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    }                                                                       
+                }
+            }
+        },                
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-KeyVault-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-KeyVault-PrivateEndpoint-DNSZone-Link"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-vaultcore-usgovcloudapi-net",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.usgovcloudapi.net')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },
+                    "GroupId": {
+                        "value": "vault"
+                    }                    
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Disable-PublicAccess-LogicApp-KeyVault",
+            "dependsOn": [
+                "Deploy-KeyVault-PrivateEndpoint-DNSZone-Group"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvault.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultNameHash": {
+                        "value": "KeyVault"
+                    },      
+                    "KeyVaultProperties": {
+                        "value": {
+                            "publicNetworkAccess": "Disabled",
+                            "enabledForDeployment": true,
+                            "enabledForDiskEncryption": true,
+                            "enabledForTemplateDeployment": true,
+                            "enableSoftDelete": true,
+                            "enablePurgeProtection": true,
+                            "softDeleteRetentionInDays": 7,
+                            "tenantId": "[subscription().tenantId]",
+                            "accessPolicies": [
+                                {
+                                    "objectId": "[parameters('AzureUserObjectID')]",
+                                    "tenantId": "[subscription().tenantId]",
+                                    "permissions": {
+                                        "secrets": [
+                                            "Get",
+                                            "List",
+                                            "Set"                            
+                                        ]
+                                    }
+                                }                                
+                            ],                            
+                            "sku": {
+                                "name": "standard",
+                                "family": "A"
+                            },
+                            "networkAcls": {
+                                "bypass": "AzureServices",
+                                "defaultAction": "Deny"
+                            }                                                                                     
+                        }
+                    }          
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Add-LogicApp-KeyVault-ACL",
+            "dependsOn": [
+                "Deploy-LogicApp-KeyVault",
+                "Deploy-Standard-LogicApp",
+                "Deploy-FunctionApp",
+                "Isolate-Standard-LogicApp",
+                "Disable-PublicAccess-LogicApp-KeyVault"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultacl.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },      
+                    "KeyVaultName": {
+                        "value": "[reference('Deploy-LogicApp-KeyVault').outputs.KeyVaultName.value]"
+                    },
+                    "SecretPermissions": {
+                        "value": [
+                            "Get",
+                            "List",
+                            "Set"                            
+                        ]
+                    },                                                      
+                    "ResourceObjectID": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppObjectId.value]"
+                    }
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint",
+            "dependsOn": [
+                "Add-LogicApp-KeyVault-ACL"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privateendpoint.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateEndpointAPIVersion": {
+                        "value": "[variables('PrivateEndpointAPIVersion')]"
+                    },      
+                    "ResourceName": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    },
+                    "ResourceProviderType": {
+                        "value": "Microsoft.Web/sites"
+                    },
+                    "GroupId": {
+                        "value": "sites"
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('PrivateEndpointSubnet')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint-DNSZone",
+            "dependsOn": [
+                "Deploy-LogicApp-PrivateEndpoint"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszoneloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.azurewebsites.us"                               
+                            }
+                        ]
+                    }                                                   
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint-DNSZone-Link",
+            "dependsOn": [
+                "Deploy-LogicApp-PrivateEndpoint-DNSZone"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonelinkloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },      
+                    "PrivateDNSZoneNameNames": {
+                        "value": [
+                            {
+                                "name": "privatelink.azurewebsites.us"                               
+                            }
+                        ]
+                    },
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    }                                                                       
+                }
+            }
+        },                
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-PrivateEndpoint-DNSZone-Group",
+            "dependsOn": [
+                "Deploy-LogicApp-PrivateEndpoint-DNSZone-Link"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/privatednszonegroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "PrivateDNSZoneGroupsAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneGroupsAPIVersion')]"
+                    },   
+                    "PrivateDnsZoneGroupProperties": {
+                        "value": {
+                            "privateDnsZoneConfigs": [                            
+                                {                            
+                                    "name": "privatelink-azurewebsites-us",
+                                    "properties": {
+                                        "privateDnsZoneId": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/privateDnsZones/privatelink.azurewebsites.us')]"
+                                        
+                                    }
+                                }
+                            ]                                                                                                                                                                      
+                        }
+                    },
+                    "ResourceName": {
+                        "value": "[reference('Deploy-Standard-LogicApp').outputs.WebAppName.value]"
+                    },
+                    "GroupId": {
+                        "value": "sites"
+                    }                    
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Disable-PublicAccess-LogicApp-StorageAccount",
+            "dependsOn": [
+                "Deploy-LogicApp-PrivateEndpoint-DNSZone-Group"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/storage.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "StorageAccountAPIVersion": {
+                        "value": "[variables('StorageAccountAPIVersion')]"
+                    },   
+                    "StorageAccountNameHash": {
+                        "value": "StorageAccount"
+                    },
+                    "StorageAccountType": {
+                        "value": "Standard_LRS"
+                    },
+                    "StorageAccountProperties": {
+                        "value": {
+                            "supportsHttpsTrafficOnly": true,
+                            "minimumTlsVersion": "TLS1_2",
+                            "allowBlobPublicAccess": false,
+                            "networkAcls": {
+                                "bypass": "AzureServices",
+                                "defaultAction": "Deny"
+                            }                                                                            
+                        }
+                    }                                        
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-NetworkSecurityGroup",
+            "dependsOn": [
+                "Disable-PublicAccess-LogicApp-StorageAccount"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },   
+                    "NetworkSecurityGroupNameHash": {
+                        "value": "NetworkSecurityGroup"
+                    }               
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-LogicApp-NetworkSecurityGroup-Rules",
+            "dependsOn": [
+                "Deploy-LogicApp-NetworkSecurityGroup"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/networksecuritygroupsecurityruleloop.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('PrivateDNSZoneAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
+                    },                    
+                    "RuleProperties": {
+                        "value": [
+                            {
+                                "name": "Allow-All-VirtualNetwork-Inbound",                                
+                                "properties": {
+                                    "access": "Allow",                               
+                                    "priority": "3000",
+                                    "direction": "Inbound",
+                                    "description": "Allow All Traffic within Virtual Network Inbound",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "*",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "VirtualNetwork"
+                                }
+                            },
+                            {
+                                "name": "Deny-All-Inbound",
+                                "properties": {
+                                    "access": "Deny",                               
+                                    "priority": "4000",
+                                    "direction": "Inbound",
+                                    "description": "Deny All Inbound Traffic",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",                                                           
+                                    "destinationPortRange": "*",
+                                    "sourceAddressPrefix": "*",                                                                                             
+                                    "destinationAddressPrefix": "*"
+                                }
+                            },                            
+                            {
+                                "name": "Allow-LogAppsManagement-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2000",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Logic App Management Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "LogicAppsManagement"
+                                }                                
+                            },                                                                                                                                            
+                            {
+                                "name": "Allow-ResourceManager-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2100",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Resource Manager Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzureResourceManager"
+                                }                                
+                            },                                                                                                                                            
+                            {
+                                "name": "Allow-AzurePortal-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2200",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Portal Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzurePortal"
+                                }                                
+                            },                                                                                                                
+                            {
+                                "name": "Allow-AzureAD-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2300",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443&80/TCP from Virtual Network to Azure Active Directory Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRanges": [
+                                        "443",
+                                        "80"
+                                    ],
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzureActiveDirectory"
+                                }                                
+                            },                                                                                    
+                            {
+                                "name": "Allow-AzureStorage-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2400",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Storage Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "Storage"
+                                }                                
+                            },                                                                  
+                            {
+                                "name": "Allow-AzureSQL-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2500",
+                                    "direction": "Outbound",
+                                    "description": "Allow 1433/TCP from Virtual Network to Azure Sql Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "1433",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "Sql"
+                                }                                
+                            },                                                                                    
+                            {
+                                "name": "Allow-AzureConnectors-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2600",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Connectors Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzureConnectors"
+                                }                                
+                            },                                                                                    
+                            {
+                                "name": "Allow-APIManagement-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2700",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443 and 3443 TCP from Virtual Network to Azure API Management Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRanges": [
+                                        "443",
+                                        "3443"
+                                    ],
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "ApiManagement"
+                                }                                
+                            },                                                        
+                            {
+                                "name": "Allow-AzureMonitor-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2800",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Azure Monitor Service Tag",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "AzureMonitor"
+                                }                                
+                            },                            
+                            {
+                                "name": "Allow-Office365-Outbound",
+                                "properties": {                                
+                                    "access": "Allow",                               
+                                    "priority": "2900",
+                                    "direction": "Outbound",
+                                    "description": "Allow 443/TCP from Virtual Network to Office M265 Gov IP's",
+                                    "protocol": "TCP",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "443",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefixes": [
+                                        "20.35.241.194",
+                                        "20.35.245.2",
+                                        "20.35.242.130",
+                                        "40.66.16.194",
+                                        "20.35.244.162",
+                                        "40.66.16.2",
+                                        "20.35.245.66",
+                                        "20.35.244.194",
+                                        "40.66.16.66",
+                                        "40.66.16.130",
+                                        "20.35.244.98",
+                                        "40.66.17.130"                                    
+                                    ]
+                                }                                
+                            },
+                            {
+                                "name": "Allow-All-VirtualNetwork-Outbound",                                
+                                "properties": {                                                                
+                                    "access": "Allow",                               
+                                    "priority": "3000",
+                                    "direction": "Outbound",
+                                    "description": "Allow All Traffic within Virtual Network Outbound",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "*",
+                                    "sourceAddressPrefix": "VirtualNetwork",
+                                    "destinationAddressPrefix": "VirtualNetwork"
+                                }
+                            },                                                                                    
+                            {
+                                "name": "Deny-All-Outbound",
+                                "properties": {                                                                                                
+                                    "access": "Deny",                               
+                                    "priority": "4000",
+                                    "direction": "Outbound",
+                                    "description": "Deny All Outbound Traffic",
+                                    "protocol": "*",
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "*",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "*"
+                                }
+                            }                            
+                        ]
+                    }                                                   
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-PrivateEndpoints-Subnet",
+            "dependsOn": [
+                "Deploy-LogicApp-NetworkSecurityGroup-Rules"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
+                    },                    
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('PrivateEndpointSubnet')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('PrivateEndpointSubnetPrefix')]"
+                    },
+                    "delegations": {
+                        "value": [
+                        ]                        
+                    }                                           
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('LogicAppType'),'Standard')]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-LogicApp-Subnet",
+            "dependsOn": [
+                "Associate-NSG-with-PrivateEndpoints-Subnet"
+            ],             
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },
+                    "NetworkSecurityGroupName": {
+                        "value": "[reference('Deploy-LogicApp-NetworkSecurityGroup').outputs.NetworkSecurityGroupName.value]"
+                    },                    
+                    "vnetName": {
+                        "value": "[reference('Deploy-VirtualNetwork-01').outputs.VirtualNetworkName.value]"
+                    },
+                    "subnetName": {
+                        "value": "[variables('LogicAppSubnet')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[variables('LogicAppSubnetPrefix')]"
+                    },
+                    "delegations": {
+                        "value": [
+                            {
+                                "name": "delegation",
+                                "properties": {
+                                    "serviceName": "Microsoft.Web/serverFarms"
+                                }
+                            }
+                        ]                        
+                    }                            
+                }
+            }
+        }                                       
+    ]
+}

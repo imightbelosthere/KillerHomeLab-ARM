@@ -14,12 +14,6 @@
                 "description": "Extension Type Handler Version"
             }
         },        
-        "domainName": {
-            "type": "string",
-          "metadata": {
-            "description": "The FQDN of the AD Domain created "
-          }
-        },
         "adminUsername": {
             "type": "string",
             "metadata": {
@@ -49,7 +43,19 @@
             "metadata": {
             "description": "VM name prefix initial number."
             }
-        },       
+        },
+        "InternaldomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "The FQDN of the AD Domain created "
+            }
+        },
+        "PrimaryDC": {
+            "type": "string",
+            "metadata": {
+                "description": "Is the Domain Controller Primary"
+            }
+        },                      
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -64,8 +70,8 @@
         }                
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/OTHERDC.zip', parameters('_artifactsLocationSasToken')))]",
-        "ConfigurationFunction": "OTHERDC.ps1\\OTHERDC"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/DOMAINCONTROLLER.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "DOMAINCONTROLLER.ps1\\DOMAINCONTROLLER"
     },
     "resources": [
         {
@@ -87,7 +93,8 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                         "Properties": {
-                            "DomainName": "[parameters('domainName')]",
+                            "InternaldomainName": "[parameters('InternaldomainName')]",
+                            "PrimaryDC": "[parameters('PrimaryDC')]",                            
                             "AdminCreds": {
                                 "UserName": "[parameters('adminUsername')]",
                                 "Password": "PrivateSettingsRef:AdminPassword1"

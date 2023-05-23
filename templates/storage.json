@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "StorageAPIVersion": {
+        "StorageAccountAPIVersion": {
             "type": "string",
             "metadata": {
                 "description": "Storage Account API Version"
@@ -13,30 +13,43 @@
             "metadata": {
                 "description": "Storage Account Name Hash"
             }
+        },
+        "StorageAccountType": {
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account Type"
+            }
+        },
+        "StorageAccountProperties": {
+            "type": "object",
+            "metadata": {
+                "description": "Storage Account Properties"
+            }
         }        
     },  
     "variables": {
-    "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
-    "Identifier": "[substring(variables('StorageAccountHash'), 24, 9)]",
-    "StorageAccountName": "[concat('sa', variables('Identifier'))]" ,
-    "StorageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]"
+        "StorageAccountHash": "[guid(resourceGroup().id, parameters('StorageAccountNameHash'))]",
+        "Identifier": "[substring(variables('StorageAccountHash'), 24, 9)]",
+        "StorageAccountName": "[concat('sa', variables('Identifier'))]" ,
+        "StorageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', variables('StorageAccountName'))]"
     },         
     "resources": [
         {
-            "apiVersion": "[parameters('StorageAPIVersion')]",
+            "apiVersion": "[parameters('StorageAccountAPIVersion')]",
             "type": "Microsoft.Storage/storageAccounts",
             "name": "[variables('storageAccountName')]",
             "location": "[resourceGroup().location]",
             "sku": { 
-                "name": "Standard_LRS"
+                "name": "[parameters('StorageAccountType')]"
             },
-            "kind": "StorageV2"
+            "kind": "StorageV2",
+            "properties": "[parameters('StorageAccountProperties')]"
         }             
     ],
     "outputs": {
         "Key": {
             "type": "string",
-            "value": "[listKeys(variables('StorageAccountId'), parameters('StorageAPIVersion')).keys[0].value]"
+            "value": "[listKeys(variables('StorageAccountId'), parameters('StorageAccountAPIVersion')).keys[0].value]"
         },
         "StorageAccountName": {
             "type": "string",

@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "RouteTableAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Table API Version"
+            }
+        },
+        "RouteTableName": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Table Name"
+            }
+        },
+        "RouteName": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Name"
+            }
+        },
+        "RouteAddressPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Name"
+            }
+        },
+        "RouteNextHop": {
+            "type": "string",
+            "metadata": {
+                "description": "Route Next Hop"
+            }
+        }                        
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('RouteTableName'),'/', parameters('RouteName'))]",
+            "type": "Microsoft.Network/routeTables/routes",
+            "apiVersion": "[parameters('RouteTableAPIVersion')]",
+            "properties": {
+                "addressPrefix": "[parameters('RouteAddressPrefix')]",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "[parameters('RouteNextHop')]"
+            }
+        }
+    ]
+}

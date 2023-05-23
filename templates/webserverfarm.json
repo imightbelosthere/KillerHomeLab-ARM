@@ -1,64 +1,50 @@
-{
+    {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "ServerFarmsAPIVersion": {
             "type": "string"
         },
-        "ServerFarmName": {
+        "ServerFarmNameHash": {
             "type": "string",
             "metadata": {
-                "description": "Service Plan Name"
-            }            
+                "description": "Service Plan Name Hash"
+            }
         },
-        "ServerFarmKind": {
+        "Sku": {
             "type": "string",
             "metadata": {
-                "description": "Service Farm OS Type:  windows, linux"
-            }            
-        },        
-        "sku": {
+                "description": "Service Sku Code"
+            }
+        },
+        "Tier": {
             "type": "string",
             "metadata": {
-                "description": "Service Sku:  Free, Shared, Basic, Standard, Premium, PremiumV2, PremiumV3"
-            }                        
-        },
-        "skucode": {
-            "type": "string",
-            "metadata": {
-                "description": "Service Sku Code:  F1, D1, B1, etc"
-            }             
-        },
-        "workerSize": {
-            "type": "string"
-        },
-        "workerSizeId": {
-            "type": "string"
-        },
-        "numberOfWorkers": {
-            "type": "string"
-        }
+                "description": "Service Sku Tier"
+            }
+        }        
     },
+    "variables": {
+        "ServerFarmHash": "[guid(resourceGroup().id, parameters('ServerFarmNameHash'))]",
+        "ServerFarmIdentifier": "[substring(variables('ServerFarmHash'), 24, 9)]",
+        "ServerFarmName": "[concat('sf', variables('ServerFarmIdentifier'))]"
+    },        
     "resources": [
         {
             "apiVersion": "[parameters('ServerFarmsAPIVersion')]",
-            "name": "[parameters('ServerFarmName')]",
+            "name": "[variables('ServerFarmName')]",
             "type": "Microsoft.Web/serverfarms",
             "location": "[resourceGroup().location]",
-            "kind": "[parameters('ServerFarmKind')]",
-            "tags": {},
-            "properties": {
-                "name": "[parameters('ServerFarmName')]",
-                "workerSize": "[parameters('workerSize')]",
-                "workerSizeId": "[parameters('workerSizeId')]",
-                "numberOfWorkers": "[parameters('numberOfWorkers')]",
-                "reserved": true,
-                "zoneRedundant": false
-            },
             "sku": {
-                "Tier": "[parameters('sku')]",
-                "Name": "[parameters('skuCode')]"
+                "name": "[parameters('Sku')]",
+                "tier": "[parameters('Tier')]"
             }
         }
-    ]
+    ],
+    "outputs": {
+        "ServerFarmName": {
+            "type": "string",
+            "value": "[variables('ServerFarmName')]"
+        }
+    }
 }

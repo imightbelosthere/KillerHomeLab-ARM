@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "PrivateDNSZoneGroupsAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Private DNS Zone Name"
+            }
+        },
+        "PrivateDnsZoneGroupProperties": {
+            "type": "object",
+            "metadata": {
+                "description": "Private DNS Zone Group Properties"
+            }
+        },
+        "ResourceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource Name"
+            }
+        },
+        "GroupId": {
+            "type": "string",
+            "metadata": {
+                "description": "Target Sub Resource"
+            }
+        }
+    },
+    "variables": {
+        "PrivateEndpointName": "[concat(parameters('ResourceName'), '-', parameters('GroupId'))]",
+        "PrivateDnsZoneGroupName": "[concat(variables('PrivateEndpointName'), '/', 'default')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+            "name": "[variables('PrivateDnsZoneGroupName')]",
+            "apiVersion": "[parameters('PrivateDNSZoneGroupsAPIVersion')]",
+            "location": "global",
+            "properties": "[parameters('PrivateDnsZoneGroupProperties')]"
+        }
+    ]
+}
