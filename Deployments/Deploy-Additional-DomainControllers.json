@@ -409,8 +409,11 @@
                     "ExtensionsTypeHandlerVersion": {
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
-                    "DomainName": {
+                    "InternaldomainName": {
                         "value": "[variables('InternaldomainName')]"
+                    },
+                    "PrimaryDC": {
+                        "value": "No"
                     },
                     "adminUsername": {
                         "value": "[parameters('adminUsername')]"
