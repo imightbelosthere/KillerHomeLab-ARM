@@ -1,4 +1,4 @@
-# Description
+# Deploy Additional Domain Controllers
 <img src="./x_Images/SpecifiedMachineCount.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
