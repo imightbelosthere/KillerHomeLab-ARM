@@ -21,7 +21,7 @@
             "apiVersion": "[parameters('WebAppAPIVersion')]",
             "name": "[format('{0}/{1}', parameters('WebAppName'), 'web')]",
             "properties": {
-                "repoUrl": "https://github.com/elliottfieldsjr/LogicApp.git",
+                "repoUrl": "https://github.com/elliottfieldsjr/EXOMT-LogicApp.git",
                 "branch": "main",
                 "isManualIntegration": true
             }
