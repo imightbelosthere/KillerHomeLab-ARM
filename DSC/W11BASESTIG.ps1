@@ -5,6 +5,20 @@
     )
 
     Import-DscResource -Module PowerSTIG
+    Import-DscResource -Module PSDscResources
+    Import-DscResource -Module SecurityPolicyDsc
+    Import-DscResource -Module SqlServerDsc
+    Import-DscResource -Module VMware.Vim
+    Import-DscResource -Module VMware.VimAutomation.Cis.Core
+    Import-DscResource -Module VMWare.VimAutomation.Common
+    Import-DscResource -Module VMWare.VimAutomation.Core
+    Import-DscResource -Module VMWare.VimAutomation.Sdk
+    Import-DscResource -Module VMWare.VimAutomation.Storage
+    Import-DscResource -Module VMWare.VimAutomation.Vds
+    Import-DscResource -Module VMWare.VSphereDSC
+    Import-DscResource -Module WindowsDefenderDsc
+    Import-DscResource -Module xDnsServer
+    Import-DscResource -Module xWebAdministration
 
     Node localhost
     {
