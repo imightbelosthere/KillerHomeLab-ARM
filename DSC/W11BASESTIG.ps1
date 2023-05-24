@@ -5,6 +5,7 @@
     )
 
     Import-DscResource -Module PowerSTIG
+    Import-Module WindowsClient
 
     Node localhost
     {
