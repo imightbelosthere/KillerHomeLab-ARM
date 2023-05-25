@@ -3,10 +3,15 @@
 
    param
    (
-        [String]$W11BASESTIGMOFSASUrl
+        [String]$W11BASESTIGMOFSASUrl,
+        [System.Management.Automation.PSCredential]$Admincreds                                  
     )
 
+    $ComputerName = $env:COMPUTERNAME
+    [System.Management.Automation.PSCredential ]$LocalCreds = New-Object System.Management.Automation.PSCredential ("${ComputerName}\$($AdminCreds.UserName)", $AdminCreds.Password)
+
     Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
+    Import-DscResource -Module ComputerManagementDsc # Used for Scheduled Task
 
     Node localhost
     {
@@ -73,6 +78,19 @@
             DependsOn = '[File]CopyXML'
         }
 
+        ScheduledTask CreateMOF
+        {
+            TaskName            = 'Create DSC MOF'
+            ActionExecutable    = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
+            ScheduleType        = 'Once'
+            StartTime           = (Get-Date).AddMinutes(1)
+            ActionArguments     = 'C:\W11BASESTIG\W11BASESTIG-MOF.ps1'
+            Enable              = $true
+            ExecuteAsCredential = $LocalCreds
+            LogonType           = 'Password'
+            DependsOn = '[xRemoteFile]W11BASESTIGMOF'
+        }
+
         Script APPLYW11BASESTIG
         {
             SetScript =
@@ -81,7 +99,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[xRemoteFile]W11BASESTIGMOF'
+            DependsOn = '[ScheduledTask]CreateMOF'
         }
     }
 }
