@@ -78,16 +78,24 @@
             DependsOn = '[File]CopyXML'
         }
 
-        ScheduledTask CreateMOF
+        Script CreateMOF
         {
-            TaskName            = 'Create DSC MOF'
-            ActionExecutable    = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
-            ScheduleType        = 'Once'
-            StartTime           = (Get-Date).AddMinutes(1)
-            ActionArguments     = 'C:\W11BASESTIG\W11BASESTIG-MOF.ps1'
-            Enable              = $true
-            ExecuteAsCredential = $LocalCreds
-            LogonType           = 'Password'
+            SetScript =
+            {
+                $Load = "$using:LocalCreds"
+                $Username = $LocalCreds.GetNetworkCredential().UserName
+                $Password = $LocalCreds.GetNetworkCredential().Password
+
+                # Create MOF Task
+                $scheduledtask = Get-ScheduledTask "Create MOF" -ErrorAction 0
+                $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\W11BASESTIG-MOF.ps1' -WorkingDirectory 'C:\W11BASESTIG'
+                IF ($scheduledtask -eq $null) {
+                    Register-ScheduledTask -Action $action -TaskName "Create MOF" -Description "Create MOF File" -User $Username -Password $Password
+                    Start-ScheduledTask "Create MOF"
+                }
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
             DependsOn = '[xRemoteFile]W11BASESTIGMOF'
         }
 
@@ -99,7 +107,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[ScheduledTask]CreateMOF'
+            DependsOn = '[Script]CreateMOF'
         }
     }
 }
