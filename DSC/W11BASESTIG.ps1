@@ -7,9 +7,6 @@
         [System.Management.Automation.PSCredential]$Admincreds                                  
     )
 
-    $ComputerName = $env:COMPUTERNAME
-    [System.Management.Automation.PSCredential ]$LocalCreds = New-Object System.Management.Automation.PSCredential ("${ComputerName}\$($AdminCreds.UserName)", $AdminCreds.Password)
-
     Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
     Import-DscResource -Module ComputerManagementDsc # Used for Scheduled Task
 
@@ -82,9 +79,9 @@
         {
             SetScript =
             {
-                $Load = "$using:LocalCreds"
-                $Username = $LocalCreds.GetNetworkCredential().UserName
-                $Password = $LocalCreds.GetNetworkCredential().Password
+                $Load = "$using:AdminCreds"
+                $Username = $AdminCreds.GetNetworkCredential().UserName
+                $Password = $AdminCreds.GetNetworkCredential().Password
 
                 # Create MOF Task
                 $scheduledtask = Get-ScheduledTask "Create MOF" -ErrorAction 0
