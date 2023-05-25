@@ -1,8 +1,5 @@
 ﻿configuration W11BASESTIG
 {
-
-    Import-DscResource -Module PowerSTIG
-
     Node localhost
     {
         LocalConfigurationManager
@@ -41,33 +38,6 @@
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[Script]EnableTls12'
-        }
-
-        WindowsClient BaseLine
-        {
-            OsVersion   = '11'
-            StigVersion = '1.2'
-            OrgSettings = 'C:\Program Files\WindowsPowerShell\Modules\PowerSTIG.zip\PowerSTIG\4.16.0\StigData\Processed\WindowsClient-11-1.2.org.default.xml'
-            Exception   = @{
-                'V-253369.b'= @{
-                    'ValueData'='0'
-                }
-                'V-253371'= @{
-                    'ValueData'='0'
-                }
-                'V-253448'= @{
-                    'ValueData'='0'
-                }
-                'V-253363'= @{
-                    'ValueData'='curve25519;NistP256;NistP384'
-                }
-                'V-253491'= @{
-                    'Identity'='Guests'
-                }
-                'V-253495'= @{
-                    'Identity'='Guests'
-                }
-            }
         }
     }
 }
