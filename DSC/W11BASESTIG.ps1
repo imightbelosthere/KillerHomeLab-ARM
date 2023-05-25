@@ -29,7 +29,7 @@
                 $InterfaceAlias=$($Interface.Name)
                 Set-NetConnectionProfile -InterfaceAlias $InterfaceAlias -NetworkCategory Private
                 Set-Item -Path WSMan:\localhost\MaxEnvelopeSizekb -Value 8192
-                winrm quickconfig -force\
+                Enable-PSRemoting –Force
 
                 Install-PackageProvider -Name NuGet -Force
                 Install-Module PowerSTIG -Force
