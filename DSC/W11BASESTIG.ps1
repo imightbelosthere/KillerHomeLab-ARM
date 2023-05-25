@@ -1,5 +1,13 @@
 ﻿configuration W11BASESTIG
 {
+
+   param
+   (
+        [String]$W11BASESTIGMOFSASUrl
+    )
+
+    Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
+
     Node localhost
     {
         LocalConfigurationManager
@@ -19,7 +27,7 @@
             TestScript = { $false}
         }
 
-        Script ConfigWinRM
+        Script InstallPowerSTIG
         {
             SetScript =
             {
@@ -38,6 +46,42 @@
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[Script]EnableTls12'
+        }
+
+        File STIGArtifacts
+        {
+            Type = 'Directory'
+            DestinationPath = 'C:\W11BASESTIG'
+            Ensure = "Present"
+            DependsOn = '[Script]InstallPowerSTIG'
+        }
+
+        File CopyXML
+        {
+            Ensure = "Present"
+            Type = "File"
+            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsClient-11-1.2.org.default.xml"
+            DestinationPath = "C:\W11BASESTIG\WindowsClient-11-1.2.org.1.0.xml"
+            DependsOn = "[File]STIGArtifacts"
+        }
+
+        xRemoteFile W11BASESTIGMOF
+        {
+            DestinationPath = "C:\W11BASESTIG\W11BASESTIG-MOF.ps1"
+            Uri             = $W11BASESTIGMOFSASUrl
+            UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
+            DependsOn = '[File]CopyXML'
+        }
+
+        Script APPLYW11BASESTIG
+        {
+            SetScript =
+            {
+                Start-DscConfiguration -Path C:\W11BASESTIG -Verbose -Wait
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            DependsOn = '[xRemoteFile]W11BASESTIGMOF'
         }
     }
 }
