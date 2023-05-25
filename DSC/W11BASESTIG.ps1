@@ -83,6 +83,19 @@
                 $Username = $AdminCreds.GetNetworkCredential().UserName
                 $Password = $AdminCreds.GetNetworkCredential().Password
 
+                $FileCheck = Get-ChildItem -Path C:\W11BASESTIG\W11BASESTIG-MOF.ps1 -ErrorAction 0
+                while (($FileCheck -eq $Null)){
+                    Start-Sleep 10
+                    $FileCheck = Get-ChildItem -Path C:\W11BASESTIG\W11BASESTIG-MOF.ps1 -ErrorAction 0
+                    Write-Host "Waiting for File to start downloading"
+                }
+
+                while (($FileCheck.Length -ne 1037)){
+                    Start-Sleep 10
+                    $FileCheck = Get-ChildItem -Path C:\W11BASESTIG\W11BASESTIG-MOF.ps1 -ErrorAction 0
+                    Write-Host "Waiting for File to finish downloading"
+                }
+
                 # Create MOF Task
                 $scheduledtask = Get-ScheduledTask "Create MOF" -ErrorAction 0
                 $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\W11BASESTIG-MOF.ps1' -WorkingDirectory 'C:\W11BASESTIG'
