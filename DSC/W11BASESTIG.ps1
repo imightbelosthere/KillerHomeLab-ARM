@@ -7,8 +7,12 @@
         [System.Management.Automation.PSCredential]$Admincreds                                  
     )
 
+    $ComputerName = $env:COMPUTERNAME
+    [System.Management.Automation.PSCredential ]$LocalCreds = New-Object System.Management.Automation.PSCredential ("${ComputerName}\$($AdminCreds.UserName)", $AdminCreds.Password)
+
     Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
     Import-DscResource -Module ComputerManagementDsc # Used for Scheduled Task
+
 
     Node localhost
     {
@@ -75,14 +79,10 @@
             DependsOn = '[File]CopyXML'
         }
 
-        Script CreateMOF
+        Script WaitForFileDownload
         {
             SetScript =
             {
-                $Load = "$using:AdminCreds"
-                $Username = $AdminCreds.GetNetworkCredential().UserName
-                $Password = $AdminCreds.GetNetworkCredential().Password
-
                 $FileCheck = Get-ChildItem -Path C:\W11BASESTIG\W11BASESTIG-MOF.ps1 -ErrorAction 0
                 while (($FileCheck -eq $Null)){
                     Start-Sleep 10
@@ -95,18 +95,23 @@
                     $FileCheck = Get-ChildItem -Path C:\W11BASESTIG\W11BASESTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to finish downloading"
                 }
-
-                # Create MOF Task
-                $scheduledtask = Get-ScheduledTask "Create MOF" -ErrorAction 0
-                $action = New-ScheduledTaskAction -Execute Powershell -Argument '.\W11BASESTIG-MOF.ps1' -WorkingDirectory 'C:\W11BASESTIG'
-                IF ($scheduledtask -eq $null) {
-                    Register-ScheduledTask -Action $action -TaskName "Create MOF" -Description "Create MOF File" -User $Username -Password $Password
-                    Start-ScheduledTask "Create MOF"
-                }
             }
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[xRemoteFile]W11BASESTIGMOF'
+        }
+
+        ScheduledTask MODVPNConfig
+        {
+            TaskName            = 'Create MOF'
+            ActionExecutable    = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
+            ScheduleType        = 'Once'
+            StartTime           = (Get-Date).AddMinutes(1)
+            ActionArguments     = 'C:\W11BASESTIG\W11BASESTIG-MOF.ps1'
+            Enable              = $true
+            ExecuteAsCredential = $LocalCreds
+            LogonType           = 'Password'
+            DependsOn = '[Script]WaitForFileDownload'
         }
 
         Script APPLYW11BASESTIG
@@ -117,7 +122,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[Script]CreateMOF'
+            DependsOn = '[ScheduledTask]MODVPNConfig'
         }
     }
 }
