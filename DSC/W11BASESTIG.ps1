@@ -116,7 +116,7 @@
         {
             SetScript =
             {
-                Start-DscConfiguration -Path C:\W11BASESTIG -Verbose -Wait
+                Start-DscConfiguration -Path C:\W11BASESTIG -Verbose -Wait -Force
             }
             GetScript =  { @{} }
             TestScript = { $false}
