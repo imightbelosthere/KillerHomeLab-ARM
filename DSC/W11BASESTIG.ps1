@@ -109,7 +109,7 @@
             StartTime           = (Get-Date).AddMinutes(1)
             ActionArguments     = 'C:\W11BASESTIG\W11BASESTIG-MOF.ps1'
             Enable              = $true
-            ExecuteAsCredential = $LocalCreds
+            ExecuteAsCredential = $Admincreds
             LogonType           = 'Password'
             DependsOn = '[Script]WaitForFileDownload'
         }
