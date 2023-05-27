@@ -109,7 +109,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[ScheduledTask]CreateMOF'
+            DependsOn = '[Script]WaitForFileDownload'
         }
 
         Script APPLYW11BASESTIG
