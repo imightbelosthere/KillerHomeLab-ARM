@@ -101,17 +101,15 @@
             DependsOn = '[xRemoteFile]W11BASESTIGMOF'
         }
 
-        ScheduledTask MODVPNConfig
+        Script CreateMOF
         {
-            TaskName            = 'Create MOF'
-            ActionExecutable    = 'C:\windows\system32\WindowsPowerShell\v1.0\powershell.exe'
-            ScheduleType        = 'Once'
-            StartTime           = (Get-Date).AddMinutes(1)
-            ActionArguments     = 'C:\W11BASESTIG\W11BASESTIG-MOF.ps1'
-            Enable              = $true
-            ExecuteAsCredential = $Admincreds
-            LogonType           = 'Password'
-            DependsOn = '[Script]WaitForFileDownload'
+            SetScript =
+            {
+                . C:\W11BASESTIG\W11BASESTIG-MOF.ps1
+            }
+            GetScript =  { @{} }
+            TestScript = { $false}
+            DependsOn = '[ScheduledTask]CreateMOF'
         }
 
         Script APPLYW11BASESTIG
@@ -122,7 +120,7 @@
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[ScheduledTask]MODVPNConfig'
+            DependsOn = '[Script]CreateMOF'
         }
     }
 }
