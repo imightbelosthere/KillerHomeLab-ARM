@@ -431,7 +431,7 @@
                         "value": "Windows-11"
                     },
                     "OSSku": {
-                        "value": "win11-21h2-ent"
+                        "value": "win11-22h2-ent"
                     },
                     "OSVersion": {
                         "value": "latest"

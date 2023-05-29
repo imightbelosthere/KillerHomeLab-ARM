@@ -57,42 +57,60 @@
         File STIGArtifacts
         {
             Type = 'Directory'
-            DestinationPath = 'C:\W11BASESTIG'
+            DestinationPath = 'C:\STIGS'
             Ensure = "Present"
             DependsOn = '[Script]InstallPowerSTIG'
         }
 
-        File CopyXML
+        File CopyWindowsClientXML
         {
             Ensure = "Present"
             Type = "File"
             SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsClient-11-1.2.org.default.xml"
-            DestinationPath = "C:\W11BASESTIG\WindowsClient-11-1.2.org.1.0.xml"
+            DestinationPath = "C:\STIGS\WindowsClient-11-1.2.org.1.0.xml"
+            DependsOn = "[File]STIGArtifacts"
+        }
+
+        File CopyWindowsDefenderXML
+        {
+            Ensure = "Present"
+            Type = "File"
+            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsDefender-All-2.4.org.default.xml"
+            DestinationPath = "C:\STIGS\WindowsDefender-All-2.4.org.1.0.xml"
+            DependsOn = "[File]STIGArtifacts"
+        }
+
+        File CopyWindowsFirewallXML
+        {
+            Ensure = "Present"
+            Type = "File"
+            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsFirewall-All-2.1.org.default.xml"
+            DestinationPath = "C:\STIGS\WindowsFirewall-All-2.1.org.1.0.xml"
             DependsOn = "[File]STIGArtifacts"
         }
 
         xRemoteFile W11BASESTIGMOF
         {
-            DestinationPath = "C:\W11BASESTIG\W11BASESTIG-MOF.ps1"
+            DestinationPath = "C:\STIGS\W11BASESTIG-MOF.ps1"
             Uri             = $W11BASESTIGMOFSASUrl
             UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
-            DependsOn = '[File]CopyXML'
+            DependsOn = '[File]CopyWindowsClientXML', '[File]CopyWindowsDefenderXML', '[File]CopyWindowsFirewallXML'
         }
 
         Script WaitForFileDownload
         {
             SetScript =
             {
-                $FileCheck = Get-ChildItem -Path C:\W11BASESTIG\W11BASESTIG-MOF.ps1 -ErrorAction 0
+                $FileCheck = Get-ChildItem -Path C:\STIGS\W11BASESTIG-MOF.ps1 -ErrorAction 0
                 while (($FileCheck -eq $Null)){
                     Start-Sleep 10
-                    $FileCheck = Get-ChildItem -Path C:\W11BASESTIG\W11BASESTIG-MOF.ps1 -ErrorAction 0
+                    $FileCheck = Get-ChildItem -Path C:\STIGS\W11BASESTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to start downloading"
                 }
 
                 while (($FileCheck.Length -ne 1037)){
                     Start-Sleep 10
-                    $FileCheck = Get-ChildItem -Path C:\W11BASESTIG\W11BASESTIG-MOF.ps1 -ErrorAction 0
+                    $FileCheck = Get-ChildItem -Path C:\STIGS\W11BASESTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to finish downloading"
                 }
             }
@@ -101,11 +119,11 @@
             DependsOn = '[xRemoteFile]W11BASESTIGMOF'
         }
 
-        Script CreateMOF
+        Script CreateWindowsClientMOF
         {
             SetScript =
             {
-                . C:\W11BASESTIG\W11BASESTIG-MOF.ps1
+                . C:\STIGS\W11BASESTIG-MOF.ps1
             }
             GetScript =  { @{} }
             TestScript = { $false}
@@ -116,11 +134,11 @@
         {
             SetScript =
             {
-                Start-DscConfiguration -Path C:\W11BASESTIG -Force
+                Start-DscConfiguration -Path C:\STIGS -Force
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[Script]CreateMOF'
+            DependsOn = '[Script]CreateWindowsClientMOF'
         }
     }
 }
