@@ -68,7 +68,7 @@
             Type = "File"
             SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsClient-11-1.2.org.default.xml"
             DestinationPath = "C:\STIGS\WindowsClient-11-1.2.org.1.0.xml"
-            DependsOn = "[File]STIGArtifacts"
+            DependsOn = '[File]STIGArtifacts'
         }
 
         File CopyWindowsDefenderXML
@@ -77,7 +77,7 @@
             Type = "File"
             SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsDefender-All-2.4.org.default.xml"
             DestinationPath = "C:\STIGS\WindowsDefender-All-2.4.org.1.0.xml"
-            DependsOn = "[File]STIGArtifacts"
+            DependsOn = '[File]CopyWindowsClientXML'
         }
 
         File CopyWindowsFirewallXML
@@ -86,7 +86,7 @@
             Type = "File"
             SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsFirewall-All-2.1.org.default.xml"
             DestinationPath = "C:\STIGS\WindowsFirewall-All-2.1.org.1.0.xml"
-            DependsOn = "[File]STIGArtifacts"
+            DependsOn = '[File]CopyWindowsDefenderXML'
         }
 
         xRemoteFile W11BASESTIGMOF
