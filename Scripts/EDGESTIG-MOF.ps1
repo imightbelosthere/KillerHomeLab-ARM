@@ -11,7 +11,7 @@ configuration EDGESTIG-MOF
 
     Node $NodeName
     {
-        WindowsDefender BaseLine
+        Edge BaseLine
         {
             StigVersion = '1.6'
             OrgSettings = 'C:\EDGESTIG-MOF\MS-Edge-1.6.org.1.0.xml'
