@@ -34,9 +34,8 @@
         }              
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/W11BASESTIG.zip', parameters('_artifactsLocationSasToken')))]",
-        "W11BASESTIGMOFSASUrl": "[uri(parameters('_artifactsLocation'), concat('Scripts/W11BASESTIG-MOF.ps1', parameters('_artifactsLocationSasToken')))]",        
-        "ConfigurationFunction": "W11BASESTIG.ps1\\W11BASESTIG"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/INSTALLPWRSTIG.zip', parameters('_artifactsLocationSasToken')))]",
+        "ConfigurationFunction": "INSTALLPWRSTIG.ps1\\INSTALLPWRSTIG"
     },
     "resources": [
         {
@@ -52,8 +51,7 @@
                 "settings": {
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
-                    "Properties": {
-                        "W11BASESTIGMOFSASUrl": "[variables('W11BASESTIGMOFSASUrl')]"
+                    "Properties": {   
                     }
                 },
                 "protectedSettings": {                                              

@@ -34,9 +34,9 @@
         }              
     },
     "variables": {
-        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/W11BASESTIG.zip', parameters('_artifactsLocationSasToken')))]",
-        "W11BASESTIGMOFSASUrl": "[uri(parameters('_artifactsLocation'), concat('Scripts/W11BASESTIG-MOF.ps1', parameters('_artifactsLocationSasToken')))]",        
-        "ConfigurationFunction": "W11BASESTIG.ps1\\W11BASESTIG"
+        "ModulesURL": "[uri(parameters('_artifactsLocation'), concat('DSC/FIREWALLSTIG.zip', parameters('_artifactsLocationSasToken')))]",
+        "FIREWALLSTIGMOFSASUrl": "[uri(parameters('_artifactsLocation'), concat('Scripts/FIREWALLSTIG-MOF.ps1', parameters('_artifactsLocationSasToken')))]",        
+        "ConfigurationFunction": "FIREWALLSTIG.ps1\\FIREWALLSTIG"
     },
     "resources": [
         {
@@ -53,7 +53,7 @@
                     "ModulesUrl": "[variables('modulesUrl')]",
                     "ConfigurationFunction": "[variables('configurationFunction')]",
                     "Properties": {
-                        "W11BASESTIGMOFSASUrl": "[variables('W11BASESTIGMOFSASUrl')]"
+                        "FIREWALLSTIGMOFSASUrl": "[variables('FIREWALLSTIGMOFSASUrl')]"
                     }
                 },
                 "protectedSettings": {                                              

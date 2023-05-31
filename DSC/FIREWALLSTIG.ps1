@@ -1,9 +1,10 @@
-﻿configuration W11BASESTIG
+﻿configuration FIREWALLSTIG
 {
 
    param
    (
-        [String]$W11BASESTIGMOFSASUrl
+        [String]$FIREWALLSTIGMOFSASUrl,
+        [System.Management.Automation.PSCredential]$Admincreds                                  
     )
 
     Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
@@ -31,69 +32,69 @@
         File STIGArtifacts
         {
             Type = 'Directory'
-            DestinationPath = 'C:\W11BASESTIG-MOF'
+            DestinationPath = 'C:\FIREWALLSTIG-MOF'
             Ensure = "Present"
         }
 
-        File CopyWindowsClientXML
+        File CopyWindowsFirewallXML
         {
             Ensure = "Present"
             Type = "File"
-            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsClient-11-1.2.org.default.xml"
-            DestinationPath = "C:\W11BASESTIG-MOF\WindowsClient-11-1.2.org.1.0.xml"
+            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsFirewall-All-2.1.org.default.xml"
+            DestinationPath = "C:\FIREWALLSTIG-MOF\WindowsFirewall-All-2.1.org.1.0.xml"
             DependsOn = '[File]STIGArtifacts'
         }
 
-        xRemoteFile W11BASESTIGMOF
+        xRemoteFile FIREWALLSTIGMOF
         {
-            DestinationPath = "C:\W11BASESTIG-MOF\W11BASESTIG-MOF.ps1"
-            Uri             = $W11BASESTIGMOFSASUrl
+            DestinationPath = "C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1"
+            Uri             = $FIREWALLSTIGMOFSASUrl
             UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
-            DependsOn = '[File]CopyWindowsClientXML'
+            DependsOn = '[File]CopyWindowsFirewallXML'
         }
 
         Script WaitForFileDownload
         {
             SetScript =
             {
-                $FileCheck = Get-ChildItem -Path C:\W11BASESTIG-MOF\W11BASESTIG-MOF.ps1 -ErrorAction 0
+                $FileCheck = Get-ChildItem -Path C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1 -ErrorAction 0
                 while (($FileCheck -eq $Null)){
                     Start-Sleep 10
-                    $FileCheck = Get-ChildItem -Path C:\W11BASESTIG-MOF\W11BASESTIG-MOF.ps1 -ErrorAction 0
+                    $FileCheck = Get-ChildItem -Path C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to start downloading"
                 }
 
-                while (($FileCheck.Length -ne 1045)){
+                while (($FileCheck.Length -ne 433)){
                     Start-Sleep 10
-                    $FileCheck = Get-ChildItem -Path C:\W11BASESTIG-MOF\W11BASESTIG-MOF.ps1 -ErrorAction 0
+                    $FileCheck = Get-ChildItem -Path C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to finish downloading"
                 }
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[xRemoteFile]W11BASESTIGMOF'
+            DependsOn = '[xRemoteFile]FIREWALLSTIGMOF'
         }
 
-        Script CreateWindowsClientMOF
+        Script CreateFirewallMOF
         {
             SetScript =
             {
-                . C:\W11BASESTIG-MOF\W11BASESTIG-MOF.ps1
+                . C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1
             }
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[Script]WaitForFileDownload'
         }
 
-        Script APPLYW11BASESTIG
+        Script APPLYFIREWALLSTIG
         {
             SetScript =
             {
-                Start-DscConfiguration -Path C:\W11BASESTIG-MOF -Force
+                Start-DscConfiguration -Path C:\FIREWALLSTIG-MOF -Force
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[Script]CreateWindowsClientMOF'
+            DependsOn = '[Script]CreateFirewallMOF'
         }
     }
 }

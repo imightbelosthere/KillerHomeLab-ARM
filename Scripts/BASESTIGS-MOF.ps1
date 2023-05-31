@@ -15,7 +15,7 @@ configuration W11BASESTIG-MOF
         {
             OsVersion   = '11'
             StigVersion = '1.2'
-            OrgSettings = 'C:\W11BASESTIG-MOF\WindowsClient-11-1.2.org.1.0.xml'
+            OrgSettings = 'C:\STIGS\WindowsClient-11-1.2.org.1.0.xml'
             Exception   = @{
                 'V-253369.b'= @{
                     'ValueData'='0'
@@ -37,7 +37,21 @@ configuration W11BASESTIG-MOF
                 }
             }
         }
+
+        WindowsDefender BaseLine
+        {
+            StigVersion = '2.4'
+            OrgSettings = 'C:\STIGS\WindowsDefender-All-2.4.org.1.0.xml'
+            DependsOn = '[WindowsClient]BaseLine'
+        }
+
+        WindowsFirewall BaseLine
+        {
+            StigVersion = '2.1'
+            OrgSettings = 'C:\STIGS\WindowsFirewall-All-2.1.org.1.0.xml'
+            DependsOn = '[WindowsDefender]BaseLine'
+        }
     }
 }
 
-W11BASESTIG-MOF -OutputPath C:\W11BASESTIG-MOF -Verbose
+W11BASESTIG-MOF -OutputPath C:\STIGS -Verbose
