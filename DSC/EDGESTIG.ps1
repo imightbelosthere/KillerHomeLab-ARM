@@ -1,9 +1,9 @@
-﻿configuration FIREWALLSTIG
+﻿configuration EDGESTIG
 {
 
    param
    (
-        [String]$FIREWALLSTIGMOFSASUrl
+        [String]$EDGESTIGMOFSASUrl
     )
 
     Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
@@ -31,69 +31,69 @@
         File STIGArtifacts
         {
             Type = 'Directory'
-            DestinationPath = 'C:\FIREWALLSTIG-MOF'
+            DestinationPath = 'C:\EDGESTIG-MOF'
             Ensure = "Present"
         }
 
-        File CopyWindowsFirewallXML
+        File CopyMicrosoftEdgeXML
         {
             Ensure = "Present"
             Type = "File"
-            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsFirewall-All-2.1.org.default.xml"
-            DestinationPath = "C:\FIREWALLSTIG-MOF\WindowsFirewall-All-2.1.org.1.0.xml"
+            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\MS-Edge-1.6.org.default.xml"
+            DestinationPath = "C:\EDGESTIG-MOF\MS-Edge-1.6.org.1.0.xml"
             DependsOn = '[File]STIGArtifacts'
         }
 
-        xRemoteFile FIREWALLSTIGMOF
+        xRemoteFile EDGESTIGMOF
         {
-            DestinationPath = "C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1"
-            Uri             = $FIREWALLSTIGMOFSASUrl
+            DestinationPath = "C:\EDGESTIG-MOF\EDGESTIG-MOF.ps1"
+            Uri             = $EDGESTIGMOFSASUrl
             UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
-            DependsOn = '[File]CopyWindowsFirewallXML'
+            DependsOn = '[File]CopyMicrosoftEdgeXML'
         }
 
         Script WaitForFileDownload
         {
             SetScript =
             {
-                $FileCheck = Get-ChildItem -Path C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1 -ErrorAction 0
+                $FileCheck = Get-ChildItem -Path C:\EDGESTIG-MOF\EDGESTIG-MOF.ps1 -ErrorAction 0
                 while (($FileCheck -eq $Null)){
                     Start-Sleep 10
-                    $FileCheck = Get-ChildItem -Path C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1 -ErrorAction 0
+                    $FileCheck = Get-ChildItem -Path C:\EDGESTIG-MOF\EDGESTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to start downloading"
                 }
 
-                while (($FileCheck.Length -ne 433)){
+                while (($FileCheck.Length -ne 405)){
                     Start-Sleep 10
-                    $FileCheck = Get-ChildItem -Path C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1 -ErrorAction 0
+                    $FileCheck = Get-ChildItem -Path C:\EDGESTIG-MOF\EDGESTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to finish downloading"
                 }
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[xRemoteFile]FIREWALLSTIGMOF'
+            DependsOn = '[xRemoteFile]EDGESTIGMOF'
         }
 
-        Script CreateFirewallMOF
+        Script CreateEdgeMOF
         {
             SetScript =
             {
-                . C:\FIREWALLSTIG-MOF\FIREWALLSTIG-MOF.ps1
+                . C:\EDGESTIG-MOF\EDGESTIG-MOF.ps1
             }
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[Script]WaitForFileDownload'
         }
 
-        Script APPLYFIREWALLSTIG
+        Script APPLYEDGESTIG
         {
             SetScript =
             {
-                Start-DscConfiguration -Path C:\FIREWALLSTIG-MOF -Force
+                Start-DscConfiguration -Path C:\EDGESTIG-MOF -Force
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[Script]CreateFirewallMOF'
+            DependsOn = '[Script]CreateEdgeMOF'
         }
     }
 }
