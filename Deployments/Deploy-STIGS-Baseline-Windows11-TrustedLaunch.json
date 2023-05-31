@@ -210,11 +210,33 @@
         },                
         "WKIP": {
             "type": "string",
-            "defaultValue": "172.16.1.210",
+            "defaultValue": "172.19.2.210",
             "metadata": {
                 "description": "Workstation IP"
             }
         },
+        "WKSku": {
+            "type": "string",
+            "defaultValue": "win11-22h2-ent",
+            "allowedValues": [
+                "win11-22h2-ent",
+                "win11-22h2-avd"
+            ],
+            "metadata": {
+                "description": "Windows OS "
+            }
+        },                
+        "WindowsClientLicenseType": {
+            "type": "string",
+            "defaultValue": "None",
+            "allowedValues": [
+                "None",
+                "Windows_Client"
+            ],
+            "metadata": {
+                "description": "Windows Client OS License Type"
+            }
+        },        
         "WK1VMSize": {
             "type": "string",
             "defaultValue": "Standard_d2ds_v5",
@@ -241,7 +263,7 @@
             "metadata": {
                 "description": "Deployment Account Object ID"
             }
-        },        
+        },                
         "_artifactsLocation": {
             "type": "string",
             "metadata": {
@@ -431,13 +453,13 @@
                         "value": "Windows-11"
                     },
                     "OSSku": {
-                        "value": "win11-22h2-ent"
+                        "value": "[parameters('WKSku')]"
                     },
                     "OSVersion": {
                         "value": "latest"
                     },
                     "LicenseType": {
-                        "value": "Windows_Client"
+                        "value": "[parameters('WindowsClientLicenseType')]"
                     },
                     "VMSize": {
                         "value": "[parameters('WK1VMSize')]"
