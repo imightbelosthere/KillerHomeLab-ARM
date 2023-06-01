@@ -11,7 +11,7 @@ This Deployment deploys the following items:
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
-- Install PowerSTIG
+- Install PowerSTIG (https://github.com/microsoft/PowerStig)
 - Apply Windows 11 Baseline STIGs
 - Apply Windows Defender Baseline STIGs
 - Apply Windows Firewall Baseline STIGs
