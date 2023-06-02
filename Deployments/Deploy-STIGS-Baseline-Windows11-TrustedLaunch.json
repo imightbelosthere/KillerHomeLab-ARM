@@ -284,6 +284,8 @@
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
         "KeyVaultName": "[concat('ADSS-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
+        "Publisher": "MicrosoftWindowsDesktop",
+        "Offer": "Windows-11",
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "NetworkSecurityGroupAPIVersion": "2022-01-01",         
@@ -447,10 +449,10 @@
                         "value": "[parameters('WKIP')]"
                     },
                     "Publisher": {
-                        "value": "MicrosoftWindowsDesktop"
+                        "value": "[variables('Publisher')]"
                     },
                     "Offer": {
-                        "value": "Windows-11"
+                        "value": "[variables('Offer')]"
                     },
                     "OSSku": {
                         "value": "[parameters('WKSku')]"

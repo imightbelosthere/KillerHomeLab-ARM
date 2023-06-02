@@ -1,0 +1,135 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "GalleryAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Gallery API Version"
+            }
+        },
+        "ImageDefinitionAPIVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Image Definition API Version"
+            }
+        },
+        "GalleryName": {
+            "type": "string",
+            "metadata": {
+                "description": "Gallery Name"
+            }
+        },
+        "ImageDefinitionName": {
+            "type": "string",
+            "metadata": {
+                "description": "Image Definition Name"
+            }
+        },        
+        "ImageDefinitionVersion": {
+            "type": "string",
+            "metadata": {
+                "description": "Image Definition Version"
+            }
+        },                
+        "Publisher": {
+            "type": "string",
+            "metadata": {
+                "description": "Publisher Name"
+            }
+        },
+        "Offer": {
+            "type": "string",
+            "metadata": {
+                "description": "Offer Name"
+            }
+        },
+        "Sku": {
+            "type": "string",
+            "metadata": {
+                "description": "Sku Name"
+            }
+        },
+        "SecurityType": {
+            "type": "string",
+            "metadata": {
+                "description": "VM Security Type"
+            }
+        },
+        "SourceVMID": {
+            "type": "string",
+            "metadata": {
+                "description": "VM Resource ID"
+            }
+        }        
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/galleries",
+            "name": "[parameters('GalleryName')]",
+            "apiVersion": "[parameters('GalleryAPIVersion')]",
+            "location": "[resourceGroup().location]"
+        },
+        {
+            "type": "Microsoft.Compute/galleries/images",
+            "name": "[concat(parameters('GalleryName'), '/', parameters('imageDefinitionName'))]",
+            "apiVersion": "[parameters('ImageDefinitionAPIVersion')]",            
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries/', parameters('GalleryName'))]"
+            ],            
+            "properties": {
+                "osType": "Windows",
+                "osState": "Generalized",
+                "identifier": {
+                    "publisher": "[parameters('publisher')]",
+                    "offer": "[parameters('offer')]",
+                    "sku": "[parameters('sku')]"
+                },
+                "hyperVGeneration": "V2",
+                "features": [
+                    {
+                        "name": "securityType",
+                        "value": "[parameters('securityType')]"
+                    }
+                ],
+                "recommended": {
+                    "vCPUs": {
+                        "min": "1",
+                        "max": "16"
+                    },
+                    "memory": {
+                        "min": "1",
+                        "max": "32"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/galleries/images/versions",
+            "name": "[concat(parameters('galleryName'), '/', parameters('ImageDefinitionName'), '/', parameters('ImageDefinitionVersion'))]",
+            "apiVersion": "[parameters('GalleryAPIVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries/', parameters('GalleryName'))]",
+                "[concat('Microsoft.Compute/galleries/', parameters('GalleryName'), '/images/', parameters('ImageDefinitionName'))]"
+            ],
+            "properties": {
+                "publishingProfile": {
+                    "replicaCount": "1",
+                    "targetRegions": {
+                        "name": "[resourceGroup().location]",
+                        "regionalReplicaCount": 1,
+                        "storageAccountType": "Standard_LRS"                        
+                    },
+                    "excludeFromLatest": false
+                },
+                "storageProfile": {
+                    "source": {
+                        "id": "[parameters('SourceVmId')]"
+                    }
+                }
+            }
+        }               
+    ]
+}
