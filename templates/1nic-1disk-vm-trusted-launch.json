@@ -223,5 +223,11 @@
                 "targetResourceId": "[variables('VMId')]"
             }
         }
-    ]
+    ],
+    "outputs": {
+        "VMId": {
+            "type": "string",
+            "value": "[variables('VMId')]"
+        }
+    }    
 }

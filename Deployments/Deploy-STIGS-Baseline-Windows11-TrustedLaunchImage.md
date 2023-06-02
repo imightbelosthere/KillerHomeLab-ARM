@@ -1,12 +1,9 @@
-# Deploy Trusted Launch Windows 11 Baseline STIG'd VM
+# Deploy Trusted Launch Windows 11 Baseline STIG'd Image
 <img src="./x_Images/TrustedLaunchWindows11STIGBaseline.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
-- 1 - Bastion Host
-- 1 - Network Security Group
-- 1 - Trusted Launch Windows Workstation (Windows 11)
-- 1 - Azure KeyVault with Secret contianing Deployment Password
+- 1 - Windows 11 STIG'd Image Gallery/Image Definition
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
@@ -15,6 +12,8 @@ The deployment leverages Desired State Configuration scripts to further customiz
 - Apply Windows Defender Baseline STIGs
 - Apply Windows Firewall Baseline STIGs
 - Apply Microsoft Edge Baseline STIGs
+- Create Gallery
+- Create Image Definition
 
 All Virtual Machines can be accessed via the [Bastion Host](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) that was deployed by using the Username and Password provided during depoyment.  The password can be manually entered or retrieved from the KeyVault that is creatd during deployment.
 
@@ -32,8 +31,6 @@ Parameters that support changes
 - AutoShutdownEmail.  Auto-Shutdown notification Email (Example:  user@domain.com)
 - VNetName.  Virtual Network Name
 - VMSubnetName.  Virtual Machine Subnet Name
-- AzureBastionSubnetPrefix.  Azure Bastion Subnet Prefix (Example:  10.1.1.253.0/24).
-- SourceIPRange.  Source Public IP or Public IP Range (Example:  52.x.21.200)
 - WKName.  Enter Workstation Name
 - WKIP.  Enter Workstation IP
 - WKSku.  Select win11-22h2-ent or win11-22h2-ent Worksation OS Sku
@@ -41,4 +38,3 @@ Parameters that support changes
 - WK1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
-- Azure UserObject ID.  Object ID for the Azure Using running the deployment
