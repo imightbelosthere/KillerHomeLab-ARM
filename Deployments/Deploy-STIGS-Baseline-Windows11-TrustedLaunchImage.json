@@ -597,12 +597,6 @@
                     }, 
                     "SourceVMID": {
                         "value": "[reference('Deploy-Workstation-01-11').outputs.VMId.value]"             
-                    },                                                                                                                                                                                                                                                                                                                                                                                                                                                             
-                    "_artifactsLocation": {
-                        "value": "[parameters('_artifactsLocation')]"
-                    },
-                    "_artifactsLocationSasToken": {
-                        "value": "[parameters('_artifactsLocationSasToken')]"
                     }
                 }
             }
