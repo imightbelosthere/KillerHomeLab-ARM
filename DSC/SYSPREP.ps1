@@ -24,6 +24,7 @@
             Ensure = "Absent"
             Type = "Directory"
             DestinationPath = "C:\Windows\Panther"
+            Force = true
         }
 
         Script PrepareMachine
