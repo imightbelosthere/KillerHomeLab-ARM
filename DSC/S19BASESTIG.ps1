@@ -1,9 +1,9 @@
-﻿configuration S22BASESTIG
+﻿configuration S19BASESTIG
 {
 
    param
    (
-        [String]$S22BASESTIGMOFSASUrl
+        [String]$S19BASESTIGMOFSASUrl
     )
 
     Import-DscResource -Module xPSDesiredStateConfiguration # Used for xRemoteFile
@@ -31,7 +31,7 @@
         File STIGArtifacts
         {
             Type = 'Directory'
-            DestinationPath = 'C:\S22BASESTIG-MOF'
+            DestinationPath = 'C:\S19BASESTIG-MOF'
             Ensure = "Present"
         }
 
@@ -39,15 +39,15 @@
         {
             Ensure = "Present"
             Type = "File"
-            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsServer-2022-MS-1.1.org.default.xml"
-            DestinationPath = "C:\S22BASESTIG-MOF\WindowsServer-2022-MS-1.1.org.1.0.xml"
+            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsServer-2019-MS-2.4.org.default.xml"
+            DestinationPath = "C:\S22BASESTIG-MOF\WindowsServer-2019-MS-2.4.org.1.0.xml"
             DependsOn = '[File]STIGArtifacts'
         }
 
-        xRemoteFile S22BASESTIGMOF
+        xRemoteFile S19BASESTIGMOF
         {
-            DestinationPath = "C:\S22BASESTIG-MOF\S22BASESTIG-MOF.ps1"
-            Uri             = $S22BASESTIGMOFSASUrl
+            DestinationPath = "C:\S19BASESTIG-MOF\S19BASESTIG-MOF.ps1"
+            Uri             = $S19BASESTIGMOFSASUrl
             UserAgent       = "[Microsoft.PowerShell.Commands.PSUserAgent]::InternetExplorer"
             DependsOn = '[File]CopyWindowsServerXML'
         }
@@ -56,40 +56,40 @@
         {
             SetScript =
             {
-                $FileCheck = Get-ChildItem -Path C:\S22BASESTIG-MOF\S22BASESTIG-MOF.ps1 -ErrorAction 0
+                $FileCheck = Get-ChildItem -Path C:\S19BASESTIG-MOF\S19BASESTIG-MOF.ps1 -ErrorAction 0
                 while (($FileCheck -eq $Null)){
                     Start-Sleep 10
-                    $FileCheck = Get-ChildItem -Path C:\S22BASESTIG-MOF\S22BASESTIG-MOF.ps1 -ErrorAction 0
+                    $FileCheck = Get-ChildItem -Path C:\S19BASESTIG-MOF\S19BASESTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to start downloading"
                 }
 
-                while (($FileCheck.Length -ne 845)){
+                while (($FileCheck.Length -ne 1045)){
                     Start-Sleep 10
-                    $FileCheck = Get-ChildItem -Path C:\S22BASESTIG-MOF\S22BASESTIG-MOF.ps1 -ErrorAction 0
+                    $FileCheck = Get-ChildItem -Path C:\S19BASESTIG-MOF\S19BASESTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to finish downloading"
                 }
             }
             GetScript =  { @{} }
             TestScript = { $false}
-            DependsOn = '[xRemoteFile]S22BASESTIGMOF'
+            DependsOn = '[xRemoteFile]S19BASESTIGMOF'
         }
 
         Script CreateWindowsServerMOF
         {
             SetScript =
             {
-                . C:\S22BASESTIG-MOF\S22BASESTIG-MOF.ps1
+                . C:\S19BASESTIG-MOF\S19BASESTIG-MOF.ps1
             }
             GetScript =  { @{} }
             TestScript = { $false}
             DependsOn = '[Script]WaitForFileDownload'
         }
 
-        Script APPLYS22BASESTIG
+        Script APPLYS19BASESTIG
         {
             SetScript =
             {
-                Start-DscConfiguration -Path C:\S22BASESTIG-MOF -Force
+                Start-DscConfiguration -Path C:\S19BASESTIG-MOF -Force
             }
             GetScript =  { @{} }
             TestScript = { $false}
