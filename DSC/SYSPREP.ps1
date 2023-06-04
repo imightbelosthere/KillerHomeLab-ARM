@@ -31,7 +31,7 @@
         {
             SetScript =
             {
-                Start-Process "C:\Windows\System32\sysprep\sysprep.exe" -ArgumentList "/oobe /generalize /shutdown /quiet" -Wait
+                Start-Process "C:\Windows\System32\sysprep\sysprep.exe" -ArgumentList "/oobe /generalize /shutdown /quiet"
             }
             GetScript =  { @{} }
             TestScript = { $false}
