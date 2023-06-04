@@ -17,9 +17,6 @@ configuration S19BASESTIG-MOF
             OsRole = 'MS'
             OrgSettings = 'C:\S19BASESTIG-MOF\WindowsServer-2019-MS-2.5.org.1.0.xml'
             Exception   = @{
-                'V-93245'= @{
-                    'ValueData'='0'
-                }
                 'V-93287'= @{
                     'ValueData'='0'
                 }
