@@ -33,7 +33,7 @@ Parameters that support changes
 - VMSubnetName.  Virtual Machine Subnet Name
 - WKName.  Enter Workstation Name
 - WKIP.  Enter Workstation IP
-- WKSku.  Select win11-22h2-ent or win11-22h2-ent Worksation OS Sku
+- WKSku.  Select win11-22h2-ent, win11-22h2-avd, win10-22h2-ent Worksation OS Sku
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - WK1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - Admin Username.  Enter a valid Admin Username
