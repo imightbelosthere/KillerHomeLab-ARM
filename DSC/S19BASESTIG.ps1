@@ -40,7 +40,7 @@
             Ensure = "Present"
             Type = "File"
             SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsServer-2019-MS-2.5.org.default.xml"
-            DestinationPath = "C:\S22BASESTIG-MOF\WindowsServer-2019-MS-2.5.org.1.0.xml"
+            DestinationPath = "C:\S19BASESTIG-MOF\WindowsServer-2019-MS-2.5.org.1.0.xml"
             DependsOn = '[File]STIGArtifacts'
         }
 
