@@ -1,17 +1,17 @@
-# Deploy Trusted Launch Windows Server 2022 Baseline STIG'd VM
-<img src="./x_Images/TrustedLaunchServer2022STIGBaseline.svg" height="600" width="800"/>
+# Deploy Trusted Launch Windows Client Baseline STIG'd VM
+<img src="./x_Images/TrustedLaunchWindowsClientSTIGBaseline.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
 - 1 - Bastion Host
 - 1 - Network Security Group
-- 1 - Trusted Launch Windows Server (Server 2022)
+- 1 - Trusted Launch Windows Workstation (Windows 11 and 10)
 - 1 - Azure KeyVault with Secret contianing Deployment Password
 
 The deployment leverages Desired State Configuration scripts to further customize the following:
 
 - Install PowerSTIG (https://github.com/microsoft/PowerStig)
-- Apply Windows Server 2022 Baseline STIGs
+- Apply Windows 11/10 Baseline STIGs
 - Apply Windows Defender Baseline STIGs
 - Apply Windows Firewall Baseline STIGs
 - Apply Microsoft Edge Baseline STIGs
@@ -34,11 +34,11 @@ Parameters that support changes
 - VMSubnetName.  Virtual Machine Subnet Name
 - AzureBastionSubnetPrefix.  Azure Bastion Subnet Prefix (Example:  10.1.1.253.0/24).
 - SourceIPRange.  Source Public IP or Public IP Range (Example:  52.x.21.200)
-- SRVName.  Enter Server Name
-- SRVIP.  Enter Server IP
-- SRVSku.  Select win11-22h2-ent or win11-22h2-ent Worksation OS Sku
-- WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
-- SRV1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
+- WKName.  Enter Workstation Name
+- WKIP.  Enter Workstation IP
+- WKSku.  Select win11-22h2-ent, win11-22h2-avd, win10-22h2-ent Worksation OS Sku
+- WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
+- WK1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - Admin Username.  Enter a valid Admin Username
 - Admin Password.  Enter a valid Admin Password
 - Azure UserObject ID.  Object ID for the Azure Using running the deployment

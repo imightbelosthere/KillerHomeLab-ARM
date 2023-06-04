@@ -201,43 +201,48 @@
                 "description": "Source IP or IP Range"
             }
         },
-        "SRVName": {
+        "WKName": {
             "type": "string",
-            "defaultValue": "khl-srv-01",
+            "defaultValue": "khl-wk-01",
             "metadata": {
-                "description": "Server Name"
+                "description": "Workstation Name"
             }
         },                
-        "SRVIP": {
+        "WKIP": {
             "type": "string",
-            "defaultValue": "172.19.1.210",
+            "defaultValue": "172.19.2.210",
             "metadata": {
-                "description": "Server IP"
+                "description": "Workstation IP"
             }
         },
-        "SRVSku": {
+        "WKSku": {
             "type": "string",
-            "defaultValue": "2022-Datacenter-g2",
+            "defaultValue": "win11-22h2-ent",
+            "allowedValues": [
+                "win11-22h2-ent",
+                "win11-22h2-avd",
+                "win10-22h2-ent"
+            ],
             "metadata": {
-                "description": "Server Sku"
+                "description": "Windows OS "
             }
-        },                
-        "WindowsServerLicenseType": {
+        },                 
+        "WindowsClientLicenseType": {
             "type": "string",
             "defaultValue": "None",
             "allowedValues": [
                 "None",
-                "Windows_Server"
+                "Windows_Client"
             ],
             "metadata": {
-                "description": "Windows Server OS License Type"
+                "description": "Windows Client OS License Type"
             }
         },        
-        "SRV1VMSize": {
+        "WK1VMSize": {
             "type": "string",
             "defaultValue": "Standard_d2ds_v5",
             "metadata": {
-                "description": "Server1 VMSize"
+                "description": "Workstation1 VMSize"
             }
         },                               
         "adminUsername": {
@@ -278,10 +283,11 @@
     "variables": {
         "DeploymentName": "[deployment().name]",
         "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
-        "KeyVaultName": "[concat('SBS22-', variables('Identifier'))]",
+        "KeyVaultName": "[concat('SBWTL-', variables('Identifier'))]",
         "SecretName": "[concat(resourceGroup().Name,'-Password')]",
-        "Publisher": "MicrosoftWindowsServer",
-        "Offer": "WindowsServer",
+        "Publisher": "MicrosoftWindowsDesktop",
+        "Offer11": "Windows-11",
+        "Offer10": "Windows-10",
         "BastionHostAPIVersion": "2021-08-01",
         "DeploymentAPIVersion": "2021-04-01",
         "NetworkSecurityGroupAPIVersion": "2022-01-01",         
@@ -419,9 +425,10 @@
             }
         },
         {
+            "condition": "[equals(parameters('WKSku'),'win11-22h2-ent')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Server-01-2022",
+            "name": "Deploy-Workstation-01-11-ENT",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -439,28 +446,28 @@
                         "value": "[variables('SchedulesAPIVersion')]"
                     },
                     "computerName": {
-                        "value": "[parameters('SRVName')]"
+                        "value": "[parameters('WKName')]"
                     },
                     "computerIP": {
-                        "value": "[parameters('SRVIP')]"
+                        "value": "[parameters('WKIP')]"
                     },
                     "Publisher": {
                         "value": "[variables('Publisher')]"
                     },
                     "Offer": {
-                        "value": "[variables('Offer')]"
+                        "value": "[variables('Offer11')]"
                     },
                     "OSSku": {
-                        "value": "[parameters('SRVSku')]"
+                        "value": "[parameters('WKSku')]"
                     },
                     "OSVersion": {
                         "value": "latest"
                     },
                     "LicenseType": {
-                        "value": "[parameters('WindowsServerLicenseType')]"
+                        "value": "[parameters('WindowsClientLicenseType')]"
                     },
                     "VMSize": {
-                        "value": "[parameters('SRV1VMSize')]"
+                        "value": "[parameters('WK1VMSize')]"
                     },
                     "vnetName": {
                         "value": "[parameters('VNetName')]"
@@ -490,11 +497,157 @@
             }
         },
         {
+            "condition": "[equals(parameters('WKSku'),'win11-22h2-avd')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-11-AVD",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-trusted-launch.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('WKName')]"
+                    },
+                    "computerIP": {
+                        "value": "[parameters('WKIP')]"
+                    },
+                    "Publisher": {
+                        "value": "[variables('Publisher')]"
+                    },
+                    "Offer": {
+                        "value": "[variables('Offer11')]"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('WKSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "latest"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('VNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('VMSubnetName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('WKSku'),'win10-22h2-ent')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-10-ENT",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-trusted-launch.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('WKName')]"
+                    },
+                    "computerIP": {
+                        "value": "[parameters('WKIP')]"
+                    },
+                    "Publisher": {
+                        "value": "[variables('Publisher')]"
+                    },
+                    "Offer": {
+                        "value": "[variables('Offer10')]"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('WKSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "latest"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('VNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('VMSubnetName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },                
+        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Install-PowerSTIG",
             "dependsOn": [
-                "Deploy-Server-01-2022"
+                "Deploy-Workstation-01-11-ENT",
+                "Deploy-Workstation-01-11-AVD",
+                "Deploy-Workstation-01-10-ENT"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -510,7 +663,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[parameters('SRVName')]"
+                        "value": "[parameters('WKName')]"
                     },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
@@ -522,9 +675,10 @@
             }
         },        
         {
+            "condition": "[equals(parameters('WKSku'),'win11-22h2-ent')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Apply-Server-22-Baseline-STIG",
+            "name": "Apply-Windows-11-Baseline-STIG-ENT",
             "dependsOn": [
                 "Install-PowerSTIG"
             ],
@@ -542,7 +696,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[parameters('SRVName')]"
+                        "value": "[parameters('WKName')]"
                     },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
@@ -554,11 +708,79 @@
             }
         },
         {
+            "condition": "[equals(parameters('WKSku'),'win11-22h2-avd')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Apply-Windows-11-Baseline-STIG-AVD",
+            "dependsOn": [
+                "Install-PowerSTIG"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/w11basestig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('WKName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('WKSku'),'win10-22h2-ent')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Apply-Windows-10-Baseline-STIG-ENT",
+            "dependsOn": [
+                "Install-PowerSTIG"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/w10basestig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('WKName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },                
+        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Windows-Defender-STIG",
             "dependsOn": [
-                "Apply-Server-22-Baseline-STIG"
+                "Apply-Windows-11-Baseline-STIG-ENT",
+                "Apply-Windows-11-Baseline-STIG-AVD",
+                "Apply-Windows-10-Baseline-STIG-ENT"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -574,7 +796,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[parameters('SRVName')]"
+                        "value": "[parameters('WKName')]"
                     },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
@@ -606,7 +828,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[parameters('SRVName')]"
+                        "value": "[parameters('WKName')]"
                     },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
@@ -638,7 +860,7 @@
                         "value": "[variables('ExtensionsTypeHandlerVersion')]"
                     },
                     "computerName": {
-                        "value": "[parameters('SRVName')]"
+                        "value": "[parameters('WKName')]"
                     },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
