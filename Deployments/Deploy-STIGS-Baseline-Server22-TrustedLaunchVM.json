@@ -217,7 +217,7 @@
         },
         "SRVSku": {
             "type": "string",
-            "defaultValue": "2022-Datacenter",
+            "defaultValue": "2022-Datacenter-g2",
             "metadata": {
                 "description": "Server Sku"
             }
