@@ -421,7 +421,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
-            "name": "Deploy-Workstation-01-11",
+            "name": "Deploy-Server-01-2022",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -494,7 +494,7 @@
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Install-PowerSTIG",
             "dependsOn": [
-                "Deploy-Workstation-01-11"
+                "Deploy-Server-01-2022"
             ],
             "properties": {
                 "mode": "Incremental",
