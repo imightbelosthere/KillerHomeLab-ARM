@@ -117,11 +117,13 @@
             "properties": {
                 "publishingProfile": {
                     "replicaCount": "1",
-                    "targetRegions": {
-                        "name": "[resourceGroup().location]",
-                        "regionalReplicaCount": 1,
-                        "storageAccountType": "Standard_LRS"                        
-                    },
+                    "targetRegions": [
+                        {
+                            "name": "[resourceGroup().location]",
+                            "regionalReplicaCount": 1,
+                            "storageAccountType": "Standard_LRS"                        
+                        }
+                    ],
                     "excludeFromLatest": false
                 },
                 "storageProfile": {
