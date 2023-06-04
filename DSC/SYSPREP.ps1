@@ -32,6 +32,7 @@
             SetScript =
             {
                 Start-Process "C:\Windows\System32\sysprep\sysprep.exe" -ArgumentList "/oobe /generalize /shutdown /quiet"
+                Start-Sleep 120
             }
             GetScript =  { @{} }
             TestScript = { $false}
