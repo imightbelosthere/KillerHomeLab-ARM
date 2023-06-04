@@ -63,7 +63,7 @@
                     Write-Host "Waiting for File to start downloading"
                 }
 
-                while (($FileCheck.Length -ne 847)){
+                while (($FileCheck.Length -ne 762)){
                     Start-Sleep 10
                     $FileCheck = Get-ChildItem -Path C:\S22BASESTIG-MOF\S22BASESTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to finish downloading"

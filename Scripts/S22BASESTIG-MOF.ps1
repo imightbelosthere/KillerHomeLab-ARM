@@ -17,9 +17,6 @@ configuration S22BASESTIG-MOF
             OsRole = 'MS'
             OrgSettings = 'C:\S22BASESTIG-MOF\WindowsServer-2022-MS-1.1.org.1.0.xml'
             Exception   = @{
-                'V-254343'= @{
-                    'ValueData'='0'
-                }
                 'V-254459'= @{
                     'ValueData'='0'
                 }
