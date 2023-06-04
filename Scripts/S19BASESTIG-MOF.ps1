@@ -14,6 +14,7 @@ configuration S19BASESTIG-MOF
         WindowsServer BaseLine
         {
             OsVersion   = '2019'
+            StigVersion = '2.5'
             OsRole = 'MS'
             OrgSettings = 'C:\S19BASESTIG-MOF\WindowsServer-2019-MS-2.5.org.1.0.xml'
             Exception   = @{

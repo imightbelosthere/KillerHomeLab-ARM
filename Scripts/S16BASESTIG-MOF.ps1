@@ -14,6 +14,7 @@ configuration S16BASESTIG-MOF
         WindowsServer BaseLine
         {
             OsVersion   = '2016'
+            StigVersion = '2.5'
             OsRole = 'MS'
             OrgSettings = 'C:\S16BASESTIG-MOF\WindowsServer-2016-MS-2.5.org.1.0.xml'
             Exception   = @{

@@ -14,6 +14,7 @@ configuration S22BASESTIG-MOF
         WindowsServer BaseLine
         {
             OsVersion   = '2022'
+            StigVersion = '1.1'
             OsRole = 'MS'
             OrgSettings = 'C:\S22BASESTIG-MOF\WindowsServer-2022-MS-1.1.org.1.0.xml'
             Exception   = @{
