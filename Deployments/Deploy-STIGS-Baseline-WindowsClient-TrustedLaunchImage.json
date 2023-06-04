@@ -660,7 +660,7 @@
                         "value": "TrustedLaunch"
                     }, 
                     "SourceVMID": {
-                        "value": "[reference('Deploy-Workstation-01-11').outputs.VMId.value]"             
+                        "value": "[reference('Deploy-Workstation-01').outputs.VMId.value]"             
                     }
                 }
             }
