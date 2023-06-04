@@ -17,19 +17,16 @@ configuration W10BASESTIG-MOF
             StigVersion = '2.5'
             OrgSettings = 'C:\W10BASESTIG-MOF\WindowsClient-10-2.5.org.1.0.xml'
             Exception   = @{
-                'V-220811'= @{
-                    'ValueData'='0'
-                }
                 'V-220924'= @{
                     'ValueData'='0'
                 }
                 'V-220805'= @{
                     'ValueData'='curve25519;NistP256;NistP384'
                 }
-                'V-253491'= @{
+                'V-220968'= @{
                     'Identity'='Guests'
                 }
-                'V-253495'= @{
+                'V-220972'= @{
                     'Identity'='Guests'
                 }
             }

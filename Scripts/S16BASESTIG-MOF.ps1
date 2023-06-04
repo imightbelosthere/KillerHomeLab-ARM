@@ -18,16 +18,13 @@ configuration S16BASESTIG-MOF
             OsRole = 'MS'
             OrgSettings = 'C:\S16BASESTIG-MOF\WindowsServer-2016-MS-2.5.org.1.0.xml'
             Exception   = @{
-                'V-73513'= @{
+                'V-224038'= @{
                     'ValueData'='0'
                 }
-                'V-73807'= @{
-                    'ValueData'='0'
-                }
-                'V-73759'= @{
+                'V-225015'= @{
                     'Identity'='Guests'
                 }
-                'V-73775'= @{
+                'V-225019'= @{
                     'Identity'='Guests'
                 }
             }

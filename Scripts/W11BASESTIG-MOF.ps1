@@ -17,12 +17,6 @@ configuration W11BASESTIG-MOF
             StigVersion = '1.2'
             OrgSettings = 'C:\W11BASESTIG-MOF\WindowsClient-11-1.2.org.1.0.xml'
             Exception   = @{
-                'V-253369.b'= @{
-                    'ValueData'='0'
-                }
-                'V-253371'= @{
-                    'ValueData'='0'
-                }
                 'V-253448'= @{
                     'ValueData'='0'
                 }
