@@ -1,0 +1,727 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "TimeZone": {
+            "type": "string",
+            "defaultValue": "Eastern Standard Time",
+            "allowedValues": [
+                "Afghanistan Standard Time",
+                "Alaskan Standard Time",
+                "Aleutian Standard Time",
+                "Altai Standard Time",
+                "Arab Standard Time",
+                "Arabian Standard Time",
+                "Arabic Standard Time",
+                "Argentina Standard Time",
+                "Astrakhan Standard Time",
+                "Atlantic Standard Time",
+                "AUS Central Standard Time",
+                "Aus Central W. Standard Time",
+                "AUS Eastern Standard Time",
+                "Azerbaijan Standard Time",
+                "Azores Standard Time",
+                "Bahia Standard Time",
+                "Bangladesh Standard Time",
+                "Belarus Standard Time",
+                "Bougainville Standard Time",
+                "Canada Central Standard Time",
+                "Cape Verde Standard Time",
+                "Caucasus Standard Time",
+                "Cen. Australia Standard Time",
+                "Central America Standard Time",
+                "Central Asia Standard Time",
+                "Central Brazilian Standard Time",
+                "Central Europe Standard Time",
+                "Central European Standard Time",
+                "Central Pacific Standard Time",
+                "Central Standard Time (Mexico)",
+                "Central Standard Time",
+                "Chatham Islands Standard Time",
+                "China Standard Time",
+                "Cuba Standard Time",
+                "Dateline Standard Time",
+                "E. Africa Standard Time",
+                "E. Australia Standard Time",
+                "E. Europe Standard Time",
+                "E. South America Standard Time",
+                "Easter Island Standard Time",
+                "Eastern Standard Time (Mexico)",
+                "Eastern Standard Time",
+                "Egypt Standard Time",
+                "Ekaterinburg Standard Time",
+                "Fiji Standard Time",
+                "FLE Standard Time",
+                "Georgian Standard Time",
+                "GMT Standard Time",
+                "Greenland Standard Time",
+                "Greenwich Standard Time",
+                "GTB Standard Time",
+                "Haiti Standard Time",
+                "Hawaiian Standard Time",
+                "India Standard Time",
+                "Iran Standard Time",
+                "Israel Standard Time",
+                "Jordan Standard Time",
+                "Kaliningrad Standard Time",
+                "Korea Standard Time",
+                "Libya Standard Time",
+                "Line Islands Standard Time",
+                "Lord Howe Standard Time",
+                "Magadan Standard Time",
+                "Magallanes Standard Time",
+                "Marquesas Standard Time",
+                "Mauritius Standard Time",
+                "Middle East Standard Time",
+                "Montevideo Standard Time",
+                "Morocco Standard Time",
+                "Mountain Standard Time (Mexico)",
+                "Mountain Standard Time",
+                "Myanmar Standard Time",
+                "N. Central Asia Standard Time",
+                "Namibia Standard Time",
+                "Nepal Standard Time",
+                "New Zealand Standard Time",
+                "Newfoundland Standard Time",
+                "Norfolk Standard Time",
+                "North Asia East Standard Time",
+                "North Asia Standard Time",
+                "North Korea Standard Time",
+                "Omsk Standard Time",
+                "Pacific SA Standard Time",
+                "Pacific Standard Time (Mexico)",
+                "Pacific Standard Time",
+                "Pakistan Standard Time",
+                "Paraguay Standard Time",
+                "Qyzylorda Standard Time",
+                "Romance Standard Time",
+                "Russia Time Zone 10",
+                "Russia Time Zone 11",
+                "Russia Time Zone 3",
+                "Russian Standard Time",
+                "SA Eastern Standard Time",
+                "SA Pacific Standard Time",
+                "SA Western Standard Time",
+                "Saint Pierre Standard Time",
+                "Sakhalin Standard Time",
+                "Samoa Standard Time",
+                "Sao Tome Standard Time",
+                "Saratov Standard Time",
+                "SE Asia Standard Time",
+                "Singapore Standard Time",
+                "South Africa Standard Time",
+                "Sri Lanka Standard Time",
+                "Sudan Standard Time",
+                "Syria Standard Time",
+                "Taipei Standard Time",
+                "Tasmania Standard Time",
+                "Tocantins Standard Time",
+                "Tokyo Standard Time",
+                "Tomsk Standard Time",
+                "Tonga Standard Time",
+                "Transbaikal Standard Time",
+                "Turkey Standard Time",
+                "Turks And Caicos Standard Time",
+                "Ulaanbaatar Standard Time",
+                "US Eastern Standard Time",
+                "US Mountain Standard Time",
+                "UTC",
+                "UTC+12",
+                "UTC+13",
+                "UTC-02",
+                "UTC-08",
+                "UTC-09",
+                "UTC-11",
+                "Venezuela Standard Time",
+                "Vladivostok Standard Time",
+                "Volgograd Standard Time",
+                "W. Australia Standard Time",
+                "W. Central Africa Standard Time",
+                "W. Europe Standard Time",
+                "W. Mongolia Standard Time",
+                "West Asia Standard Time",
+                "West Bank Standard Time",
+                "West Pacific Standard Time",
+                "Yakutsk Standard Time"
+            ],
+            "metadata": {
+                "description": "Time Zone"
+            }
+        },
+        "AutoShutdownEnabled": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "Enabled Auto Shutdown.  !!!If Enabled, AutoShutdownEmail MUST be added!!!!"
+            }
+        },
+        "AutoShutdownTime": {
+            "type": "string",
+            "defaultValue": "2000",
+            "metadata": {
+                "description": "24-Hour Clock Time for Auto-Shutdown Example: 1900 = 7PM"
+            }
+        },
+        "AutoShutdownEmail": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Auto-Shutdown notification Email Example:  user@domain.com"
+            }
+        },        
+        "VNetName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Virtual Network Name"
+            }
+        },   
+        "VMSubnetName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Virtual Machine Subnet Name"
+            }
+        },           
+        "AzureBastionSubnetPrefix": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Azure Bastion Subnet Prefix"
+            }
+        },              
+        "SourceIPRange": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Source IP or IP Range"
+            }
+        },
+        "SRVName": {
+            "type": "string",
+            "defaultValue": "khl-srv-01",
+            "metadata": {
+                "description": "Server Name"
+            }
+        },                
+        "SRVIP": {
+            "type": "string",
+            "defaultValue": "172.19.1.210",
+            "metadata": {
+                "description": "Server IP"
+            }
+        },
+        "SRVSku": {
+            "type": "string",
+            "defaultValue": "2022-Datacenter-g2",
+            "allowedValues": [
+                "2022-Datacenter-g2",
+                "2019-Datacenter-g2",
+                "2016-Datacenter-g2"
+            ],
+            "metadata": {
+                "description": "Server Sku"
+            }
+        },                
+        "WindowsServerLicenseType": {
+            "type": "string",
+            "defaultValue": "None",
+            "allowedValues": [
+                "None",
+                "Windows_Server"
+            ],
+            "metadata": {
+                "description": "Windows Server OS License Type"
+            }
+        },        
+        "SRV1VMSize": {
+            "type": "string",
+            "defaultValue": "Standard_d2ds_v5",
+            "metadata": {
+                "description": "Server1 VMSize"
+            }
+        },                               
+        "adminUsername": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The name of the Administrator of the new VM and Domain"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The password for the Administrator account of the new VM and Domain"
+            }
+        },
+        "AzureUserObjectID": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Deployment Account Object ID"
+            }
+        },                
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of resources, such as templates and DSC modules, that the template depends on"
+            },
+            "defaultValue": "https://raw.githubusercontent.com/elliottfieldsjr/KillerHomeLab-ARM/comingsoon/"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
+            },
+            "defaultValue": ""
+        }
+    },
+    "variables": {
+        "DeploymentName": "[deployment().name]",
+        "Identifier": "[substring(variables('DeploymentName'), 19, 14)]",
+        "KeyVaultName": "[concat('SBSTL-', variables('Identifier'))]",
+        "SecretName": "[concat(resourceGroup().Name,'-Password')]",
+        "Publisher": "MicrosoftWindowsServer",
+        "Offer": "WindowsServer",
+        "BastionHostAPIVersion": "2021-08-01",
+        "DeploymentAPIVersion": "2021-04-01",
+        "NetworkSecurityGroupAPIVersion": "2022-01-01",         
+        "ExtensionsAPIVersion": "2022-03-01",
+        "KeyVaultAPIVersion": "2021-11-01-preview",
+        "KeyVaultSecretAPIVersion": "2021-11-01-preview",
+        "NetworkInterfacesAPIVersion": "2021-08-01",
+        "PublicIPAddressesAPIVersion": "2021-08-01",
+        "SchedulesAPIVersion": "2018-09-15",
+        "VirtualMachinesAPIVersion": "2022-03-01",
+        "VirtualNetworkAPIVersion": "2020-11-01",
+        "ExtensionsTypeHandlerVersion": "2.83"        
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Password-KeyVault-with-Secret",
+            "Properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/keyvaultwithsecret.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "KeyVaultAPIVersion": {
+                        "value": "[variables('KeyVaultAPIVersion')]"
+                    },
+                    "KeyVaultSecretAPIVersion": {
+                        "value": "[variables('KeyVaultSecretAPIVersion')]"
+                    },
+                    "KeyVaultName": {
+                        "value": "[variables('KeyVaultName')]"
+                    },
+                    "SecretName": {
+                        "value": "[variables('SecretName')]"
+                    },
+                    "SecretValue": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "AzureUserObjectID": {
+                        "value": "[parameters('AzureUserObjectID')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-NetworksecurityGroup-01",     
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/bastionnetworksecuritygroup.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkSecurityGroupAPIVersion": {
+                        "value": "[variables('NetworkSecurityGroupAPIVersion')]"
+                    },                    
+                    "NetworkSecurityGroupname": {
+                        "value": "[concat(parameters('VNetName'),'-Bastion-NSG')]"
+                    },                                                                                                      
+                    "SourceIPAddressRange": {
+                        "value": "[parameters('SourceIPRange')]"
+                    }                 
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Associate-NSG-with-Subnet1",
+            "dependsOn": [
+                "Deploy-NetworksecurityGroup-01"
+            ],            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/associatesubnetnsg.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "VirtualNetworkAPIVersion": {
+                        "value": "[variables('VirtualNetworkAPIVersion')]"
+                    },                    
+                    "vnetName": {
+                        "value": "[parameters('vnetName')]"
+                    },
+                    "subnetName": {
+                        "value": "AzureBastionSubnet"
+                    },                                                                                                            
+                    "subnetPrefix": {
+                        "value": "[parameters('AzureBastionSubnetPrefix')]"
+                    }, 
+                    "NetworkSecurityGroupname": {
+                        "value": "[concat(parameters('VNetName'),'-Bastion-NSG')]"
+                    }                                                                                                                                                                                                                             
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-BastionHost-01",
+            "dependsOn": [
+                "Deploy-NetworksecurityGroup-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/bastionhost.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "BastionHostAPIVersion": {
+                        "value": "[variables('BastionHostAPIVersion')]"
+                    },
+                    "PublicIPAddressesAPIVersion": {
+                        "value": "[variables('PublicIPAddressesAPIVersion')]"
+                    },
+                    "publicIPAddressName": {
+                        "value": "[concat(parameters('VNetName'),'-Bastion-pip')]"
+                    },
+                    "AllocationMethod": {
+                        "value": "Static"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('VNetName')]"
+                    },
+                    "subnetName": {
+                        "value": "AzureBastionSubnet"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Server-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-trusted-launch.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('SRVName')]"
+                    },
+                    "computerIP": {
+                        "value": "[parameters('SRVIP')]"
+                    },
+                    "Publisher": {
+                        "value": "[variables('Publisher')]"
+                    },
+                    "Offer": {
+                        "value": "[variables('Offer')]"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('SRVSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "latest"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsServerLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('SRV1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('VNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('VMSubnetName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Install-PowerSTIG",
+            "dependsOn": [
+                "Deploy-Server-01"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/installpwrstig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('SRVName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('SRVSku'),'2022-Datacenter-g2')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Apply-Server-22-Baseline-STIG",
+            "dependsOn": [
+                "Install-PowerSTIG"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/s22basestig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('SRVName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[equals(parameters('SRVSku'),'2019-Datacenter-g2')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Apply-Server-19-Baseline-STIG",
+            "dependsOn": [
+                "Install-PowerSTIG"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/s19basestig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('SRVName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
+        {
+            "condition": "[equals(parameters('SRVSku'),'2016-Datacenter-g2')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Apply-Server-16-Baseline-STIG",
+            "dependsOn": [
+                "Install-PowerSTIG"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/s16basestig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('SRVName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },        
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Apply-Windows-Defender-STIG",
+            "dependsOn": [
+                "Apply-Server-22-Baseline-STIG",
+                "Apply-Server-19-Baseline-STIG",
+                "Apply-Server-16-Baseline-STIG"                
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/defenderstig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('SRVName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Apply-Windows-Firewall-STIG",
+            "dependsOn": [
+                "Apply-Windows-Defender-STIG"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/firewallstig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('SRVName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Apply-Microsoft-Edge-STIG",
+            "dependsOn": [
+                "Apply-Windows-Firewall-STIG"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/edgestig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('SRVName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        }                        
+    ]
+}
