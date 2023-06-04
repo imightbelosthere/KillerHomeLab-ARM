@@ -89,6 +89,7 @@
         {
             SetScript =
             {
+                Start-DscConfiguration -Path C:\S19BASESTIG-MOF -Force
             }
             GetScript =  { @{} }
             TestScript = { $false}
