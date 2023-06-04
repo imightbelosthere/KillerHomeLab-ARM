@@ -1,5 +1,5 @@
 # Deploy Trusted Launch Windows Server Baseline STIG'd VM
-<img src="./x_Images/TrustedLaunchServerSTIGBaseline.svg" height="600" width="800"/>
+<img src="./x_Images/TrustedLaunchWindowsServerSTIGBaseline.svg" height="600" width="800"/>
 
 This Deployment deploys the following items:
 
