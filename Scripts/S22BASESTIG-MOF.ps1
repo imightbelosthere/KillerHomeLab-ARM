@@ -14,25 +14,19 @@ configuration S22BASESTIG-MOF
         WindowsServer BaseLine
         {
             OsVersion   = '11'
-            StigVersion = '1.1'
-            OrgSettings = 'C:\S22BASESTIG-MOF\WindowsClient-11-1.2.org.1.0.xml'
+            OsRole = 'MS'
+            OrgSettings = 'C:\S22BASESTIG-MOF\WindowsServer-2022-MS-1.1.org.1.0.xml'
             Exception   = @{
-                'V-253369.b'= @{
+                'V-254343'= @{
                     'ValueData'='0'
                 }
-                'V-253371'= @{
+                'V-254459'= @{
                     'ValueData'='0'
                 }
-                'V-253448'= @{
-                    'ValueData'='0'
-                }
-                'V-253363'= @{
-                    'ValueData'='curve25519;NistP256;NistP384'
-                }
-                'V-253491'= @{
+                'V-254421'= @{
                     'Identity'='Guests'
                 }
-                'V-253495'= @{
+                'V-254425'= @{
                     'Identity'='Guests'
                 }
             }
