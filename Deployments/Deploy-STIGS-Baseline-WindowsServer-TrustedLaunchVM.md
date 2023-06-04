@@ -36,7 +36,7 @@ Parameters that support changes
 - SourceIPRange.  Source Public IP or Public IP Range (Example:  52.x.21.200)
 - SRVName.  Enter Server Name
 - SRVIP.  Enter Server IP
-- SRVSku.  Select win11-22h2-ent or win11-22h2-ent Worksation OS Sku
+- SRVSku.  Select 2022-Datacenter-g2, 2019-Datacenter-gensecond or 2019-Datacenter-gensecond Server OS Sku
 - WindowsServerLicenseType.  Choose Windows Server License Type (Example:  Windows_Server or None)
 - SRV1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - Admin Username.  Enter a valid Admin Username
