@@ -220,8 +220,8 @@
             "defaultValue": "2022-Datacenter-g2",
             "allowedValues": [
                 "2022-Datacenter-g2",
-                "2019-Datacenter-g2",
-                "2016-Datacenter-g2"
+                "2019-Datacenter-gensecond",
+                "2016-Datacenter-gensecond"
             ],
             "metadata": {
                 "description": "Server Sku"
@@ -560,7 +560,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('SRVSku'),'2019-Datacenter-g2')]",            
+            "condition": "[equals(parameters('SRVSku'),'2019-Datacenter-gensecond')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Server-19-Baseline-STIG",
@@ -593,7 +593,7 @@
             }
         },        
         {
-            "condition": "[equals(parameters('SRVSku'),'2016-Datacenter-g2')]",            
+            "condition": "[equals(parameters('SRVSku'),'2016-Datacenter-gensecond')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Server-16-Baseline-STIG",
