@@ -1,4 +1,4 @@
-configuration S22BASESTIG-MOF
+configuration S19BASESTIG-MOF
 {
     param
     (
@@ -13,20 +13,20 @@ configuration S22BASESTIG-MOF
     {
         WindowsServer BaseLine
         {
-            OsVersion   = '2022'
+            OsVersion   = '2019'
             OsRole = 'MS'
-            OrgSettings = 'C:\S22BASESTIG-MOF\WindowsServer-2022-MS-1.1.org.1.0.xml'
+            OrgSettings = 'C:\S19BASESTIG-MOF\WindowsServer-2019-MS-2.5.org.1.0.xml'
             Exception   = @{
-                'V-254343'= @{
+                'V-93245'= @{
                     'ValueData'='0'
                 }
-                'V-254459'= @{
+                'V-93287'= @{
                     'ValueData'='0'
                 }
-                'V-254435'= @{
+                'V-93009'= @{
                     'Identity'='Guests'
                 }
-                'V-254439'= @{
+                'V-92965'= @{
                     'Identity'='Guests'
                 }
             }
@@ -34,4 +34,4 @@ configuration S22BASESTIG-MOF
     }
 }
 
-S22BASESTIG-MOF -OutputPath C:\S22BASESTIG-MOF -Verbose
+S19BASESTIG-MOF -OutputPath C:\S19BASESTIG-MOF -Verbose

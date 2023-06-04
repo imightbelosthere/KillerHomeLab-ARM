@@ -39,8 +39,8 @@
         {
             Ensure = "Present"
             Type = "File"
-            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsServer-2019-MS-2.4.org.default.xml"
-            DestinationPath = "C:\S22BASESTIG-MOF\WindowsServer-2019-MS-2.4.org.1.0.xml"
+            SourcePath = "C:\Program Files\WindowsPowerShell\Modules\PowerSTIG\4.16.0\StigData\Processed\WindowsServer-2019-MS-2.5.org.default.xml"
+            DestinationPath = "C:\S22BASESTIG-MOF\WindowsServer-2019-MS-2.5.org.1.0.xml"
             DependsOn = '[File]STIGArtifacts'
         }
 
@@ -63,7 +63,7 @@
                     Write-Host "Waiting for File to start downloading"
                 }
 
-                while (($FileCheck.Length -ne 1045)){
+                while (($FileCheck.Length -ne 843)){
                     Start-Sleep 10
                     $FileCheck = Get-ChildItem -Path C:\S19BASESTIG-MOF\S19BASESTIG-MOF.ps1 -ErrorAction 0
                     Write-Host "Waiting for File to finish downloading"
@@ -89,7 +89,6 @@
         {
             SetScript =
             {
-                Start-DscConfiguration -Path C:\S19BASESTIG-MOF -Force
             }
             GetScript =  { @{} }
             TestScript = { $false}
