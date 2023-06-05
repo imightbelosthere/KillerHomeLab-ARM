@@ -26,7 +26,7 @@ If you can't remember the Username review the Deployment Input tab within your R
 <img src="./x_Images/DeploymentUsername.png" width="300"/>
 
 Parameters that support changes
-- ApplyWindowsServerBaselineSTIGs. Choose whether to Apply Windows Client Baseline STIGs.
+- ApplyWindowsServerBaselineSTIGs. Choose whether to Apply Windows Server Baseline STIGs.
 - ApplyWindowsDefenderBaselineSTIGs. Choose whether to Apply Windows Defender Baseline STIGs.
 - ApplyWindowsFirewallBaselineSTIGs. Choose whether to Apply Windows Firewall Baseline STIGs.
 - ApplyMicrosoftEdgeBaselineSTIGs. Choose whether to Apply Microsoft Edge Baseline STIGs.

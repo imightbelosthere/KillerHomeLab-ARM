@@ -2,6 +2,50 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "ApplyWindowsClientBaselineSTIGs": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],      
+            "metadata": {
+                "description": "Apply Windows Client Baseline STIGs"
+            }
+        },
+        "ApplyWindowsDefenderBaselineSTIGs": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],      
+            "metadata": {
+                "description": "Apply Windows Defender Baseline STIGs"
+            }
+        },
+        "ApplyWindowsFirewallBaselineSTIGs": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],      
+            "metadata": {
+                "description": "Apply Windows Firewall Baseline STIGs"
+            }
+        },        
+        "ApplyMicrosoftEdgeBaselineSTIGs": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],      
+            "metadata": {
+                "description": "Apply Microsoft Edge Baseline STIGs"
+            }
+        },                                
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -221,7 +265,8 @@
             "allowedValues": [
                 "win11-22h2-ent",
                 "win11-22h2-avd",
-                "win10-22h2-ent"
+                "win10-22h2-ent-g2",
+                "win10-22h2-avd-g2"
             ],
             "metadata": {
                 "description": "Windows OS "
@@ -569,7 +614,7 @@
             }
         },        
         {
-            "condition": "[equals(parameters('WKSku'),'win10-22h2-ent')]",            
+            "condition": "[equals(parameters('WKSku'),'win10-22h2-ent-g2')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Deploy-Workstation-01-10-ENT",
@@ -641,13 +686,86 @@
             }
         },                
         {
+            "condition": "[equals(parameters('WKSku'),'win10-22h2-avd-g2')]",            
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Deploy-Workstation-01-10-AVD",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/1nic-1disk-vm-trusted-launch.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "NetworkInterfacesAPIVersion": {
+                        "value": "[variables('NetworkInterfacesAPIVersion')]"
+                    },
+                    "VirtualMachinesAPIVersion": {
+                        "value": "[variables('VirtualMachinesAPIVersion')]"
+                    },
+                    "SchedulesAPIVersion": {
+                        "value": "[variables('SchedulesAPIVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('WKName')]"
+                    },
+                    "computerIP": {
+                        "value": "[parameters('WKIP')]"
+                    },
+                    "Publisher": {
+                        "value": "[variables('Publisher')]"
+                    },
+                    "Offer": {
+                        "value": "[variables('Offer10')]"
+                    },
+                    "OSSku": {
+                        "value": "[parameters('WKSku')]"
+                    },
+                    "OSVersion": {
+                        "value": "latest"
+                    },
+                    "LicenseType": {
+                        "value": "[parameters('WindowsClientLicenseType')]"
+                    },
+                    "VMSize": {
+                        "value": "[parameters('WK1VMSize')]"
+                    },
+                    "vnetName": {
+                        "value": "[parameters('VNetName')]"
+                    },
+                    "subnet1Name": {
+                        "value": "[parameters('VMSubnetName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "TimeZone": {
+                        "value": "[parameters('TimeZone')]"
+                    },
+                    "AutoShutdownEnabled": {
+                        "value": "[parameters('AutoShutdownEnabled')]"
+                    },
+                    "AutoShutdownTime": {
+                        "value": "[parameters('AutoShutdownTime')]"
+                    },
+                    "AutoShutdownEmail": {
+                        "value": "[parameters('AutoShutdownEmail')]"
+                    }
+                }
+            }
+        },                        
+        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Install-PowerSTIG",
             "dependsOn": [
                 "Deploy-Workstation-01-11-ENT",
                 "Deploy-Workstation-01-11-AVD",
-                "Deploy-Workstation-01-10-ENT"
+                "Deploy-Workstation-01-10-ENT",
+                "Deploy-Workstation-01-10-AVD"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -675,7 +793,7 @@
             }
         },        
         {
-            "condition": "[equals(parameters('WKSku'),'win11-22h2-ent')]",            
+            "condition": "[and(equals(parameters('WKSku'),'win11-22h2-ent'), equals(parameters('ApplyWindowsClientBaselineSTIGs'),'Yes'))]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Windows-11-Baseline-STIG-ENT",
@@ -708,7 +826,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('WKSku'),'win11-22h2-avd')]",            
+            "condition": "[and(equals(parameters('WKSku'),'win11-22h2-avd'), equals(parameters('ApplyWindowsClientBaselineSTIGs'),'Yes'))]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Windows-11-Baseline-STIG-AVD",
@@ -741,7 +859,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('WKSku'),'win10-22h2-ent')]",            
+            "condition": "[and(equals(parameters('WKSku'),'win10-22h2-ent-g2'), equals(parameters('ApplyWindowsClientBaselineSTIGs'),'Yes'))]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Windows-10-Baseline-STIG-ENT",
@@ -772,15 +890,50 @@
                     }
                 }
             }
-        },                
+        },
         {
+            "condition": "[and(equals(parameters('WKSku'),'win10-22h2-avd-g2'), equals(parameters('ApplyWindowsClientBaselineSTIGs'),'Yes'))]",                        
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('DeploymentAPIVersion')]",
+            "name": "Apply-Windows-10-Baseline-STIG-AVD",
+            "dependsOn": [
+                "Install-PowerSTIG"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[uri(parameters('_artifactsLocation'), concat('templates/w10basestig.json', parameters('_artifactsLocationSasToken')))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "ExtensionsAPIVersion": {
+                        "value": "[variables('ExtensionsAPIVersion')]"
+                    },
+                    "ExtensionsTypeHandlerVersion": {
+                        "value": "[variables('ExtensionsTypeHandlerVersion')]"
+                    },
+                    "computerName": {
+                        "value": "[parameters('WKName')]"
+                    },
+                    "_artifactsLocation": {
+                        "value": "[parameters('_artifactsLocation')]"
+                    },
+                    "_artifactsLocationSasToken": {
+                        "value": "[parameters('_artifactsLocationSasToken')]"
+                    }
+                }
+            }
+        },                        
+        {
+            "condition": "[equals(parameters('ApplyWindowsDefenderBaselineSTIGs'),'Yes')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Windows-Defender-STIG",
             "dependsOn": [
                 "Apply-Windows-11-Baseline-STIG-ENT",
                 "Apply-Windows-11-Baseline-STIG-AVD",
-                "Apply-Windows-10-Baseline-STIG-ENT"
+                "Apply-Windows-10-Baseline-STIG-ENT",
+                "Apply-Windows-10-Baseline-STIG-AVD"                
             ],
             "properties": {
                 "mode": "Incremental",
@@ -808,6 +961,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('ApplyWindowsFirewallBaselineSTIGs'),'Yes')]",                                    
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Windows-Firewall-STIG",
@@ -840,6 +994,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('ApplyMicrosoftEdgeBaselineSTIGs'),'Yes')]",                                    
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Microsoft-Edge-STIG",

@@ -26,6 +26,10 @@ If you can't remember the Username review the Deployment Input tab within your R
 <img src="./x_Images/DeploymentUsername.png" width="300"/>
 
 Parameters that support changes
+- ApplyWindowsClientBaselineSTIGs. Choose whether to Apply Windows Client Baseline STIGs.
+- ApplyWindowsDefenderBaselineSTIGs. Choose whether to Apply Windows Defender Baseline STIGs.
+- ApplyWindowsFirewallBaselineSTIGs. Choose whether to Apply Windows Firewall Baseline STIGs.
+- ApplyMicrosoftEdgeBaselineSTIGs. Choose whether to Apply Microsoft Edge Baseline STIGs.
 - TimeZone.  Select an appropriate Time Zone.
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
@@ -36,7 +40,7 @@ Parameters that support changes
 - SourceIPRange.  Source Public IP or Public IP Range (Example:  52.x.21.200)
 - WKName.  Enter Workstation Name
 - WKIP.  Enter Workstation IP
-- WKSku.  Select win11-22h2-ent, win11-22h2-avd, win10-22h2-ent Worksation OS Sku
+- WKSku.  Select win11-22h2-ent, win11-22h2-avd, win10-22h2-ent-g2, or win10-22h2-avd-g2 Worksation OS Sku
 - WindowsClientLicenseType.  Choose Windows Client License Type (Example:  Windows_Client or None)
 - WK1VMSize.  Enter a Valid VM Size based on which Region the VM is deployed.
 - Admin Username.  Enter a valid Admin Username

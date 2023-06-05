@@ -10,7 +10,7 @@
                 "No"
             ],      
             "metadata": {
-                "description": "Apply Windows Client Baseline STIGs"
+                "description": "Apply Windows Server Baseline STIGs"
             }
         },
         "ApplyWindowsDefenderBaselineSTIGs": {
