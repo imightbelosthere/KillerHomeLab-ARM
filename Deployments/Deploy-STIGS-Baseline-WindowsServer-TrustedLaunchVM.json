@@ -2,6 +2,50 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "ApplyWindowsServerSTIGs": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],      
+            "metadata": {
+                "description": "Apply Windows Client STIGs"
+            }
+        },
+        "ApplyWindowsDefenderSTIGs": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],      
+            "metadata": {
+                "description": "Apply Windows Defender STIGs"
+            }
+        },
+        "ApplyWindowsFirewallSTIGs": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],      
+            "metadata": {
+                "description": "Apply Windows Firewall STIGs"
+            }
+        },        
+        "ApplyMicrosoftEdgeSTIGs": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],      
+            "metadata": {
+                "description": "Apply Microsoft Edge STIGs"
+            }
+        },                        
         "TimeZone": {
             "type": "string",
             "defaultValue": "Eastern Standard Time",
@@ -527,7 +571,7 @@
             }
         },        
         {
-            "condition": "[equals(parameters('SRVSku'),'2022-Datacenter-g2')]",            
+            "condition": "[and(equals(parameters('SRVSku'),'2022-Datacenter-g2'), equals(parameters('ApplyWindowsServerSTIGs'),'Yes'))]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Server-22-Baseline-STIG",
@@ -560,7 +604,7 @@
             }
         },
         {
-            "condition": "[equals(parameters('SRVSku'),'2019-Datacenter-gensecond')]",            
+            "condition": "[and(equals(parameters('SRVSku'),'2019-Datacenter-gensecond'), equals(parameters('ApplyWindowsServerSTIGs'),'Yes'))]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Server-19-Baseline-STIG",
@@ -593,7 +637,7 @@
             }
         },        
         {
-            "condition": "[equals(parameters('SRVSku'),'2016-Datacenter-gensecond')]",            
+            "condition": "[and(equals(parameters('SRVSku'),'2016-Datacenter-gensecond'), equals(parameters('ApplyWindowsServerSTIGs'),'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Server-16-Baseline-STIG",
@@ -626,6 +670,7 @@
             }
         },        
         {
+            "condition": "[equals(parameters('ApplyWindowsDefenderSTIGs'),'Yes')]",            
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Windows-Defender-STIG",
@@ -660,6 +705,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('ApplyWindowsFirewallSTIGs'),'Yes')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Windows-Firewall-STIG",
@@ -692,6 +738,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('ApplyMicrosoftEdgeSTIGs'),'Yes')]",                        
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('DeploymentAPIVersion')]",
             "name": "Apply-Microsoft-Edge-STIG",

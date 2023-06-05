@@ -26,6 +26,10 @@ If you can't remember the Username review the Deployment Input tab within your R
 <img src="./x_Images/DeploymentUsername.png" width="300"/>
 
 Parameters that support changes
+- ApplyWindowsServerSTIGs. Choose whether to Apply Windows Client STIGs.
+- ApplyWindowsDefenderSTIGs. Choose whether to Apply Windows Defender STIGs.
+- ApplyWindowsFirewallSTIGs. Choose whether to Apply Windows Firewall STIGs.
+- ApplyMicrosoftEdgeSTIGs. Choose whether to Apply Microsoft Edge STIGs.
 - TimeZone.  Select an appropriate Time Zone.
 - AutoShutdownEnabled.  Yes = AutoShutdown Enabled, No = AutoShutdown Disabled.
 - AutoShutdownTime.  24-Hour Clock Time for Auto-Shutdown (Example: 1900 = 7PM)
